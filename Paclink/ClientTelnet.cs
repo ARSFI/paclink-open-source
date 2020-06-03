@@ -198,7 +198,7 @@ namespace Paclink
             }
             else
             {
-                strCMSHost = "cms.winlink.org";
+                strCMSHost = "cms-z.winlink.org";
             }
 
             if (stcChannel.Enabled)
