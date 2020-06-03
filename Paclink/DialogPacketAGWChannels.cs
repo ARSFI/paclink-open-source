@@ -1,0 +1,538 @@
+﻿using System;
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Windows.Forms;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using nsoftware.IPWorks;
+
+namespace Paclink
+{
+    public partial class DialogPacketAGWChannels
+    {
+        public DialogPacketAGWChannels()
+        {
+            objTCPPort = new Ipport();
+            InitializeComponent();
+            _cmbAGWPort.Name = "cmbAGWPort";
+            _Label11.Name = "Label11";
+            _Label10.Name = "Label10";
+            _Label9.Name = "Label9";
+            _Label5.Name = "Label5";
+            _Label4.Name = "Label4";
+            _txtRemoteCallsign.Name = "txtRemoteCallsign";
+            _chkEnabled.Name = "chkEnabled";
+            _cmbChannelName.Name = "cmbChannelName";
+            _Label3.Name = "Label3";
+            _Label2.Name = "Label2";
+            _Label1.Name = "Label1";
+            _btnClose.Name = "btnClose";
+            _btnUpdate.Name = "btnUpdate";
+            _btnRemove.Name = "btnRemove";
+            _btnAdd.Name = "btnAdd";
+            _Label8.Name = "Label8";
+            _Label7.Name = "Label7";
+            _txtScript.Name = "txtScript";
+            _Label6.Name = "Label6";
+            _nudMaxOutstanding.Name = "nudMaxOutstanding";
+            _nudActivityTimeout.Name = "nudActivityTimeout";
+            _nudPriority.Name = "nudPriority";
+            _nudScriptTimeout.Name = "nudScriptTimeout";
+            _btnRetryRemote.Name = "btnRetryRemote";
+            _nudPacketLength.Name = "nudPacketLength";
+            _btnHelp.Name = "btnHelp";
+        }
+
+        private TChannelProperties stcSelectedChannel;
+        private Ipport _objTCPPort;
+
+        private Ipport objTCPPort
+        {
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            get
+            {
+                return _objTCPPort;
+            }
+
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            set
+            {
+                if (_objTCPPort != null)
+                {
+                    _objTCPPort.OnDataIn -= objTCPPort_OnDataIn;
+                    _objTCPPort.OnReadyToSend -= objTCPPort_OnReadyToSend;
+                }
+
+                _objTCPPort = value;
+                if (_objTCPPort != null)
+                {
+                    _objTCPPort.OnDataIn += objTCPPort_OnDataIn;
+                    _objTCPPort.OnReadyToSend += objTCPPort_OnReadyToSend;
+                }
+            }
+        }
+
+        private byte[] bytTCPData;
+
+        public delegate void AddAGWPortInfoCallback(string AddItem, string Text, bool EnableRetry);
+
+        private void PacketAGWChannels_Load(object sender, EventArgs e)
+        {
+            UpdateAGWPortInfo();
+            ClearEntries();
+            FillChannelList();
+            cmbChannelName.DroppedDown = true;
+        } // PacketAGWChannels_Load
+
+        private void FillChannelList()
+        {
+            cmbChannelName.Items.Clear();
+            foreach (TChannelProperties stcChannel in Channels.Entries)
+            {
+                if (stcChannel.ChannelType == EChannelModes.PacketAGW)
+                {
+                    cmbChannelName.Items.Add(stcChannel.ChannelName);
+                }
+            }
+        } // FillChannelList
+
+        private void ClearEntries()
+        {
+            cmbChannelName.Text = "";
+            nudPriority.Value = 3;
+            txtRemoteCallsign.Text = "";
+            nudActivityTimeout.Value = 4;
+            nudPacketLength.Value = 128;
+            nudMaxOutstanding.Value = 2;
+            nudScriptTimeout.Value = 60;
+            txtScript.Clear();
+            chkEnabled.Checked = true;
+            btnAdd.Enabled = false;
+            btnRemove.Enabled = false;
+            btnUpdate.Enabled = false;
+        } // ClearEntries
+
+        private void SetEntries()
+        {
+            stcSelectedChannel = (TChannelProperties)Channels.Entries[cmbChannelName.Text];
+            {
+                var withBlock = stcSelectedChannel;
+                nudPriority.Value = withBlock.Priority;
+                cmbAGWPort.Text = withBlock.AGWPort;
+                txtRemoteCallsign.Text = withBlock.RemoteCallsign;
+                nudActivityTimeout.Value = withBlock.AGWTimeout;
+                nudPacketLength.Value = withBlock.AGWPacketLength;
+                nudMaxOutstanding.Value = Math.Max(1, withBlock.AGWMaxFrames); // temp fix to fix channels with old values of 0
+                nudScriptTimeout.Value = withBlock.AGWScriptTimeout;
+                txtScript.Text = withBlock.AGWScript;
+                chkEnabled.Checked = withBlock.Enabled;
+            }
+
+            btnAdd.Enabled = false;
+            btnRemove.Enabled = true;
+            btnUpdate.Enabled = true;
+        } // SetEntries
+
+        private void UpdateAGWPortInfo()
+        {
+            try
+            {
+                string strAGWIniPath = DialogAGWEngine.AGWPath + "AGWPE.INI";
+                string[] strTokens;
+                cmbAGWPort.Items.Clear();
+                if (DialogAGWEngine.AGWLocation == 0)
+                {
+                    cmbAGWPort.Text = "<AGW engine not configured or not enabled>";
+                    return;
+                }
+                else if (DialogAGWEngine.AGWLocation == 1) // If local read the INI file to get port info
+                {
+                    if (!File.Exists(strAGWIniPath))
+                    {
+                        cmbAGWPort.Text = "<AGW engine not installed or not configured>";
+                        return;
+                    }
+
+                    string strAGWData = My.MyProject.Computer.FileSystem.ReadAllText(strAGWIniPath);
+                    int intAGWPorts;
+                    var blnMainFlag = default(bool);
+                    var srdAGWData = new StringReader(strAGWData);
+                    do
+                    {
+                        string strLine = srdAGWData.ReadLine();
+                        if (blnMainFlag)
+                        {
+                            strTokens = strLine.Split('=');
+                            if (strTokens[0].IndexOf("PORTS") != 1)
+                            {
+                                intAGWPorts = Conversions.ToInteger(strTokens[1]);
+                                break;
+                            }
+                        }
+
+                        if (strLine.IndexOf("[MAIN]") != -1)
+                            blnMainFlag = true;
+                    }
+                    while (true);
+                    for (int intIndex = 0, loopTo = intAGWPorts - 1; intIndex <= loopTo; intIndex++)
+                    {
+                        var strType = default(string);
+                        var strFrequency = default(string);
+                        var strPort = default(string);
+                        string strPortIniFile = DialogAGWEngine.AGWPath + "PORT" + intIndex.ToString() + ".ini";
+                        if (File.Exists(strPortIniFile))
+                        {
+                            string strPortData = My.MyProject.Computer.FileSystem.ReadAllText(strPortIniFile);
+                            var srdPortData = new StringReader(strPortData);
+                            do
+                            {
+                                string strLine = srdPortData.ReadLine();
+                                if (string.IsNullOrEmpty(strLine))
+                                    break;
+                                strTokens = strLine.Split('=');
+                                var switchExpr = strTokens[0];
+                                switch (switchExpr)
+                                {
+                                    case "FREQUENCY":
+                                        {
+                                            strFrequency = strTokens[1];
+                                            break;
+                                        }
+
+                                    case "PORT":
+                                        {
+                                            strPort = strTokens[1].Replace(":", "");
+                                            break;
+                                        }
+
+                                    case "TYPE":
+                                        {
+                                            strType = strTokens[1];
+                                            break;
+                                        }
+                                }
+                            }
+                            while (true);
+                            cmbAGWPort.Items.Add((intIndex + 1).ToString() + ": " + strType + " Frequency:" + strFrequency + " Port:" + strPort);
+                        }
+                    }
+                }
+                else
+                {
+                    // This requires a remote login and port properties retrieval to set cmbAGWPort
+                    try
+                    {
+                        cmbAGWPort.Items.Clear();
+                        cmbAGWPort.Text = "Requesting port info from remote AGW Engine @ host " + DialogAGWEngine.AGWHost;
+                        objTCPPort.Connected = false;
+                        tmrTimer10sec.Enabled = true;
+                        objTCPPort.Connect(DialogAGWEngine.AGWHost, DialogAGWEngine.AGWTCPPort);
+                    }
+                    catch
+                    {
+                        cmbAGWPort.Text = "Could not connect to remote AGW Engine @ host " + DialogAGWEngine.AGWHost;
+                        tmrTimer10sec.Enabled = false;
+                    }
+                }
+            }
+            catch
+            {
+                Logs.Exception("[DialogPacketAGWChannels.UpdateAGWPortInfo]: " + Information.Err().Description);
+            }
+        } // UpdateAGWPortInfo
+
+        private void cmbChannelName_Leave(object sender, EventArgs e)
+        {
+        } // cmbChannelName_Leave
+
+        private void cmbChannelName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(cmbChannelName.Text) & cmbChannelName.Text != "<Enter a new channel>")
+            {
+                if (Channels.Entries.Contains(cmbChannelName.Text))
+                {
+                    SetEntries();
+                }
+                else
+                {
+                    ClearEntries();
+                }
+            }
+        } // cmbChannelName_SelectedIndexChanged
+
+        private void cmbChannelName_TextChanged(object sender, EventArgs e)
+        {
+            if (cmbChannelName.Items.Contains(cmbChannelName.Text))
+            {
+                btnAdd.Enabled = false;
+                btnRemove.Enabled = true;
+                btnUpdate.Enabled = true;
+            }
+            else
+            {
+                btnAdd.Enabled = true;
+                btnRemove.Enabled = false;
+                btnUpdate.Enabled = false;
+            }
+        } // cmbChannelName_TextChanged
+
+        private void txtPacketLength_TextChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void LoginAGWRemote()
+        {
+            // Private Sub to Login to remote AGWPE with UserID and password ("P" Frame)...
+
+            try
+            {
+                var bytTemp2 = new byte[546];
+                var asc = new ASCIIEncoding(); // had to declare this to eliminate an ocasional error
+                asc.GetBytes("P", 0, 1, bytTemp2, 4);
+                Array.Copy(Globals.ComputeLengthB(255 + 255), 0, bytTemp2, 28, 4);
+                asc.GetBytes(DialogAGWEngine.AGWUserId, 0, DialogAGWEngine.AGWUserId.Length, bytTemp2, 36);
+                asc.GetBytes(DialogAGWEngine.AGWPassword, 0, DialogAGWEngine.AGWPassword.Length, bytTemp2, 36 + 255);
+                objTCPPort.DataToSendB = bytTemp2;
+            }
+            catch
+            {
+                AddAGWPortInfo("", "Error in Remote AGW Engine Login @ host " + DialogAGWEngine.AGWHost, true);
+                Logs.Exception("[PacketAGWChannels, LoginAGWRemote] " + Information.Err().Description);
+                tmrTimer10sec.Enabled = false;
+            }
+        }  // LoginAGWRemote 
+
+        private void GetAGWPortInfo()
+        {
+            // Private Sub to Request AGW Port Information ("G" Frame)...
+
+            var bytTemp = new byte[36];
+            try
+            {
+                if (!objTCPPort.Connected)
+                    return;
+                bytTemp[4] = (byte)Strings.Asc("G");
+                objTCPPort.DataToSendB = bytTemp;
+            }
+            catch
+            {
+                Logs.Exception("[AGWEngine, RequestAGWPortInfo] " + Information.Err().Description);
+                tmrTimer10sec.Enabled = false;
+                AddAGWPortInfo("", "Error requesting Port Info from Remote AGW Engine @ host " + DialogAGWEngine.AGWHost, true);
+            }
+        } // GetAGWPortInfo
+
+        private void objTCPPort_OnDataIn(object sender, IpportDataInEventArgs e)
+        {
+            int intDataLength;
+            try
+            {
+                if (Information.IsNothing(e.TextB))
+                    return;
+                Globals.ConcatanateByteArrays(ref bytTCPData, e.TextB); // Add data to buffer array
+                if (bytTCPData.Length < 36)
+                    return; // not a complete frame header
+                intDataLength = Globals.ComputeLengthL(bytTCPData, 28); // get and decode the data length field from the header
+                if (bytTCPData.Length < 36 + intDataLength)
+                    return; // not A complete "G" frame...
+                if (Conversions.ToString((char)bytTCPData[4]) != "G")
+                {
+                    bytTCPData = new byte[0];
+                    return;
+                }
+
+                tmrTimer10sec.Enabled = false;
+                objTCPPort.Disconnect();
+                string strPort1Info = "";
+                var bytTemp1 = new byte[intDataLength];
+                Array.Copy(bytTCPData, 36, bytTemp1, 0, bytTemp1.Length);
+                string strPortInfo = Globals.GetString(bytTemp1);
+                int intPtr1 = strPortInfo.IndexOf(";");
+                int intPortCnt = Conversions.ToInteger(strPortInfo.Substring(0, intPtr1));
+                for (int i = 1, loopTo = intPortCnt; i <= loopTo; i++)
+                {
+                    int intPtr2 = strPortInfo.IndexOf("with ", intPtr1);
+                    if (intPtr2 == -1)
+                        break;
+                    intPtr1 = strPortInfo.IndexOf(";", intPtr2 + 5);
+                    if (intPtr1 == -1)
+                        break;
+                    string strTemp = i.ToString() + ": ";
+                    strTemp += strPortInfo.Substring(intPtr2 + 5, intPtr1 - (intPtr2 + 5)).Trim();
+                    AddAGWPortInfo(strTemp, "", false);
+                    if (i == 1)
+                        strPort1Info = strTemp;
+                }
+
+                AddAGWPortInfo("", strPort1Info, true); // update to text to port 1 and enable retry button.
+            }
+            catch
+            {
+                Logs.Exception("[AGWEngine, tcpOnDataIn] " + Information.Err().Description);
+                AddAGWPortInfo("", "Port Info request failure with host " + DialogAGWEngine.AGWHost, true);
+            }
+        } // objTCPPort_OnDataIn
+
+        private void objTCPPort_OnReadyToSend(object sender, IpportReadyToSendEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(DialogAGWEngine.AGWUserId))
+            {
+                LoginAGWRemote();  // do a secure AGWPE login 
+            }
+
+            bytTCPData = new byte[0];
+            GetAGWPortInfo();    // Request port info from AGWPE
+        } // objTCPPort_OnReadyToSend
+
+        private void tmrTimer10sec_Tick(object sender, EventArgs e)
+        {
+            tmrTimer10sec.Enabled = false;
+            Logs.Exception("[PacketAGWChannels]  10 sec timeout on remote AGWPE port info Request to " + DialogAGWEngine.AGWHost);
+            AddAGWPortInfo("", "Timeout on port info request to remote computer AGW Engine @ host " + DialogAGWEngine.AGWHost, true);
+            try
+            {
+                objTCPPort.Disconnect();
+            }
+            catch
+            {
+            }
+        } // tmrTimer10sec_Tick
+
+        private void AddAGWPortInfo(string AddItem, string Text, bool EnableRetry)
+        {
+            if (cmbAGWPort.InvokeRequired)
+            {
+                var objCMBDelegate = new AddAGWPortInfoCallback(AddAGWPortInfo);
+                Invoke(objCMBDelegate, new object[] { AddItem, Text, EnableRetry });
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(AddItem))
+                cmbAGWPort.Items.Add(AddItem);
+            if (!string.IsNullOrEmpty(Text))
+                cmbAGWPort.Text = Text;
+            btnRetryRemote.Enabled = EnableRetry;
+        } // AddAGWPortInfo
+
+        private void btnRetryRemote_Click(object sender, EventArgs e)
+        {
+            btnRetryRemote.Enabled = false;
+            UpdateAGWPortInfo();
+        } // btnRetryRemote_Click
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            cmbChannelName.Text = cmbChannelName.Text.Trim();
+            cmbChannelName.Text = cmbChannelName.Text.Replace("|", "");
+            if (Channels.IsAccount(cmbChannelName.Text))
+            {
+                Interaction.MsgBox(cmbChannelName.Text + " is in use as an account name...", MsgBoxStyle.Information);
+                cmbChannelName.Focus();
+                return;
+            }
+
+            if (Channels.IsChannel(cmbChannelName.Text))
+            {
+                Interaction.MsgBox("The channel name " + cmbChannelName.Text + " is already in use...", MsgBoxStyle.Information);
+                cmbChannelName.Focus();
+            }
+            else
+            {
+                var stcNewChannel = default(TChannelProperties);
+                {
+                    var withBlock = stcNewChannel;
+                    withBlock.ChannelType = EChannelModes.PacketAGW;
+                    withBlock.ChannelName = cmbChannelName.Text;
+                    withBlock.Priority = Conversions.ToInteger(nudPriority.Value);
+                    withBlock.RemoteCallsign = txtRemoteCallsign.Text;
+                    withBlock.AGWTimeout = Conversions.ToInteger(nudActivityTimeout.Value);
+                    withBlock.AGWPacketLength = Conversions.ToInteger(nudPacketLength.Value);
+                    withBlock.AGWPort = cmbAGWPort.Text;
+                    withBlock.AGWScript = txtScript.Text;
+                    withBlock.AGWScriptTimeout = Conversions.ToInteger(nudScriptTimeout.Value);
+                    withBlock.Enabled = chkEnabled.Checked;
+                    withBlock.EnableAutoforward = true; // Packet Channels always enabled
+                }
+
+                Channels.AddChannel(ref stcNewChannel);
+                Channels.FillChannelCollection();
+                FillChannelList();
+                btnAdd.Enabled = false;
+                btnRemove.Enabled = true;
+                btnUpdate.Enabled = true;
+                // Me.Close()
+            }
+        } // btnAdd_Click
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            if (cmbChannelName.Items.Contains(cmbChannelName.Text) == false)
+            {
+                Interaction.MsgBox("The packet channel " + cmbChannelName.Text + " is not found...", MsgBoxStyle.Information);
+            }
+            else if (Interaction.MsgBox("Confirm removal of packet channel " + cmbChannelName.Text + "...", MsgBoxStyle.Question | MsgBoxStyle.YesNo) == MsgBoxResult.Yes)
+            {
+                Channels.RemoveChannel(cmbChannelName.Text);
+                Channels.FillChannelCollection();
+                FillChannelList();
+                // Me.Close()
+            }
+
+            ClearEntries();
+        } // btnRemove_Click
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            if (cmbChannelName.Items.Contains(cmbChannelName.Text) == false)
+            {
+                Interaction.MsgBox("The AGW packet channel " + cmbChannelName.Text + " is not found...", MsgBoxStyle.Information);
+                return;
+            }
+            else if (string.IsNullOrEmpty(cmbAGWPort.Text.Trim()))
+            {
+                Interaction.MsgBox("AGW Port not selected!...", MsgBoxStyle.Information);
+                return; // 
+            }
+            else if (string.IsNullOrEmpty(txtRemoteCallsign.Text.Trim()))
+            {
+                Interaction.MsgBox("No remote callsign entered!...", MsgBoxStyle.Information);
+                return;
+            }
+            else
+            {
+                var stcUpdateChannel = default(TChannelProperties);
+                {
+                    var withBlock = stcUpdateChannel;
+                    withBlock.ChannelType = EChannelModes.PacketAGW;
+                    withBlock.ChannelName = cmbChannelName.Text;
+                    withBlock.Priority = Conversions.ToInteger(nudPriority.Value);
+                    withBlock.RemoteCallsign = txtRemoteCallsign.Text;
+                    withBlock.AGWTimeout = Conversions.ToInteger(nudActivityTimeout.Value);
+                    withBlock.AGWPacketLength = Conversions.ToInteger(nudPacketLength.Value);
+                    withBlock.AGWPort = cmbAGWPort.Text;
+                    withBlock.AGWScript = txtScript.Text;
+                    withBlock.AGWScriptTimeout = Conversions.ToInteger(nudScriptTimeout.Value);
+                    withBlock.AGWMaxFrames = Conversions.ToInteger(nudMaxOutstanding.Value);
+                    withBlock.Enabled = chkEnabled.Checked;
+                    withBlock.EnableAutoforward = true; // Packet Channels always enabled
+                }
+
+                Channels.UpdateChannel(ref stcUpdateChannel);
+                Channels.FillChannelCollection();
+                FillChannelList();
+                // Me.Close()
+            }
+        } // btnUpdate_Click
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            Close();
+        } // btnClose_Click
+
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            Help.ShowHelp(this, Globals.SiteRootDirectory + @"Help\Paclink.chm", HelpNavigator.Topic, @"html\hs140.htm");
+        } // btnHelp_Click
+    }
+} // PacketAGWChannels
