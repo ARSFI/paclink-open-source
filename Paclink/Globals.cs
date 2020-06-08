@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
@@ -12,7 +13,6 @@ using System.Threading;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using nsoftware.IPWorks;
 using SyslogLib;
 using WinlinkServiceClasses;
 
@@ -863,29 +863,31 @@ namespace Paclink
         public static void InitializeLocalIPAddresses()
         {
             // Subroutine for initializing available and default IP addresses for multi home applications...
-
-            var objIPInfo = new Ipinfo();
-            int intCount = objIPInfo.AdapterCount;
-            strLocalIPAddresses = new string[intCount + 1];
+            NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
+            int intCount = adapters.Length;
+            var tempIPList = new List<string>();
             if (intCount > 0)
             {
-                strLocalIPAddresses[0] = "Default";
+                tempIPList.Add("Default");
             }
             else
             {
                 // MsgBox("No network or local IP interface found on this computer..." & vbCrLf & _
                 // "You many need to correct this problem and restart the program" & vbCrLf & _
                 // "for features requiring local or remote IP connections to work.", MsgBoxStyle.Critical)
-                objIPInfo.Dispose();
                 return;
             }
 
             // Get the dotted IP address for each adapter...
-            for (int intAdapterIndex = 1, loopTo = intCount; intAdapterIndex <= loopTo; intAdapterIndex++)
+            foreach (var adapter in adapters)
             {
-                objIPInfo.AdapterIndex = intAdapterIndex - 1;
-                strLocalIPAddresses[intAdapterIndex] = objIPInfo.AdapterIPAddress;
+                var ipProperties = adapter.GetIPProperties();
+                foreach (var ipAddress in ipProperties.UnicastAddresses)
+                {
+                    tempIPList.Add(ipAddress.Address.ToString());
+                }
             }
+            strLocalIPAddresses = tempIPList.ToArray();
 
             int intIndex = objINIFile.GetInteger("Properties", "Default Local IP Address Index", 0);
             if (intIndex < 0)

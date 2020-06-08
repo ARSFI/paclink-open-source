@@ -4,7 +4,6 @@ using System.Text;
 using System.Timers;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using nsoftware.IPWorks;
 
 namespace Paclink
 {
@@ -45,7 +44,6 @@ namespace Paclink
         private const string Reply554 = "554 Transaction failed or rejected" + Constants.vbCrLf;
         public string ConnectionId;
         public DateTime Timestamp;
-        private Netcode objNetcode;
         private SMTPPort objSMTPPort;
         private DateTime dttSessionStart;
         private System.Timers.Timer _tmrSessionTimer;
@@ -86,7 +84,6 @@ namespace Paclink
             Timestamp = DateAndTime.Now;
             objSMTPPort = parent;
             ConnectionId = strNewConnectionId;
-            objNetcode = new Netcode();
             strMessageBody = "";
             strCommandBuffer = "";
             SMTPState = SessionState.Connected;
@@ -106,9 +103,6 @@ namespace Paclink
             tmrSessionTimer.Stop();
             tmrSessionTimer.Dispose();
             tmrSessionTimer = null;
-            if (objNetcode is object)
-                objNetcode.Dispose();
-            objNetcode = null;
         } // Close
 
         public void DataIn(string strText)
@@ -746,10 +740,7 @@ namespace Paclink
 
             try
             {
-                objNetcode.Format = NetcodeFormats.fmtBase64;
-                objNetcode.EncodedData = strB64String;
-                objNetcode.Decode();
-                Base64DecodeRet = objNetcode.DecodedData;
+                Base64DecodeRet = ASCIIEncoding.ASCII.GetString(Convert.FromBase64String(strB64String));
             }
             catch
             {
@@ -767,10 +758,7 @@ namespace Paclink
 
             try
             {
-                objNetcode.Format = NetcodeFormats.fmtBase64;
-                objNetcode.DecodedData = strText;
-                objNetcode.Encode();
-                Base64EncodeRet = objNetcode.EncodedData;
+                Base64EncodeRet = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(strText));
             }
             catch
             {
@@ -785,17 +773,15 @@ namespace Paclink
         {
             // Does the decode and untangle of combined UserId and Password for a plain authorization...
 
-            byte[] bytDecodeBytes;
+            byte[] bytDecodeBytes = null;
             var strTempUserId = default(string);
             var strTempPassword = default(string);
             var intCount = default(int);
             var blnPassword = default(bool);
             try
             {
-                objNetcode.Format = NetcodeFormats.fmtBase64;
-                objNetcode.EncodedData = strB64String;
-                objNetcode.Decode();
-                intCount = Information.UBound(objNetcode.DecodedDataB);
+                bytDecodeBytes = Convert.FromBase64String(strB64String);
+                intCount = Information.UBound(bytDecodeBytes);
             }
             catch
             {
@@ -804,8 +790,6 @@ namespace Paclink
 
             if (intCount > 1)
             {
-                bytDecodeBytes = new byte[intCount + 1]; // should be at least 2 elements
-                bytDecodeBytes = objNetcode.DecodedDataB;
                 var loopTo = Information.UBound(bytDecodeBytes);
                 for (intCount = 0; intCount <= loopTo; intCount++)
                 {
