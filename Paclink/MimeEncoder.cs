@@ -1,7 +1,9 @@
 ﻿using System.Collections;
+using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.VisualBasic;
-using nsoftware.IPWorks;
+using MimeKit;
 
 namespace Paclink
 {
@@ -75,31 +77,50 @@ namespace Paclink
                 }
                 else
                 {
-                    var objMime = new Mime();
-                    objMime.ResetData();
-                    objMime.Parts.Add(new MIMEPart());
-                    objMime.Parts[0].DecodedString = Body;
-                    objMime.Parts[0].Encoding = MIMEPartEncodings.peQuotedPrintable;
-                    objMime.Parts[0].ContentType = "text/plain";
-                    for (int intIndex = 1, loopTo = Attachments.Count; intIndex <= loopTo; intIndex++)
+                    // Create message from existing data so we can copy the header and text
+                    // data to the new message.
+                    var multipartBoundaryRgx = Regex.Match(Body, "^--([^\r\n]+)");
+                    var multipartHeader = string.Empty;
+                    if (multipartBoundaryRgx.Success)
                     {
-                        Attachment stcAttachment = (Attachment)Attachments[intIndex - 1];
-                        var objPart = new MIMEPart();
-                        objPart.Filename = stcAttachment.FileName;
-                        objPart.Encoding = MIMEPartEncodings.peBase64;
-                        objPart.ContentType = "attachment";
-                        objPart.ContentTypeAttr = "name=\"" + stcAttachment.FileName + "\"";
-                        objPart.ContentDisposition = "attachment";
-                        objPart.ContentDispositionAttr = "filename=\"" + stcAttachment.FileName + "\"";
-                        objPart.DecodedStringB = stcAttachment.Image;
-                        objMime.Parts.Add(objPart);
+                        var multipartBoundary = multipartBoundaryRgx.Groups[1];
+                        multipartHeader = string.Format("Content-Type: multipart/alternative; boundary=\"{0}\"", multipartBoundary);
                     }
 
-                    objMime.EncodeToString();
-                    string strPartialEncodedMessage = objMime.Message;
-                    Header = Header + objMime.MessageHeadersString;
-                    Mime = Header + strPartialEncodedMessage;
-                    objMime.Dispose();
+                    var memStream = new MemoryStream(ASCIIEncoding.ASCII.GetBytes(Header + multipartHeader + "\r\n\r\n" + Body));
+                    var mimeParser = new MimeParser(memStream);
+                    var mimeMessage = mimeParser.ParseMessage();
+
+                    // Create new message and set body/attachments.
+                    var objMime = new MimeMessage();
+                    objMime.Headers.Clear();
+                    foreach (var header in mimeMessage.Headers)
+                    {
+                        objMime.Headers.Add(header);
+                    }
+
+                    var bodyBuilder = new BodyBuilder();
+                    bodyBuilder.TextBody = mimeMessage.TextBody;
+                    bodyBuilder.HtmlBody = mimeMessage.HtmlBody;
+                    foreach (Attachment attachment in Attachments)
+                    {
+                        bodyBuilder.Attachments.Add(attachment.FileName, attachment.Image);
+                    }
+
+                    objMime.Body = bodyBuilder.ToMessageBody();
+                    
+                    using (var headerStream = new MemoryStream())
+                    {
+                        objMime.Headers.WriteTo(headerStream);
+                        Header = ASCIIEncoding.ASCII.GetString(headerStream.ToArray());
+                    }
+
+                    using (var msgStream = new MemoryStream())
+                    {
+                        objMime.WriteTo(msgStream);
+                        Mime = ASCIIEncoding.ASCII.GetString(msgStream.ToArray());
+                    }
+
                     return true;
                 }
             }

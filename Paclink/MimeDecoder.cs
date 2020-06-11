@@ -1,6 +1,8 @@
 ﻿using System.Collections;
+using System.IO;
+using System.Text;
 using Microsoft.VisualBasic;
-using nsoftware.IPWorks;
+using MimeKit;
 
 namespace Paclink
 {
@@ -82,30 +84,47 @@ namespace Paclink
 
         public bool DecodeMime(string strMime)
         {
-            var objMime = new Mime();
-            aryAttachments.Clear();
             try
             {
-                objMime.Message = strMime;
-                objMime.DecodeFromString();
-                strMessageHeader = objMime.MessageHeadersString;
-                strMessageBody = objMime.Parts[0].DecodedString;
-                if (objMime.Parts.Count > 1)
+                var memStream = new MemoryStream(ASCIIEncoding.ASCII.GetBytes(strMime));
+                var mimeParser = new MimeParser(memStream);
+                aryAttachments.Clear();
+
+                foreach (var mimeMessage in mimeParser)
                 {
-                    foreach (MIMEPart objPart in objMime.Parts)
+                    using (var headerStream = new MemoryStream())
                     {
-                        if (!string.IsNullOrEmpty(objPart.Name))
+                        mimeMessage.Headers.WriteTo(headerStream);
+                        strMessageHeader = ASCIIEncoding.ASCII.GetString(headerStream.ToArray());
+                    }
+                    strMessageBody = mimeMessage.TextBody;
+
+                    foreach (var attachment in mimeMessage.Attachments)
+                    {
+                        if (!(attachment is MessagePart))
                         {
-                            Attachment stcAttachment;
-                            stcAttachment.FileName = objPart.Filename.Replace(Constants.vbCr, "").Replace(Constants.vbLf, "");
-                            stcAttachment.Image = objPart.DecodedStringB;
-                            aryAttachments.Add(stcAttachment);
+                            var part = (MimePart)attachment;
+                            var fileName = part.FileName;
+
+                            using (var stream = new MemoryStream())
+                            {
+                                part.Content.DecodeTo(stream);
+                                Attachment stcAttachment = new Attachment()
+                                {
+                                    FileName = part.FileName.Replace(Constants.vbCr, "").Replace(Constants.vbLf, ""),
+                                    Image = stream.ToArray()
+                                };
+                                aryAttachments.Add(stcAttachment);
+                            }
                         }
                     }
+
+                    // Only one message should exist.
+                    break;
                 }
 
                 return true;
-            }
+            } 
             catch
             {
                 return false;
