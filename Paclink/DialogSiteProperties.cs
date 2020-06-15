@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using nsoftware.IPWorks;
 
 namespace Paclink
 {
@@ -12,7 +13,6 @@ namespace Paclink
     {
         public DialogSiteProperties()
         {
-            objTestPort = new Ipdaemon();
             InitializeComponent();
             _Label26.Name = "Label26";
             _txtPOP3PortNumber.Name = "txtPOP3PortNumber";
@@ -57,9 +57,9 @@ namespace Paclink
             _Label14.Name = "Label14";
         }
 
-        private Ipdaemon _objTestPort;
+        private Socket _objTestPort;
 
-        private Ipdaemon objTestPort
+        private Socket objTestPort
         {
             [MethodImpl(MethodImplOptions.Synchronized)]
             get
@@ -256,11 +256,12 @@ namespace Paclink
                 Globals.objWL2KInterop.SetCallsign(Globals.SiteCallsign);
 
             // Test the POP3 and SMTP Port numbers
-            objTestPort.LocalPort = Globals.intPOP3PortNumber;
+            objTestPort = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try
             {
-                objTestPort.Listening = true;
-                objTestPort.Listening = false;
+                objTestPort.Bind(new IPEndPoint(IPAddress.Loopback, Globals.intPOP3PortNumber));
+                objTestPort.Listen(10);
+                objTestPort.Close();
             }
             catch
             {
@@ -268,18 +269,27 @@ namespace Paclink
                 txtPOP3PortNumber.Focus();
                 return;
             }
+            finally 
+            {
+                objTestPort = null;
+            }
 
-            objTestPort.LocalPort = Globals.intSMTPPortNumber;
+            objTestPort = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try
             {
-                objTestPort.Listening = true;
-                objTestPort.Listening = false;
+                objTestPort.Bind(new IPEndPoint(IPAddress.Loopback, Globals.intSMTPPortNumber));
+                objTestPort.Listen(10);
+                objTestPort.Close();
             }
             catch
             {
                 Interaction.MsgBox("Conflict on SMTP port number " + Globals.intSMTPPortNumber.ToString() + ".  Port is probably in use by another service or program. Try port number " + (Globals.intSMTPPortNumber + 1).ToString() + ".", MsgBoxStyle.Exclamation, "SMTP Port Conflict");
                 txtSMTPPortNumber.Focus();
                 return;
+            }
+            finally 
+            {
+                objTestPort = null;
             }
 
             Globals.objINIFile.WriteString("Properties", "Program Directory", Globals.SiteBinDirectory);
