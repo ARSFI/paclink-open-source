@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using nsoftware.IPWorks;
+using Org.BouncyCastle.Crypto.Paddings;
 
 namespace Paclink
 {
@@ -14,7 +17,6 @@ namespace Paclink
     {
         public DialogAGWEngine()
         {
-            objTCPPort = new Ipport();
             InitializeComponent();
             _btnCancel.Name = "btnCancel";
             _btnUpdate.Name = "btnUpdate";
@@ -42,9 +44,9 @@ namespace Paclink
         public static string AGWHost;
         public static string AGWUserId;
         public static string AGWPassword;
-        private Ipport _objTCPPort;
+        private TcpClient _objTCPPort;
 
-        private Ipport objTCPPort
+        private TcpClient objTCPPort
         {
             [MethodImpl(MethodImplOptions.Synchronized)]
             get
@@ -55,18 +57,7 @@ namespace Paclink
             [MethodImpl(MethodImplOptions.Synchronized)]
             set
             {
-                if (_objTCPPort != null)
-                {
-                    _objTCPPort.OnDataIn -= objTCPPort_OnDataIn;
-                    _objTCPPort.OnReadyToSend -= objTCPPort_OnReadyToSend;
-                }
-
                 _objTCPPort = value;
-                if (_objTCPPort != null)
-                {
-                    _objTCPPort.OnDataIn += objTCPPort_OnDataIn;
-                    _objTCPPort.OnReadyToSend += objTCPPort_OnReadyToSend;
-                }
             }
         }
 
@@ -171,37 +162,57 @@ namespace Paclink
             }
         } // rdoRemote_CheckedChanged
 
-        private void objTCPPort_OnDataIn(object sender, IpportDataInEventArgs e)
+        private void OnDataIn(byte[] buffer, int length)
         {
             int intDataLength;
+            while (true)
+            {
+                try
+                {
+                    if (Information.IsNothing(buffer))
+                        break;
+                    Globals.ConcatanateByteArrays(ref bytTCPData, buffer); // Add data to buffer array
+                    if (bytTCPData.Length < 36)
+                        break; // not a complete frame header
+                    intDataLength = Globals.ComputeLengthL(bytTCPData, 28); // get and decode the data length field from the header
+                    if (bytTCPData.Length < 36 + intDataLength)
+                        break; // not A complete "G" frame...
+                    if (Conversions.ToString((char)bytTCPData[4]) != "G")
+                    {
+                        bytTCPData = new byte[0];
+                        return;
+                    }
+
+                    tmrTimer10sec.Enabled = false;
+                    SetRemoteButtonStatus(true, Color.Lime);
+                    objTCPPort.Close();
+                    objTCPPort = null;
+                }
+                catch
+                {
+                    Logs.Exception("[AGWEngine, tcpOnDataIn] " + Information.Err().Description);
+                    SetRemoteButtonStatus(true, Color.Tomato);
+                }
+                break;
+            }
+
+            Task<int> t = null;
             try
             {
-                if (Information.IsNothing(e.TextB))
-                    return;
-                Globals.ConcatanateByteArrays(ref bytTCPData, e.TextB); // Add data to buffer array
-                if (bytTCPData.Length < 36)
-                    return; // not a complete frame header
-                intDataLength = Globals.ComputeLengthL(bytTCPData, 28); // get and decode the data length field from the header
-                if (bytTCPData.Length < 36 + intDataLength)
-                    return; // not A complete "G" frame...
-                if (Conversions.ToString((char)bytTCPData[4]) != "G")
+                t = objTCPPort.GetStream().ReadAsync(buffer, 0, 1024);
+                t.ContinueWith(k =>
                 {
-                    bytTCPData = new byte[0];
-                    return;
-                }
-
-                tmrTimer10sec.Enabled = false;
-                SetRemoteButtonStatus(true, Color.Lime);
-                objTCPPort.Disconnect();
+                    OnDataIn(buffer, k.Result);
+                });
+                t.Wait(0);
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[AGWEngine, tcpOnDataIn] " + Information.Err().Description);
-                SetRemoteButtonStatus(true, Color.Tomato);
+                // empty
             }
         } // objTCPPort_OnDataIn
 
-        private void objTCPPort_OnReadyToSend(object sender, IpportReadyToSendEventArgs e)
+        private void OnConnected(TcpClient sender)
         {
             if (!string.IsNullOrEmpty(txtAGWUserId.Text.Trim()))
             {
@@ -224,7 +235,7 @@ namespace Paclink
                 Array.Copy(Globals.ComputeLengthB(255 + 255), 0, bytTemp2, 28, 4);
                 asc.GetBytes(txtAGWUserId.Text.Trim(), 0, txtAGWUserId.Text.Trim().Length, bytTemp2, 36);
                 asc.GetBytes(txtAGWPassword.Text.Trim(), 0, txtAGWPassword.Text.Trim().Length, bytTemp2, 36 + 255);
-                objTCPPort.DataToSendB = bytTemp2;
+                objTCPPort.GetStream().Write(bytTemp2, 0, bytTemp2.Length);;
             }
             catch
             {
@@ -244,7 +255,7 @@ namespace Paclink
                 if (!objTCPPort.Connected)
                     return;
                 bytTemp[4] = (byte)Strings.Asc("G");
-                objTCPPort.DataToSendB = bytTemp;
+                objTCPPort.GetStream().Write(bytTemp, 0, bytTemp.Length);;
             }
             catch
             {
@@ -261,7 +272,8 @@ namespace Paclink
             Logs.Exception("[AGWEngine]10 sec timeout on remote AGWPE port info Request to " + txtAGWHost.Text);
             try
             {
-                objTCPPort.Disconnect();
+                objTCPPort.Close();
+                objTCPPort = null;
             }
             catch
             {
@@ -301,11 +313,38 @@ namespace Paclink
             SetRemoteButtonStatus(false, Color.Yellow);
             try
             {
-                objTCPPort.Connected = false;
+                if (objTCPPort != null)
+                {
+                    objTCPPort.Close();
+                    objTCPPort = null;
+                }
                 tmrTimer10sec.Enabled = true;
+                objTCPPort = new TcpClient();
                 if (Globals.strLocalIPAddress != "Default")
-                    objTCPPort.LocalHost = Globals.strLocalIPAddress;
-                objTCPPort.Connect(txtAGWHost.Text.Trim(), Conversions.ToInteger(txtAGWPort.Text.Trim()));
+                {
+                    objTCPPort.Client.Bind(new IPEndPoint(IPAddress.Parse(Globals.strLocalIPAddress), 0));
+                }
+                objTCPPort.ConnectAsync(txtAGWHost.Text.Trim(), Conversions.ToInteger(txtAGWPort.Text.Trim())).ContinueWith(t =>
+                {
+                    OnConnected(objTCPPort);
+
+                    byte[] buffer = new byte[1024];
+
+                    Task<int> task = null;
+                    try
+                    {
+                        task = objTCPPort.GetStream().ReadAsync(buffer, 0, 1024);
+                        task.ContinueWith(t =>
+                        {
+                            OnDataIn(buffer, t.Result);
+                        });
+                        task.Wait(0);
+                    }
+                    catch (Exception e)
+                    {
+                        // empty
+                    }
+                }).Wait(0);
             }
             catch
             {

@@ -2,12 +2,13 @@
 using System.Collections;
 using System.Diagnostics;
 using System.IO;
+using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using nsoftware.IPWorks;
 
 namespace Paclink
 {
@@ -15,7 +16,6 @@ namespace Paclink
     {
         public ClientAGW()
         {
-            objTCPPort = new Ipport();
             Globals.blnChannelActive = true;
         } // New
 
@@ -23,9 +23,9 @@ namespace Paclink
         private ProtocolInitial objProtocol;
         private DateTime dttStartDisconnect;
         private ConnectedCalls ConnectedCall; // holds the connected call structure
-        private Ipport _objTCPPort;
+        private TcpClient _objTCPPort;
 
-        private Ipport objTCPPort
+        private TcpClient objTCPPort
         {
             [MethodImpl(MethodImplOptions.Synchronized)]
             get
@@ -36,20 +36,7 @@ namespace Paclink
             [MethodImpl(MethodImplOptions.Synchronized)]
             set
             {
-                if (_objTCPPort != null)
-                {
-                    _objTCPPort.OnDataIn -= objTCPPort_OnDataIn;
-                    _objTCPPort.OnDisconnected -= objTCPPort_OnDisconnected;
-                    _objTCPPort.OnReadyToSend -= objTCPPort_OnReadyToSend;
-                }
-
                 _objTCPPort = value;
-                if (_objTCPPort != null)
-                {
-                    _objTCPPort.OnDataIn += objTCPPort_OnDataIn;
-                    _objTCPPort.OnDisconnected += objTCPPort_OnDisconnected;
-                    _objTCPPort.OnReadyToSend += objTCPPort_OnReadyToSend;
-                }
             }
         }
 
@@ -161,7 +148,7 @@ namespace Paclink
                                 {
                                     try
                                     {
-                                        objTCPPort.DataToSendB = objQ.Data;
+                                        objTCPPort.GetStream().Write(objQ.Data, 0, objQ.Data.Length);
                                     }
                                     catch
                                     {
@@ -179,7 +166,7 @@ namespace Paclink
                             {
                                 try
                                 {
-                                    objTCPPort.DataToSendB = objQ.Data;
+                                    objTCPPort.GetStream().Write(objQ.Data, 0, objQ.Data.Length);
                                     Globals.UpdateProgressBar(objQ.Data.Length - 36);
                                 }
                                 catch
@@ -251,7 +238,7 @@ namespace Paclink
 
             try
             {
-                objTCPPort.Disconnect();
+                objTCPPort.Close();
                 Thread.Sleep(200);
             }
             catch
@@ -302,7 +289,7 @@ namespace Paclink
                 ConnectedCall = new ConnectedCalls();
                 try
                 {
-                    objTCPPort.Disconnect();
+                    objTCPPort.Close();
                     var dttDisconStart = DateAndTime.Now;
                     while (DateAndTime.Now.Subtract(dttDisconStart).TotalSeconds < 10 & objTCPPort.Connected)
                         Thread.Sleep(100);
@@ -320,9 +307,29 @@ namespace Paclink
 
                 bytDataBuffer = new byte[0]; // null out the data buffer
                 Globals.queChannelDisplay.Enqueue("R*** Connecting to Packet Engine");
-                objTCPPort.KeepAlive = true;
-                objTCPPort.Timeout = 30;
-                objTCPPort.Connect(DialogAGWEngine.AGWHost, DialogAGWEngine.AGWTCPPort);
+                objTCPPort.ReceiveTimeout = 30;
+                //objTCPPort.KeepAlive = true;
+                objTCPPort.ConnectAsync(DialogAGWEngine.AGWHost, DialogAGWEngine.AGWTCPPort).ContinueWith(t =>
+                {
+                    OnConnected(objTCPPort);
+
+                    byte[] buffer = new byte[1024];
+
+                    Task<int> task = null;
+                    try
+                    {
+                        task = objTCPPort.GetStream().ReadAsync(buffer, 0, 1024);
+                        task.ContinueWith(t =>
+                        {
+                            OnDataIn(buffer, t.Result);
+                        });
+                        task.Wait(0);
+                    }
+                    catch (Exception e)
+                    {
+                        OnError(task.Exception);
+                    }
+                });
                 var dttStart = DateAndTime.Now;
                 while (DateAndTime.Now.Subtract(dttStart).TotalSeconds < 10 & !blnLoggedIn)
                 {
@@ -513,7 +520,7 @@ namespace Paclink
             objASCIIEncoding.GetBytes(strCall.ToUpper().Trim(), 0, strCall.Trim().Length, bytTemp, 8);
             try
             {
-                objTCPPort.DataToSendB = bytTemp;
+                objTCPPort.GetStream().Write(bytTemp, 0, bytTemp.Length);
             }
             catch
             {
@@ -531,7 +538,7 @@ namespace Paclink
             objASCIIEncoding.GetBytes(strCall.ToUpper().Trim(), 0, strCall.Trim().Length, bytTemp, 8);
             try
             {
-                objTCPPort.DataToSendB = bytTemp;
+                objTCPPort.GetStream().Write(bytTemp, 0, bytTemp.Length);
             }
             catch
             {
@@ -594,9 +601,9 @@ namespace Paclink
                     objASCIIEncoding.GetBytes("d", 0, 1, bytTemp, 4);
                     objASCIIEncoding.GetBytes(Globals.SiteCallsign, 0, Globals.SiteCallsign.Length, bytTemp, 8);
                     objASCIIEncoding.GetBytes(ConnectedCall.Callsign, 0, ConnectedCall.Callsign.Length, bytTemp, 18);
-                    objTCPPort.DataToSendB = bytTemp;
+                    objTCPPort.GetStream().Write(bytTemp, 0, bytTemp.Length);
                     Thread.Sleep(1000);
-                    objTCPPort.DataToSendB = bytTemp; // Send the disconnect twice to cause immediate disconnect
+                    objTCPPort.GetStream().Write(bytTemp, 0, bytTemp.Length); // Send the disconnect twice to cause immediate disconnect
                     return true;
                 }
                 else
@@ -669,7 +676,7 @@ namespace Paclink
             objASCIIEncoding.GetBytes(Globals.SiteCallsign, 0, Globals.SiteCallsign.Length, bytTemp, 8);
             try
             {
-                objTCPPort.DataToSendB = bytTemp;
+                objTCPPort.GetStream().Write(bytTemp, 0, bytTemp.Length);
             }
             catch
             {
@@ -751,23 +758,45 @@ namespace Paclink
             return -1;
         }
 
-        private void objTCPPort_OnDataIn(object sender, IpportDataInEventArgs e)
+        private void OnDataIn(object s, int bytesRead)
         {
-            // Reads all pending bytes in the inbound TCP port and places them as byte arrays on
-            // the TCP port input queue...
-            if (Information.IsNothing(e.TextB))
-                return;
-            quePortInput.Enqueue(e.TextB);
-        }
+            if (bytesRead > 0)
+            {
+                byte[] buffer = (byte[])s;
+                byte[] newBuffer = new byte[bytesRead];
+                Array.Copy(buffer, newBuffer, bytesRead);
+                quePortInput.Enqueue(newBuffer);
 
-        private void objTCPPort_OnDisconnected(object sender, IpportDisconnectedEventArgs e)
+                Task<int> t = null;
+                try
+                {
+                    t = objTCPPort.GetStream().ReadAsync(buffer, 0, 1024);
+                    t.ContinueWith(k =>
+                    {
+                        OnDataIn(buffer, k.Result);
+                    });
+                    t.Wait(0);
+                }
+                catch (Exception e)
+                {
+                    OnError(t.Exception);
+                }
+            }
+            else
+            {
+                Disconnect();
+            }
+        } // OnDataIn
+
+
+        private void OnError(Exception e)
         {
             // MainForm.UpdateChannelText("*** TCP DISCONNECT from PACKET ENGINE", "PURPLE")
             Globals.queChannelDisplay.Enqueue("R*** TCP DISCONNECT from PACKET ENGINE");
             blnLoggedIn = false;
         }
 
-        private void objTCPPort_OnReadyToSend(object sender, IpportReadyToSendEventArgs e)
+        private void OnConnected(object sender)
         {
             try
             {
@@ -780,7 +809,7 @@ namespace Paclink
                     Array.Copy(ComputeLengthB(255 + 255), 0, bTemp, 28, 4);
                     objASCIIEncoding.GetBytes(DialogAGWEngine.AGWUserId, 0, DialogAGWEngine.AGWUserId.Length, bTemp, 36);
                     objASCIIEncoding.GetBytes(DialogAGWEngine.AGWPassword, 0, DialogAGWEngine.AGWPassword.Length, bTemp, 36 + 255);
-                    objTCPPort.DataToSendB = bTemp;
+                    objTCPPort.GetStream().Write(bTemp, 0, bTemp.Length);
                     Thread.Sleep(500);
                 }
                 // after login call for registration first 
@@ -837,7 +866,7 @@ namespace Paclink
                     Globals.queStatusDisplay.Enqueue("Connecting");
                     Globals.queChannelDisplay.Enqueue("R*** Connecting to " + strTarget);
                     intConnectTimer = 0;
-                    objTCPPort.DataToSendB = bytTemp;
+                    objTCPPort.GetStream().Write(bytTemp, 0, bytTemp.Length);
                     enmState = ELinkStates.Connecting;
                     return true;
                 }
@@ -1013,7 +1042,7 @@ namespace Paclink
                 AppendBuffer(ref bytTemp, bytData);
                 try
                 {
-                    objTCPPort.DataToSendB = bytTemp;
+                    objTCPPort.GetStream().Write(bytTemp, 0, bytTemp.Length);
                 }
                 catch
                 {

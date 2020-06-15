@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using nsoftware.IPWorks;
 
 namespace Paclink
 {
@@ -13,7 +14,6 @@ namespace Paclink
     {
         public DialogPacketAGWChannels()
         {
-            objTCPPort = new Ipport();
             InitializeComponent();
             _cmbAGWPort.Name = "cmbAGWPort";
             _Label11.Name = "Label11";
@@ -45,9 +45,9 @@ namespace Paclink
         }
 
         private TChannelProperties stcSelectedChannel;
-        private Ipport _objTCPPort;
+        private TcpClient _objTCPPort;
 
-        private Ipport objTCPPort
+        private TcpClient objTCPPort
         {
             [MethodImpl(MethodImplOptions.Synchronized)]
             get
@@ -58,18 +58,7 @@ namespace Paclink
             [MethodImpl(MethodImplOptions.Synchronized)]
             set
             {
-                if (_objTCPPort != null)
-                {
-                    _objTCPPort.OnDataIn -= objTCPPort_OnDataIn;
-                    _objTCPPort.OnReadyToSend -= objTCPPort_OnReadyToSend;
-                }
-
                 _objTCPPort = value;
-                if (_objTCPPort != null)
-                {
-                    _objTCPPort.OnDataIn += objTCPPort_OnDataIn;
-                    _objTCPPort.OnReadyToSend += objTCPPort_OnReadyToSend;
-                }
             }
         }
 
@@ -225,9 +214,13 @@ namespace Paclink
                     {
                         cmbAGWPort.Items.Clear();
                         cmbAGWPort.Text = "Requesting port info from remote AGW Engine @ host " + DialogAGWEngine.AGWHost;
-                        objTCPPort.Connected = false;
+                        if (objTCPPort != null) objTCPPort.Close();
                         tmrTimer10sec.Enabled = true;
-                        objTCPPort.Connect(DialogAGWEngine.AGWHost, DialogAGWEngine.AGWTCPPort);
+                        objTCPPort = new TcpClient();
+                        objTCPPort.ConnectAsync(DialogAGWEngine.AGWHost, DialogAGWEngine.AGWTCPPort).ContinueWith(t =>
+                        {
+                            OnConnected(this);
+                        }).Wait(0);
                     }
                     catch
                     {
@@ -293,7 +286,7 @@ namespace Paclink
                 Array.Copy(Globals.ComputeLengthB(255 + 255), 0, bytTemp2, 28, 4);
                 asc.GetBytes(DialogAGWEngine.AGWUserId, 0, DialogAGWEngine.AGWUserId.Length, bytTemp2, 36);
                 asc.GetBytes(DialogAGWEngine.AGWPassword, 0, DialogAGWEngine.AGWPassword.Length, bytTemp2, 36 + 255);
-                objTCPPort.DataToSendB = bytTemp2;
+                objTCPPort.GetStream().Write(bytTemp2, 0, bytTemp2.Length);;
             }
             catch
             {
@@ -310,10 +303,10 @@ namespace Paclink
             var bytTemp = new byte[36];
             try
             {
-                if (!objTCPPort.Connected)
+                if (objTCPPort == null || !objTCPPort.Connected)
                     return;
                 bytTemp[4] = (byte)Strings.Asc("G");
-                objTCPPort.DataToSendB = bytTemp;
+                objTCPPort.GetStream().Write(bytTemp, 0, bytTemp.Length);;
             }
             catch
             {
@@ -323,58 +316,85 @@ namespace Paclink
             }
         } // GetAGWPortInfo
 
-        private void objTCPPort_OnDataIn(object sender, IpportDataInEventArgs e)
+        private void OnDataIn(byte[] buffer, int length)
         {
-            int intDataLength;
+            while (true)
+            {
+                int intDataLength;
+                try
+                {
+                    if (length <= 0)
+                    {
+                        objTCPPort.Close();
+                        objTCPPort = null;
+                        return;
+                    }
+                    byte[] result = new byte[length];
+                    Array.Copy(buffer, result, length);
+                    Globals.ConcatanateByteArrays(ref bytTCPData, result); // Add data to buffer array
+                    if (bytTCPData.Length < 36)
+                        break; // not a complete frame header
+                    intDataLength = Globals.ComputeLengthL(bytTCPData, 28); // get and decode the data length field from the header
+                    if (bytTCPData.Length < 36 + intDataLength)
+                        break; // not A complete "G" frame...
+                    if (Conversions.ToString((char)bytTCPData[4]) != "G")
+                    {
+                        bytTCPData = new byte[0];
+                        break;
+                    }
+
+                    tmrTimer10sec.Enabled = false;
+                    objTCPPort.Close();
+                    objTCPPort = null;
+                    string strPort1Info = "";
+                    var bytTemp1 = new byte[intDataLength];
+                    Array.Copy(bytTCPData, 36, bytTemp1, 0, bytTemp1.Length);
+                    string strPortInfo = Globals.GetString(bytTemp1);
+                    int intPtr1 = strPortInfo.IndexOf(";");
+                    int intPortCnt = Conversions.ToInteger(strPortInfo.Substring(0, intPtr1));
+                    for (int i = 1, loopTo = intPortCnt; i <= loopTo; i++)
+                    {
+                        int intPtr2 = strPortInfo.IndexOf("with ", intPtr1);
+                        if (intPtr2 == -1)
+                            break;
+                        intPtr1 = strPortInfo.IndexOf(";", intPtr2 + 5);
+                        if (intPtr1 == -1)
+                            break;
+                        string strTemp = i.ToString() + ": ";
+                        strTemp += strPortInfo.Substring(intPtr2 + 5, intPtr1 - (intPtr2 + 5)).Trim();
+                        AddAGWPortInfo(strTemp, "", false);
+                        if (i == 1)
+                            strPort1Info = strTemp;
+                    }
+
+                    AddAGWPortInfo("", strPort1Info, true); // update to text to port 1 and enable retry button.
+                }
+                catch
+                {
+                    Logs.Exception("[AGWEngine, tcpOnDataIn] " + Information.Err().Description);
+                    AddAGWPortInfo("", "Port Info request failure with host " + DialogAGWEngine.AGWHost, true);
+                }
+                break;
+            }
+
+            Task<int> t = null;
             try
             {
-                if (Information.IsNothing(e.TextB))
-                    return;
-                Globals.ConcatanateByteArrays(ref bytTCPData, e.TextB); // Add data to buffer array
-                if (bytTCPData.Length < 36)
-                    return; // not a complete frame header
-                intDataLength = Globals.ComputeLengthL(bytTCPData, 28); // get and decode the data length field from the header
-                if (bytTCPData.Length < 36 + intDataLength)
-                    return; // not A complete "G" frame...
-                if (Conversions.ToString((char)bytTCPData[4]) != "G")
+                t = objTCPPort.GetStream().ReadAsync(buffer, 0, 1024);
+                t.ContinueWith(k =>
                 {
-                    bytTCPData = new byte[0];
-                    return;
-                }
-
-                tmrTimer10sec.Enabled = false;
-                objTCPPort.Disconnect();
-                string strPort1Info = "";
-                var bytTemp1 = new byte[intDataLength];
-                Array.Copy(bytTCPData, 36, bytTemp1, 0, bytTemp1.Length);
-                string strPortInfo = Globals.GetString(bytTemp1);
-                int intPtr1 = strPortInfo.IndexOf(";");
-                int intPortCnt = Conversions.ToInteger(strPortInfo.Substring(0, intPtr1));
-                for (int i = 1, loopTo = intPortCnt; i <= loopTo; i++)
-                {
-                    int intPtr2 = strPortInfo.IndexOf("with ", intPtr1);
-                    if (intPtr2 == -1)
-                        break;
-                    intPtr1 = strPortInfo.IndexOf(";", intPtr2 + 5);
-                    if (intPtr1 == -1)
-                        break;
-                    string strTemp = i.ToString() + ": ";
-                    strTemp += strPortInfo.Substring(intPtr2 + 5, intPtr1 - (intPtr2 + 5)).Trim();
-                    AddAGWPortInfo(strTemp, "", false);
-                    if (i == 1)
-                        strPort1Info = strTemp;
-                }
-
-                AddAGWPortInfo("", strPort1Info, true); // update to text to port 1 and enable retry button.
+                    OnDataIn(buffer, k.Result);
+                });
+                t.Wait(0);
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[AGWEngine, tcpOnDataIn] " + Information.Err().Description);
-                AddAGWPortInfo("", "Port Info request failure with host " + DialogAGWEngine.AGWHost, true);
+                // empty
             }
+
         } // objTCPPort_OnDataIn
 
-        private void objTCPPort_OnReadyToSend(object sender, IpportReadyToSendEventArgs e)
+        private void OnConnected(object sender)
         {
             if (!string.IsNullOrEmpty(DialogAGWEngine.AGWUserId))
             {
@@ -383,6 +403,23 @@ namespace Paclink
 
             bytTCPData = new byte[0];
             GetAGWPortInfo();    // Request port info from AGWPE
+
+            byte[] buffer = new byte[1024];
+
+            Task<int> task = null;
+            try
+            {
+                task = objTCPPort.GetStream().ReadAsync(buffer, 0, 1024);
+                task.ContinueWith(t =>
+                {
+                    OnDataIn(buffer, t.Result);
+                });
+                task.Wait(0);
+            }
+            catch (Exception e)
+            {
+                // empty
+            }
         } // objTCPPort_OnReadyToSend
 
         private void tmrTimer10sec_Tick(object sender, EventArgs e)
@@ -392,7 +429,8 @@ namespace Paclink
             AddAGWPortInfo("", "Timeout on port info request to remote computer AGW Engine @ host " + DialogAGWEngine.AGWHost, true);
             try
             {
-                objTCPPort.Disconnect();
+                objTCPPort.Close();
+                objTCPPort = null;
             }
             catch
             {
