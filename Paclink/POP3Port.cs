@@ -1,6 +1,7 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Net;
+using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using Microsoft.VisualBasic;
-using nsoftware.IPWorks;
 
 namespace Paclink
 {
@@ -8,9 +9,9 @@ namespace Paclink
     {
         public string LocalHost = "127.0.0.1";
         public int LocalPort = 110;
-        private Ipdaemon _objTCPPort;
+        private Socket _objTCPPort;
 
-        private Ipdaemon objTCPPort
+        private Socket objTCPPort
         {
             [MethodImpl(MethodImplOptions.Synchronized)]
             get
@@ -35,12 +36,6 @@ namespace Paclink
             tmrTimeout.AutoReset = false;
             tmrTimeout.Elapsed += CheckTimeouts;
             tmrTimeout.Start();
-            objTCPPort = new Ipdaemon();
-            objTCPPort.OnConnectionRequest += OnConnectionRequest;
-            objTCPPort.OnConnected += OnConnected;
-            objTCPPort.OnReadyToSend += OnReadyToSend;
-            objTCPPort.OnDataIn += OnDataIn;
-            objTCPPort.OnDisconnected += OnDisconnected;
         } // New
 
         private void CheckTimeouts(object s, System.Timers.ElapsedEventArgs e)
@@ -54,7 +49,6 @@ namespace Paclink
                     {
                         if (objPOP3Sessions[intIndex].Timestamp > DateAndTime.Now.AddMinutes(-30))
                         {
-                            objTCPPort.Disconnect(objPOP3Sessions[intIndex].ConnectionId);
                             objPOP3Sessions[intIndex].Close();
                             objPOP3Sessions[intIndex] = null;
                         }
@@ -73,14 +67,13 @@ namespace Paclink
             // This to insure a clean shutdown of all TCP Ports...
             try
             {
-                objTCPPort.Linger = false;
+                objTCPPort.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
                 for (int intIndex = 0; intIndex <= 9; intIndex++)
                 {
                     try
                     {
                         if (objPOP3Sessions[intIndex] is object)
                         {
-                            objTCPPort.Disconnect(objPOP3Sessions[intIndex].ConnectionId);
                             objPOP3Sessions[intIndex].Close();
                             objPOP3Sessions[intIndex] = null;
                         }
@@ -90,7 +83,7 @@ namespace Paclink
                     }
                 }
 
-                objTCPPort.Shutdown();
+                objTCPPort.Close();
                 objTCPPort.Dispose();
             }
             catch
@@ -102,16 +95,23 @@ namespace Paclink
         public void Listen(bool blnValue)
         {
             // This method is called to active the port...
-            objTCPPort.Linger = false;
-            objTCPPort.Listening = false;
+            if (objTCPPort != null)
+            {
+                objTCPPort.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
+                objTCPPort.Close();
+                objTCPPort = null;
+            }
+
             if (blnValue)
             {
+                objTCPPort = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                objTCPPort.Bind(new IPEndPoint(IPAddress.Parse(LocalHost), LocalPort));
+                objTCPPort.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Linger, true);
+                objTCPPort.Listen(10);
+                objTCPPort.AcceptAsync().ContinueWith(t =>
                 {
-                    var withBlock = objTCPPort;
-                    withBlock.Linger = true;
-                    withBlock.LocalPort = LocalPort;
-                    withBlock.Listening = true;
-                }
+                    OnConnected(t.Result);
+                }).Wait(0);
             }
         } // Listen
 
@@ -128,92 +128,37 @@ namespace Paclink
             return intCount;
         } // ConnectionCount
 
-        public void DataToSend(string strText, string strConnectionId)
-        {
-            objTCPPort.Send(strConnectionId, Globals.GetBytes(strText));
-        } // DataToSend
-
-        public void Disconnect(string strConnectionId)
-        {
-            objTCPPort.Disconnect(strConnectionId);
-            for (int intIndex = 0; intIndex <= 9; intIndex++)
-            {
-                if (!Information.IsNothing(objPOP3Sessions[intIndex]) && (objPOP3Sessions[intIndex].ConnectionId ?? "") == (strConnectionId ?? ""))
-                {
-                    objPOP3Sessions[intIndex].Close();
-                    objPOP3Sessions[intIndex] = null;
-                }
-            }
-        } // Disconnect
-
-        private void OnConnectionRequest(object s, IpdaemonConnectionRequestEventArgs e)
+        private void OnConnected(Socket s)
         {
             if (ConnectionCount() >= 10)
-                e.Accept = false;
-        } // OnConnectionRequest
-
-        private void OnConnected(object s, IpdaemonConnectedEventArgs e)
-        {
-            for (int intIndex = 0; intIndex <= 9; intIndex++)
             {
-                if (Information.IsNothing(objPOP3Sessions[intIndex]))
-                {
-                    objPOP3Sessions[intIndex] = new POP3Session(this, e.ConnectionId);
-                    break;
-                }
+                s.Close();
             }
-        } // OnConnected
-
-        private void OnReadyToSend(object s, IpdaemonReadyToSendEventArgs e)
-        {
-            try
+            else
             {
-                foreach (POP3Session objPOP3Session in objPOP3Sessions)
+                for (int intIndex = 0; intIndex <= 9; intIndex++)
                 {
-                    try
+                    if (Information.IsNothing(objPOP3Sessions[intIndex]))
                     {
-                        if ((objPOP3Session.ConnectionId ?? "") == (e.ConnectionId ?? ""))
-                        {
-                            objPOP3Session.DataIn("NewConnection");
-                            break;
-                        }
-                    }
-                    catch
-                    {
-                    }
-                }
-            }
-            catch
-            {
-                Logs.Exception("[POP3Port, OnReadyToSend]: " + Information.Err().Description);
-            }
-        } // OnReadyToSend
-
-        private void OnDataIn(object s, IpdaemonDataInEventArgs e)
-        {
-            foreach (POP3Session objPOP3Session in objPOP3Sessions)
-            {
-                try
-                {
-                    if ((objPOP3Session.ConnectionId ?? "") == (e.ConnectionId ?? ""))
-                    {
-                        objPOP3Session.DataIn(e.Text);
+                        objPOP3Sessions[intIndex] = new POP3Session(s);
+                        objPOP3Sessions[intIndex].OnDisconnect += OnDisconnected;
                         break;
                     }
                 }
-                catch
-                {
-                }
             }
-        } // OnDataIn
 
-        private void OnDisconnected(object s, IpdaemonDisconnectedEventArgs e)
+            objTCPPort.AcceptAsync().ContinueWith(t =>
+            {
+                OnConnected(t.Result);
+            }).Wait(0);
+        } // OnConnected
+
+        private void OnDisconnected(POP3Session s)
         {
             for (int intIndex = 0; intIndex <= 9; intIndex++)
             {
-                if (!Information.IsNothing(objPOP3Sessions[intIndex]) && (objPOP3Sessions[intIndex].ConnectionId ?? "") == (e.ConnectionId ?? ""))
+                if (objPOP3Sessions[intIndex] == s)
                 {
-                    objPOP3Sessions[intIndex].Close();
                     objPOP3Sessions[intIndex] = null;
                 }
             }

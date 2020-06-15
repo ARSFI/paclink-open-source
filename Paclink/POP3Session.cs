@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Net.Sockets;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Timers;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
@@ -9,6 +11,9 @@ namespace Paclink
 {
     public class POP3Session
     {
+        public delegate void DisconnectHandler(POP3Session conn);
+        public event DisconnectHandler OnDisconnect;
+
         // Declaration of SessionState of the POP3 Server...
         private enum SessionState
         {
@@ -20,7 +25,7 @@ namespace Paclink
         // Initialize the basic POP3Server Reply String Constants
         private const string ReplyOK = "+OK " + Constants.vbCrLf;
         private const string ReplyERR = "-ERR " + Constants.vbCrLf;
-        public string ConnectionId;
+        public Socket connection;
         public string AuthorizedUser;
         public DateTime Timestamp;
         private POP3Port objPOP3Port;
@@ -55,11 +60,10 @@ namespace Paclink
         private int intNumberOfMimeFiles;
         private int intTotalBytes;
 
-        public POP3Session(POP3Port parent, string strNewConnectionId)
+        public POP3Session(Socket sock)
         {
             Timestamp = DateAndTime.Now;
-            objPOP3Port = parent;
-            ConnectionId = strNewConnectionId;
+            connection = sock;
             dttSessionStart = DateAndTime.Now.AddMinutes(5);
             tmrSessionTimer = new System.Timers.Timer();
             tmrSessionTimer.Elapsed += OnSessionTimer;
@@ -67,6 +71,9 @@ namespace Paclink
             tmrSessionTimer.Interval = 60000;
             tmrSessionTimer.AutoReset = true;
             tmrSessionTimer.Start();
+
+            // Begin session
+            DataIn("NewConnection");
         } // New
 
         public void Close()
@@ -74,24 +81,43 @@ namespace Paclink
             tmrSessionTimer.Stop();
             tmrSessionTimer.Dispose();
             tmrSessionTimer = null;
+
+            connection.Close();
+            OnDisconnect?.Invoke(this);
         } // Close
 
         public void DataIn(string strText)
         {
             string strResponse = Protocol(strText);
             if (!string.IsNullOrEmpty(strResponse))
-                objPOP3Port.DataToSend(strResponse, ConnectionId);
+                connection.Send(UTF8Encoding.UTF8.GetBytes(strResponse));
+
+            if (connection.Connected)
+            {
+                byte[] receiveBuffer = new byte[1024];
+                connection.ReceiveAsync(new ArraySegment<byte>(receiveBuffer, 0, 1024), SocketFlags.None).ContinueWith(t =>
+                {
+                    if (t.Result > 0)
+                    {
+                        byte[] dataIn = new byte[t.Result];
+                        Array.Copy(receiveBuffer, dataIn, t.Result);
+                        DataIn(UTF8Encoding.UTF8.GetString(dataIn));
+                    }
+                    else
+                    {
+                        Close();
+                    }
+                }).Wait(0);
+            }
         } // DataIn
 
         private void OnSessionTimer(object s, ElapsedEventArgs e)
         {
             if (dttSessionStart < DateAndTime.Now)
             {
-                tmrSessionTimer.Stop();
-                tmrSessionTimer.Dispose();
                 try
                 {
-                    objPOP3Port.Disconnect(ConnectionId);
+                    Close();
                 }
                 catch
                 {
