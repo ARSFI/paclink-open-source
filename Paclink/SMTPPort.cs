@@ -1,6 +1,7 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Net;
+using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using Microsoft.VisualBasic;
-using nsoftware.IPWorks;
 
 namespace Paclink
 {
@@ -10,20 +11,20 @@ namespace Paclink
     {
         public string LocalHost = "127.0.0.1";
         public int LocalPort = 25;
-        private Ipdaemon _objIPDaemon;
+        private Socket _daemonSocket;
 
-        private Ipdaemon objIPDaemon
+        private Socket objIPDaemon
         {
             [MethodImpl(MethodImplOptions.Synchronized)]
             get
             {
-                return _objIPDaemon;
+                return _daemonSocket;
             }
 
             [MethodImpl(MethodImplOptions.Synchronized)]
             set
             {
-                _objIPDaemon = value;
+                _daemonSocket = value;
             }
         }
 
@@ -37,12 +38,6 @@ namespace Paclink
             tmrTimeout.AutoReset = false;
             tmrTimeout.Elapsed += CheckTimeouts;
             tmrTimeout.Start();
-            objIPDaemon = new Ipdaemon();
-            objIPDaemon.OnConnectionRequest += OnConnectionRequest;
-            objIPDaemon.OnConnected += OnConnected;
-            objIPDaemon.OnReadyToSend += OnReadyToSend;
-            objIPDaemon.OnDataIn += OnDataIn;
-            objIPDaemon.OnDisconnected += OnDisconnected;
         } // New
 
         private void CheckTimeouts(object s, System.Timers.ElapsedEventArgs e)
@@ -56,7 +51,6 @@ namespace Paclink
                     {
                         if (objSMTPSessions[intIndex].Timestamp > DateAndTime.Now.AddMinutes(-30))
                         {
-                            objIPDaemon.Disconnect(objSMTPSessions[intIndex].ConnectionId);
                             objSMTPSessions[intIndex].Close();
                             objSMTPSessions[intIndex] = null;
                         }
@@ -73,16 +67,23 @@ namespace Paclink
         public void Listen(bool blnValue)
         {
             // This method is called to active the port...
-            objIPDaemon.Linger = false;
-            objIPDaemon.Listening = false;
+            if (objIPDaemon != null)
+            {
+                objIPDaemon.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
+                objIPDaemon.Close();
+                objIPDaemon = null;
+            }
+
             if (blnValue)
             {
+                objIPDaemon = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                objIPDaemon.Bind(new IPEndPoint(IPAddress.Parse(LocalHost), LocalPort));
+                objIPDaemon.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Linger, true);
+                objIPDaemon.Listen(10);
+                objIPDaemon.AcceptAsync().ContinueWith(t =>
                 {
-                    var withBlock = objIPDaemon;
-                    withBlock.Linger = true;
-                    withBlock.LocalPort = LocalPort;
-                    withBlock.Listening = true;
-                }
+                    OnConnected(t.Result);
+                }).Wait(0);
             }
         } // Listen
 
@@ -91,21 +92,13 @@ namespace Paclink
             // This to insure a clean shutdown of all TCP Ports... 
             try
             {
-                objIPDaemon.Linger = false;
+                objIPDaemon.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
                 for (int intIndex = 0; intIndex <= 9; intIndex++)
                 {
                     try
                     {
                         if (!Information.IsNothing(objSMTPSessions[intIndex]))
                         {
-                            try
-                            {
-                                objIPDaemon.Disconnect(objSMTPSessions[intIndex].ConnectionId);
-                            }
-                            catch
-                            {
-                            }
-
                             objSMTPSessions[intIndex].Close();
                             objSMTPSessions[intIndex] = null;
                         }
@@ -116,7 +109,7 @@ namespace Paclink
                     }
                 }
 
-                objIPDaemon.Shutdown();
+                objIPDaemon.Close();
                 objIPDaemon.Dispose();
             }
             catch
@@ -138,88 +131,40 @@ namespace Paclink
             return intCount;
         } // ConnectionCount
 
-        public void DataToSend(string strText, string strConnectionId)
+        public void OnDisconnect(SMTPSession session)
         {
-            objIPDaemon.Send(strConnectionId, Globals.GetBytes(strText));
-        } // DataToSend
-
-        public void Disconnect(string strConnectionId)
-        {
-            objIPDaemon.Disconnect(strConnectionId);
             for (int intIndex = 0; intIndex <= 9; intIndex++)
             {
-                if (objSMTPSessions[intIndex] is object && (objSMTPSessions[intIndex].ConnectionId ?? "") == (strConnectionId ?? ""))
+                if (objSMTPSessions[intIndex] == session)
                 {
-                    objSMTPSessions[intIndex].Close();
                     objSMTPSessions[intIndex] = null;
                 }
             }
         } // Disconnect
 
-        private void OnConnectionRequest(object s, IpdaemonConnectionRequestEventArgs e)
+        private void OnConnected(Socket s)
         {
             if (ConnectionCount() >= 10)
-                e.Accept = false;
-        } // OnConnectionRequest
-
-        private void OnConnected(object s, IpdaemonConnectedEventArgs e)
-        {
-            for (int intIndex = 0; intIndex <= 9; intIndex++)
             {
-                if (Information.IsNothing(objSMTPSessions[intIndex]))
+                s.Close();
+            }
+            else
+            {
+                for (int intIndex = 0; intIndex <= 9; intIndex++)
                 {
-                    objSMTPSessions[intIndex] = new SMTPSession(this, e.ConnectionId);
-                    break;
+                    if (Information.IsNothing(objSMTPSessions[intIndex]))
+                    {
+                        objSMTPSessions[intIndex] = new SMTPSession(s);
+                        objSMTPSessions[intIndex].OnDisconnect += OnDisconnect;
+                        break;
+                    }
                 }
             }
+
+            objIPDaemon.AcceptAsync().ContinueWith(t =>
+            {
+                OnConnected(t.Result);
+            }).Wait(0);
         } // OnConnected
-
-        private void OnReadyToSend(object s, IpdaemonReadyToSendEventArgs e)
-        {
-            foreach (SMTPSession objSMTPSession in objSMTPSessions)
-            {
-                try
-                {
-                    if ((objSMTPSession.ConnectionId ?? "") == (e.ConnectionId ?? ""))
-                    {
-                        objSMTPSession.DataIn("NewConnection");
-                        break;
-                    }
-                }
-                catch
-                {
-                }
-            }
-        } // OnReadyToSend
-
-        private void OnDataIn(object s, IpdaemonDataInEventArgs e)
-        {
-            foreach (SMTPSession objSMTPSession in objSMTPSessions)
-            {
-                try
-                {
-                    if ((objSMTPSession.ConnectionId ?? "") == (e.ConnectionId ?? ""))
-                    {
-                        objSMTPSession.DataIn(e.Text);
-                        break;
-                    }
-                }
-                catch
-                {
-                }
-            }
-        } // OnDataIn
-
-        private void OnDisconnected(object s, IpdaemonDisconnectedEventArgs e)
-        {
-            for (int intIndex = 0; intIndex <= 9; intIndex++)
-            {
-                if (!Information.IsNothing(objSMTPSessions[intIndex]) && (objSMTPSessions[intIndex].ConnectionId ?? "") == (e.ConnectionId ?? ""))
-                {
-                    objSMTPSessions[intIndex].Close();
-                    objSMTPSessions[intIndex] = null;
-                }
-            }
-        } // OnDisconnected
     } // SMTPPort
 }

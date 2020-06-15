@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Timers;
@@ -9,6 +10,8 @@ namespace Paclink
 {
     public class SMTPSession
     {
+        public delegate void DisconnectHandler(SMTPSession conn);
+        public event DisconnectHandler OnDisconnect;
 
         // Declaration of SessionState
         private enum SessionState
@@ -42,9 +45,8 @@ namespace Paclink
         private const string Reply553 = "553 action not taken; mailbox name syntax error" + Constants.vbCrLf;
         private const string Reply354 = "354 Start mail input, end with <CRLF>.<CRLF>" + Constants.vbCrLf;
         private const string Reply554 = "554 Transaction failed or rejected" + Constants.vbCrLf;
-        public string ConnectionId;
+        public Socket connection;
         public DateTime Timestamp;
-        private SMTPPort objSMTPPort;
         private DateTime dttSessionStart;
         private System.Timers.Timer _tmrSessionTimer;
 
@@ -79,11 +81,10 @@ namespace Paclink
         private StringBuilder sbdInboundMessage;
         private string strRecipients = "";
 
-        public SMTPSession(SMTPPort parent, string strNewConnectionId)
+        public SMTPSession(Socket socket)
         {
             Timestamp = DateAndTime.Now;
-            objSMTPPort = parent;
-            ConnectionId = strNewConnectionId;
+            connection = socket;
             strMessageBody = "";
             strCommandBuffer = "";
             SMTPState = SessionState.Connected;
@@ -96,6 +97,9 @@ namespace Paclink
             tmrSessionTimer.Interval = 60000;
             tmrSessionTimer.AutoReset = true;
             tmrSessionTimer.Start();
+
+            // Begin session.
+            DataIn("NewConnection");
         } // New
 
         public void Close()
@@ -103,6 +107,9 @@ namespace Paclink
             tmrSessionTimer.Stop();
             tmrSessionTimer.Dispose();
             tmrSessionTimer = null;
+
+            connection.Close();
+            OnDisconnect?.Invoke(this);
         } // Close
 
         public void DataIn(string strText)
@@ -110,10 +117,28 @@ namespace Paclink
             string strResponse = Protocol(strText);
             if (!string.IsNullOrEmpty(strResponse))
             {
-                Logs.SMTPEvent("Out to " + ConnectionId + ": " + strText);
-                objSMTPPort.DataToSend(strResponse, ConnectionId);
+                Logs.SMTPEvent("Out to " + connection.RemoteEndPoint.ToString() + ": " + strText);
+                connection.Send(Globals.GetBytes(strResponse));
                 if (strResponse.StartsWith("221 "))
-                    objSMTPPort.Disconnect(ConnectionId);
+                    Close();
+            }
+
+            if (connection.Connected)
+            {
+                byte[] receiveBuffer = new byte[1024];
+                connection.ReceiveAsync(new ArraySegment<byte>(receiveBuffer, 0, 1024), SocketFlags.None).ContinueWith(t =>
+                {
+                    if (t.Result > 0)
+                    {
+                        byte[] dataIn = new byte[t.Result];
+                        Array.Copy(receiveBuffer, dataIn, t.Result);
+                        DataIn(UTF8Encoding.UTF8.GetString(dataIn));
+                    }
+                    else 
+                    {
+                        Close();
+                    }
+                }).Wait(0);
             }
         } // DataIn
 
@@ -121,9 +146,7 @@ namespace Paclink
         {
             if (dttSessionStart < DateAndTime.Now)
             {
-                tmrSessionTimer.Stop();
-                tmrSessionTimer.Dispose();
-                objSMTPPort.Disconnect(ConnectionId);
+                Close();
             }
         } // OnSessionTimer
 
@@ -147,7 +170,7 @@ namespace Paclink
                 {
                     // The SMTPSession has just been initialized.
                     // Acknowledge with Reply 220 with echo local IP Address...
-                    Logs.SMTPEvent("In from " + ConnectionId + ": " + "(New connection started)");
+                    Logs.SMTPEvent("In from " + connection.RemoteEndPoint.ToString() + ": " + "(New connection started)");
                     strCommandBuffer = ""; // Clear the command buffer
                     return Reply220; // Local IP address service ready
                 }
@@ -168,7 +191,7 @@ namespace Paclink
             }
 
             // Process the command...
-            Logs.SMTPEvent("In from " + ConnectionId + ": " + strCommand);
+            Logs.SMTPEvent("In from " + connection.RemoteEndPoint.ToString() + ": " + strCommand);
             var switchExpr = SMTPState;
             switch (switchExpr)
             {
