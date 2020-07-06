@@ -125,10 +125,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\TNCKissInterface\TNCKissInterface\bin\Release\TNCKissInterface.dll</HintPath>
     </Reference>
-    <Reference Include="WinlinkInterop, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Winlink_Common\WinlinkInteropAWS 3.5\WinlinkInterop\bin\Release\WinlinkInterop.dll</HintPath>
-    </Reference>
     <Reference Include="WinlinkRegistration, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Winlink_Common\WinlinkRegistration 3.5\bin\Release\WinlinkRegistration.dll</HintPath>
@@ -418,6 +414,12 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Libraries\WinlinkInterop\WinlinkInterop.csproj">
+      <Project>{3e0ca358-6558-035f-1ec2-200d2fb68198}</Project>
+      <Name>WinlinkInterop</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -63,16 +63,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinlinkRegistration3.5", ".
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinlinkServiceClasses", "..\Winlink_Common\WinlinkServiceClasses 3.5\WinlinkServiceClasses\WinlinkServiceClasses.csproj", "{AE3BD75E-C5B0-4D81-BD98-F0673B3A796F}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "RMS Link Test", "..\Winlink_Utilities\RMS Link Test\RMS Link Test\RMS Link Test.vbproj", "{537B1798-7EB3-4B8B-BDAB-4803E02F8CC3}"
-	ProjectSection(ProjectDependencies) = postProject
-		{3E0CA358-6558-035F-1EC2-200D2FB68198} = {3E0CA358-6558-035F-1EC2-200D2FB68198}
-		{AE3BD75E-C5B0-4D81-BD98-F0673B3A796F} = {AE3BD75E-C5B0-4D81-BD98-F0673B3A796F}
-		{844C57BC-79DE-482D-A138-34B34296DAC9} = {844C57BC-79DE-482D-A138-34B34296DAC9}
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TNCKissInterface", "..\TNCKissInterface\TNCKissInterface\TNCKissInterface.csproj", "{A63067BC-6BFC-430F-801F-F6F289311E90}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinlinkInterop", "Libraries\WinlinkInterop\WinlinkInterop.csproj", "{3E0CA358-6558-035F-1EC2-200D2FB68198}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMS Link Test", "Utilities\RMS Link Test\RMS Link Test.csproj", "{E15F96F3-B2EB-047A-3FF3-827D82B8B863}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -114,13 +109,6 @@ Global
 		{AE3BD75E-C5B0-4D81-BD98-F0673B3A796F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AE3BD75E-C5B0-4D81-BD98-F0673B3A796F}.Release|x86.ActiveCfg = Release|x86
 		{AE3BD75E-C5B0-4D81-BD98-F0673B3A796F}.Release|x86.Build.0 = Release|x86
-		{537B1798-7EB3-4B8B-BDAB-4803E02F8CC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{537B1798-7EB3-4B8B-BDAB-4803E02F8CC3}.Debug|x86.ActiveCfg = Debug|x86
-		{537B1798-7EB3-4B8B-BDAB-4803E02F8CC3}.Debug|x86.Build.0 = Debug|x86
-		{537B1798-7EB3-4B8B-BDAB-4803E02F8CC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{537B1798-7EB3-4B8B-BDAB-4803E02F8CC3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{537B1798-7EB3-4B8B-BDAB-4803E02F8CC3}.Release|x86.ActiveCfg = Release|x86
-		{537B1798-7EB3-4B8B-BDAB-4803E02F8CC3}.Release|x86.Build.0 = Release|x86
 		{A63067BC-6BFC-430F-801F-F6F289311E90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A63067BC-6BFC-430F-801F-F6F289311E90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A63067BC-6BFC-430F-801F-F6F289311E90}.Debug|x86.ActiveCfg = Debug|x86
@@ -137,6 +125,14 @@ Global
 		{3E0CA358-6558-035F-1EC2-200D2FB68198}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3E0CA358-6558-035F-1EC2-200D2FB68198}.Release|x86.ActiveCfg = Release|x86
 		{3E0CA358-6558-035F-1EC2-200D2FB68198}.Release|x86.Build.0 = Release|x86
+		{E15F96F3-B2EB-047A-3FF3-827D82B8B863}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E15F96F3-B2EB-047A-3FF3-827D82B8B863}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E15F96F3-B2EB-047A-3FF3-827D82B8B863}.Debug|x86.ActiveCfg = Debug|x86
+		{E15F96F3-B2EB-047A-3FF3-827D82B8B863}.Debug|x86.Build.0 = Debug|x86
+		{E15F96F3-B2EB-047A-3FF3-827D82B8B863}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E15F96F3-B2EB-047A-3FF3-827D82B8B863}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E15F96F3-B2EB-047A-3FF3-827D82B8B863}.Release|x86.ActiveCfg = Release|x86
+		{E15F96F3-B2EB-047A-3FF3-827D82B8B863}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

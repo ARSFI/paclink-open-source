@@ -164,7 +164,7 @@ namespace WinlinkInterop
             return strResult;
         }
 
-        private void DownloadSFI(double dblMaxWaitSeconds = 0)
+        private void DownloadSFI(double dblMaxWaitSeconds = 30)
         {
             // 
             // Subroutine running as a thread to get the solar flux index from the web.
@@ -206,7 +206,8 @@ namespace WinlinkInterop
                     objHTTP = new HttpClient();
                 }
 
-                objHTTP.Timeout = new TimeSpan(0, 0, 0, Convert.ToInt32(dblMaxWaitSeconds), 0);
+                var timeoutInSec = Convert.ToInt32(dblMaxWaitSeconds);
+                objHTTP.Timeout = new TimeSpan(0, 0, timeoutInSec / 60, timeoutInSec % 60, 0);
                 blnGetSFIDownloadComplete = false;
                 strSFIDownload = "";
                 var dttStartDownload = DateAndTime.Now;
@@ -223,9 +224,11 @@ namespace WinlinkInterop
                         }
 
                         var readTask = t.Result.Content.ReadAsStringAsync();
-                        readTask.RunSynchronously();
-                        strSFIDownload = readTask.Result;
-                        objHTTP_OnEndTransfer(t.Result);
+                        readTask.ContinueWith(v =>
+                        {
+                            strSFIDownload = v.Result;
+                            objHTTP_OnEndTransfer(t.Result);
+                        }).Wait();
                     } 
                     catch (Exception e)
                     {
