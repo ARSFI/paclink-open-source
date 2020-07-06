@@ -1,0 +1,80 @@
+
+    Private Function JsonCommand(ByVal strArg As String, Optional ByVal strCallsign As String = "", Optional ByVal strMPSCallsign As String = "", _
+                                 Optional ByVal strIPaddress As String = "") As String
+        '
+        '  Execute a Json command.  Return the results or null if an error occurred.
+        '
+        Dim client As New WebClient
+        Dim strCmd As String
+
+        '
+        '  Find a CMS to use.
+        '
+        If strIPaddress = "" Then
+            Dim objCMSinfo As WinlinkInterop.CMSInfo = objWL2KInterop.GetNetParamHost("Express:JsonCommand")
+            If objCMSinfo Is Nothing Then
+                Return Nothing
+            End If
+            strIPaddress = objCMSinfo.strCMSIP
+        End If
+        '
+        '  Make the complete URL.
+        '
+        strCmd = "http://" & strIPaddress & ":8085" & strArg
+        '
+        '  Execute the command.
+        '
+        With client
+            ' Set up the arguments.
+            Dim reqparm As System.Collections.Specialized.NameValueCollection = New System.Collections.Specialized.NameValueCollection()
+            reqparm.Add("WebServiceAccessCode", strAccessCode)
+            reqparm.Add("Requester", strMyCallsign)
+            If strCallsign IsNot Nothing AndAlso strCallsign <> "" Then
+                reqparm.Add("Callsign", strCallsign)
+            End If
+            If strMPSCallsign IsNot Nothing AndAlso strMPSCallsign <> "" Then
+                reqparm.Add("MpsCallsign", strMPSCallsign)
+            End If
+            Try
+                ' Post the request to the server.
+                Dim responsebytes As Byte() = client.UploadValues(strCmd, "POST", reqparm)
+                Dim strResponse As String = Encoding.UTF8.GetString(responsebytes)
+                ' File.WriteAllText("c:\Test\Response.html", strResponse)
+                Return strResponse
+            Catch
+                Return Nothing
+            End Try
+        End With
+    End Function
+
+    Private Function JsonCommandGet(ByVal strArg As String) As String
+        '
+        '  Execute a Json command.  Return the results or null if an error occurred.
+        '
+        Dim client As New WebClient
+        Dim strCmd As String
+
+        '
+        '  Find a CMS to use.
+        '
+        Dim objCMSinfo As WinlinkInterop.CMSInfo = objWL2KInterop.GetNetParamHost("Express:JsonCommand")
+        If objCMSinfo Is Nothing Then
+            Return Nothing
+        End If
+        '
+        '  Make the complete URL.
+        '
+        strCmd = "http://" & objCMSinfo.strCMSIP & ":8085" & strArg
+        '
+        '  Execute the command.
+        '
+        ' Set up the arguments.
+        Try
+            ' Post the request to the server.
+            Dim strResponse As String = client.DownloadString(strCmd)
+            ' File.WriteAllText("c:\Test\Response.html", strResponse)
+            Return strResponse
+        Catch
+            Return Nothing
+        End Try
+    End Function
