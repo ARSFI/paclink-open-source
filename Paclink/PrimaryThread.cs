@@ -209,7 +209,7 @@ namespace Paclink
             }
             catch
             {
-                Interaction.MsgBox(Information.Err().Description + Constants.vbCrLf + "There may be a SMTP/POP3 confilct due to another program/service listening on the POP3/SMTP Ports." + " Terminate that service or change POP3/SMTP ports in Paclink and your mail client." + " Check the Paclink Errors.log for details of the error.", MsgBoxStyle.Critical);
+                Interaction.MsgBox(Information.Err().Description + Globals.CRLF + "There may be a SMTP/POP3 confilct due to another program/service listening on the POP3/SMTP Ports." + " Terminate that service or change POP3/SMTP ports in Paclink and your mail client." + " Check the Paclink Errors.log for details of the error.", MsgBoxStyle.Critical);
 
                 Logs.Exception("[SMTPThread] SMTP/POP3 Port Setup: " + Information.Err().Description);
             }
@@ -363,7 +363,7 @@ namespace Paclink
                             }
 
                             // Force a disconnect if the channel has been held too long...
-                            if (Globals.stcSelectedChannel.StartTimestamp < DateAndTime.Now)
+                            if (Globals.stcSelectedChannel.StartTimestamp < DateTime.Now)
                             {
                                 if (Globals.objSelectedClient is object)
                                 {
@@ -418,9 +418,9 @@ namespace Paclink
                 {
                     if (DialogPolling.AutoPoll)
                     {
-                        if (intMinutes != DateAndTime.Now.Minute)
+                        if (intMinutes != DateTime.Now.Minute)
                         {
-                            intMinutes = DateAndTime.Now.Minute;
+                            intMinutes = DateTime.Now.Minute;
                             DialogPolling.MinutesRemaining -= 1;
                         }
 
@@ -529,7 +529,7 @@ namespace Paclink
                     case EChannelModes.PacketAGW:
                         {
                             Globals.objSelectedClient = new ClientAGW();
-                            Globals.stcSelectedChannel.StartTimestamp = DateAndTime.Now.AddMinutes(60);
+                            Globals.stcSelectedChannel.StartTimestamp = DateTime.Now.AddMinutes(60);
                             break;
                         }
 
@@ -548,7 +548,7 @@ namespace Paclink
                                 case "KAM98":
                                     {
                                         Globals.objSelectedClient = new ClientKantronics();
-                                        Globals.stcSelectedChannel.StartTimestamp = DateAndTime.Now.AddMinutes(60);
+                                        Globals.stcSelectedChannel.StartTimestamp = DateTime.Now.AddMinutes(60);
                                         break;
                                     }
 
@@ -559,7 +559,7 @@ namespace Paclink
                                 case "PK-900":
                                     {
                                         Globals.objSelectedClient = new ClientTimewave();
-                                        Globals.stcSelectedChannel.StartTimestamp = DateAndTime.Now.AddMinutes(60);
+                                        Globals.stcSelectedChannel.StartTimestamp = DateTime.Now.AddMinutes(60);
                                         break;
                                     }
 
@@ -571,7 +571,7 @@ namespace Paclink
                                 case "PTC DR-7800":
                                     {
                                         Globals.objSelectedClient = new ClientSCS();
-                                        Globals.stcSelectedChannel.StartTimestamp = DateAndTime.Now.AddMinutes(60);
+                                        Globals.stcSelectedChannel.StartTimestamp = DateTime.Now.AddMinutes(60);
                                         break;
                                     }
 
@@ -584,7 +584,7 @@ namespace Paclink
                                 case "Generic KISS":
                                     {
                                         Globals.objSelectedClient = new ClientNativeKISS();
-                                        Globals.stcSelectedChannel.StartTimestamp = DateAndTime.Now.AddMinutes(60);
+                                        Globals.stcSelectedChannel.StartTimestamp = DateTime.Now.AddMinutes(60);
                                         break;
                                     }
                             }
@@ -595,7 +595,7 @@ namespace Paclink
                     case EChannelModes.Telnet:
                         {
                             Globals.objSelectedClient = new ClientTelnet(ref Globals.stcSelectedChannel);
-                            Globals.stcSelectedChannel.StartTimestamp = DateAndTime.Now.AddMinutes(20);
+                            Globals.stcSelectedChannel.StartTimestamp = DateTime.Now.AddMinutes(20);
                             break;
                         }
 
@@ -609,7 +609,7 @@ namespace Paclink
                                 case "KAM98":
                                     {
                                         Globals.objSelectedClient = new ClientKantronics();
-                                        Globals.stcSelectedChannel.StartTimestamp = DateAndTime.Now.AddMinutes(120);
+                                        Globals.stcSelectedChannel.StartTimestamp = DateTime.Now.AddMinutes(120);
                                         break;
                                     }
 
@@ -621,7 +621,7 @@ namespace Paclink
                                 case "PTC DR-7800":
                                     {
                                         Globals.objSelectedClient = new ClientSCS();
-                                        Globals.stcSelectedChannel.StartTimestamp = DateAndTime.Now.AddMinutes(120);
+                                        Globals.stcSelectedChannel.StartTimestamp = DateTime.Now.AddMinutes(120);
                                         break;
                                     }
 
@@ -629,7 +629,7 @@ namespace Paclink
                                 case "PK-232": // , "PK-900"
                                     {
                                         Globals.objSelectedClient = new ClientTimewave();
-                                        Globals.stcSelectedChannel.StartTimestamp = DateAndTime.Now.AddMinutes(120);
+                                        Globals.stcSelectedChannel.StartTimestamp = DateTime.Now.AddMinutes(120);
                                         break;
                                     }
                             }
@@ -719,7 +719,7 @@ namespace Paclink
                 var objFileInfo = objDirectoryInfo.GetFiles("*.indata");
                 foreach (FileInfo objFile in objFileInfo)
                 {
-                    if (DateAndTime.Now.Subtract(objFile.LastWriteTime).TotalHours > 24)
+                    if (DateTime.Now.Subtract(objFile.LastWriteTime).TotalHours > 24)
                     {
                         try
                         {

@@ -97,7 +97,7 @@ namespace Paclink
             if ((strText ?? "") == Globals.CLEAR)
             {
                 ChannelDisplay.Clear();
-                My.MyProject.Computer.FileSystem.WriteAllText(Globals.SiteRootDirectory + @"Logs\Channel Events " + Strings.Format(DateTime.UtcNow, "yyyyMMdd") + ".log", Constants.vbCrLf, true);
+                My.MyProject.Computer.FileSystem.WriteAllText(Globals.SiteRootDirectory + @"Logs\Channel Events " + Strings.Format(DateTime.UtcNow, "yyyyMMdd") + ".log", Globals.CRLF, true);
                 return;
             }
             else if (string.IsNullOrEmpty(strText))
@@ -112,7 +112,7 @@ namespace Paclink
             {
                 ChannelDisplay.SelectionColor = objColor;
                 ChannelDisplay.SelectionStart = ChannelDisplay.Text.Length;
-                ChannelDisplay.AppendText(strText + Constants.vbCrLf);
+                ChannelDisplay.AppendText(strText + Globals.CRLF);
                 ChannelDisplay.SelectionLength = strText.Length;
                 ChannelDisplay.Select();
                 ChannelDisplay.SelectionLength = 0;
@@ -208,11 +208,11 @@ namespace Paclink
             ChannelDisplay.ForeColor = Color.Green;
             if (Globals.UseRMSRelay())
             {
-                ChannelDisplay.Text = "*** Initializing. Paclink is set to connect to RMS Relay.  RMS Relay must be running." + Constants.vbCrLf;
+                ChannelDisplay.Text = "*** Initializing. Paclink is set to connect to RMS Relay.  RMS Relay must be running." + Globals.CRLF;
             }
             else
             {
-                ChannelDisplay.Text = "*** Initializing..." + Constants.vbCrLf;
+                ChannelDisplay.Text = "*** Initializing..." + Globals.CRLF;
             }
 
             Refresh();
@@ -425,7 +425,7 @@ namespace Paclink
                         if (intStartupCount >= 50)
                         {
                             blnLooping = true;
-                            MessageBox.Show("Paclink has been started " + intStartupCount.ToString() + " times today." + Constants.vbCrLf + Constants.vbCrLf + "Confirm that you want to restart it again.");
+                            MessageBox.Show("Paclink has been started " + intStartupCount.ToString() + " times today." + Globals.CRLF + Globals.CRLF + "Confirm that you want to restart it again.");
                         }
                         // Increment the count
                         Globals.objINIFile.WriteString("Main", "Daily starts", strTok[0] + "|" + (intStartupCount + 1).ToString());
@@ -469,7 +469,7 @@ namespace Paclink
             {
                 SMTPDisplay.SelectionColor = objColor;
                 SMTPDisplay.SelectionStart = SMTPDisplay.Text.Length;
-                SMTPDisplay.AppendText(strText + Constants.vbCrLf);
+                SMTPDisplay.AppendText(strText + Globals.CRLF);
                 SMTPDisplay.SelectionLength = strText.Length;
                 SMTPDisplay.Select();
                 SMTPDisplay.SelectionLength = 0;
@@ -544,10 +544,10 @@ namespace Paclink
                 return;
             }
 
-            if (intHour != DateAndTime.Now.Hour)
+            if (intHour != DateTime.Now.Hour)
             {
                 // We just entered a new hour.
-                intHour = DateAndTime.Now.Hour;
+                intHour = DateTime.Now.Hour;
                 Logs.PurgeOldLogFiles();
                 Globals.objINIFile.CheckBackupIni();
                 // See if it's time to post a version record
@@ -616,7 +616,7 @@ namespace Paclink
                 while (Globals.queStatusDisplay.Count > 0)
                     lblChannelStatus.Text = Globals.queStatusDisplay.Dequeue().ToString();
                 while (Globals.queProgressDisplay.Count > 0)
-                    barChannelProgress.Value = Conversions.ToInteger(Globals.queProgressDisplay.Dequeue());
+                    barChannelProgress.Value = Convert.ToInt32(Globals.queProgressDisplay.Dequeue());
                 while (Globals.queRateDisplay.Count > 0)
                     ChannelRate.Text = Globals.queRateDisplay.Dequeue().ToString();
                 while (Globals.queSMTPDisplay.Count > 0)

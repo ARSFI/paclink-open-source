@@ -35,13 +35,13 @@ namespace Paclink
 
             if (Information.IsNothing(strMessageBody))
                 strMessageBody = "<no message body>";
-            strMessageBody = strMessageBody.Trim().Replace(Constants.vbLf, "");
-            strMessageBody = strMessageBody.Replace(Constants.vbCr, Constants.vbCrLf) + Constants.vbCrLf;
+            strMessageBody = strMessageBody.Trim().Replace(Globals.LF, "");
+            strMessageBody = strMessageBody.Replace(Globals.CR, Globals.CRLF) + Globals.CRLF;
             do
             {
-                if (strMessageBody.IndexOf(Constants.vbCrLf + Constants.vbCrLf + Constants.vbCrLf) == -1)
+                if (strMessageBody.IndexOf(Globals.CRLF + Globals.CRLF + Globals.CRLF) == -1)
                     break;
-                strMessageBody = strMessageBody.Replace(Constants.vbCrLf + Constants.vbCrLf + Constants.vbCrLf, Constants.vbCrLf + Constants.vbCrLf);
+                strMessageBody = strMessageBody.Replace(Globals.CRLF + Globals.CRLF + Globals.CRLF, Globals.CRLF + Globals.CRLF);
             }
             while (true);
             return strMessageBody;
@@ -54,9 +54,9 @@ namespace Paclink
             try
             {
                 var stbMessage = new StringBuilder();
-                stbMessage.Append("MIME-Version: 1.0" + Constants.vbCrLf);
-                stbMessage.Append("Content-Type: text/plain; charset = \"iso-8859-1\"" + Constants.vbCrLf);
-                stbMessage.Append("Content-Transfer-Encoding: 7bit" + Constants.vbCrLf + Constants.vbCrLf);
+                stbMessage.Append("MIME-Version: 1.0" + Globals.CRLF);
+                stbMessage.Append("Content-Type: text/plain; charset = \"iso-8859-1\"" + Globals.CRLF);
+                stbMessage.Append("Content-Transfer-Encoding: 7bit" + Globals.CRLF + Globals.CRLF);
                 stbMessage.Append(Body);
                 Mime = Header + stbMessage.ToString();
                 return true;

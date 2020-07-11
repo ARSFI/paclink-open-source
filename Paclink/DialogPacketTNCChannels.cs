@@ -293,7 +293,7 @@ namespace Paclink
                     cmbTNCBaudRate.Items.Add("38400");
                     cmbTNCBaudRate.Items.Add("57600");
                     cmbTNCBaudRate.Items.Add("115200");
-                    if (Conversions.ToInteger(withBlock.TNCBaudRate) < 38400)
+                    if (Convert.ToInt32(withBlock.TNCBaudRate) < 38400)
                         withBlock.TNCBaudRate = "38400";
                 }
                 else
@@ -319,20 +319,20 @@ namespace Paclink
         {
             stcChannel.ChannelType = EChannelModes.PacketTNC;
             stcChannel.ChannelName = cmbChannelName.Text;
-            stcChannel.Priority = Conversions.ToInteger(nudPriority.Value);
+            stcChannel.Priority = Convert.ToInt32(nudPriority.Value);
             stcChannel.RemoteCallsign = CleanupCallSign(cmbRemoteCallsign.Text);
             stcChannel.RDOCenterFrequency = cmbFreqs.Text;
             stcChannel.Enabled = chkEnabled.Checked;
-            stcChannel.TNCTimeout = Conversions.ToInteger(nudActivityTimeout.Value);
+            stcChannel.TNCTimeout = Convert.ToInt32(nudActivityTimeout.Value);
             stcChannel.TNCScript = txtScript.Text;
-            stcChannel.TNCScriptTimeout = Conversions.ToInteger(nudScriptTimeout.Value);
+            stcChannel.TNCScriptTimeout = Convert.ToInt32(nudScriptTimeout.Value);
             stcChannel.TNCSerialPort = cmbTNCSerialPort.Text;
             stcChannel.TNCBaudRate = cmbTNCBaudRate.Text;
             stcChannel.TNCConfigurationFile = txtTNCConfigurationFile.Text;
             stcChannel.TNCConfigureOnFirstUseOnly = chkFirstUseOnly.Checked;
-            stcChannel.TNCPort = Conversions.ToInteger(nudTNCPort.Value);
+            stcChannel.TNCPort = Convert.ToInt32(nudTNCPort.Value);
             stcChannel.TNCType = cmbTNCType.Text;
-            stcChannel.TNCOnAirBaud = Conversions.ToInteger(cmbOnAirBaud.Text);
+            stcChannel.TNCOnAirBaud = Convert.ToInt32(cmbOnAirBaud.Text);
             stcChannel.EnableAutoforward = true; // Packet Channels always enabled
             if (!rdoManual.Checked)
             {
@@ -595,7 +595,7 @@ namespace Paclink
                 cmbTNCBaudRate.Items.Add("38400");
                 cmbTNCBaudRate.Items.Add("57600");
                 cmbTNCBaudRate.Items.Add("115200");
-                if (Conversions.ToInteger(stcSelectedChannel.TNCBaudRate) < 38400)
+                if (Convert.ToInt32(stcSelectedChannel.TNCBaudRate) < 38400)
                     stcSelectedChannel.TNCBaudRate = "38400";
             }
             else

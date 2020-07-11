@@ -29,7 +29,7 @@ namespace Paclink
             int retc;
             try
             {
-                if (MICOMOpenPort(ref stcTNC.RDOControlPort, Conversions.ToInteger(stcTNC.RDOControlBaud)) != 0) // Com port open worked
+                if (MICOMOpenPort(ref stcTNC.RDOControlPort, Convert.ToInt32(stcTNC.RDOControlBaud)) != 0) // Com port open worked
                 {
                     // *****************************************************************
                     // * Perform initial radio setup.
@@ -134,7 +134,7 @@ namespace Paclink
             try
             {
                 string strKilohertz = Globals.StripMode(stcTNC.RDOCenterFrequency); // Strip off any mode designator
-                int intHertz = Globals.KHzToHz(strKilohertz) - Conversions.ToInteger(stcTNC.AudioToneCenter);
+                int intHertz = Globals.KHzToHz(strKilohertz) - Convert.ToInt32(stcTNC.AudioToneCenter);
                 if (!SetFrequency(intHertz))
                 {
                     SetParametersRet = false;

@@ -41,7 +41,7 @@ namespace Paclink
         {
             // Displays instructions for entering a callsign address...
 
-            Interaction.MsgBox("A callsign account name must consist of a valid ham or MARS radio callsign." + Constants.vbCrLf + "examples:  W1ABC, WA9DEF-12" + Constants.vbCrLf + Constants.vbCrLf + "The <account name>@Winlink.org will be the email address of the account user." + Constants.vbCrLf + "If the account name uses a -ssid extension then you must also enter the " + Constants.vbCrLf + "password of the base callsign in the field provided." + Constants.vbCrLf + Constants.vbCrLf + "To enter a tactical account use the Tactical Accounts dialog box.");
+            Interaction.MsgBox("A callsign account name must consist of a valid ham or MARS radio callsign." + Globals.CRLF + "examples:  W1ABC, WA9DEF-12" + Globals.CRLF + Globals.CRLF + "The <account name>@Winlink.org will be the email address of the account user." + Globals.CRLF + "If the account name uses a -ssid extension then you must also enter the " + Globals.CRLF + "password of the base callsign in the field provided." + Globals.CRLF + Globals.CRLF + "To enter a tactical account use the Tactical Accounts dialog box.");
 
 
 
@@ -126,7 +126,7 @@ namespace Paclink
             string strAccount = cmbAccount.Text.ToUpper().Trim();
             if ((Globals.SiteCallsign ?? "") == (strAccount ?? ""))
             {
-                Interaction.MsgBox("The site callsign account cannot be removed from the Accounts menu!" + Constants.vbCr + "Use the Properties menu to change the site callsign.", MsgBoxStyle.Information, "Remove Account");
+                Interaction.MsgBox("The site callsign account cannot be removed from the Accounts menu!" + Globals.CR + "Use the Properties menu to change the site callsign.", MsgBoxStyle.Information, "Remove Account");
                 return;
             }
 
@@ -174,7 +174,7 @@ namespace Paclink
         {
             cmbAccount.Items.Clear();
             cmbAccount.Sorted = true;
-            foreach (Accounts.TAccount UserAccount in Accounts.AccountsList)
+            foreach (Accounts.TAccount UserAccount in Accounts.AccountsList.Values)
             {
                 if (Globals.IsValidRadioCallsign(UserAccount.Name))
                 {
@@ -208,7 +208,7 @@ namespace Paclink
                 return false;
             if (!Information.IsNumeric(strTokens[1]))
                 return false;
-            int intSSID = Conversions.ToInteger(strTokens[1]);
+            int intSSID = Convert.ToInt32(strTokens[1]);
             if (intSSID >= 1 & intSSID <= 15)
             {
                 return true;

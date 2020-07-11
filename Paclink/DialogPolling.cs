@@ -54,7 +54,7 @@ namespace Paclink
                 txtInterval.Text = "60";
             try
             {
-                AutoPollInterval = Conversions.ToInteger(txtInterval.Text);
+                AutoPollInterval = Convert.ToInt32(txtInterval.Text);
             }
             catch
             {
@@ -69,7 +69,7 @@ namespace Paclink
             }
             else if (AutoPollInterval < 15)
             {
-                if (Interaction.MsgBox("To reduce QRM and channel loading polling intervals less than 15" + Constants.vbCrLf + "minutes should be used only during emergencies!   Continue?", MsgBoxStyle.YesNo, "Short Polling Interval!") != MsgBoxResult.Yes)
+                if (Interaction.MsgBox("To reduce QRM and channel loading polling intervals less than 15" + Globals.CRLF + "minutes should be used only during emergencies!   Continue?", MsgBoxStyle.YesNo, "Short Polling Interval!") != MsgBoxResult.Yes)
 
                     return;
             }

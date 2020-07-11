@@ -216,7 +216,7 @@ namespace Paclink
 
             cllToAddresses = new Collection();
             cllCcAddresses = new Collection();
-            var strHeaderLines = Regex.Split(Header.Replace("," + Constants.vbCrLf + " ", ";"), Constants.vbCrLf);
+            var strHeaderLines = Regex.Split(Header.Replace("," + Globals.CRLF + " ", ";"), Globals.CRLF);
             foreach (string strLine in strHeaderLines)
             {
                 var tmpStrLine = strLine;
@@ -384,7 +384,7 @@ namespace Paclink
                     return true;
                 }
 
-                sbdHeader.Append(strLine + Constants.vbCrLf);
+                sbdHeader.Append(strLine + Globals.CRLF);
             }
             while (true);
             return false;
@@ -398,33 +398,33 @@ namespace Paclink
             int intIndex;
             if (Information.IsDate(MessageDate))
             {
-                sbdHeader.Append("Date: " + Globals.DateToRFC822Date(MessageDate) + Constants.vbCrLf);
+                sbdHeader.Append("Date: " + Globals.DateToRFC822Date(MessageDate) + Globals.CRLF);
             }
             else
             {
-                sbdHeader.Append("Date: " + Globals.DateToRFC822Date(DateTime.UtcNow) + Constants.vbCrLf);
+                sbdHeader.Append("Date: " + Globals.DateToRFC822Date(DateTime.UtcNow) + Globals.CRLF);
             }
 
             if (!string.IsNullOrEmpty(Sender.SMTPAddress))
             {
-                sbdHeader.Append("From: " + Sender.SMTPAddress + Constants.vbCrLf);
+                sbdHeader.Append("From: " + Sender.SMTPAddress + Globals.CRLF);
                 if (string.IsNullOrEmpty(ReplyTo.RadioAddress))
                 {
-                    sbdHeader.Append("Reply-To: " + Sender.SMTPAddress + Constants.vbCrLf);
+                    sbdHeader.Append("Reply-To: " + Sender.SMTPAddress + Globals.CRLF);
                 }
                 else
                 {
-                    sbdHeader.Append("Reply-To: " + ReplyTo.SMTPAddress + Constants.vbCrLf);
+                    sbdHeader.Append("Reply-To: " + ReplyTo.SMTPAddress + Globals.CRLF);
                 }
             }
 
             if (!string.IsNullOrEmpty(Subject))
-                sbdHeader.Append("Subject: " + Subject + Constants.vbCrLf);
+                sbdHeader.Append("Subject: " + Subject + Globals.CRLF);
             if (cllToAddresses.Count != 0)
             {
                 if (cllToAddresses.Count == 1)
                 {
-                    sbdHeader.Append("To: " + ((WinlinkAddress)cllToAddresses[1]).SMTPAddress + Constants.vbCrLf);
+                    sbdHeader.Append("To: " + ((WinlinkAddress)cllToAddresses[1]).SMTPAddress + Globals.CRLF);
                 }
                 else
                 {
@@ -433,15 +433,15 @@ namespace Paclink
                     {
                         if (intIndex == 1)
                         {
-                            sbdHeader.Append("To: " + ((WinlinkAddress)cllToAddresses[1]).SMTPAddress + "," + Constants.vbCrLf);
+                            sbdHeader.Append("To: " + ((WinlinkAddress)cllToAddresses[1]).SMTPAddress + "," + Globals.CRLF);
                         }
                         else if (intIndex == cllToAddresses.Count)
                         {
-                            sbdHeader.Append(" " + ((WinlinkAddress)cllToAddresses[intIndex]).SMTPAddress + Constants.vbCrLf);
+                            sbdHeader.Append(" " + ((WinlinkAddress)cllToAddresses[intIndex]).SMTPAddress + Globals.CRLF);
                         }
                         else
                         {
-                            sbdHeader.Append(" " + ((WinlinkAddress)cllToAddresses[intIndex]).SMTPAddress + "," + Constants.vbCrLf);
+                            sbdHeader.Append(" " + ((WinlinkAddress)cllToAddresses[intIndex]).SMTPAddress + "," + Globals.CRLF);
                         }
                     }
                 }
@@ -451,7 +451,7 @@ namespace Paclink
             {
                 if (cllCcAddresses.Count == 1)
                 {
-                    sbdHeader.Append("Cc: " + ((WinlinkAddress)cllCcAddresses[1]).SMTPAddress + Constants.vbCrLf);
+                    sbdHeader.Append("Cc: " + ((WinlinkAddress)cllCcAddresses[1]).SMTPAddress + Globals.CRLF);
                 }
                 else
                 {
@@ -460,28 +460,28 @@ namespace Paclink
                     {
                         if (intIndex == 1)
                         {
-                            sbdHeader.Append("Cc: " + ((WinlinkAddress)cllCcAddresses[1]).SMTPAddress + "," + Constants.vbCrLf);
+                            sbdHeader.Append("Cc: " + ((WinlinkAddress)cllCcAddresses[1]).SMTPAddress + "," + Globals.CRLF);
                         }
                         else if (intIndex == cllCcAddresses.Count)
                         {
-                            sbdHeader.Append(" " + ((WinlinkAddress)cllCcAddresses[intIndex]).SMTPAddress + Constants.vbCrLf);
+                            sbdHeader.Append(" " + ((WinlinkAddress)cllCcAddresses[intIndex]).SMTPAddress + Globals.CRLF);
                         }
                         else
                         {
-                            sbdHeader.Append(" " + ((WinlinkAddress)cllCcAddresses[intIndex]).SMTPAddress + "," + Constants.vbCrLf);
+                            sbdHeader.Append(" " + ((WinlinkAddress)cllCcAddresses[intIndex]).SMTPAddress + "," + Globals.CRLF);
                         }
                     }
                 }
             }
 
             if (!string.IsNullOrEmpty(MessageId))
-                sbdHeader.Append("Message-ID: " + MessageId + Constants.vbCrLf);
+                sbdHeader.Append("Message-ID: " + MessageId + Globals.CRLF);
             if (ExpirationDate > MessageDate)
             {
-                sbdHeader.Append("X-Cancel: " + Globals.FormatDate(ExpirationDate) + Constants.vbCrLf);
+                sbdHeader.Append("X-Cancel: " + Globals.FormatDate(ExpirationDate) + Globals.CRLF);
             }
 
-            sbdHeader.Append("MIME-Version: 1.0" + Constants.vbCrLf);
+            sbdHeader.Append("MIME-Version: 1.0" + Globals.CRLF);
             Header = sbdHeader.ToString();
         } // EncodeHeader
 
@@ -501,7 +501,7 @@ namespace Paclink
                 if (!string.IsNullOrEmpty(strLine.Trim()))
                     blnBlankLine = false;
                 if (!blnBlankLine)
-                    sbdBody.Append(strLine + Constants.vbCrLf);
+                    sbdBody.Append(strLine + Globals.CRLF);
                 if (string.IsNullOrEmpty(strLine.Trim()))
                 {
                     blnBlankLine = true;
@@ -510,7 +510,7 @@ namespace Paclink
             while (true);
             strBody = sbdBody.ToString().Trim();
             if (string.IsNullOrEmpty(strBody))
-                strBody = "<no message body>" + Constants.vbCrLf;
+                strBody = "<no message body>" + Globals.CRLF;
             return strBody;
         } // FormatMessageBody
 
@@ -792,7 +792,7 @@ namespace Paclink
                             }
                             else if (strHeaderLine.IndexOf("BODY:") == 0)
                             {
-                                intBody = Conversions.ToInteger(strHeaderLine.Substring(5));
+                                intBody = Convert.ToInt32(strHeaderLine.Substring(5));
                             }
                             else if (strHeaderLine.IndexOf("MBO:") == 0)
                             {
@@ -802,7 +802,7 @@ namespace Paclink
                             {
                                 var strTokens = strHeaderLine.Split(' ');
                                 cllAttachmentNames.Add(Strings.Trim(sbdInput.ToString().Substring(7 + strTokens[1].Length)));
-                                cllAttachmentSizes.Add(Conversions.ToInteger(strTokens[1]));
+                                cllAttachmentSizes.Add(Convert.ToInt32(strTokens[1]));
                             }
 
                             sbdInput.Length = 0;
@@ -831,9 +831,9 @@ namespace Paclink
                 {
                     var stcAttachment = new Attachment();
                     stcAttachment.FileName = Conversions.ToString(cllAttachmentNames[intCount]);
-                    stcAttachment.Image = new byte[(Conversions.ToInteger(cllAttachmentSizes[intCount]))];
+                    stcAttachment.Image = new byte[(Convert.ToInt32(cllAttachmentSizes[intCount]))];
                     intIndex += 2;
-                    for (int intPosition = 0, loopTo2 = Conversions.ToInteger(cllAttachmentSizes[intCount]) - 1; intPosition <= loopTo2; intPosition++)
+                    for (int intPosition = 0, loopTo2 = Convert.ToInt32(cllAttachmentSizes[intCount]) - 1; intPosition <= loopTo2; intPosition++)
                     {
                         stcAttachment.Image[intPosition] = bytUncompressed[intIndex];
                         intIndex += 1;
@@ -859,30 +859,30 @@ namespace Paclink
             try
             {
                 var sbdMessage = new StringBuilder();
-                sbdMessage.Append("MID: " + MessageId + Constants.vbCrLf);
-                sbdMessage.Append("Date: " + Globals.FormatDate(MessageDate) + Constants.vbCrLf);
-                sbdMessage.Append("Type: Private" + Constants.vbCrLf);
-                sbdMessage.Append("From: " + Sender.RadioAddress + Constants.vbCrLf);
+                sbdMessage.Append("MID: " + MessageId + Globals.CRLF);
+                sbdMessage.Append("Date: " + Globals.FormatDate(MessageDate) + Globals.CRLF);
+                sbdMessage.Append("Type: Private" + Globals.CRLF);
+                sbdMessage.Append("From: " + Sender.RadioAddress + Globals.CRLF);
 
                 // Add the destinations to the header...
                 foreach (WinlinkAddress objAddress in cllToAddresses)
-                    sbdMessage.Append("To: " + objAddress.RadioAddress + Constants.vbCrLf);
+                    sbdMessage.Append("To: " + objAddress.RadioAddress + Globals.CRLF);
                 foreach (WinlinkAddress objAddress in cllCcAddresses)
-                    sbdMessage.Append("Cc: " + objAddress.RadioAddress + Constants.vbCrLf);
+                    sbdMessage.Append("Cc: " + objAddress.RadioAddress + Globals.CRLF);
 
                 // Add the subject and originating MBO to the header...
-                sbdMessage.Append("Subject: " + Subject + Constants.vbCrLf);
-                sbdMessage.Append("Mbo: " + Globals.SiteCallsign + Constants.vbCrLf);
+                sbdMessage.Append("Subject: " + Subject + Globals.CRLF);
+                sbdMessage.Append("Mbo: " + Globals.SiteCallsign + Globals.CRLF);
 
                 // Add the message body size to the header...
-                sbdMessage.Append("Body: " + Body.Length.ToString() + Constants.vbCrLf);
+                sbdMessage.Append("Body: " + Body.Length.ToString() + Globals.CRLF);
 
                 // Add the attachment sizes and names to the header...
                 foreach (Attachment stcAttachment in aryAttachments)
-                    sbdMessage.Append("File: " + stcAttachment.Image.Length.ToString() + " " + stcAttachment.FileName + Constants.vbCrLf);
+                    sbdMessage.Append("File: " + stcAttachment.Image.Length.ToString() + " " + stcAttachment.FileName + Globals.CRLF);
 
                 // Add the message body...
-                sbdMessage.Append(Constants.vbCrLf + Body);
+                sbdMessage.Append(Globals.CRLF + Body);
 
                 // Convert header and body to a binary image...
                 bytUncompressed = new byte[1];

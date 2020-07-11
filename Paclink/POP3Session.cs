@@ -23,8 +23,8 @@ namespace Paclink
         }
 
         // Initialize the basic POP3Server Reply String Constants
-        private const string ReplyOK = "+OK " + Constants.vbCrLf;
-        private const string ReplyERR = "-ERR " + Constants.vbCrLf;
+        private const string ReplyOK = "+OK " + Globals.CRLF;
+        private const string ReplyERR = "-ERR " + Globals.CRLF;
         public Socket connection;
         public string AuthorizedUser;
         public DateTime Timestamp;
@@ -62,9 +62,9 @@ namespace Paclink
 
         public POP3Session(Socket sock)
         {
-            Timestamp = DateAndTime.Now;
+            Timestamp = DateTime.Now;
             connection = sock;
-            dttSessionStart = DateAndTime.Now.AddMinutes(5);
+            dttSessionStart = DateTime.Now.AddMinutes(5);
             tmrSessionTimer = new System.Timers.Timer();
             tmrSessionTimer.Elapsed += OnSessionTimer;
             tmrSessionTimer.Enabled = false;
@@ -113,7 +113,7 @@ namespace Paclink
 
         private void OnSessionTimer(object s, ElapsedEventArgs e)
         {
-            if (dttSessionStart < DateAndTime.Now)
+            if (dttSessionStart < DateTime.Now)
             {
                 try
                 {
@@ -142,7 +142,7 @@ namespace Paclink
                 return ReplyOK;
             }
 
-            if ((Strings.Right(strInputStream, 2) ?? "") == Constants.vbCrLf)
+            if ((Strings.Right(strInputStream, 2) ?? "") == Globals.CRLF)
             {
                 // This is for a complete command or the CRLF to complete the command...
                 strInputStream = strCommandBuffer + strInputStream;
@@ -185,7 +185,7 @@ namespace Paclink
                                     }
                                     else
                                     {
-                                        return "501 Authentication failed" + Constants.vbCrLf;
+                                        return "501 Authentication failed" + Globals.CRLF;
                                     }
 
                                     break;
@@ -297,7 +297,7 @@ namespace Paclink
                     Array.Resize(ref blnDeleteFlags, intCount + 1);
                     blnDeleteFlags[intCount] = false;
                     intCount += 1;
-                    intByteCount += Conversions.ToInteger(objFileInfo.Length);
+                    intByteCount += Convert.ToInt32(objFileInfo.Length);
                 }
             }
 
@@ -311,7 +311,7 @@ namespace Paclink
             // Provides a string for the summary to the STAT command...
 
             GetPendingMimeList();
-            StatResponseRet = "+OK " + intNumberOfMimeFiles.ToString() + " " + intTotalBytes.ToString() + Constants.vbCrLf;
+            StatResponseRet = "+OK " + intNumberOfMimeFiles.ToString() + " " + intTotalBytes.ToString() + Globals.CRLF;
             return StatResponseRet;
         } // StatResponse
 
@@ -323,36 +323,36 @@ namespace Paclink
             int intCount = 0;
             if (string.IsNullOrEmpty(strMessageId))  // List everything as a multi line response...
             {
-                strResponse = "+OK " + intNumberOfMimeFiles.ToString() + " " + intTotalBytes.ToString() + Constants.vbCrLf;
+                strResponse = "+OK " + intNumberOfMimeFiles.ToString() + " " + intTotalBytes.ToString() + Globals.CRLF;
                 if (aryPendingMimeList is object)
                 {
                     foreach (FileInfo objFileInfo in aryPendingMimeList)
                     {
                         intCount = intCount + 1;
-                        strResponse = strResponse + intCount.ToString() + " " + objFileInfo.Length.ToString() + Constants.vbCrLf;
+                        strResponse = strResponse + intCount.ToString() + " " + objFileInfo.Length.ToString() + Globals.CRLF;
                     }
                 }
 
-                strResponse = strResponse + "." + Constants.vbCrLf;  // Add the terminator
+                strResponse = strResponse + "." + Globals.CRLF;  // Add the terminator
             }
             else  // Just list the requested message as a one line response...
             {
                 int intIndex;
-                intIndex = Conversions.ToInteger(strMessageId);
+                intIndex = Convert.ToInt32(strMessageId);
                 if (aryPendingMimeList is object)
                 {
                     if (intIndex > 0 & intIndex <= intNumberOfMimeFiles)
                     {
-                        strResponse = "+OK " + intIndex.ToString() + " " + aryPendingMimeList[intIndex - 1].Length.ToString() + Constants.vbCrLf;
+                        strResponse = "+OK " + intIndex.ToString() + " " + aryPendingMimeList[intIndex - 1].Length.ToString() + Globals.CRLF;
                     }
                     else
                     {
-                        strResponse = "-ERR no such message" + Constants.vbCrLf;
+                        strResponse = "-ERR no such message" + Globals.CRLF;
                     }
                 }
                 else
                 {
-                    strResponse = "-ERR no such message" + Constants.vbCrLf;
+                    strResponse = "-ERR no such message" + Globals.CRLF;
                 }
             }
 
@@ -374,7 +374,7 @@ namespace Paclink
             string strId;
             if (string.IsNullOrEmpty(strMessageId)) // Request for all messages and send a multi line response...
             {
-                UidlResponseRet = "+OK " + Constants.vbCrLf;
+                UidlResponseRet = "+OK " + Globals.CRLF;
                 if (intNumberOfMimeFiles != 0)
                 {
                     if (aryPendingMimeList is object)
@@ -386,20 +386,20 @@ namespace Paclink
                             intLastSlashPosition = Strings.InStrRev(strId, @"\");
                             strId = Strings.Mid(strId, intLastSlashPosition + 1);
                             strId = Strings.Replace(strId, ".mime", "");
-                            UidlResponseRet = UidlResponseRet + intCount.ToString() + " " + strId + Constants.vbCrLf;
+                            UidlResponseRet = UidlResponseRet + intCount.ToString() + " " + strId + Globals.CRLF;
                         }
                     }
 
-                    UidlResponseRet = UidlResponseRet + "." + Constants.vbCrLf; // add terminator
+                    UidlResponseRet = UidlResponseRet + "." + Globals.CRLF; // add terminator
                 }
                 else
                 {
-                    UidlResponseRet = "+OK" + Constants.vbCrLf + "." + Constants.vbCrLf;
+                    UidlResponseRet = "+OK" + Globals.CRLF + "." + Globals.CRLF;
                 }
             }
             else // Request for specific message just send a single line response...
             {
-                intIndex = Conversions.ToInteger(strMessageId);
+                intIndex = Convert.ToInt32(strMessageId);
                 if (aryPendingMimeList is object)
                 {
                     if (intIndex > 0 & intIndex <= intNumberOfMimeFiles)
@@ -408,16 +408,16 @@ namespace Paclink
                         intLastSlashPosition = Strings.InStrRev(strId, @"\");
                         strId = Strings.Mid(strId, intLastSlashPosition + 1);
                         strId = Strings.Replace(strId, ".mime", "");
-                        UidlResponseRet = "+OK " + intIndex.ToString() + " " + strId + Constants.vbCrLf;
+                        UidlResponseRet = "+OK " + intIndex.ToString() + " " + strId + Globals.CRLF;
                     }
                     else
                     {
-                        UidlResponseRet = "-ERR" + Constants.vbCrLf;
+                        UidlResponseRet = "-ERR" + Globals.CRLF;
                     }
                 }
                 else
                 {
-                    UidlResponseRet = "-ERR" + Constants.vbCrLf;
+                    UidlResponseRet = "-ERR" + Globals.CRLF;
                 }
             }
 
@@ -433,19 +433,19 @@ namespace Paclink
             int intIndex;
             if (!string.IsNullOrEmpty(sParam))
             {
-                intIndex = Conversions.ToInteger(sParam);
+                intIndex = Convert.ToInt32(sParam);
                 if (intIndex > 0 & intIndex <= Information.UBound(blnDeleteFlags) + 1)
                 {
                     if (blnDeleteFlags[intIndex - 1] == false) // Only mark if not yet marked for deletion
                     {
                         blnDeleteFlags[intIndex - 1] = true;
-                        DeleteMessageRet = "+OK message " + intIndex.ToString() + " marked for deletion" + Constants.vbCrLf;
+                        DeleteMessageRet = "+OK message " + intIndex.ToString() + " marked for deletion" + Globals.CRLF;
                         return DeleteMessageRet;
                     }
                 }
             }
 
-            DeleteMessageRet = "-ERR no such message" + Constants.vbCrLf;
+            DeleteMessageRet = "-ERR no such message" + Globals.CRLF;
             return DeleteMessageRet;
         } // DeleteMessage
 
@@ -457,7 +457,7 @@ namespace Paclink
             var loopTo = Information.UBound(blnDeleteFlags) + 1;
             for (intIndex = 1; intIndex <= loopTo; intIndex++)
                 blnDeleteFlags[intIndex - 1] = false;
-            return "+OK maildrop has " + (1 + Information.UBound(blnDeleteFlags)).ToString() + " messages" + Constants.vbCrLf;
+            return "+OK maildrop has " + (1 + Information.UBound(blnDeleteFlags)).ToString() + " messages" + Globals.CRLF;
         } // ResetMessages
 
         public string DeleteMimeFiles()
@@ -469,7 +469,7 @@ namespace Paclink
             int intIndex;
             if (intNumberOfMimeFiles == 0)
             {
-                DeleteMimeFilesRet = "+OK" + Constants.vbCrLf;
+                DeleteMimeFilesRet = "+OK" + Globals.CRLF;
                 return DeleteMimeFilesRet;
             }
 
@@ -485,7 +485,7 @@ namespace Paclink
                 }
             }
 
-            DeleteMimeFilesRet = "+OK" + Constants.vbCrLf;
+            DeleteMimeFilesRet = "+OK" + Globals.CRLF;
             return DeleteMimeFilesRet;
         } // DeleteMimeFiles
 
@@ -499,10 +499,10 @@ namespace Paclink
             int intIndex;
             if (!string.IsNullOrEmpty(strMessageNumber))
             {
-                intIndex = Conversions.ToInteger(strMessageNumber);
+                intIndex = Convert.ToInt32(strMessageNumber);
                 if (intNumberOfMimeFiles == 0)
                 {
-                    RetrieveMessageRet = "-ERR no messages" + Constants.vbCrLf;
+                    RetrieveMessageRet = "-ERR no messages" + Globals.CRLF;
                     return RetrieveMessageRet;
                 }
 
@@ -518,10 +518,10 @@ namespace Paclink
                             // Decode header for display and logging.
                             var strSubject = default(string);
                             var strFrom = default(string);
-                            var strHeaderLines = strMessage.Split(Conversions.ToChar(Constants.vbCr));
+                            var strHeaderLines = strMessage.Split(Conversions.ToChar(Globals.CR));
                             foreach (string strLine in strHeaderLines)
                             {
-                                var tmpStrLine = strLine.Replace(Constants.vbLf, "").Trim();
+                                var tmpStrLine = strLine.Replace(Globals.LF, "").Trim();
                                 if (tmpStrLine.StartsWith("From:"))
                                 {
                                     strFrom = tmpStrLine;
@@ -534,7 +534,7 @@ namespace Paclink
                             }
 
                             // Add byte stuffing for <CrLf . >
-                            strMessage = Strings.Replace(strMessage, Constants.vbCrLf + ".", Constants.vbCrLf + "..");
+                            strMessage = Strings.Replace(strMessage, Globals.CRLF + ".", Globals.CRLF + "..");
                             string strMessageId = aryPendingMimeList[intIndex - 1].FullName;
                             int nPosLastSlash = Strings.InStrRev(strMessageId, @"\");
                             strMessageId = Strings.Mid(strMessageId, nPosLastSlash + 1);
@@ -542,7 +542,7 @@ namespace Paclink
                             Globals.queSMTPDisplay.Enqueue("G" + strMessageId + " delivered to " + strAccountName);
                             Globals.queSMTPDisplay.Enqueue("G   " + strFrom);
                             Globals.queSMTPDisplay.Enqueue("G   " + strSubject);
-                            RetrieveMessageRet = "+OK " + Constants.vbCrLf + strMessage + Constants.vbCrLf + "." + Constants.vbCrLf;
+                            RetrieveMessageRet = "+OK " + Globals.CRLF + strMessage + Globals.CRLF + "." + Globals.CRLF;
                             srdMime.Close();
                             return RetrieveMessageRet;
                         }
@@ -550,7 +550,7 @@ namespace Paclink
                 }
             }
 
-            RetrieveMessageRet = "-ERR no such message" + Constants.vbCrLf;
+            RetrieveMessageRet = "-ERR no such message" + Globals.CRLF;
             return RetrieveMessageRet;
         } // RetrieveMessage
 
@@ -567,13 +567,13 @@ namespace Paclink
                 if (!string.IsNullOrEmpty(strMessageId))
                 {
                     var Param = strMessageId.Split(' ');
-                    intIndex = Conversions.ToInteger(Param[0]);
+                    intIndex = Convert.ToInt32(Param[0]);
                     int intLineCounter = 0;
                     if (Param.Length > 1)
-                        intLineCounter = Conversions.ToInteger(Param[1]);
+                        intLineCounter = Convert.ToInt32(Param[1]);
                     if (intNumberOfMimeFiles == 0)
                     {
-                        TopResponseRet = "-ERR no messages" + Constants.vbCrLf;
+                        TopResponseRet = "-ERR no messages" + Globals.CRLF;
                         return TopResponseRet;
                     }
 
@@ -584,15 +584,15 @@ namespace Paclink
                             strMime = new StreamReader(aryPendingMimeList[intIndex - 1].FullName);
                             strMessage = strMime.ReadToEnd();
                             // Add byte stuffing for <CrLf . >
-                            strMessage = Strings.Replace(strMessage, Constants.vbCrLf + ".", Constants.vbCrLf + "..");
-                            int intEndOfHeader = 4 + strMessage.IndexOf(Constants.vbCrLf + Constants.vbCrLf);
+                            strMessage = Strings.Replace(strMessage, Globals.CRLF + ".", Globals.CRLF + "..");
+                            int intEndOfHeader = 4 + strMessage.IndexOf(Globals.CRLF + Globals.CRLF);
                             string sHeader = strMessage.Substring(0, intEndOfHeader);
                             strMessage = strMessage.Substring(intEndOfHeader);
                             string sBody = "";
                             int intLineEnd;
                             for (int intLine = 1, loopTo = intLineCounter; intLine <= loopTo; intLine++) // Will not execute if no second parameter or if it is 0
                             {
-                                intLineEnd = 2 + strMessage.IndexOf(Constants.vbCrLf);
+                                intLineEnd = 2 + strMessage.IndexOf(Globals.CRLF);
                                 if (intLineEnd != 1)
                                 {
                                     sBody = sBody + strMessage.Substring(0, intLineEnd);
@@ -606,17 +606,17 @@ namespace Paclink
                             }
 
                             strMime.Close();
-                            return "+OK " + Constants.vbCrLf + sHeader + sBody + Constants.vbCrLf + "." + Constants.vbCrLf;
+                            return "+OK " + Globals.CRLF + sHeader + sBody + Globals.CRLF + "." + Globals.CRLF;
                         }
                     }
                 }
 
-                return "-ERR no such message" + Constants.vbCrLf;
+                return "-ERR no such message" + Globals.CRLF;
             }
             catch
             {
                 Logs.Exception("[8273] " + Information.Err().Description);
-                return "-ERR internal error" + Constants.vbCrLf;
+                return "-ERR internal error" + Globals.CRLF;
             }
         } // TopResponse
 

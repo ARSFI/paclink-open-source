@@ -510,7 +510,7 @@ namespace Paclink
             // 
             var sbdChannels = new StringBuilder();
             foreach (KeyValuePair<string, string> kvp in dicStation)
-                sbdChannels.Append(kvp.Key + ":" + kvp.Value + Microsoft.VisualBasic.Constants.vbCrLf);
+                sbdChannels.Append(kvp.Key + ":" + kvp.Value + Globals.CRLF);
             // 
             // Create the channel file.
             // 

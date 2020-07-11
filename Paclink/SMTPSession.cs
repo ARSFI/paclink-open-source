@@ -29,22 +29,22 @@ namespace Paclink
         }
 
         // Initialize SMTP receiver reply string constants...
-        private const string Reply220 = "220 Winlink.org" + Constants.vbCrLf; // Shortened 220 without return path
-        private const string Reply221 = "221 Closing Service" + Constants.vbCrLf; // 221 without return path
-        private const string Reply250 = "250 OK" + Constants.vbCrLf; // Shortened OK without return path
-        private const string Reply500 = "500 Syntax Error, command unrecognized" + Constants.vbCrLf;
-        private const string Reply501 = "501 Syntax Error in parameters or arguments" + Constants.vbCrLf;
-        private const string Reply503 = "503 Bad sequence of commands" + Constants.vbCrLf;
-        private const string Reply504 = "504 Command parameter not implemented" + Constants.vbCrLf;
-        private const string Reply211 = "211 System status, or system help reply" + Constants.vbCrLf;
-        private const string Reply214 = "214 Help Message" + Constants.vbCrLf;
-        private const string Reply450 = "450 mailbox not available" + Constants.vbCrLf;
-        private const string Reply550 = "550 user not registered" + Constants.vbCrLf;
-        private const string Reply451 = "451 requested action aborted" + Constants.vbCrLf;
-        private const string Reply452 = "452 action not taken, insufficient resources" + Constants.vbCrLf;
-        private const string Reply553 = "553 action not taken; mailbox name syntax error" + Constants.vbCrLf;
-        private const string Reply354 = "354 Start mail input, end with <CRLF>.<CRLF>" + Constants.vbCrLf;
-        private const string Reply554 = "554 Transaction failed or rejected" + Constants.vbCrLf;
+        private const string Reply220 = "220 Winlink.org" + Globals.CRLF; // Shortened 220 without return path
+        private const string Reply221 = "221 Closing Service" + Globals.CRLF; // 221 without return path
+        private const string Reply250 = "250 OK" + Globals.CRLF; // Shortened OK without return path
+        private const string Reply500 = "500 Syntax Error, command unrecognized" + Globals.CRLF;
+        private const string Reply501 = "501 Syntax Error in parameters or arguments" + Globals.CRLF;
+        private const string Reply503 = "503 Bad sequence of commands" + Globals.CRLF;
+        private const string Reply504 = "504 Command parameter not implemented" + Globals.CRLF;
+        private const string Reply211 = "211 System status, or system help reply" + Globals.CRLF;
+        private const string Reply214 = "214 Help Message" + Globals.CRLF;
+        private const string Reply450 = "450 mailbox not available" + Globals.CRLF;
+        private const string Reply550 = "550 user not registered" + Globals.CRLF;
+        private const string Reply451 = "451 requested action aborted" + Globals.CRLF;
+        private const string Reply452 = "452 action not taken, insufficient resources" + Globals.CRLF;
+        private const string Reply553 = "553 action not taken; mailbox name syntax error" + Globals.CRLF;
+        private const string Reply354 = "354 Start mail input, end with <CRLF>.<CRLF>" + Globals.CRLF;
+        private const string Reply554 = "554 Transaction failed or rejected" + Globals.CRLF;
         public Socket connection;
         public DateTime Timestamp;
         private DateTime dttSessionStart;
@@ -83,14 +83,14 @@ namespace Paclink
 
         public SMTPSession(Socket socket)
         {
-            Timestamp = DateAndTime.Now;
+            Timestamp = DateTime.Now;
             connection = socket;
             strMessageBody = "";
             strCommandBuffer = "";
             SMTPState = SessionState.Connected;
             // strMimeFilename = ""
 
-            dttSessionStart = DateAndTime.Now.AddMinutes(5);
+            dttSessionStart = DateTime.Now.AddMinutes(5);
             tmrSessionTimer = new System.Timers.Timer();
             tmrSessionTimer.Elapsed += OnSessionTimer;
             tmrSessionTimer.Enabled = false;
@@ -144,7 +144,7 @@ namespace Paclink
 
         private void OnSessionTimer(object s, ElapsedEventArgs e)
         {
-            if (dttSessionStart < DateAndTime.Now)
+            if (dttSessionStart < DateTime.Now)
             {
                 Close();
             }
@@ -176,7 +176,7 @@ namespace Paclink
                 }
 
                 // This is for a complete command or the CRLF to complete the command...
-                if ((Strings.Right(strInputStream, 2) ?? "") == Constants.vbCrLf)
+                if ((Strings.Right(strInputStream, 2) ?? "") == Globals.CRLF)
                 {
                     strInputStream = strCommandBuffer + strInputStream;
                     strCommand = Strings.UCase(Strings.Left(strInputStream, 4));
@@ -206,7 +206,7 @@ namespace Paclink
                                                                     // OK accept LOGIN and PLAIN authorization - Note both formats are 
                                                                     // required below since there was some prior incompatibility in the spec...
                                                                     // Add in a Hello response to the return packet.
-                                    return "250-smtp.winlink.org Hello " + strInputStream.Substring(5) + "250-AUTH LOGIN PLAIN" + Constants.vbCrLf + "250-AUTH=LOGIN PLAIN" + Constants.vbCrLf + "250 OK" + Constants.vbCrLf;
+                                    return "250-smtp.winlink.org Hello " + strInputStream.Substring(5) + "250-AUTH LOGIN PLAIN" + Globals.CRLF + "250-AUTH=LOGIN PLAIN" + Globals.CRLF + "250 OK" + Globals.CRLF;
 
 
                                 }
@@ -219,7 +219,7 @@ namespace Paclink
 
                             case "VRFY":  // Currently reply OK to all recipients
                                 {
-                                    return "250 OK " + strInputStream + Constants.vbCrLf;  // If command not "EHLO", "VRFY",  or "QUIT" return error
+                                    return "250 OK " + strInputStream + Globals.CRLF;  // If command not "EHLO", "VRFY",  or "QUIT" return error
                                 }
 
                             default:
@@ -256,11 +256,11 @@ namespace Paclink
                                     // Sucessful authorization if the MIME path is returned...
                                     if (!string.IsNullOrEmpty(strMimeFilePath))
                                     {
-                                        return "235 OK Authenticated" + Constants.vbCrLf;
+                                        return "235 OK Authenticated" + Globals.CRLF;
                                     }
                                     else
                                     {
-                                        return "501 Authentication failed" + Constants.vbCrLf;
+                                        return "501 Authentication failed" + Globals.CRLF;
                                     }
 
                                     break;
@@ -290,7 +290,7 @@ namespace Paclink
                                     SMTPState = SessionState.AuthLoginPass; // Change state to receive password
 
                                     // Send the Base64 encoded request for password...
-                                    return "334 " + Base64Encode("Password:") + Constants.vbCrLf;
+                                    return "334 " + Base64Encode("Password:") + Globals.CRLF;
                                 }
                         }
 
@@ -323,11 +323,11 @@ namespace Paclink
                                     if (!string.IsNullOrEmpty(strMimeFilePath))
                                     {
                                         Globals.queSMTPDisplay.Enqueue("BSMTP link from " + strAccountName + " at " + Globals.TimestampEx());
-                                        return "235 OK Authenticated" + Constants.vbCrLf;
+                                        return "235 OK Authenticated" + Globals.CRLF;
                                     }
                                     else
                                     {
-                                        return "501 Authentication failed" + Constants.vbCrLf;
+                                        return "501 Authentication failed" + Globals.CRLF;
                                     }
 
                                     break;
@@ -363,7 +363,7 @@ namespace Paclink
                                     }
                                     else
                                     {
-                                        return "530 Authentication required" + Constants.vbCrLf;
+                                        return "530 Authentication required" + Globals.CRLF;
                                     }
 
                                     break;
@@ -390,7 +390,7 @@ namespace Paclink
                                     {
                                         // Initial AUTH did NOT contain the Base64 Encode
                                         SMTPState = SessionState.AuthPlain;
-                                        return "334 " + Constants.vbCrLf; // Reply for a AUTH PLAIN request
+                                        return "334 " + Globals.CRLF; // Reply for a AUTH PLAIN request
                                     }
                                     else if (intPointer != 0)
                                     {
@@ -407,11 +407,11 @@ namespace Paclink
                                         strMimeFilePath = Authorize(strAccountName, strPassword);
                                         if (!string.IsNullOrEmpty(strMimeFilePath)) // sucessful authorization if the MIME path is returned
                                         {
-                                            return "235 OK Authenticated" + Constants.vbCrLf;
+                                            return "235 OK Authenticated" + Globals.CRLF;
                                         }
                                         else
                                         {
-                                            return "501 Authentication failed" + Constants.vbCrLf;
+                                            return "501 Authentication failed" + Globals.CRLF;
                                         }
                                     }
                                     else if (Strings.InStr(strInputStream.ToUpper(), "LOGIN") != 0)
@@ -421,7 +421,7 @@ namespace Paclink
                                         {
                                             // Initial AUTH did NOT contain the Base64 Encode
                                             SMTPState = SessionState.AuthLoginID;
-                                            return "334 " + Base64Encode("Username:") + Constants.vbCrLf;  // Base 64 encoded account name
+                                            return "334 " + Base64Encode("Username:") + Globals.CRLF;  // Base 64 encoded account name
                                         }
                                         else
                                         {
@@ -432,12 +432,12 @@ namespace Paclink
                                             strTemporary = Strings.Trim(Strings.Mid(strInputStream, intPointer + 5));
                                             strAccountName = Base64Decode(strTemporary);
                                             SMTPState = SessionState.AuthLoginPass;
-                                            return "334 " + Base64Encode("Password:") + Constants.vbCrLf;
+                                            return "334 " + Base64Encode("Password:") + Globals.CRLF;
                                         }
                                     }
                                     else
                                     {
-                                        return "504 Unrecognized authentication type" + Constants.vbCrLf;
+                                        return "504 Unrecognized authentication type" + Globals.CRLF;
                                     }
 
                                     break;
@@ -459,7 +459,7 @@ namespace Paclink
 
                         // Append data to the inbound string builder...
                         InboundMessage(strInputStream);
-                        if ((Strings.Right(Strings.Right(strMessageBody, 4) + strInputStream, 5) ?? "") == Constants.vbCrLf + "." + Constants.vbCrLf)
+                        if ((Strings.Right(Strings.Right(strMessageBody, 4) + strInputStream, 5) ?? "") == Globals.CRLF + "." + Globals.CRLF)
                         {
                             // This is the end of data...
 
@@ -469,7 +469,7 @@ namespace Paclink
                                 Globals.queSMTPDisplay.Enqueue("B" + objPaclinkMessage.MessageId + " from " + strAccountName + " rejected due to Bcc");
                                 Globals.queSMTPDisplay.Enqueue("BSubject: " + objPaclinkMessage.Subject);
                                 SMTPState = SessionState.Failure;
-                                return "554 " + "Winlink does not accept Bcc recipients" + Constants.vbCrLf;
+                                return "554 " + "Winlink does not accept Bcc recipients" + Globals.CRLF;
                             }
 
                             if (objPaclinkMessage.IsAccepted)
@@ -482,7 +482,7 @@ namespace Paclink
                                         Globals.queSMTPDisplay.Enqueue("B" + objPaclinkMessage.MessageId + " received from " + strAccountName);
                                         Globals.queSMTPDisplay.Enqueue("B   Subject: " + objPaclinkMessage.Subject);
                                         Globals.queSMTPDisplay.Enqueue("B   Rejected! Exceeds 120KB compressed size limit.");
-                                        return "554 Message exceeds WL2K's 120KB compressed size limit" + Constants.vbCrLf; // Transaction failed
+                                        return "554 Message exceeds WL2K's 120KB compressed size limit" + Globals.CRLF; // Transaction failed
                                     }
                                 }
 
@@ -530,13 +530,13 @@ namespace Paclink
                                 else
                                 {
                                     SMTPState = SessionState.Failure;
-                                    return "554 " + "Failure to save message" + Constants.vbCrLf;
+                                    return "554 " + "Failure to save message" + Globals.CRLF;
                                 }
                             }
                             else
                             {
                                 SMTPState = SessionState.Failure;
-                                return "554 " + objPaclinkMessage.ErrorDescription + Constants.vbCrLf;
+                                return "554 " + objPaclinkMessage.ErrorDescription + Globals.CRLF;
                             }
                         }
                         else
@@ -665,7 +665,7 @@ namespace Paclink
 
                             default:
                                 {
-                                    return "451 Local error cannot process command" + Constants.vbCrLf;
+                                    return "451 Local error cannot process command" + Globals.CRLF;
                                 }
                         }
 
@@ -687,7 +687,7 @@ namespace Paclink
             // later processing. Transparancy functions Per RFC821 are validated...
 
             int intPositionCrLfPeriod;
-            if (Information.IsNothing(sbdInboundMessage))
+            if (sbdInboundMessage == null)
             {
                 sbdInboundMessage = new StringBuilder();
                 strTransparentBuffer = "  ";    // Initialize the strTransparentBuffer to 2 spaces
@@ -700,7 +700,7 @@ namespace Paclink
             // Filter strTransparentBuffer for transparent "."
             do
             {
-                intPositionCrLfPeriod = Strings.InStr(strTransparentBuffer + strMessage, Constants.vbCrLf + ".");
+                intPositionCrLfPeriod = Strings.InStr(strTransparentBuffer + strMessage, Globals.CRLF + ".");
                 if (intPositionCrLfPeriod != 0) // There is a transparent "."
                 {
                     strRecordBuffer = strRecordBuffer + Strings.Left(strMessage, intPositionCrLfPeriod - 1);
@@ -729,7 +729,7 @@ namespace Paclink
             VBMath.Randomize();
             for (intIndex = Strings.Len(Strings.Left(strTag, 8)) + 1; intIndex <= 12; intIndex++)
             {
-                intSeed = Conversions.ToInteger(VBMath.Rnd() * 36);
+                intSeed = Convert.ToInt32(VBMath.Rnd() * 36);
                 if (intSeed < 36)
                     intSeed = intSeed + 1;
                 strName = strName + Strings.Mid("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", intSeed, 1);

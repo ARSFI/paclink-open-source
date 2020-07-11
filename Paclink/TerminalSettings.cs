@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO.Ports;
 using System.Windows.Forms;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -40,8 +39,8 @@ namespace Paclink
         {
             DialogResult = DialogResult.OK;
             Terminal.strPort = cmbPort.Text;
-            Terminal.intBaudRate = Conversions.ToInteger(cmbBaudRate.Text);
-            Terminal.intDataBits = Conversions.ToInteger(cmbDataBits.Text);
+            Terminal.intBaudRate = Convert.ToInt32(cmbBaudRate.Text);
+            Terminal.intDataBits = Convert.ToInt32(cmbDataBits.Text);
             var switchExpr = cmbStopBits.Text;
             switch (switchExpr)
             {
@@ -161,7 +160,7 @@ namespace Paclink
             }
             else
             {
-                cmbPort.Text = Conversions.ToString(cmbPort.Items[0]);
+                cmbPort.Text = cmbPort.Items[0].ToString();
             }
 
             cmbBaudRate.Text = Terminal.intBaudRate.ToString();

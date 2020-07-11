@@ -1,7 +1,7 @@
 ﻿
 // Class to hold a message address type...
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+
+using System;
 
 namespace Paclink
 {
@@ -91,7 +91,7 @@ namespace Paclink
                 try
                 {
                     // Try to convert to integer; a failure inidcates non integer...
-                    intSSID = Conversions.ToInteger(strCallsign.Substring(intDash + 1));
+                    intSSID = Convert.ToInt32(strCallsign.Substring(intDash + 1));
 
                     // Must be 1-15...
                     if (intSSID < 1 | intSSID > 15)
@@ -114,11 +114,11 @@ namespace Paclink
                 strChr = strCallsign.Substring(intIndex, 1);
 
                 // Return false if not A-Z or 0-9...
-                if (!(strChr.CompareTo(Conversions.ToString('A')) >= 0 & strChr.CompareTo(Conversions.ToString('Z')) <= 0 | strChr.CompareTo(Conversions.ToString('0')) >= 0 & strChr.CompareTo(Conversions.ToString('9')) <= 0))
+                if (!(strChr.CompareTo(Convert.ToString('A')) >= 0 & strChr.CompareTo(Convert.ToString('Z')) <= 0 | strChr.CompareTo(Convert.ToString('0')) >= 0 & strChr.CompareTo(Convert.ToString('9')) <= 0))
                     return false;
 
                 // Count the numeric digits...
-                if (strChr.CompareTo(Conversions.ToString('0')) >= 0 & strChr.CompareTo(Conversions.ToString('9')) <= 0)
+                if (strChr.CompareTo(Convert.ToString('0')) >= 0 & strChr.CompareTo(Convert.ToString('9')) <= 0)
                     intDigitFound += 1; // count the numeric digits
             }
 
@@ -248,9 +248,9 @@ namespace Paclink
                     return strLine.Substring(strLine.IndexOf(":") + 1).Trim();
                 }
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[7754] " + strLine + " " + Information.Err().Description);
+                Logs.Exception("[7754] " + strLine + " " + e.Message);
                 return "";
             }
         } // ParseAddress
@@ -278,7 +278,7 @@ namespace Paclink
         {
             // Converts an Internet format address to a radio format... 
 
-            string strBuffer = Strings.UCase(strAddress);
+            string strBuffer = strAddress.ToUpper();
             if (strBuffer.IndexOf("@WINLINK.ORG") != -1)
             {
                 strBuffer = strBuffer.Replace("SMTP:", "");

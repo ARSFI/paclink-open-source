@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -91,7 +90,7 @@ namespace Paclink
                 {
                     if (!InitializeSerialPort())
                     {
-                        txtDisplay.Text = "Serial port " + strPort + " failed to open..." + Constants.vbCrLf;
+                        txtDisplay.Text = "Serial port " + strPort + " failed to open..." + Globals.CRLF;
                     }
                 }
 
@@ -114,8 +113,8 @@ namespace Paclink
                                 sbd.Append((char)byt);
                         }
 
-                        string strData = sbd.ToString().Replace(Constants.vbLf, "");
-                        strData = strData.Replace(Constants.vbCr, Constants.vbCrLf);
+                        string strData = sbd.ToString().Replace(Globals.LF, "");
+                        strData = strData.Replace(Globals.CR, Globals.CRLF);
                         txtDisplay.AppendText(strData);
                         My.MyProject.Computer.FileSystem.WriteAllText(strLog, strData, true);
                     }
@@ -130,10 +129,10 @@ namespace Paclink
                 if (e.KeyChar == '\u0003' | e.KeyChar == '\u001b')
                 {
                     if (blnLocalEcho)
-                        txtDisplay.AppendText(Constants.vbCrLf);
+                        txtDisplay.AppendText(Globals.CRLF);
                     try
                     {
-                        objSerialPort.Write(Conversions.ToString(e.KeyChar));
+                        objSerialPort.Write(e.KeyChar.ToString());
                     }
                     catch
                     {
@@ -149,13 +148,13 @@ namespace Paclink
                 {
                     case BufferType.Line:
                         {
-                            if (Conversions.ToString(e.KeyChar) == Constants.vbCr)
+                            if (e.KeyChar.ToString() == Globals.CR)
                             {
                                 if (blnLocalEcho)
-                                    txtDisplay.AppendText(txtKeyboard.Text + Constants.vbCrLf);
+                                    txtDisplay.AppendText(txtKeyboard.Text + Globals.CRLF);
                                 try
                                 {
-                                    objSerialPort.Write(txtKeyboard.Text + Constants.vbCr);
+                                    objSerialPort.Write(txtKeyboard.Text + Globals.CR);
                                 }
                                 catch
                                 {
@@ -174,7 +173,7 @@ namespace Paclink
                                 return;
                             }
 
-                            if (Conversions.ToString(e.KeyChar) == " ")
+                            if (e.KeyChar.ToString() == " ")
                             {
                                 if (blnLocalEcho)
                                     txtDisplay.AppendText(txtKeyboard.Text + " ");
@@ -190,13 +189,13 @@ namespace Paclink
                                 txtKeyboard.Clear();
                             }
 
-                            if (Conversions.ToString(e.KeyChar) == Constants.vbCr)
+                            if (e.KeyChar.ToString() == Globals.CR)
                             {
                                 if (blnLocalEcho)
-                                    txtDisplay.AppendText(txtKeyboard.Text + Constants.vbCrLf);
+                                    txtDisplay.AppendText(txtKeyboard.Text + Globals.CRLF);
                                 try
                                 {
-                                    objSerialPort.Write(txtKeyboard.Text + Constants.vbCr);
+                                    objSerialPort.Write(txtKeyboard.Text + Globals.CR);
                                 }
                                 catch
                                 {
@@ -213,14 +212,14 @@ namespace Paclink
                         {
                             if (blnLocalEcho)
                             {
-                                txtDisplay.AppendText(Conversions.ToString(e.KeyChar));
-                                if (Conversions.ToString(e.KeyChar) == Constants.vbCr)
-                                    txtDisplay.AppendText(Constants.vbLf);
+                                txtDisplay.AppendText(e.KeyChar.ToString());
+                                if (e.KeyChar.ToString() == Globals.CR)
+                                    txtDisplay.AppendText(Globals.LF);
                             }
 
                             try
                             {
-                                objSerialPort.Write(Conversions.ToString(e.KeyChar));
+                                objSerialPort.Write(e.KeyChar.ToString());
                             }
                             catch
                             {
@@ -288,10 +287,10 @@ namespace Paclink
                 withBlock.WriteTimeout = intWriteTimeout;
                 withBlock.BaudRate = intBaudRate;
                 withBlock.DataBits = intDataBits;
-                withBlock.StopBits = (StopBits)Conversions.ToInteger(intStopBits);
+                withBlock.StopBits = (StopBits)Convert.ToInt32(intStopBits);
                 withBlock.PortName = strPort;
-                withBlock.Parity = (Parity)Conversions.ToInteger(intParity);
-                withBlock.Handshake = (Handshake)Conversions.ToInteger(intHandshake);
+                withBlock.Parity = (Parity)Convert.ToInt32(intParity);
+                withBlock.Handshake = (Handshake)Convert.ToInt32(intHandshake);
                 withBlock.RtsEnable = blnRTSEnable;
                 withBlock.DtrEnable = blnDTREnable;
                 try
@@ -325,22 +324,22 @@ namespace Paclink
         private void SaveCurrentProperties()
         {
             var sbdProperties = new StringBuilder();
-            sbdProperties.Append("Port " + strPort + Constants.vbCrLf);
-            sbdProperties.Append("BaudRate " + intBaudRate.ToString() + Constants.vbCrLf);
-            sbdProperties.Append("DataBits " + intDataBits.ToString() + Constants.vbCrLf);
-            sbdProperties.Append("StopBits " + intStopBits.ToString() + Constants.vbCrLf);
-            sbdProperties.Append("Parity " + intParity.ToString() + Constants.vbCrLf);
-            sbdProperties.Append("Handshake " + intHandshake.ToString() + Constants.vbCrLf);
-            sbdProperties.Append("WriteTimeout " + intWriteTimeout.ToString() + Constants.vbCrLf);
-            sbdProperties.Append("RTSEnable " + blnRTSEnable.ToString() + Constants.vbCrLf);
-            sbdProperties.Append("DTREnable " + blnDTREnable.ToString() + Constants.vbCrLf);
-            sbdProperties.Append("LocalEcho " + blnLocalEcho.ToString() + Constants.vbCrLf);
-            sbdProperties.Append("WordWrap " + blnWordWrap.ToString() + Constants.vbCrLf);
-            sbdProperties.Append("BufferType " + enmBufferType.ToString() + Constants.vbCrLf);
-            sbdProperties.Append("Top " + Top.ToString() + Constants.vbCrLf);
-            sbdProperties.Append("Left " + Left.ToString() + Constants.vbCrLf);
-            sbdProperties.Append("Width " + Width.ToString() + Constants.vbCrLf);
-            sbdProperties.Append("Height " + Height.ToString() + Constants.vbCrLf);
+            sbdProperties.Append("Port " + strPort + Globals.CRLF);
+            sbdProperties.Append("BaudRate " + intBaudRate.ToString() + Globals.CRLF);
+            sbdProperties.Append("DataBits " + intDataBits.ToString() + Globals.CRLF);
+            sbdProperties.Append("StopBits " + intStopBits.ToString() + Globals.CRLF);
+            sbdProperties.Append("Parity " + intParity.ToString() + Globals.CRLF);
+            sbdProperties.Append("Handshake " + intHandshake.ToString() + Globals.CRLF);
+            sbdProperties.Append("WriteTimeout " + intWriteTimeout.ToString() + Globals.CRLF);
+            sbdProperties.Append("RTSEnable " + blnRTSEnable.ToString() + Globals.CRLF);
+            sbdProperties.Append("DTREnable " + blnDTREnable.ToString() + Globals.CRLF);
+            sbdProperties.Append("LocalEcho " + blnLocalEcho.ToString() + Globals.CRLF);
+            sbdProperties.Append("WordWrap " + blnWordWrap.ToString() + Globals.CRLF);
+            sbdProperties.Append("BufferType " + enmBufferType.ToString() + Globals.CRLF);
+            sbdProperties.Append("Top " + Top.ToString() + Globals.CRLF);
+            sbdProperties.Append("Left " + Left.ToString() + Globals.CRLF);
+            sbdProperties.Append("Width " + Width.ToString() + Globals.CRLF);
+            sbdProperties.Append("Height " + Height.ToString() + Globals.CRLF);
             My.MyProject.Computer.FileSystem.WriteAllText(Globals.SiteRootDirectory + @"Data\Simple Terminal.stx", sbdProperties.ToString(), false);
         } // SaveCurrentProperties
 
@@ -380,91 +379,91 @@ namespace Paclink
 
                         case "BaudRate":
                             {
-                                intBaudRate = Conversions.ToInteger(strTokens[1]);
+                                intBaudRate = Convert.ToInt32(strTokens[1]);
                                 break;
                             }
 
                         case "DataBits":
                             {
-                                intDataBits = Conversions.ToInteger(strTokens[1]);
+                                intDataBits = Convert.ToInt32(strTokens[1]);
                                 break;
                             }
 
                         case "StopBits":
                             {
-                                intStopBits = Conversions.ToInteger(strTokens[1]);
+                                intStopBits = Convert.ToInt32(strTokens[1]);
                                 break;
                             }
 
                         case "Parity":
                             {
-                                intParity = Conversions.ToInteger(strTokens[1]);
+                                intParity = Convert.ToInt32(strTokens[1]);
                                 break;
                             }
 
                         case "Handshake":
                             {
-                                intHandshake = Conversions.ToInteger(strTokens[1]);
+                                intHandshake = Convert.ToInt32(strTokens[1]);
                                 break;
                             }
 
                         case "WriteTimeout":
                             {
-                                intWriteTimeout = Conversions.ToInteger(strTokens[1]);
+                                intWriteTimeout = Convert.ToInt32(strTokens[1]);
                                 break;
                             }
 
                         case "RTSEnable":
                             {
-                                blnRTSEnable = Conversions.ToBoolean(strTokens[1]);
+                                blnRTSEnable = Convert.ToBoolean(strTokens[1]);
                                 break;
                             }
 
                         case "DTREnable":
                             {
-                                blnDTREnable = Conversions.ToBoolean(strTokens[1]);
+                                blnDTREnable = Convert.ToBoolean(strTokens[1]);
                                 break;
                             }
 
                         case "LocalEcho":
                             {
-                                blnLocalEcho = Conversions.ToBoolean(strTokens[1]);
+                                blnLocalEcho = Convert.ToBoolean(strTokens[1]);
                                 break;
                             }
 
                         case "WordWrap":
                             {
-                                blnWordWrap = Conversions.ToBoolean(strTokens[1]);
+                                blnWordWrap = Convert.ToBoolean(strTokens[1]);
                                 break;
                             }
 
                         case "BufferType":
                             {
-                                enmBufferType = (BufferType)Conversions.ToInteger(strTokens[1]);
+                                enmBufferType = (BufferType)Convert.ToInt32(strTokens[1]);
                                 break;
                             }
 
                         case "Top":
                             {
-                                Top = Conversions.ToInteger(strTokens[1]);
+                                Top = Convert.ToInt32(strTokens[1]);
                                 break;
                             }
 
                         case "Left":
                             {
-                                Left = Conversions.ToInteger(strTokens[1]);
+                                Left = Convert.ToInt32(strTokens[1]);
                                 break;
                             }
 
                         case "Width":
                             {
-                                Width = Conversions.ToInteger(strTokens[1]);
+                                Width = Convert.ToInt32(strTokens[1]);
                                 break;
                             }
 
                         case "Height":
                             {
-                                Height = Conversions.ToInteger(strTokens[1]);
+                                Height = Convert.ToInt32(strTokens[1]);
                                 break;
                             }
                     }
@@ -517,7 +516,7 @@ namespace Paclink
             Thread.Sleep(1000);
             try
             {
-                objSerialPort.Write(Constants.vbCr);
+                objSerialPort.Write(Globals.CR);
             }
             catch
             {
@@ -538,7 +537,7 @@ namespace Paclink
             Thread.Sleep(1000);
             try
             {
-                objSerialPort.Write(Constants.vbCr);
+                objSerialPort.Write(Globals.CR);
             }
             catch
             {
@@ -559,7 +558,7 @@ namespace Paclink
             Thread.Sleep(1000);
             try
             {
-                objSerialPort.Write(Constants.vbCr);
+                objSerialPort.Write(Globals.CR);
             }
             catch
             {

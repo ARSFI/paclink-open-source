@@ -56,7 +56,7 @@ namespace Paclink
             // 
             // Displays instructions for entering a tactical address...
             // 
-            Interaction.MsgBox("A tactical account name may consist of a tactical address of alpha characters" + Constants.vbCrLf + "ONLY or alpha characters ONLY, followed by a dash, followed by alphanumeric" + Constants.vbCrLf + "characters . A name may not exceed 12 characters. " + Constants.vbCrLf + Constants.vbCrLf + "Valid account name examples:  MLBSHELTER, REDCROSS-12, POLICE-9A, FLDADEEOC-1" + Constants.vbCrLf + "The <account name>@Winlink.org will be the E-mail address of the account user." + Constants.vbCrLf + Constants.vbCrLf + "To enter a ham or MARS radio callsign account use the Callsign Accounts dialog box.");
+            Interaction.MsgBox("A tactical account name may consist of a tactical address of alpha characters" + Globals.CRLF + "ONLY or alpha characters ONLY, followed by a dash, followed by alphanumeric" + Globals.CRLF + "characters . A name may not exceed 12 characters. " + Globals.CRLF + Globals.CRLF + "Valid account name examples:  MLBSHELTER, REDCROSS-12, POLICE-9A, FLDADEEOC-1" + Globals.CRLF + "The <account name>@Winlink.org will be the E-mail address of the account user." + Globals.CRLF + Globals.CRLF + "To enter a ham or MARS radio callsign account use the Callsign Accounts dialog box.");
 
 
 
@@ -197,7 +197,7 @@ namespace Paclink
                 if (Globals.objWL2KInterop.ValidatePassword(strAccount, strOldPassword) == false)
                 {
                     Cursor = Cursors.Default;
-                    Interaction.MsgBox("The address/account has been previously used and the entered old password" + "does not match the password for '" + strAccount + "' in the Winlink database" + Constants.vbCr + Constants.vbCr + "To use this address/account " + "name you must have the previously assigned password.", MsgBoxStyle.Critical, "Validating Password");
+                    Interaction.MsgBox("The address/account has been previously used and the entered old password" + "does not match the password for '" + strAccount + "' in the Winlink database" + Globals.CR + Globals.CR + "To use this address/account " + "name you must have the previously assigned password.", MsgBoxStyle.Critical, "Validating Password");
 
 
 
@@ -263,7 +263,7 @@ namespace Paclink
             // 
             cmbAccount.Items.Clear();
             cmbAccount.Sorted = true;
-            foreach (Accounts.TAccount UserAccount in Accounts.AccountsList)
+            foreach (Accounts.TAccount UserAccount in Accounts.AccountsList.Values)
             {
                 if (!Globals.IsValidRadioCallsign(UserAccount.Name))
                 {
@@ -375,17 +375,17 @@ namespace Paclink
                 // 
                 if (Globals.objWL2KInterop.ValidatePassword(strTacticalAddress, strPassword) == false)
                 {
-                    Interaction.MsgBox("The address/account has been previously used and the entered password" + "does not match the password for '" + strTacticalAddress + "' in the Winlink database" + Constants.vbCr + Constants.vbCr + "To use this address/account " + "name you must have the previously assigned password.", MsgBoxStyle.Critical, "Validating Password");
+                    Interaction.MsgBox("The address/account has been previously used and the entered password" + "does not match the password for '" + strTacticalAddress + "' in the Winlink database" + Globals.CR + Globals.CR + "To use this address/account " + "name you must have the previously assigned password.", MsgBoxStyle.Critical, "Validating Password");
 
 
 
                     return false;
                 }
 
-                if (Interaction.MsgBox("The account name '" + strTacticalAddress + "' is already in use or otherwise " + "not available." + Constants.vbCrLf + "Do you want to add this account to this Paclink site anyway?", MsgBoxStyle.Question | MsgBoxStyle.YesNo, "Existing Tactical Address Found") == MsgBoxResult.Yes)
+                if (Interaction.MsgBox("The account name '" + strTacticalAddress + "' is already in use or otherwise " + "not available." + Globals.CRLF + "Do you want to add this account to this Paclink site anyway?", MsgBoxStyle.Question | MsgBoxStyle.YesNo, "Existing Tactical Address Found") == MsgBoxResult.Yes)
 
                 {
-                    Interaction.MsgBox("Using the same Tactical address from different Paclink sites must be done carefully." + Constants.vbCr + "Once mail is retrieved by a Paclink site it is considered delivered by the WL2K system " + Constants.vbCr + "and will not longer be accessable to other sites.", MsgBoxStyle.Information, "Caution!");
+                    Interaction.MsgBox("Using the same Tactical address from different Paclink sites must be done carefully." + Globals.CR + "Once mail is retrieved by a Paclink site it is considered delivered by the WL2K system " + Globals.CR + "and will not longer be accessable to other sites.", MsgBoxStyle.Information, "Caution!");
 
                     return true;
                 }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -85,7 +83,7 @@ namespace Paclink
                 var objPen = new Pen(Color.Lime, 1);
                 int intYctr = (int)(pnlRadar.Height / (double)2);
                 int intXctr = (int)(pnlRadar.Width / (double)2);
-                int intOffset = Conversions.ToInteger(dblRingRad);
+                int intOffset = Convert.ToInt32(dblRingRad);
                 graRangeBearing.DrawEllipse(objPen, intXctr - intOffset, intYctr - intOffset, (int)(2 * dblRingRad), (int)(2 * dblRingRad));
                 graRangeBearing.DrawEllipse(objPen, intXctr - 2 * intOffset, intYctr - 2 * intOffset, (int)(4 * dblRingRad), (int)(4 * dblRingRad));
                 graRangeBearing.DrawEllipse(objPen, intXctr - 3 * intOffset, intYctr - 3 * intOffset, (int)(6 * dblRingRad), (int)(6 * dblRingRad));
@@ -104,8 +102,8 @@ namespace Paclink
                     graRangeBearing.DrawLine(objPen, intXctr, intYctr, intXplot, intYplot);
 
                     // Draw the range and bearing strings... 
-                    graRangeBearing.DrawString(Strings.Format(dblRange, "####0") + " sm", fnt, Brushes.Yellow, 5, 5);
-                    graRangeBearing.DrawString(Strings.Format(dblBearing, "000") + "T", fnt, Brushes.Yellow, pnlRadar.Width - 40, 5);
+                    graRangeBearing.DrawString(dblRange.ToString("####0") + " sm", fnt, Brushes.Yellow, 5, 5);
+                    graRangeBearing.DrawString(dblBearing.ToString("000") + "T", fnt, Brushes.Yellow, pnlRadar.Width - 40, 5);
                 }
 
                 if (!string.IsNullOrEmpty(Globals.strConnectedCallsign)) // plot the callsign in the lower right corner
@@ -114,14 +112,14 @@ namespace Paclink
                 }
 
                 // Plot the UTC time in the lower left...
-                string strStartTime = Strings.Format(DateTime.UtcNow, "HH:mm:ss") + " UTC";
+                string strStartTime = DateTime.UtcNow.ToString("HH:mm:ss") + " UTC";
                 graRangeBearing.DrawString(strStartTime, fnt, Brushes.Yellow, 5, pnlRadar.Height - 15);
                 objPen.Dispose();
                 graRangeBearing.Dispose();
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[Radar.DrawRangeBearing] " + Information.Err().Description);
+                Logs.Exception("[Radar.DrawRangeBearing] " + e.Message);
             }
         } // Radar.DrawRangeBearing
     }

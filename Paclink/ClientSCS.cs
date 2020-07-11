@@ -145,8 +145,8 @@ namespace Paclink
                 if (objHostPort is object && objHostPort.HostState == SCSHostPort.HostModeState.HostMode)
                 {
                     // Wait for all serial data to be sent before closing serial port...
-                    var dttStartClose = DateAndTime.Now;
-                    while (DateAndTime.Now.Subtract(dttStartClose).TotalMilliseconds < 500 & blnSendingID)
+                    var dttStartClose = DateTime.Now;
+                    while (DateTime.Now.Subtract(dttStartClose).TotalMilliseconds < 500 & blnSendingID)
                         Thread.Sleep(100);
                     objHostPort.Close();
                     Thread.Sleep(Globals.intComCloseTime);
@@ -419,10 +419,10 @@ namespace Paclink
                             blnWaitingForManualConnect = true;
                             Globals.queChannelDisplay.Enqueue("G*** Waiting for clear channel condition...");
                             var intClearChannelMonitor = default(int);
-                            var dttClearChannelWait = DateAndTime.Now.AddSeconds(30);
+                            var dttClearChannelWait = DateTime.Now.AddSeconds(30);
                             do
                             {
-                                if (dttClearChannelWait < DateAndTime.Now)
+                                if (dttClearChannelWait < DateTime.Now)
                                     break;
                                 Thread.Sleep(100);
                                 Poll();
@@ -583,7 +583,7 @@ namespace Paclink
             else
             {
                 stcConnectedCall.PendingDisconnect = true;
-                stcConnectedCall.StartDisconnect = DateAndTime.Now;
+                stcConnectedCall.StartDisconnect = DateTime.Now;
                 SendCommand("D", Globals.stcSelectedChannel.TNCPort);
             }
 
@@ -609,7 +609,7 @@ namespace Paclink
             // Function to send an immediate disconnect command to the PTC II in host mode...
 
             // Returns True if sucessful, False otherwise
-            var dttStart = DateAndTime.Now;
+            var dttStart = DateTime.Now;
             blnCommandReply = false;
             strCommandReply = "";
             try
@@ -630,7 +630,7 @@ namespace Paclink
             }
 
             // Wait for reply?
-            while (DateAndTime.Now.Subtract(dttStart).TotalMilliseconds < 1200 & !blnCommandReply)
+            while (DateTime.Now.Subtract(dttStart).TotalMilliseconds < 1200 & !blnCommandReply)
             {
                 if (objHostPort is object)
                     objHostPort.Poll();
@@ -652,7 +652,7 @@ namespace Paclink
             // Parse the connection script, if any, into the ConnectScript string array...
             if (!string.IsNullOrEmpty(Globals.stcSelectedChannel.TNCScript))
             {
-                ConnectScript = Globals.stcSelectedChannel.TNCScript.Replace(Constants.vbLf, "").Split(Conversions.ToChar(Constants.vbCr));
+                ConnectScript = Globals.stcSelectedChannel.TNCScript.Replace(Globals.LF, "").Split(Conversions.ToChar(Globals.CR));
             }
 
             if (objHostPort.Startup())
@@ -711,8 +711,8 @@ namespace Paclink
             {
                 Globals.queChannelDisplay.Enqueue("R*** " + Globals.stcSelectedChannel.TNCTimeout.ToString() + " minute activity timeout at " + Strings.Format(DateTime.UtcNow, "yyyy/MM/dd HH:mm UTC"));
                 ImmediateDisconnect();
-                var dttStartDisconnect = DateAndTime.Now;
-                while (DateAndTime.Now.Subtract(dttStartDisconnect).TotalMilliseconds < 2000)
+                var dttStartDisconnect = DateTime.Now;
+                while (DateTime.Now.Subtract(dttStartDisconnect).TotalMilliseconds < 2000)
                 {
                     Thread.Sleep(100);
                     objHostPort.Poll();
@@ -769,7 +769,7 @@ namespace Paclink
                     return;
                 }
             }
-            else if (stcConnectedCall.PendingDisconnect & DateAndTime.Now.Subtract(stcConnectedCall.StartDisconnect).TotalSeconds > 10)
+            else if (stcConnectedCall.PendingDisconnect & DateTime.Now.Subtract(stcConnectedCall.StartDisconnect).TotalSeconds > 10)
             {
                 ImmediateDisconnect();
                 Thread.Sleep(500);
@@ -924,7 +924,7 @@ namespace Paclink
 
                     // Update the count of pending frames in the TNC.
                     if (Information.IsNumeric(strTokens[2]))
-                        objHostPort.intTNCFramesPending = Conversions.ToInteger(strTokens[2]);
+                        objHostPort.intTNCFramesPending = Convert.ToInt32(strTokens[2]);
                     return;
                 }
             }
@@ -934,7 +934,7 @@ namespace Paclink
             {
                 if (Information.IsNumeric(strData))
                 {
-                    int intNewBytesSentCount = Conversions.ToInteger(strData);
+                    int intNewBytesSentCount = Convert.ToInt32(strData);
                     if (intNewBytesSentCount > 0)
                     {
                         if (intBytesSentCount > intNewBytesSentCount)
@@ -970,7 +970,7 @@ namespace Paclink
             {
                 try
                 {
-                    intChannel = Conversions.ToInteger(strData.Substring(intPtr1 + 1, intPtr2 - (intPtr1 + 1)));
+                    intChannel = Convert.ToInt32(strData.Substring(intPtr1 + 1, intPtr2 - (intPtr1 + 1)));
                 }
                 catch
                 {
@@ -1012,7 +1012,7 @@ namespace Paclink
                             case "PTC-II":
                             case "PTC-IIpro":
                                 {
-                                    stcConnectedCall.Port = Conversions.ToInteger(stcConnectedCall.Callsign.Substring(0, 1));
+                                    stcConnectedCall.Port = Convert.ToInt32(stcConnectedCall.Callsign.Substring(0, 1));
                                     stcConnectedCall.Callsign = stcConnectedCall.Callsign.Substring(2).Trim();
                                     break;
                                 }
@@ -1583,7 +1583,7 @@ namespace Paclink
                 {
                     objHostPort.SendHostCommandPacket(bytCommand, Conversions.ToByte(intChannel));
                     objHostPort.Poll();
-                    var dttStart = DateAndTime.Now;
+                    var dttStart = DateTime.Now;
                 }
                 catch
                 {
@@ -1603,7 +1603,7 @@ namespace Paclink
                 {
                     objHostPort.SendHostCommandPacket(strCommand, Conversions.ToByte(intChannel));
                     objHostPort.Poll();
-                    var dttStart = DateAndTime.Now;
+                    var dttStart = DateTime.Now;
                 }
                 catch
                 {
@@ -1743,7 +1743,7 @@ namespace Paclink
             {
                 byte[] bytData;
                 var objEncoder = new ASCIIEncoding();
-                bytData = Globals.GetBytes(strDataToSend + Constants.vbCr);
+                bytData = Globals.GetBytes(strDataToSend + Globals.CR);
 
                 // Send the data here...
                 DataToSend(bytData);
@@ -1956,7 +1956,7 @@ namespace Paclink
                     if (objSerial is object)
                     {
                         if (objSerial.IsOpen)
-                            objSerial.Write("QUIT" + Constants.vbCr);
+                            objSerial.Write("QUIT" + Globals.CR);
                         Thread.Sleep(200);
 
                         // Release the serial port...
@@ -2064,12 +2064,12 @@ namespace Paclink
             {
             }
 
-            var dttTimer = DateAndTime.Now.AddMilliseconds(2000);
+            var dttTimer = DateTime.Now.AddMilliseconds(2000);
             do
             {
                 if (blnCmdSeen | blnPacSeen | blnAsteriskSeen)
                     return true;
-                if (dttTimer < DateAndTime.Now)
+                if (dttTimer < DateTime.Now)
                     return false;
                 Thread.Sleep(100);
                 Poll();
@@ -2192,7 +2192,7 @@ namespace Paclink
                 objSerial.PortName = Globals.stcSelectedChannel.TNCSerialPort;
                 // objSerial.WriteTimeout = 1000
                 objSerial.ReceivedBytesThreshold = 1;
-                objSerial.BaudRate = Conversions.ToInteger(Globals.stcSelectedChannel.TNCBaudRate);
+                objSerial.BaudRate = Convert.ToInt32(Globals.stcSelectedChannel.TNCBaudRate);
                 objSerial.DataBits = 8;
                 objSerial.StopBits = StopBits.One;
                 objSerial.Parity = Parity.None;
@@ -2257,9 +2257,9 @@ namespace Paclink
             else if (blnAcknowledged == false)
             {
                 // Repeat the last frame if no acknowledgement received within one second...
-                if (dttReplyTimer < DateAndTime.Now)
+                if (dttReplyTimer < DateTime.Now)
                 {
-                    dttReplyTimer = DateAndTime.Now.AddMilliseconds(1000);
+                    dttReplyTimer = DateTime.Now.AddMilliseconds(1000);
                     SendNextFrame(true);
                 }
             }
@@ -2267,7 +2267,7 @@ namespace Paclink
             {
                 // Send the next frame in the queue if any are pending else send a 
                 // query command...
-                dttReplyTimer = DateAndTime.Now.AddMilliseconds(1000);
+                dttReplyTimer = DateTime.Now.AddMilliseconds(1000);
                 if (queDataOutbound.Count > 0 | queCommandOutbound.Count > 0)
                 {
                     SendNextFrame();
@@ -2319,7 +2319,7 @@ namespace Paclink
             Array.Resize(ref bytDataIn, intIndex);
             try
             {
-                OnPTCControl?.Invoke(Globals.GetString(bytDataIn) + Constants.vbCr);
+                OnPTCControl?.Invoke(Globals.GetString(bytDataIn) + Globals.CR);
             }
             catch
             {
@@ -2338,9 +2338,9 @@ namespace Paclink
                 dttTimer = DateTime.Now.AddMilliseconds(1000);
             }
 
-            if (dttTimer < DateAndTime.Now)
+            if (dttTimer < DateTime.Now)
             {
-                dttTimer = DateAndTime.Now.AddMilliseconds((double)1000);
+                dttTimer = DateTime.Now.AddMilliseconds((double)1000);
                 var bytG3Query = new byte[] { 0xAA, 0xAA, 0xFE, 0x1, 0x1, 0x47, 0x33, 0x0, 0x0 };
                 queCommandOutbound.Enqueue(bytG3Query);
             }
@@ -2683,7 +2683,7 @@ namespace Paclink
                             case 4:
                             case 6:
                                 {
-                                    OnPTCControl?.Invoke(Globals.GetString(bytPayload, 2) + Constants.vbCr);
+                                    OnPTCControl?.Invoke(Globals.GetString(bytPayload, 2) + Globals.CR);
                                     break;
                                 }
 
@@ -2879,7 +2879,7 @@ namespace Paclink
             // Enter CRC extended host mode...
             try
             {
-                objSerial.Write("JHOST4" + Constants.vbCr);
+                objSerial.Write("JHOST4" + Globals.CR);
             }
             catch
             {
@@ -2980,17 +2980,17 @@ namespace Paclink
                     blnCmdSeen = false;
                     blnAsteriskSeen = false;
                     // Resets packet mode if necessary necessary...
-                    dttTimer = DateAndTime.Now;
+                    dttTimer = DateTime.Now;
                     try
                     {
                         sbdResponse.Length = 0;
-                        objSerial.Write("QUIT" + Constants.vbCr);
+                        objSerial.Write("QUIT" + Globals.CR);
                     }
                     catch
                     {
                     }
 
-                    while (DateAndTime.Now.Subtract(dttTimer).TotalMilliseconds < 1000)
+                    while (DateTime.Now.Subtract(dttTimer).TotalMilliseconds < 1000)
                     {
                         Thread.Sleep(100);
                         Poll();
@@ -3004,10 +3004,10 @@ namespace Paclink
                 if (blnAsteriskSeen) // TNC was left in emulation mode TNC 2 by some other program
                 {
                     blnCmdSeen = false;
-                    dttTimer = DateAndTime.Now;
+                    dttTimer = DateTime.Now;
                     sbdResponse.Length = 0;
-                    objSerial.Write("TNC 0" + Constants.vbCr); // Put in normal default emulation mode TNC 0
-                    while (DateAndTime.Now.Subtract(dttTimer).TotalMilliseconds < 1000)
+                    objSerial.Write("TNC 0" + Globals.CR); // Put in normal default emulation mode TNC 0
+                    while (DateTime.Now.Subtract(dttTimer).TotalMilliseconds < 1000)
                     {
                         Thread.Sleep(100);
                         Poll();
@@ -3031,19 +3031,19 @@ namespace Paclink
                     sbdResponse.Length = 0;
                     if (Globals.stcSelectedChannel.TNCType == "PTC DR-7800")
                     {
-                        objSerial.Write("RESTART" + Constants.vbCr);   // PHS DR-7800 works better with Restart than Reset.
+                        objSerial.Write("RESTART" + Globals.CR);   // PHS DR-7800 works better with Restart than Reset.
                     }
                     else
                     {
-                        objSerial.Write("RESET" + Constants.vbCr);
+                        objSerial.Write("RESET" + Globals.CR);
                     } // Reset is OK with other types of modems.
                 }
                 catch
                 {
                 }
 
-                dttTimer = DateAndTime.Now;
-                while (DateAndTime.Now.Subtract(dttTimer).TotalMilliseconds < 3000) // Wait 3 seconds for RESET
+                dttTimer = DateTime.Now;
+                while (DateTime.Now.Subtract(dttTimer).TotalMilliseconds < 3000) // Wait 3 seconds for RESET
                 {
                     Thread.Sleep(100);
                     Poll();
@@ -3068,10 +3068,10 @@ namespace Paclink
                         {
                         }
 
-                        dttTimer = DateAndTime.Now.AddMilliseconds(2000);
+                        dttTimer = DateTime.Now.AddMilliseconds(2000);
                         do
                         {
-                            if (dttTimer < DateAndTime.Now)
+                            if (dttTimer < DateTime.Now)
                                 break;
                             Thread.Sleep(100);
                             Poll();
@@ -3120,12 +3120,12 @@ namespace Paclink
 
                                 if (tmpStrLine.Length > 0)
                                 {
-                                    dttTimer = DateAndTime.Now;
+                                    dttTimer = DateTime.Now;
                                     blnCmdSeen = false;
                                     try
                                     {
                                         sbdResponse.Length = 0;
-                                        objSerial.Write(tmpStrLine + Constants.vbCr);
+                                        objSerial.Write(tmpStrLine + Globals.CR);
                                     }
                                     catch
                                     {
@@ -3157,9 +3157,9 @@ namespace Paclink
                     }
                 }
 
-                objSerial.Write("MYCALL " + strPactorCallsign + Constants.vbCr);
+                objSerial.Write("MYCALL " + strPactorCallsign + Globals.CR);
                 Thread.Sleep(50);
-                objSerial.Write("PAC MYCALL " + strPactorCallsign + Constants.vbCr);
+                objSerial.Write("PAC MYCALL " + strPactorCallsign + Globals.CR);
                 Thread.Sleep(50);
 
                 // Set the TNC to host mode...

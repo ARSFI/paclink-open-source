@@ -49,7 +49,7 @@ namespace Paclink
 
         private TChannelProperties stcChannel;
         private string[] arySelectedMBOs;
-        private DateTime dttLastBusyUpdate = DateAndTime.Now;
+        private DateTime dttLastBusyUpdate = DateTime.Now;
         private bool blnChangesNotSaved;
         private IClient objClient;
         private bool blnLoading;
@@ -87,12 +87,12 @@ namespace Paclink
             cmbFrequencies.Text = argstrChannel;
             if (!Globals.IsValidFrequency(strCenterFreq, ref intHz))
             {
-                Interaction.MsgBox("Improper frequency syntax! Select frequency from selected RMS " + Constants.vbCr + "or enter a frequency 1800 - 54000 KHz.", MsgBoxStyle.Information);
+                Interaction.MsgBox("Improper frequency syntax! Select frequency from selected RMS " + Globals.CR + "or enter a frequency 1800 - 54000 KHz.", MsgBoxStyle.Information);
                 return;
             }
             else if (intHz < 1800000 | intHz > 54000000)
             {
-                Interaction.MsgBox("Not a valid frequency. Select frequency from selected RMS " + Constants.vbCr + "or enter a frequency 1800 - 54000 KHz.", MsgBoxStyle.Information);
+                Interaction.MsgBox("Not a valid frequency. Select frequency from selected RMS " + Globals.CR + "or enter a frequency 1800 - 54000 KHz.", MsgBoxStyle.Information);
                 return;
             }
 
@@ -131,7 +131,7 @@ namespace Paclink
                 if (value)
                 {
                     lblBusy.BackColor = Color.Tomato;
-                    dttLastBusyUpdate = DateAndTime.Now;
+                    dttLastBusyUpdate = DateTime.Now;
                 }
                 else
                 {
@@ -201,7 +201,7 @@ namespace Paclink
             {
                 try
                 {
-                    intHz -= Conversions.ToInteger(stcChannel.AudioToneCenter);
+                    intHz -= Convert.ToInt32(stcChannel.AudioToneCenter);
                     lblUSB.Text = "USB Dial: " + Strings.Format(intHz / (double)1000, "##0000.000") + " KHz";
                 }
                 catch
@@ -238,7 +238,7 @@ namespace Paclink
             {
                 try
                 {
-                    intHz -= Conversions.ToInteger(stcChannel.AudioToneCenter);
+                    intHz -= Convert.ToInt32(stcChannel.AudioToneCenter);
                     lblUSB.Text = "USB Dial: " + Strings.Format(intHz / (double)1000, "##0000.000") + " KHz";
                     stcChannel.RDOCenterFrequency = strCenterFreq;
                     Globals.objRadioControl.SetParameters(ref stcChannel);
@@ -376,7 +376,7 @@ namespace Paclink
                                 {
                                     if (Information.IsNumeric(strToken.Replace("#", "")))
                                     {
-                                        int intFrequency = Conversions.ToInteger(strToken.Substring(0, strToken.IndexOf(".")));
+                                        int intFrequency = Convert.ToInt32(strToken.Substring(0, strToken.IndexOf(".")));
                                         if (intFrequency > 1800 & intFrequency < 54000) // Only select HF frequencies
                                         {
                                             strFrequencies += strToken.Trim() + ",";

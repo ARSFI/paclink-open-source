@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Paclink
 {
@@ -19,14 +20,14 @@ namespace Paclink
             public string Suffix;             // Optoinal callsign Suffix for ID 
         } // TAccount
 
-        public static Collection AccountsList;
+        public static Dictionary<string, TAccount> AccountsList;
         public static string AccountsString;
 
         public static void RefreshAccountsList()
         {
             // Clear user list...
             AccountsList = null;
-            AccountsList = new Collection();
+            AccountsList = new Dictionary<string, TAccount>();
             AccountsString = Globals.objINIFile.GetString("Properties", "Account Names", "");
             string strAccountsListNoDupes = ""; // Added to purge ini file of any duplicate accounts
             if (!string.IsNullOrEmpty(AccountsString))
@@ -52,7 +53,7 @@ namespace Paclink
                         NewAccount.MimePathOut = Globals.SiteRootDirectory + @"Accounts\" + strEachAccount + @"_Account\";
                         try
                         {
-                            AccountsList.Add(NewAccount, strEachAccount);
+                            AccountsList.Add(strEachAccount, NewAccount);
                             strAccountsListNoDupes += strEachAccount + "|";
                         }
                         catch
@@ -74,7 +75,7 @@ namespace Paclink
         {
             try
             {
-                return (TAccount)AccountsList[strAccountName];
+                return AccountsList[strAccountName];
             }
             catch
             {

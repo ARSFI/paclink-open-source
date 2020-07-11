@@ -120,7 +120,7 @@ namespace Paclink
 
                     objSerial.WriteTimeout = 1000;
                     objSerial.ReceivedBytesThreshold = 1;         // Minimum of 1 bytes for interrupt 
-                    objSerial.BaudRate = Conversions.ToInteger(stcChannel.RDOControlBaud);
+                    objSerial.BaudRate = Convert.ToInt32(stcChannel.RDOControlBaud);
                     objSerial.DataBits = 8;
                     objSerial.Parity = Parity.None;
                     objSerial.StopBits = StopBits.Two; // two stop bits for TS-440, 450, 690
@@ -213,7 +213,7 @@ namespace Paclink
             // Verified with TS-480 and TS-2000
             string strCommand;
             strKilohertz = Globals.StripMode(strKilohertz); // Strip off any mode designator
-            int intHertz = Globals.KHzToHz(strKilohertz) - Conversions.ToInteger(strAudioCenterFrequency);
+            int intHertz = Globals.KHzToHz(strKilohertz) - Convert.ToInt32(strAudioCenterFrequency);
             SendCommand("PR0;"); // Turn off any speech processor (not used on all models)
             try
             {
@@ -284,8 +284,8 @@ namespace Paclink
                             if (Globals.UseWideFilter(strRDOCenterFreq) | !blnUseNarrow)
                             {
                                 // Set the wide filter
-                                int intHighCO = 1200 + Conversions.ToInteger(strAudioCenterFrequency);
-                                int intLowCO = Conversions.ToInteger(strAudioCenterFrequency) - 1200;
+                                int intHighCO = 1200 + Convert.ToInt32(strAudioCenterFrequency);
+                                int intLowCO = Convert.ToInt32(strAudioCenterFrequency) - 1200;
                                 int intIndex = intHighCO / 200 - 7;
                                 SendCommand("SH" + Strings.Format(intIndex, "00") + ";"); // 1200 Hz above Audio Center
                                 intIndex = Math.Min(10, intLowCO / 100) + 1;
@@ -294,8 +294,8 @@ namespace Paclink
                             // set the narrow filter
                             else
                             {
-                                int intHighCO = 300 + Conversions.ToInteger(strAudioCenterFrequency);
-                                int intLowCO = Conversions.ToInteger(strAudioCenterFrequency) - 300;
+                                int intHighCO = 300 + Convert.ToInt32(strAudioCenterFrequency);
+                                int intLowCO = Convert.ToInt32(strAudioCenterFrequency) - 300;
                                 int intIndex = intHighCO / 200 - 7;
                                 SendCommand("SH" + Strings.Format(intIndex, "00") + ";"); // 300 Hz above Audio Center
                                 intIndex = Math.Min(10, intLowCO / 100) + 1;
@@ -315,7 +315,7 @@ namespace Paclink
                     {
                         try
                         {
-                            dttTimeout = DateAndTime.Now;
+                            dttTimeout = DateTime.Now;
                             strRadioReply = "";
                             // While strRadioReply.IndexOf("FL") = -1
                             // If dttTimeout.AddSeconds(3) < Now Then
@@ -351,7 +351,7 @@ namespace Paclink
                         // Verified OK with TS-480
                         try
                         {
-                            dttTimeout = DateAndTime.Now;
+                            dttTimeout = DateTime.Now;
                             strRadioReply = "";
                             // While strRadioReply.IndexOf("FW") = -1
                             // If dttTimeout.AddSeconds(3) < Now Then
@@ -400,7 +400,7 @@ namespace Paclink
                 else
                 {
                     objSerial.Write(strCommand);
-                    strTrace = strTrace + strCommand + Constants.vbCr;
+                    strTrace = strTrace + strCommand + Globals.CR;
                 }
 
                 Thread.Sleep(100);
@@ -467,15 +467,15 @@ namespace Paclink
                             // or 400 - 534 (B band) 
                             if (intHertz >= 136000000 & intHertz <= 199000000) // A Band
                             {
-                                SendCommand("BC 0,0" + Constants.vbCr);
+                                SendCommand("BC 0,0" + Globals.CR);
                                 // Set A Vfo, 0 offset, 5 KHz steps  (default)
-                                strCmd = "FO 0,0" + intHertz.ToString() + ",0,0,0,0,0,0,08,08,000,00600000,0" + Constants.vbCr;
+                                strCmd = "FO 0,0" + intHertz.ToString() + ",0,0,0,0,0,0,08,08,000,00600000,0" + Globals.CR;
                             }
                             else if (intHertz >= 400000000 & intHertz <= 534000000) // B Band
                             {
-                                SendCommand("BC 1,1" + Constants.vbCr);
+                                SendCommand("BC 1,1" + Globals.CR);
                                 // Set B Vfo, 0 offset, 25 KHz steps (default)
-                                strCmd = "FO 1,0" + intHertz.ToString() + ",7,0,0,0,0,0,08,08,000,05000000,0" + Constants.vbCr;
+                                strCmd = "FO 1,0" + intHertz.ToString() + ",7,0,0,0,0,0,08,08,000,05000000,0" + Globals.CR;
                             }
 
                             return SendCommand(strCmd);
@@ -491,15 +491,15 @@ namespace Paclink
                             // or 400 - 534 (B band) 
                             if (intHertz >= 136000000 & intHertz <= 199000000) // A Band
                             {
-                                SendCommand("BC 0,0" + Constants.vbCr);
+                                SendCommand("BC 0,0" + Globals.CR);
                                 // Set A Vfo, 0 offset, 5 KHz steps  (default)
-                                strCmd = "FO 0,0" + intHertz.ToString() + ",0,0,0,0,0,0,08,08,000,00600000,0" + Constants.vbCr;
+                                strCmd = "FO 0,0" + intHertz.ToString() + ",0,0,0,0,0,0,08,08,000,00600000,0" + Globals.CR;
                             }
                             else if (intHertz >= 400000000 & intHertz <= 534000000) // B Band
                             {
-                                SendCommand("BC 1,1" + Constants.vbCr);
+                                SendCommand("BC 1,1" + Globals.CR);
                                 // Set B Vfo, 0 offset, 25 KHz steps (default)
-                                strCmd = "FO 1,0" + intHertz.ToString() + ",7,0,0,0,0,0,08,08,000,05000000,0" + Constants.vbCr;
+                                strCmd = "FO 1,0" + intHertz.ToString() + ",7,0,0,0,0,0,08,08,000,05000000,0" + Globals.CR;
                             }
 
                             return SendCommand(strCmd);

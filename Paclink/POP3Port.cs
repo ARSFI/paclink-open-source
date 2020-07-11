@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using Microsoft.VisualBasic;
@@ -47,7 +48,7 @@ namespace Paclink
                 {
                     if (objPOP3Sessions[intIndex] is object)
                     {
-                        if (objPOP3Sessions[intIndex].Timestamp > DateAndTime.Now.AddMinutes(-30))
+                        if (objPOP3Sessions[intIndex].Timestamp > DateTime.Now.AddMinutes(-30))
                         {
                             objPOP3Sessions[intIndex].Close();
                             objPOP3Sessions[intIndex] = null;

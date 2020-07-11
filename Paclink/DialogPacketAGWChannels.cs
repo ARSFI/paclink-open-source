@@ -155,7 +155,7 @@ namespace Paclink
                             strTokens = strLine.Split('=');
                             if (strTokens[0].IndexOf("PORTS") != 1)
                             {
-                                intAGWPorts = Conversions.ToInteger(strTokens[1]);
+                                intAGWPorts = Convert.ToInt32(strTokens[1]);
                                 break;
                             }
                         }
@@ -351,7 +351,7 @@ namespace Paclink
                     Array.Copy(bytTCPData, 36, bytTemp1, 0, bytTemp1.Length);
                     string strPortInfo = Globals.GetString(bytTemp1);
                     int intPtr1 = strPortInfo.IndexOf(";");
-                    int intPortCnt = Conversions.ToInteger(strPortInfo.Substring(0, intPtr1));
+                    int intPortCnt = Convert.ToInt32(strPortInfo.Substring(0, intPtr1));
                     for (int i = 1, loopTo = intPortCnt; i <= loopTo; i++)
                     {
                         int intPtr2 = strPortInfo.IndexOf("with ", intPtr1);
@@ -482,13 +482,13 @@ namespace Paclink
                     var withBlock = stcNewChannel;
                     withBlock.ChannelType = EChannelModes.PacketAGW;
                     withBlock.ChannelName = cmbChannelName.Text;
-                    withBlock.Priority = Conversions.ToInteger(nudPriority.Value);
+                    withBlock.Priority = Convert.ToInt32(nudPriority.Value);
                     withBlock.RemoteCallsign = txtRemoteCallsign.Text;
-                    withBlock.AGWTimeout = Conversions.ToInteger(nudActivityTimeout.Value);
-                    withBlock.AGWPacketLength = Conversions.ToInteger(nudPacketLength.Value);
+                    withBlock.AGWTimeout = Convert.ToInt32(nudActivityTimeout.Value);
+                    withBlock.AGWPacketLength = Convert.ToInt32(nudPacketLength.Value);
                     withBlock.AGWPort = cmbAGWPort.Text;
                     withBlock.AGWScript = txtScript.Text;
-                    withBlock.AGWScriptTimeout = Conversions.ToInteger(nudScriptTimeout.Value);
+                    withBlock.AGWScriptTimeout = Convert.ToInt32(nudScriptTimeout.Value);
                     withBlock.Enabled = chkEnabled.Checked;
                     withBlock.EnableAutoforward = true; // Packet Channels always enabled
                 }
@@ -544,14 +544,14 @@ namespace Paclink
                     var withBlock = stcUpdateChannel;
                     withBlock.ChannelType = EChannelModes.PacketAGW;
                     withBlock.ChannelName = cmbChannelName.Text;
-                    withBlock.Priority = Conversions.ToInteger(nudPriority.Value);
+                    withBlock.Priority = Convert.ToInt32(nudPriority.Value);
                     withBlock.RemoteCallsign = txtRemoteCallsign.Text;
-                    withBlock.AGWTimeout = Conversions.ToInteger(nudActivityTimeout.Value);
-                    withBlock.AGWPacketLength = Conversions.ToInteger(nudPacketLength.Value);
+                    withBlock.AGWTimeout = Convert.ToInt32(nudActivityTimeout.Value);
+                    withBlock.AGWPacketLength = Convert.ToInt32(nudPacketLength.Value);
                     withBlock.AGWPort = cmbAGWPort.Text;
                     withBlock.AGWScript = txtScript.Text;
-                    withBlock.AGWScriptTimeout = Conversions.ToInteger(nudScriptTimeout.Value);
-                    withBlock.AGWMaxFrames = Conversions.ToInteger(nudMaxOutstanding.Value);
+                    withBlock.AGWScriptTimeout = Convert.ToInt32(nudScriptTimeout.Value);
+                    withBlock.AGWMaxFrames = Convert.ToInt32(nudMaxOutstanding.Value);
                     withBlock.Enabled = chkEnabled.Checked;
                     withBlock.EnableAutoforward = true; // Packet Channels always enabled
                 }

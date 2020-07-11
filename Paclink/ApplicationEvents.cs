@@ -16,7 +16,7 @@ namespace Paclink.My
     {
         private void MyUnhandledException(object s, Microsoft.VisualBasic.ApplicationServices.UnhandledExceptionEventArgs e)
         {
-            string strUnhandledException = Globals.TimestampEx() + " [" + Globals.strProductVersion + "] " + s.ToString() + ": " + Constants.vbCrLf + e.Exception.Message + Constants.vbCrLf + e.Exception.StackTrace + Constants.vbCrLf + e.Exception.TargetSite.ToString() + Constants.vbCrLf + Constants.vbCrLf;
+            string strUnhandledException = Globals.TimestampEx() + " [" + Globals.strProductVersion + "] " + s.ToString() + ": " + Globals.CRLF + e.Exception.Message + Globals.CRLF + e.Exception.StackTrace + Globals.CRLF + e.Exception.TargetSite.ToString() + Globals.CRLF + Globals.CRLF;
 
             MyProject.Computer.FileSystem.WriteAllText(Globals.SiteRootDirectory + @"Logs\Unhandled Exceptions.log", strUnhandledException, true);
             Interaction.MsgBox(strUnhandledException, MsgBoxStyle.Critical, "Unhandled Exception Error");
@@ -34,7 +34,7 @@ namespace Paclink.My
                 // 
                 // Remove CrLf and noise words from the stack trace.
                 // 
-                string strTrace = e.Exception.StackTrace.Replace(Constants.vbCrLf, "$").Replace("   at ", " ");
+                string strTrace = e.Exception.StackTrace.Replace(Globals.CRLF, "$").Replace("   at ", " ");
                 // 
                 // Remove arguments in parentheses.
                 // 

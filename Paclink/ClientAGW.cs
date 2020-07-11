@@ -207,7 +207,7 @@ namespace Paclink
                         enmState = ELinkStates.LinkFailed;
                     }
 
-                    if (blnDisconnectPending & DateAndTime.Now.Subtract(dttStartDisconnect).TotalSeconds > 30)
+                    if (blnDisconnectPending & DateTime.Now.Subtract(dttStartDisconnect).TotalSeconds > 30)
                     {
                         Disconnect();
                     }
@@ -272,11 +272,11 @@ namespace Paclink
 
         private bool Initialize()
         {
-            intAGWPort = Conversions.ToInteger(Globals.stcSelectedChannel.AGWPort.Substring(0, Globals.stcSelectedChannel.AGWPort.IndexOf(":")));
+            intAGWPort = Convert.ToInt32(Globals.stcSelectedChannel.AGWPort.Substring(0, Globals.stcSelectedChannel.AGWPort.IndexOf(":")));
             blnDisconnectPending = false;
             if (!string.IsNullOrEmpty(Globals.stcSelectedChannel.AGWScript))
             {
-                ConnectScript = Globals.stcSelectedChannel.AGWScript.Replace(Constants.vbLf, "").Split(Conversions.ToChar(Constants.vbCr));
+                ConnectScript = Globals.stcSelectedChannel.AGWScript.Replace(Globals.LF, "").Split(Conversions.ToChar(Globals.CR));
             }
 
             try
@@ -290,8 +290,8 @@ namespace Paclink
                 try
                 {
                     objTCPPort.Close();
-                    var dttDisconStart = DateAndTime.Now;
-                    while (DateAndTime.Now.Subtract(dttDisconStart).TotalSeconds < 10 & objTCPPort.Connected)
+                    var dttDisconStart = DateTime.Now;
+                    while (DateTime.Now.Subtract(dttDisconStart).TotalSeconds < 10 & objTCPPort.Connected)
                         Thread.Sleep(100);
                 }
                 catch
@@ -330,8 +330,8 @@ namespace Paclink
                         OnError(task.Exception);
                     }
                 });
-                var dttStart = DateAndTime.Now;
-                while (DateAndTime.Now.Subtract(dttStart).TotalSeconds < 10 & !blnLoggedIn)
+                var dttStart = DateTime.Now;
+                while (DateTime.Now.Subtract(dttStart).TotalSeconds < 10 & !blnLoggedIn)
                 {
                     Thread.Sleep(200);
                     ProcessPortInput();
@@ -357,7 +357,7 @@ namespace Paclink
         // Sub to Send byte Data or add data to the outbound Queue
         public void DataToSend(byte[] Data)
         {
-            string strTemp = Globals.GetString(Data).Replace(Constants.vbCr, ">>");
+            string strTemp = Globals.GetString(Data).Replace(Globals.CR, ">>");
             if (!blnLoggedIn)
                 return;
             if (Data.Length == 0)
@@ -437,7 +437,7 @@ namespace Paclink
                     objD.Data = bytTemp;
                     objD.Port = ConnectedCall.Port;
                     objD.IsDisconnect = true;
-                    dttStartDisconnect = DateAndTime.Now;
+                    dttStartDisconnect = DateTime.Now;
                     cllOutboundQueue.Add(objD, ConnectedCall.Callsign); // add the packet to the Outbound Queue collection
                     blnDisconnectPending = true;
                     blnPollEnabled = true;
@@ -462,8 +462,8 @@ namespace Paclink
             lLen = lLength;
             for (n = 1; n <= 4; n++)
             {
-                lQ = lLen / Conversions.ToInteger(Math.Pow(256, 4 - n)); // note integer divide 
-                lLen = lLen - Conversions.ToInteger(lQ * Math.Pow(256, 4 - n));
+                lQ = lLen / Convert.ToInt32(Math.Pow(256, 4 - n)); // note integer divide 
+                lLen = lLen - Convert.ToInt32(lQ * Math.Pow(256, 4 - n));
                 bLength[4 - n] = Conversions.ToByte(lQ);
             }
 
@@ -637,8 +637,8 @@ namespace Paclink
             }
 
             Release(); // disconnect and release AGW resource
-            var dttWait = DateAndTime.Now;
-            while (DateAndTime.Now.Subtract(dttWait).TotalMilliseconds < 1000 & blnLoggedIn)
+            var dttWait = DateTime.Now;
+            while (DateTime.Now.Subtract(dttWait).TotalMilliseconds < 1000 & blnLoggedIn)
             {
                 Thread.Sleep(100);
                 ProcessPortInput();
@@ -720,8 +720,8 @@ namespace Paclink
             objProcess.StartInfo = objProcessStartInfo;
             Globals.queChannelDisplay.Enqueue("R*** Starting " + strProcessName);
             objProcess.Start();
-            var dtStart = DateAndTime.Now;
-            while (DateAndTime.Now.Subtract(dtStart).TotalSeconds < 20) // wait up to 20 seconds
+            var dtStart = DateTime.Now;
+            while (DateTime.Now.Subtract(dtStart).TotalSeconds < 20) // wait up to 20 seconds
             {
                 Thread.Sleep(1000);
                 objAGWProcess = Process.GetProcessesByName(strProcessName);
@@ -1030,7 +1030,7 @@ namespace Paclink
             {
                 byte[] bytData;
                 var objEncoder = new ASCIIEncoding();
-                bytData = Globals.GetBytes(strDataToSend + Constants.vbCr);
+                bytData = Globals.GetBytes(strDataToSend + Globals.CR);
                 var bytTemp = new byte[36];
                 if (!blnLoggedIn)
                     return SequenceScriptRet;

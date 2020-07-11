@@ -49,7 +49,7 @@ namespace Paclink
 
         public bool Restore(string strFile)
         {
-            if (Interaction.MsgBox("This will replace your current Paclink settings with the new settings contained in file:" + Constants.vbCrLf + strFile + ". Any connect Script files (.script) will not be affected." + Constants.vbCrLf + "Your existing INI file will be saved to backup file: " + strFilePath + ".bak" + Constants.vbCrLf + "Do you wish to continue?", MsgBoxStyle.YesNo) == Constants.vbNo)
+            if (Interaction.MsgBox("This will replace your current Paclink settings with the new settings contained in file:" + Globals.CRLF + strFile + ". Any connect Script files (.script) will not be affected." + Globals.CRLF + "Your existing INI file will be saved to backup file: " + strFilePath + ".bak" + Globals.CRLF + "Do you wish to continue?", MsgBoxStyle.YesNo) == Constants.vbNo)
 
 
                 return false;
@@ -70,7 +70,7 @@ namespace Paclink
                 return false;
             }
 
-            Interaction.MsgBox("File " + strFile + " successfully imported." + Constants.vbCrLf + "Paclink will now quit.  Restart to use new INI File settings.", MsgBoxStyle.Information);
+            Interaction.MsgBox("File " + strFile + " successfully imported." + Globals.CRLF + "Paclink will now quit.  Restart to use new INI File settings.", MsgBoxStyle.Information);
             return true;
         } // Restore
 
@@ -205,7 +205,7 @@ namespace Paclink
                 var sbdContent = new StringBuilder();
                 foreach (string strSection in dicSections.Keys)
                 {
-                    sbdContent.AppendLine(Constants.vbCrLf + "[" + strSection + "]");
+                    sbdContent.AppendLine(Globals.CRLF + "[" + strSection + "]");
                     foreach (string strKey in dicSections[strSection].Keys)
                     {
                         string strValue = dicSections[strSection][strKey];
@@ -234,7 +234,7 @@ namespace Paclink
             bool blnResult;
             try
             {
-                blnResult = Conversions.ToBoolean(GetRecord(strSection, strKey, blnDefault.ToString()));
+                blnResult = Convert.ToBoolean(GetRecord(strSection, strKey, blnDefault.ToString()));
             }
             catch
             {
@@ -249,7 +249,7 @@ namespace Paclink
             int intResult;
             try
             {
-                intResult = Conversions.ToInteger(GetRecord(strSection, strKey, intDefault.ToString()));
+                intResult = Convert.ToInt32(GetRecord(strSection, strKey, intDefault.ToString()));
             }
             catch
             {

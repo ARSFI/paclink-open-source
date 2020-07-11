@@ -128,7 +128,7 @@ namespace Paclink
         public ClientNativeKISS()
         {
             // The class is instantiated to begin a channel connection...
-            dttLastActivity = DateAndTime.Now;
+            dttLastActivity = DateTime.Now;
             Globals.queStatusDisplay.Enqueue("Starting");
             Globals.queStatusDisplay.Enqueue("Starting");
             Globals.blnManualAbort = false;
@@ -242,61 +242,61 @@ namespace Paclink
 
                                         case "TXDELAY":
                                             {
-                                                intTXDelay = Conversions.ToInteger(strTokens[1]);
+                                                intTXDelay = Convert.ToInt32(strTokens[1]);
                                                 break;
                                             }
 
                                         case "PERSISTANCE":
                                             {
-                                                intPersistance = Conversions.ToInteger(strTokens[1]);
+                                                intPersistance = Convert.ToInt32(strTokens[1]);
                                                 break;
                                             }
 
                                         case "SLOTTIME":
                                             {
-                                                intSlottime = Conversions.ToInteger(strTokens[1]);
+                                                intSlottime = Convert.ToInt32(strTokens[1]);
                                                 break;
                                             }
 
                                         case "FULLDUPLEX":
                                             {
-                                                blnFullDuplex = Conversions.ToBoolean(strTokens[1]);
+                                                blnFullDuplex = Convert.ToBoolean(strTokens[1]);
                                                 break;
                                             }
 
                                         case "MAXFRAMESIZE":
                                             {
-                                                intMaxFrameSize = Conversions.ToInteger(strTokens[1]);
+                                                intMaxFrameSize = Convert.ToInt32(strTokens[1]);
                                                 break;
                                             }
 
                                         case "MAXFRAMES":
                                             {
-                                                intMaxFrames = Conversions.ToInteger(strTokens[1]);
+                                                intMaxFrames = Convert.ToInt32(strTokens[1]);
                                                 break;
                                             }
 
                                         case "ACKTIMER":
                                             {
-                                                intACKTimer = Conversions.ToInteger(strTokens[1]);
+                                                intACKTimer = Convert.ToInt32(strTokens[1]);
                                                 break;
                                             }
 
                                         case "MAXRETRY":
                                             {
-                                                intMaxRetry = Conversions.ToInteger(strTokens[1]);
+                                                intMaxRetry = Convert.ToInt32(strTokens[1]);
                                                 break;
                                             }
 
                                         case "POLLTHRESH":
                                             {
-                                                intPollThresh = Conversions.ToInteger(strTokens[1]);
+                                                intPollThresh = Convert.ToInt32(strTokens[1]);
                                                 break;
                                             }
 
                                         case "KISSEXIT":
                                             {
-                                                blnExitKiss = Conversions.ToBoolean(strTokens[1]);
+                                                blnExitKiss = Convert.ToBoolean(strTokens[1]);
                                                 break;
                                             }
 
@@ -322,7 +322,7 @@ namespace Paclink
                         }
                         catch (Exception ex)
                         {
-                            Logs.Exception("[ClientNativeKISS.Open] " + strLine + Constants.vbCr + Information.Err().Description);
+                            Logs.Exception("[ClientNativeKISS.Open] " + strLine + Globals.CR + Information.Err().Description);
                         }
                     }
                     while (true);
@@ -346,7 +346,7 @@ namespace Paclink
                 objSerial = new SerialPort();
                 objSerial.PortName = Globals.stcSelectedChannel.TNCSerialPort;
                 objSerial.ReceivedBytesThreshold = 1;
-                objSerial.BaudRate = Conversions.ToInteger(Globals.stcSelectedChannel.TNCBaudRate);
+                objSerial.BaudRate = Convert.ToInt32(Globals.stcSelectedChannel.TNCBaudRate);
                 objSerial.DataBits = 8;
                 objSerial.StopBits = StopBits.One;
                 objSerial.Parity = Parity.None;
@@ -401,7 +401,7 @@ namespace Paclink
                 // All OK so set up Peter's Native KISS DLL
                 try
                 {
-                    objKissComPort = new COMPort(Globals.stcSelectedChannel.TNCSerialPort, Conversions.ToInteger(Globals.stcSelectedChannel.TNCBaudRate));
+                    objKissComPort = new COMPort(Globals.stcSelectedChannel.TNCSerialPort, Convert.ToInt32(Globals.stcSelectedChannel.TNCBaudRate));
                     // set up the optional escape characters
                     if (!string.IsNullOrEmpty(strEscapeChars))
                         objKissComPort.escapedCharList = strEscapeChars; // Escape characters from .aps file
@@ -417,7 +417,7 @@ namespace Paclink
                     objKissChannel.SetPersistence(intPersistance);
                     objKissChannel.SetSlotTime(intSlottime);
                     objKissChannel.SetTXDelay(intTXDelay);
-                    objKissChannel.SetTXFullDuplex(Conversions.ToInteger(blnFullDuplex));
+                    objKissChannel.SetTXFullDuplex(Convert.ToInt32(blnFullDuplex));
                     enmState = ELinkStates.Initialized;
                 }
                 catch (Exception ex)
@@ -446,7 +446,7 @@ namespace Paclink
                 objSerial.Write(bytExitKiss, 0, bytExitKiss.Length);
                 Thread.Sleep(200);
                 // Send return to get cmd: prompt
-                objSerial.Write(Constants.vbCr);
+                objSerial.Write(Globals.CR);
                 Thread.Sleep(200);
                 var switchExpr = Globals.stcSelectedChannel.TNCType;
                 switch (switchExpr)
@@ -455,17 +455,17 @@ namespace Paclink
                     case "TM-D72": // TODO: this needs verification or correction for the D700
                         {
                             // if TM-Dxx Kenwood internal use TC sequence
-                            objSerial.Write("TC 1" + Constants.vbCr); // force the interface to Display unit
+                            objSerial.Write("TC 1" + Globals.CR); // force the interface to Display unit
                             Thread.Sleep(100);
                             int intHz = Globals.KHzToHz(Globals.stcSelectedChannel.RDOCenterFrequency);
                             // TODO: These codes need verification for D700,  OK for D710
                             if (intHz <= 199000000) // A Band
                             {
-                                objSerial.Write("TN 2,0" + Constants.vbCr); // Enable the TNC to use A band and go to TNC interface
+                                objSerial.Write("TN 2,0" + Globals.CR); // Enable the TNC to use A band and go to TNC interface
                             }
                             else
                             {
-                                objSerial.Write("TN 2,1" + Constants.vbCr);
+                                objSerial.Write("TN 2,1" + Globals.CR);
                             } // Enable the TNC to use B band and go to TNC interface
 
                             break;
@@ -474,21 +474,21 @@ namespace Paclink
                     case "TM-D700 int":
                     case "TH-D7 int":
                         {
-                            objSerial.Write("TC 1" + Constants.vbCr); // force the interface to Display unit
+                            objSerial.Write("TC 1" + Globals.CR); // force the interface to Display unit
                             Thread.Sleep(100);
-                            objSerial.Write("TNC 2" + Constants.vbCr); // select the TNC Packet mode
+                            objSerial.Write("TNC 2" + Globals.CR); // select the TNC Packet mode
                             Thread.Sleep(100);
                             int intHz = Globals.KHzToHz(Globals.stcSelectedChannel.RDOCenterFrequency);
                             // TODO: These codes need verification for D700, D7
                             if (intHz <= 199000000) // A Band
                             {
-                                objSerial.Write("BC 0,0" + Constants.vbCr); // Set A band as asctive band
-                                objSerial.Write("DTB 0" + Constants.vbCr); // Enable the TNC to use A band
+                                objSerial.Write("BC 0,0" + Globals.CR); // Set A band as asctive band
+                                objSerial.Write("DTB 0" + Globals.CR); // Enable the TNC to use A band
                             }
                             else
                             {
-                                objSerial.Write("BC 1,1" + Constants.vbCr); // Set B band as asctive band
-                                objSerial.Write("DTB 1" + Constants.vbCr);
+                                objSerial.Write("BC 1,1" + Globals.CR); // Set B band as asctive band
+                                objSerial.Write("DTB 1" + Globals.CR);
                             } // Enable the TNC to use B band
 
                             break;
@@ -498,7 +498,7 @@ namespace Paclink
                 Thread.Sleep(500);
                 queTNCData.Clear();
                 strCommandReply = "";
-                objSerial.Write(Constants.vbCr);
+                objSerial.Write(Globals.CR);
 
                 // Send KISSSTART sequence
                 foreach (string cmd in strKissStart)
@@ -508,7 +508,7 @@ namespace Paclink
                         strBaudRate = cmd.Substring(cmd.IndexOf("HBAUD ") + 5).Trim() + " baud";
                     }
 
-                    objSerial.Write(cmd + Constants.vbCr);
+                    objSerial.Write(cmd + Globals.CR);
                     Thread.Sleep(200);
                 }
 
@@ -516,7 +516,7 @@ namespace Paclink
                 // Parse the connection script, if any, into the ConnectScript string array...
                 if (!string.IsNullOrEmpty(Globals.stcSelectedChannel.TNCScript))
                 {
-                    ConnectScript = Globals.stcSelectedChannel.TNCScript.Replace(Constants.vbLf, "").Split(Conversions.ToChar(Constants.vbCr));
+                    ConnectScript = Globals.stcSelectedChannel.TNCScript.Replace(Globals.LF, "").Split(Conversions.ToChar(Globals.CR));
                 }
 
                 return true;
@@ -552,11 +552,11 @@ namespace Paclink
 
                 if (objProtocol is object)
                     objProtocol.CloseProtocol();
-                var dttTimeout = DateAndTime.Now;
-                dttTimeout = DateAndTime.Now;
+                var dttTimeout = DateTime.Now;
+                dttTimeout = DateTime.Now;
                 while (!(enmState == ELinkStates.Disconnected | enmState == ELinkStates.LinkFailed))
                 {
-                    if (dttTimeout.AddSeconds(10) < DateAndTime.Now)
+                    if (dttTimeout.AddSeconds(10) < DateTime.Now)
                         break;
                 }
 
@@ -711,7 +711,7 @@ namespace Paclink
                             }
                         }
                         // Start connection timing
-                        dttStartConnect = DateAndTime.Now;
+                        dttStartConnect = DateTime.Now;
                     }
                     else
                     {
@@ -723,7 +723,7 @@ namespace Paclink
                 else
                 {
                     // start Connection Timing...
-                    dttStartConnect = DateAndTime.Now;
+                    dttStartConnect = DateTime.Now;
                     Globals.queRateDisplay.Enqueue("Linking");
                     Globals.queChannelDisplay.Enqueue("G*** Starting Packet connection to " + Globals.stcSelectedChannel.RemoteCallsign + " on port " + Globals.stcSelectedChannel.TNCPort.ToString());
                     // Start KISS connection here
@@ -771,7 +771,7 @@ namespace Paclink
                 {
                     if (objCon.connectState == Connection.ConnectionState.Connected)
                     {
-                        dttLastActivity = DateAndTime.Now;
+                        dttLastActivity = DateTime.Now;
                         objCon.Send(bytData);
                         intBytesConfirmedSent += 0;
                     }
@@ -865,12 +865,12 @@ namespace Paclink
                     }
                 }
                 // check for timeouts approx once per second
-                if (blnInScript & DateAndTime.Now.Subtract(dttLastScript).TotalSeconds > Globals.stcSelectedChannel.TNCScriptTimeout)
+                if (blnInScript & DateTime.Now.Subtract(dttLastScript).TotalSeconds > Globals.stcSelectedChannel.TNCScriptTimeout)
                 {
                     Globals.queChannelDisplay.Enqueue("R*** Script Timeout...aborting script");
                     Abort();
                 }
-                else if (enmState == ELinkStates.Connecting & DateAndTime.Now.Subtract(dttStartConnect).TotalSeconds > 60)
+                else if (enmState == ELinkStates.Connecting & DateTime.Now.Subtract(dttStartConnect).TotalSeconds > 60)
                 {
                     Globals.queChannelDisplay.Enqueue("R*** 60 second connect timeout...");
                     Abort();
@@ -888,14 +888,14 @@ namespace Paclink
                     if (intBytesAvail > 0)
                     {
                         Array.Resize(ref bytRcvBuff, intBytesAvail);
-                        dttLastActivity = DateAndTime.Now;
+                        dttLastActivity = DateTime.Now;
                         if (blnInScript)
                         {
                             // Display received data immediately and post data to the script response string...
                             string strResponse = Globals.GetString(bytRcvBuff);
                             Globals.queChannelDisplay.Enqueue("X" + strResponse);
                             strScriptResponse += strResponse.ToUpper();
-                            dttLastScript = DateAndTime.Now;
+                            dttLastScript = DateTime.Now;
                             SequenceScript();
                         }
                         else if (objProtocol is object)
@@ -932,7 +932,7 @@ namespace Paclink
             if (intConnectScriptPtr > ConnectScript.Length - 1)
             {
                 blnInScript = false;
-                Globals.queChannelDisplay.Enqueue(Constants.vbCr);
+                Globals.queChannelDisplay.Enqueue(Globals.CR);
                 Globals.queChannelDisplay.Enqueue("G #End of Script File...");
                 if (!Information.IsNothing(objProtocol))
                     objProtocol.ChannelInput(strScriptResponse);
@@ -944,7 +944,7 @@ namespace Paclink
                 int intPtr = strScriptResponse.IndexOf(ConnectScript[intConnectScriptPtr]);
                 if (intPtr == -1)
                     return false;
-                Globals.queChannelDisplay.Enqueue(Constants.vbCr);
+                Globals.queChannelDisplay.Enqueue(Globals.CR);
                 Globals.queChannelDisplay.Enqueue("G     #Script(" + (1 + intConnectScriptPtr).ToString() + "):" + ConnectScript[intConnectScriptPtr]);
                 if (ConnectScript.Length == intConnectScriptPtr + 1)
                 {
@@ -967,7 +967,7 @@ namespace Paclink
 
                 strScriptResponse = strScriptResponse.Substring(intPtr + ConnectScript[intConnectScriptPtr].Length);
                 Globals.queChannelDisplay.Enqueue("G     #Script(" + (2 + intConnectScriptPtr).ToString() + "):" + ConnectScript[intConnectScriptPtr + 1]);
-                DataToSend(ConnectScript[intConnectScriptPtr + 1] + Constants.vbCr);
+                DataToSend(ConnectScript[intConnectScriptPtr + 1] + Globals.CR);
                 intConnectScriptPtr += 2;
                 if (intConnectScriptPtr > ConnectScript.Length - 1)
                 {
@@ -1023,7 +1023,7 @@ namespace Paclink
                     int intPt;
                     string strTemp;
                     string strTok;
-                    dttLastScript = DateAndTime.Now; // initialize the script timing
+                    dttLastScript = DateTime.Now; // initialize the script timing
                     strTemp = " " + ConnectScript[0].ToUpper().Trim();
 
                     // This strips off any leading V or Via (case insensitive) and skips over any syntax "Connect via"
@@ -1055,8 +1055,8 @@ namespace Paclink
                         intConnectScriptPtr = 1; // Initialize ptr to first script line response (also signals the script is active)
                         strScriptResponse = ""; // clear the script response string on start 
                         blnInScript = true;
-                        dttLastActivity = DateAndTime.Now;
-                        dttLastScript = DateAndTime.Now;
+                        dttLastActivity = DateTime.Now;
+                        dttLastScript = DateTime.Now;
                         strTok = GetConnectTarget(ConnectScript[0]);
                         if (!string.IsNullOrEmpty(strTok))
                         {

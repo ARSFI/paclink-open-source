@@ -324,7 +324,7 @@ namespace Paclink
                 {
                     objTCPPort.Client.Bind(new IPEndPoint(IPAddress.Parse(Globals.strLocalIPAddress), 0));
                 }
-                objTCPPort.ConnectAsync(txtAGWHost.Text.Trim(), Conversions.ToInteger(txtAGWPort.Text.Trim())).ContinueWith(t =>
+                objTCPPort.ConnectAsync(txtAGWHost.Text.Trim(), Convert.ToInt32(txtAGWPort.Text.Trim())).ContinueWith(t =>
                 {
                     OnConnected(objTCPPort);
 
@@ -382,7 +382,7 @@ namespace Paclink
 
             AGWPath = txtAGWPath.Text;
             AGWHost = txtAGWHost.Text;
-            AGWTCPPort = Conversions.ToInteger(txtAGWPort.Text);
+            AGWTCPPort = Convert.ToInt32(txtAGWPort.Text);
             AGWUserId = txtAGWUserId.Text;
             AGWPassword = txtAGWPassword.Text;
             Globals.objINIFile.WriteInteger(Application.ProductName, "AGW Location", AGWLocation);

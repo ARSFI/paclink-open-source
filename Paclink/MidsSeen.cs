@@ -33,7 +33,7 @@ namespace Paclink
 
                     if (strMessageIdString.IndexOf(strMessageId) == -1)
                     {
-                        string strMessageIdRecord = Globals.TimestampEx() + " " + strMessageId + Constants.vbCrLf;
+                        string strMessageIdRecord = Globals.TimestampEx() + " " + strMessageId + Globals.CRLF;
                         My.MyProject.Computer.FileSystem.WriteAllText(strMessagesSeenPath, strMessageIdRecord, true);
                     }
                 }
@@ -94,7 +94,7 @@ namespace Paclink
                         strMessageIdString = My.MyProject.Computer.FileSystem.ReadAllText(strMessagesSeenPath);
 
                         // Parse into records and test each record for a timestamp...
-                        strMessageIdString = strMessageIdString.Replace(Constants.vbCrLf, Constants.vbCr);
+                        strMessageIdString = strMessageIdString.Replace(Globals.CRLF, Globals.CR);
                         var strRecords = strMessageIdString.Split('\r');
                         foreach (string strRecord in strRecords)
                         {
@@ -103,7 +103,7 @@ namespace Paclink
                             // Save only records that are less than 30 days old...
                             if (strTokens[0].CompareTo(strTimestamp) > 0)
                             {
-                                sbdRecords.Append(strRecord + Constants.vbCrLf);
+                                sbdRecords.Append(strRecord + Globals.CRLF);
                             }
                         }
 

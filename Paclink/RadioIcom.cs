@@ -139,7 +139,7 @@ namespace Paclink
 
                 objSerial.WriteTimeout = 1000;
                 objSerial.ReceivedBytesThreshold = 1;
-                objSerial.BaudRate = Conversions.ToInteger(Channel.RDOControlBaud);
+                objSerial.BaudRate = Convert.ToInt32(Channel.RDOControlBaud);
                 objSerial.DataBits = 8;
                 objSerial.Parity = Parity.None;
                 objSerial.StopBits = StopBits.One;
@@ -206,7 +206,7 @@ namespace Paclink
             // Sets the radio's frequency...
             string strKilohertz;
             strKilohertz = Globals.StripMode(strRDOFreq); // Strip off any mode designator
-            int intHertz = Globals.KHzToHz(strKilohertz) - Conversions.ToInteger(strAudioCenterFrequency);
+            int intHertz = Globals.KHzToHz(strKilohertz) - Convert.ToInt32(strAudioCenterFrequency);
             switch (strRadioType)
             {
                 case "Icom IC-M700pro":
@@ -345,12 +345,12 @@ namespace Paclink
                 case "Icom IC-746pro":
                 case "Icom IC-756pro":
                     {
-                        strHertz = Strings.Format(Conversions.ToInteger(intHertz), "000000000");
-                        intPa1 = 16 * Conversions.ToInteger(strHertz.Substring(7, 1)) + Conversions.ToInteger(strHertz.Substring(8, 1));
-                        intPa2 = 16 * Conversions.ToInteger(strHertz.Substring(5, 1)) + Conversions.ToInteger(strHertz.Substring(6, 1));
-                        intPa3 = 16 * Conversions.ToInteger(strHertz.Substring(3, 1)) + Conversions.ToInteger(strHertz.Substring(4, 1));
-                        intPa4 = 16 * Conversions.ToInteger(strHertz.Substring(1, 1)) + Conversions.ToInteger(strHertz.Substring(2, 1));
-                        intPa5 = Conversions.ToInteger(strHertz.Substring(0, 1));
+                        strHertz = Strings.Format(Convert.ToInt32(intHertz), "000000000");
+                        intPa1 = 16 * Convert.ToInt32(strHertz.Substring(7, 1)) + Convert.ToInt32(strHertz.Substring(8, 1));
+                        intPa2 = 16 * Convert.ToInt32(strHertz.Substring(5, 1)) + Convert.ToInt32(strHertz.Substring(6, 1));
+                        intPa3 = 16 * Convert.ToInt32(strHertz.Substring(3, 1)) + Convert.ToInt32(strHertz.Substring(4, 1));
+                        intPa4 = 16 * Convert.ToInt32(strHertz.Substring(1, 1)) + Convert.ToInt32(strHertz.Substring(2, 1));
+                        intPa5 = Convert.ToInt32(strHertz.Substring(0, 1));
                         bytCommand = new byte[11];
                         bytCommand[0] = 0xFE;
                         bytCommand[1] = 0xFE;
@@ -369,11 +369,11 @@ namespace Paclink
 
                 default:
                     {
-                        strHertz = Strings.Format(Conversions.ToInteger(intHertz), "00000000");
-                        intPa1 = 16 * Conversions.ToInteger(strHertz.Substring(6, 1)) + Conversions.ToInteger(strHertz.Substring(7, 1));
-                        intPa2 = 16 * Conversions.ToInteger(strHertz.Substring(4, 1)) + Conversions.ToInteger(strHertz.Substring(5, 1));
-                        intPa3 = 16 * Conversions.ToInteger(strHertz.Substring(2, 1)) + Conversions.ToInteger(strHertz.Substring(3, 1));
-                        intPa4 = 16 * Conversions.ToInteger(strHertz.Substring(0, 1)) + Conversions.ToInteger(strHertz.Substring(1, 1));
+                        strHertz = Strings.Format(Convert.ToInt32(intHertz), "00000000");
+                        intPa1 = 16 * Convert.ToInt32(strHertz.Substring(6, 1)) + Convert.ToInt32(strHertz.Substring(7, 1));
+                        intPa2 = 16 * Convert.ToInt32(strHertz.Substring(4, 1)) + Convert.ToInt32(strHertz.Substring(5, 1));
+                        intPa3 = 16 * Convert.ToInt32(strHertz.Substring(2, 1)) + Convert.ToInt32(strHertz.Substring(3, 1));
+                        intPa4 = 16 * Convert.ToInt32(strHertz.Substring(0, 1)) + Convert.ToInt32(strHertz.Substring(1, 1));
                         bytCommand = new byte[10];
                         bytCommand[0] = 0xFE;
                         bytCommand[1] = 0xFE;
@@ -405,7 +405,7 @@ namespace Paclink
             for (intIndex = 1; intIndex <= loopTo; intIndex++)
                 intCheckSum = intCheckSum ^ Strings.Asc(strBuffer.Substring(intIndex, 1));
             strCheckSum = "*" + Strings.Right("0" + Conversion.Hex(intCheckSum), 2);
-            ComputeNMEACommandRet = strBuffer + strCheckSum + Constants.vbCrLf;
+            ComputeNMEACommandRet = strBuffer + strCheckSum + Globals.CRLF;
             return ComputeNMEACommandRet;
         } // ComputeNMEACommand
 

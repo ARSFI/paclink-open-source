@@ -19,7 +19,7 @@ namespace Paclink
         {
             this.RetryConnect += ClientKantronics_RetryConnect;
             // The class is instantiated to begin a channel connection...
-            dttLastActivity = DateAndTime.Now;
+            dttLastActivity = DateTime.Now;
             Globals.queStatusDisplay.Enqueue("Starting");
             Globals.queStatusDisplay.Enqueue("Starting");
             Globals.blnManualAbort = false;
@@ -101,19 +101,19 @@ namespace Paclink
 
             if (objProtocol is object)
                 objProtocol.CloseProtocol();
-            var dttTimeout = DateAndTime.Now;
+            var dttTimeout = DateTime.Now;
             while (!objHostPort.SendComplete)
             {
-                if (dttTimeout.AddSeconds(60) < DateAndTime.Now)
+                if (dttTimeout.AddSeconds(60) < DateTime.Now)
                     break;
                 Poll();
                 Thread.Sleep(50);
             }
 
-            dttTimeout = DateAndTime.Now;
+            dttTimeout = DateTime.Now;
             while (enmState != ELinkStates.Disconnected)
             {
-                if (dttTimeout.AddSeconds(60) < DateAndTime.Now)
+                if (dttTimeout.AddSeconds(60) < DateTime.Now)
                     break;
                 Poll();
                 Thread.Sleep(50);
@@ -159,7 +159,7 @@ namespace Paclink
             // Handles the initial TNC initialization and connection to a remote site...
 
             blnAutomaticConnect = blnAutomatic;
-            dttLastActivity = DateAndTime.Now;
+            dttLastActivity = DateTime.Now;
             Globals.queChannelDisplay.Enqueue("G*** Initializing TNC " + Globals.stcSelectedChannel.TNCType + " on " + Globals.stcSelectedChannel.TNCSerialPort + " with " + Globals.stcSelectedChannel.TNCConfigurationFile);
             if (objHostPort.Open() == false)
                 return false;
@@ -239,7 +239,7 @@ namespace Paclink
                 }
                 else
                 {
-                    aryConnectScriptLines = Globals.stcSelectedChannel.TNCScript.Replace(Constants.vbLf, "").ToUpper().Split(Conversions.ToChar(Constants.vbCr));
+                    aryConnectScriptLines = Globals.stcSelectedChannel.TNCScript.Replace(Globals.LF, "").ToUpper().Split(Conversions.ToChar(Globals.CR));
                     blnInScript = true;
                     if (!ConnectionScript())
                     {
@@ -331,7 +331,7 @@ namespace Paclink
 
             if (bytData.Length > 0)
             {
-                dttLastActivity = DateAndTime.Now;
+                dttLastActivity = DateTime.Now;
                 objHostPort.DataToSend(bytData);
             }
         } // DataToSend (bytes) 
@@ -412,7 +412,7 @@ namespace Paclink
                             break;
                         }
 
-                        dttLastActivity = DateAndTime.Now;
+                        dttLastActivity = DateTime.Now;
                         if (blnInScript)
                         {
                             // Display received data immediately and post data to the script response string...
@@ -491,8 +491,8 @@ namespace Paclink
                         return true;
                     if (string.IsNullOrEmpty(aryConnectScriptLines[intIndex + 1]))
                         return false;
-                    objHostPort.DataToSend(aryConnectScriptLines[intIndex] + Constants.vbCr);
-                    Globals.queChannelDisplay.Enqueue("G     #Script(" + intIndex.ToString() + "):" + aryConnectScriptLines[intIndex] + Constants.vbCrLf);
+                    objHostPort.DataToSend(aryConnectScriptLines[intIndex] + Globals.CR);
+                    Globals.queChannelDisplay.Enqueue("G     #Script(" + intIndex.ToString() + "):" + aryConnectScriptLines[intIndex] + Globals.CRLF);
                     if (WaitOnScriptResponse(aryConnectScriptLines[intIndex + 1]) == false)
                         return false;
                     Globals.queChannelDisplay.Enqueue("G     #Script(" + (1 + intIndex).ToString() + "):" + aryConnectScriptLines[intIndex + 1]);
@@ -512,10 +512,10 @@ namespace Paclink
 
         private bool WaitOnScriptResponse(string strTarget)
         {
-            var dttTimeout = DateAndTime.Now.AddSeconds(Globals.stcSelectedChannel.TNCScriptTimeout);
+            var dttTimeout = DateTime.Now.AddSeconds(Globals.stcSelectedChannel.TNCScriptTimeout);
             do
             {
-                if (dttTimeout < DateAndTime.Now)
+                if (dttTimeout < DateTime.Now)
                 {
                     Globals.queChannelDisplay.Enqueue("G #Connect Script Timeout at " + Strings.Format(DateTime.UtcNow, "yyyy/MM/dd HH:mm UTC") + " - disconnecting");
                     return false;
@@ -578,11 +578,11 @@ namespace Paclink
                 objHostPort.LinkCommand('T');
 
                 // Allow one second for the TNC to begin FEC transmission...
-                var dttTimer = DateAndTime.Now.AddMilliseconds(1000);
+                var dttTimer = DateTime.Now.AddMilliseconds(1000);
                 do
                 {
                     Poll();
-                    if (dttTimer < DateAndTime.Now)
+                    if (dttTimer < DateTime.Now)
                         break;
                     Thread.Sleep(100);
                 }
@@ -592,11 +592,11 @@ namespace Paclink
                 DataToSend("DE " + Globals.SiteCallsign);
 
                 // Give the TNC the time it takes to send the callsign...
-                dttTimer = DateAndTime.Now.AddSeconds(5);
+                dttTimer = DateTime.Now.AddSeconds(5);
                 do
                 {
                     Poll();
-                    if (dttTimer < DateAndTime.Now)
+                    if (dttTimer < DateTime.Now)
                         break;
                     Thread.Sleep(100);
                 }
@@ -869,7 +869,7 @@ namespace Paclink
                     objSerial.DataReceived += DataReceivedEvent;
                     objSerial.PortName = stcChannel.TNCSerialPort;
                     objSerial.ReceivedBytesThreshold = 1;
-                    objSerial.BaudRate = Conversions.ToInteger(stcChannel.TNCBaudRate);
+                    objSerial.BaudRate = Convert.ToInt32(stcChannel.TNCBaudRate);
                     objSerial.DataBits = 8;
                     objSerial.StopBits = StopBits.One;
                     objSerial.Parity = Parity.None;
@@ -1031,11 +1031,11 @@ namespace Paclink
 
         public string WaitOnHostCommandResponse(string strMatch, int intTimeoutSeconds = 2)
         {
-            var dttTimeout = DateAndTime.Now;
+            var dttTimeout = DateTime.Now;
             bool blnResult = false;
             do
             {
-                if (dttTimeout.AddSeconds(intTimeoutSeconds) > DateAndTime.Now)
+                if (dttTimeout.AddSeconds(intTimeoutSeconds) > DateTime.Now)
                 {
                     if (!string.IsNullOrEmpty(strCommandResponse))
                     {
@@ -1061,11 +1061,11 @@ namespace Paclink
 
         private bool WaitOnNonHostCommandResponse(string strMatch, int intTimeoutSeconds = 2)
         {
-            var dttTimeout = DateAndTime.Now;
+            var dttTimeout = DateTime.Now;
             bool blnResult = false;
             do
             {
-                if (dttTimeout.AddSeconds(intTimeoutSeconds) > DateAndTime.Now)
+                if (dttTimeout.AddSeconds(intTimeoutSeconds) > DateTime.Now)
                 {
                     if (!string.IsNullOrEmpty(strCommandResponse))
                     {
@@ -1078,7 +1078,7 @@ namespace Paclink
                         if (strCommandResponse.IndexOf("CALLSIGN=>") != -1)
                         {
                             strCommandResponse = "";
-                            objSerial.Write(Globals.SiteCallsign + Constants.vbCr);
+                            objSerial.Write(Globals.SiteCallsign + Globals.CR);
                             return true;
                         }
                     }
@@ -1099,10 +1099,10 @@ namespace Paclink
 
         private bool WaitOnHostMode()
         {
-            var dttTimeout = DateAndTime.Now.AddSeconds(5);
+            var dttTimeout = DateTime.Now.AddSeconds(5);
             do
             {
-                if (dttTimeout < DateAndTime.Now)
+                if (dttTimeout < DateTime.Now)
                     return false;
                 if (blnHostMode)
                 {
@@ -1479,7 +1479,7 @@ namespace Paclink
                 blnUnconfirmedPackets = false;
             else
                 blnUnconfirmedPackets = true;
-            string strSeparators = " /" + Constants.vbCrLf;
+            string strSeparators = " /" + Globals.CRLF;
             var strTokens = strLines[0].Split(strSeparators.ToCharArray());
 
             // Update the available outbound buffer available...
@@ -1487,10 +1487,10 @@ namespace Paclink
             {
                 if (Information.IsNumeric(strTokens[strTokens.GetUpperBound(0)]))
                 {
-                    int intBuffer = Conversions.ToInteger(strTokens[strTokens.GetUpperBound(0)]);
+                    int intBuffer = Convert.ToInt32(strTokens[strTokens.GetUpperBound(0)]);
                     if (intBufferOffset < intBuffer - 1024)
                     {
-                        intBufferOffset = Conversions.ToInteger(strTokens[strTokens.GetUpperBound(0)]) - 1024;
+                        intBufferOffset = Convert.ToInt32(strTokens[strTokens.GetUpperBound(0)]) - 1024;
                     }
 
                     intAvailableBufferOut = intBuffer - intBufferOffset;
@@ -1539,7 +1539,7 @@ namespace Paclink
             if (blnClosing || Globals.blnProgramClosing || blnAbort)
                 return false;
             strCommandResponse = "";
-            objSerial.Write(Constants.vbCr);
+            objSerial.Write(Globals.CR);
             if (!WaitOnNonHostCommandResponse("cmd:"))
             {
                 if (!RecoverTNC())
@@ -1554,7 +1554,7 @@ namespace Paclink
             if (blnClosing || Globals.blnProgramClosing || blnAbort)
                 return false;
             strCommandResponse = "";
-            objSerial.Write("INTFACE HOST" + Constants.vbCr);
+            objSerial.Write("INTFACE HOST" + Globals.CR);
             if (!WaitOnNonHostCommandResponse("cmd:"))
             {
                 Globals.queChannelDisplay.Enqueue("R*** INTFACE HOST command failed");
@@ -1565,7 +1565,7 @@ namespace Paclink
             if (blnClosing || Globals.blnProgramClosing || blnAbort)
                 return false;
             strCommandResponse = "";
-            objSerial.Write("RESET" + Constants.vbCr);
+            objSerial.Write("RESET" + Globals.CR);
             if (!WaitOnHostMode())
             {
                 Globals.queChannelDisplay.Enqueue("R*** RESET command failed");
@@ -1652,9 +1652,9 @@ namespace Paclink
                     intTNCPort = 1;
                     HostCommand("SPACE 4000");
                     WaitOnHostCommandResponse("SPACE");
-                    HostCommand("MARK " + (Conversions.ToInteger(stcChannel.AudioToneCenter) - 100).ToString());
+                    HostCommand("MARK " + (Convert.ToInt32(stcChannel.AudioToneCenter) - 100).ToString());
                     WaitOnHostCommandResponse("MARK");
-                    HostCommand("SPACE " + (Conversions.ToInteger(stcChannel.AudioToneCenter) + 100).ToString());
+                    HostCommand("SPACE " + (Convert.ToInt32(stcChannel.AudioToneCenter) + 100).ToString());
                     WaitOnHostCommandResponse("SPACE");
                     HostCommand("SHIFT MODEM");
                     WaitOnHostCommandResponse("SHIFT");
@@ -1668,9 +1668,9 @@ namespace Paclink
                 {
                     HostCommand("SPACE 4000");
                     WaitOnHostCommandResponse("SPACE");
-                    HostCommand("MARK " + (Conversions.ToInteger(stcChannel.AudioToneCenter) - 100).ToString());
+                    HostCommand("MARK " + (Convert.ToInt32(stcChannel.AudioToneCenter) - 100).ToString());
                     WaitOnHostCommandResponse("MARK");
-                    HostCommand("SPACE " + (Conversions.ToInteger(stcChannel.AudioToneCenter) + 100).ToString());
+                    HostCommand("SPACE " + (Convert.ToInt32(stcChannel.AudioToneCenter) + 100).ToString());
                     WaitOnHostCommandResponse("SPACE");
                 }
             }
@@ -1693,9 +1693,9 @@ namespace Paclink
                     intTNCPort = 1;
                     HostCommand("SPACE 4000");
                     WaitOnHostCommandResponse("SPACE");
-                    HostCommand("MARK " + (Conversions.ToInteger(stcChannel.AudioToneCenter) - 100).ToString());
+                    HostCommand("MARK " + (Convert.ToInt32(stcChannel.AudioToneCenter) - 100).ToString());
                     WaitOnHostCommandResponse("MARK");
-                    HostCommand("SPACE " + (Conversions.ToInteger(stcChannel.AudioToneCenter) + 100).ToString());
+                    HostCommand("SPACE " + (Convert.ToInt32(stcChannel.AudioToneCenter) + 100).ToString());
                     WaitOnHostCommandResponse("SPACE");
                 }
             }
@@ -1726,30 +1726,30 @@ namespace Paclink
             objSerial.Write("*");
             WaitOnNonHostCommandResponse("cmd:");
             objSerial.Write(Conversions.ToString('\u0003'));
-            objSerial.Write(Constants.vbCr);
+            objSerial.Write(Globals.CR);
             if (WaitOnNonHostCommandResponse("cmd:") == true)
             {
-                objSerial.Write("INTFACE TERMINAL" + Constants.vbCr); // insures not in NEW USER mode
+                objSerial.Write("INTFACE TERMINAL" + Globals.CR); // insures not in NEW USER mode
                 return true;
             }
 
             // Try exiting host mode...
             objSerial.Write(bytExitHostMode, 0, bytExitHostMode.Length);
             Thread.Sleep(1000);
-            objSerial.Write(Constants.vbCr);
+            objSerial.Write(Globals.CR);
             if (WaitOnNonHostCommandResponse("cmd:", 2) == true)
             {
-                objSerial.Write("INTFACE TERMINAL" + Constants.vbCr); // insures not in NEW USER mode
+                objSerial.Write("INTFACE TERMINAL" + Globals.CR); // insures not in NEW USER mode
                 return true;
             }
 
             // Try exiting kiss mode...
             objSerial.Write(bytExitKissMode, 0, bytExitKissMode.Length);
             Thread.Sleep(1000);
-            objSerial.Write(Constants.vbCr);
+            objSerial.Write(Globals.CR);
             if (WaitOnNonHostCommandResponse("cmd:", 2) == true)
             {
-                objSerial.Write("INTFACE TERMINAL" + Constants.vbCr); // insures not in NEW USER mode
+                objSerial.Write("INTFACE TERMINAL" + Globals.CR); // insures not in NEW USER mode
                 return true;
             }
 
@@ -1758,10 +1758,10 @@ namespace Paclink
             {
                 objSerial.Write("*");
                 Thread.Sleep(200);
-                objSerial.Write(Constants.vbCr);
+                objSerial.Write(Globals.CR);
                 if (WaitOnNonHostCommandResponse("cmd:", 1) == true)
                 {
-                    objSerial.Write("INTFACE TERMINAL" + Constants.vbCr); // insures not in NEW USER mode
+                    objSerial.Write("INTFACE TERMINAL" + Globals.CR); // insures not in NEW USER mode
                     return true;
                 }
             }

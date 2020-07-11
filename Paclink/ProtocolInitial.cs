@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.IO;
 using System.Text;
 using System.Timers;
@@ -113,7 +114,7 @@ namespace Paclink
             }
             else if (Information.IsNumeric(strTokens[1]))
             {
-                return "N" + Strings.Format(Conversions.ToInteger(strTokens[1]), "0#");
+                return "N" + Strings.Format(Convert.ToInt32(strTokens[1]), "0#");
             }
             else
             {
@@ -182,7 +183,7 @@ namespace Paclink
             Globals.queChannelDisplay.Enqueue("B" + strText);
             if (blnCR)
             {
-                objClient.DataToSend(strText + Constants.vbCr);
+                objClient.DataToSend(strText + Globals.CR);
             }
             else
             {
@@ -368,7 +369,7 @@ namespace Paclink
         private string ChallengePhrase()
         {
             // Function used to generate a random challenge phrase for secure login (not used for Client)
-            return ";PQ: " + Conversions.ToInteger(VBMath.Rnd() * 100000000.0).ToString() + Constants.vbCr;
+            return ";PQ: " + Convert.ToInt32(VBMath.Rnd() * 100000000.0).ToString() + Globals.CR;
         } // ChallengePhrase
 
         private void SendFWFeature()

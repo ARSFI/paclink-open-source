@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -370,10 +369,10 @@ namespace Paclink
                     inEnd += 1;
                 }
 
-                putc(Conversions.ToByte(inEnd & 0xFF));
-                putc(Conversions.ToByte(inEnd >> 8 & 0xFF));
-                putc(Conversions.ToByte(inEnd >> 16 & 0xFF));
-                putc(Conversions.ToByte(inEnd >> 24 & 0xFF));
+                putc(Convert.ToByte(inEnd & 0xFF));
+                putc(Convert.ToByte(inEnd >> 8 & 0xFF));
+                putc(Convert.ToByte(inEnd >> 16 & 0xFF));
+                putc(Convert.ToByte(inEnd >> 24 & 0xFF));
                 codeSize += 4;
                 if (inEnd == 0)
                 {
@@ -390,11 +389,11 @@ namespace Paclink
                 var loopTo1 = r - 1;
                 for (i = 0; i <= loopTo1; i++)
                     // fillchar(text_buf[0],r,' ');
-                    textBuf[i] = Conversions.ToByte(0x20);
+                    textBuf[i] = Convert.ToByte(0x20);
                 len = 0;
                 while (len < F && inPtr < inEnd)
                 {
-                    textBuf[r + len] = Conversions.ToByte(getc() & 0xFF);
+                    textBuf[r + len] = Convert.ToByte(getc() & 0xFF);
                     len += 1;
                 }
 
@@ -427,10 +426,10 @@ namespace Paclink
                         i += 1;
                         DeleteNode(s);
                         c = getc();
-                        textBuf[s] = Conversions.ToByte(c & 0xFF);
+                        textBuf[s] = Convert.ToByte(c & 0xFF);
                         if (s < F - 1)
                         {
-                            textBuf[s + N] = Conversions.ToByte(c);
+                            textBuf[s + N] = Convert.ToByte(c);
                         }
 
                         s = s + 1 & N - 1;
@@ -462,8 +461,8 @@ namespace Paclink
                 if (prependCRC)
                 {
                     oBuf = new byte[codeSize + 1 + 1];
-                    oBuf[0] = Conversions.ToByte(retCRC >> 8 & 0xFF);
-                    oBuf[1] = Conversions.ToByte(retCRC & 0xFF);
+                    oBuf[0] = Convert.ToByte(retCRC >> 8 & 0xFF);
+                    oBuf[1] = Convert.ToByte(retCRC & 0xFF);
                     j = 2;
                 }
                 else
@@ -527,8 +526,8 @@ namespace Paclink
                 if (checkCRC)
                 {
                     iBufStart = 2;
-                    suppliedCRC = Conversions.ToInteger(iBuf[1]) & 0xFF;
-                    suppliedCRC = suppliedCRC | Conversions.ToInteger(iBuf[0]) << 8;
+                    suppliedCRC = Convert.ToInt32(iBuf[1]) & 0xFF;
+                    suppliedCRC = suppliedCRC | Convert.ToInt32(iBuf[0]) << 8;
                 }
 
                 var loopTo = iBuf.Length - 1;
@@ -559,7 +558,7 @@ namespace Paclink
                 StartHuff();
                 for (i = 0; i <= N - F - 1; i++)
                     // fillchar(text_buf[0],N-F,' ');
-                    textBuf[i] = Conversions.ToByte(0x20);
+                    textBuf[i] = Convert.ToByte(0x20);
                 r = N - F;
                 count = 0;
                 while (count < textSize)
@@ -567,8 +566,8 @@ namespace Paclink
                     c = DecodeChar();
                     if (c < 256)
                     {
-                        putc(Conversions.ToByte(c & 0xFF));
-                        textBuf[r] = Conversions.ToByte(c & 0xFF);
+                        putc(Convert.ToByte(c & 0xFF));
+                        textBuf[r] = Convert.ToByte(c & 0xFF);
                         r = r + 1 & N - 1;
                         count += 1;
                     }
@@ -579,9 +578,9 @@ namespace Paclink
                         var loopTo1 = j - 1;
                         for (k = 0; k <= loopTo1; k++)
                         {
-                            c = Conversions.ToInteger(textBuf[i + k & N - 1]);
-                            putc(Conversions.ToByte(c & 0xFF));
-                            textBuf[r] = Conversions.ToByte(c & 0xFF);
+                            c = Convert.ToInt32(textBuf[i + k & N - 1]);
+                            putc(Convert.ToByte(c & 0xFF));
+                            textBuf[r] = Convert.ToByte(c & 0xFF);
                             r = r + 1 & N - 1;
                             count += 1;
                         }
@@ -607,7 +606,7 @@ namespace Paclink
 
         public static ushort GetCRC()
         {
-            return Conversions.ToUShort(Swap(CRC & 0xFFFF));
+            return Convert.ToUInt16(Swap(CRC & 0xFFFF));
         }
 
         private static void Init()
@@ -652,7 +651,7 @@ namespace Paclink
             int c = 0;
             if (inPtr < inEnd)
             {
-                c = Conversions.ToInteger(inBuf[inPtr]) & 0xFF;
+                c = Convert.ToInt32(inBuf[inPtr]) & 0xFF;
                 inPtr += 1;
                 if (!EncDec)
                 {
@@ -682,7 +681,7 @@ namespace Paclink
                 outBuf = tmpBuf;
             }
 
-            outBuf[outPtr] = Conversions.ToByte(c & 0xFF);
+            outBuf[outPtr] = Convert.ToByte(c & 0xFF);
             outPtr += 1;
             if (EncDec)
             {
@@ -1092,7 +1091,7 @@ namespace Paclink
                     code += 0x8000;
                 }
 
-                len += Conversions.ToByte(1);
+                len += Convert.ToByte(1);
                 k = parent[k];
             }
             while (k != R);
@@ -1271,7 +1270,7 @@ namespace Paclink
             // Return 2 byte CRC
             // 
             int crc = FetchCrc(buf) ^ CRCSTART;
-            var ret = new[] { Conversions.ToByte(crc & 0xFF), Conversions.ToByte(crc >> 8 & 0xFF) };
+            var ret = new[] { Convert.ToByte(crc & 0xFF), Convert.ToByte(crc >> 8 & 0xFF) };
             return ret;
         }
 
@@ -1280,7 +1279,7 @@ namespace Paclink
             // 
             // Provides an interative call to calculate CRC on the fly
             // 
-            int retCRC = (crc >> 8 & 0xFF ^ crcTable[crc & 0xFF ^ Conversions.ToInteger(b)]) & 0xFFFF;
+            int retCRC = (crc >> 8 & 0xFF ^ crcTable[crc & 0xFF ^ Convert.ToInt32(b)]) & 0xFFFF;
             return retCRC;
         }
 

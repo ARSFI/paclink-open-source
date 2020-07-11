@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -237,7 +238,7 @@ namespace Paclink
             Globals.queChannelDisplay.Enqueue("B" + strText);
             if (blnCR)
             {
-                objInitialProtocol.objClient.DataToSend(strText + Constants.vbCr);
+                objInitialProtocol.objClient.DataToSend(strText + Globals.CR);
             }
             else
             {
@@ -252,7 +253,7 @@ namespace Paclink
             // 
             Globals.queChannelDisplay.Enqueue("X" + strText);
             if (blnCRLF)
-                Globals.queChannelDisplay.Enqueue("X" + Constants.vbCrLf);
+                Globals.queChannelDisplay.Enqueue("X" + Globals.CRLF);
             string strCommand = strText.ToUpper();
             if (strCommand.StartsWith(";PM:"))
             {
@@ -440,10 +441,10 @@ namespace Paclink
                         if (!string.IsNullOrEmpty(strProposal))
                         {
                             var strTokens = strProposal.Split(' ');
-                            intProposedCompressedSize[intIndex] = Conversions.ToInteger(strTokens[4]);
+                            intProposedCompressedSize[intIndex] = Convert.ToInt32(strTokens[4]);
                             foreach (char c in strProposal)
                                 intCheckSum += Strings.Asc(c);
-                            intCheckSum += Strings.Asc(Constants.vbCr);
+                            intCheckSum += Strings.Asc(Globals.CR);
                             Send(strProposal);
                         }
                         else
@@ -496,7 +497,7 @@ namespace Paclink
                         {
                             if (sbdText.Length > 0)
                             {
-                                cllResponse.Add(Conversions.ToInteger(sbdText.ToString()));
+                                cllResponse.Add(Convert.ToInt32(sbdText.ToString()));
                                 sbdText.Length = 0;
                             }
 
@@ -510,7 +511,7 @@ namespace Paclink
                         {
                             if (sbdText.Length > 0)
                             {
-                                cllResponse.Add(Conversions.ToInteger(sbdText.ToString()));
+                                cllResponse.Add(Convert.ToInt32(sbdText.ToString()));
                                 sbdText.Length = 0;
                             }
 
@@ -523,7 +524,7 @@ namespace Paclink
                         {
                             if (sbdText.Length > 0)
                             {
-                                cllResponse.Add(Conversions.ToInteger(sbdText.ToString()));
+                                cllResponse.Add(Convert.ToInt32(sbdText.ToString()));
                                 sbdText.Length = 0;
                             }
 
@@ -535,7 +536,7 @@ namespace Paclink
                         {
                             if (sbdText.Length > 0)
                             {
-                                cllResponse.Add(Conversions.ToInteger(sbdText.ToString()));
+                                cllResponse.Add(Convert.ToInt32(sbdText.ToString()));
                             }
 
                             sbdText.Length = 0;
@@ -551,7 +552,7 @@ namespace Paclink
             }
 
             if (sbdText.Length > 0)
-                cllResponse.Add(Conversions.ToInteger(sbdText.ToString()));
+                cllResponse.Add(Convert.ToInt32(sbdText.ToString()));
             return cllResponse;
         } // ParseAcceptance
 
@@ -571,7 +572,7 @@ namespace Paclink
                 StateChange(EB2States.SendingB2Messages);
                 for (int intIndex = 0, loopTo = intCount - 1; intIndex <= loopTo; intIndex++)
                 {
-                    int intOffset = Conversions.ToInteger(cllResponse[intIndex + 1]);
+                    int intOffset = Convert.ToInt32(cllResponse[intIndex + 1]);
                     Message objMessage = (Message)aryOutboundMessages[intIndex];
                     if (intOffset >= 0)
                     {
@@ -627,7 +628,7 @@ namespace Paclink
                 cllInboundProposals.Add(strText);
                 foreach (char chrText in strText)
                     intCheckSum += Strings.Asc(chrText);
-                intCheckSum += Strings.Asc(Constants.vbCr);
+                intCheckSum += Strings.Asc(Globals.CR);
             }
             else if (strText.StartsWith("F>"))
             {
@@ -652,8 +653,8 @@ namespace Paclink
                     // FC EM mid uncompsize compsize 0
                     objProp = new Globals.Proposal();
                     objProp.msgID = strToks[2];
-                    objProp.uncompressedSize = Conversions.ToInteger(strToks[3]);
-                    objProp.compressedSize = Conversions.ToInteger(strToks[4]);
+                    objProp.uncompressedSize = Convert.ToInt32(strToks[3]);
+                    objProp.compressedSize = Convert.ToInt32(strToks[4]);
                     if (MidsSeen.IsMessageIdSeen(objProp.msgID))
                     {
                         sbdText.Append("N");
@@ -675,7 +676,7 @@ namespace Paclink
                         intInboundMessageCount += 1;
                         if (Information.IsNumeric(strToks[4]))
                         {
-                            Globals.ResetProgressBar(Conversions.ToInteger(strToks[4]) - intPartialCount);
+                            Globals.ResetProgressBar(Convert.ToInt32(strToks[4]) - intPartialCount);
                         }
                     }
                 }
@@ -993,7 +994,7 @@ namespace Paclink
                             File.Delete(Globals.SiteRootDirectory + @"Temp Inbound\" + MID + ".indata");
                             intBytesReceived = 0;
                         }
-                        else if (intBytesReceived >= Conversions.ToInteger(Length))
+                        else if (intBytesReceived >= Convert.ToInt32(Length))
                         {
                             Logs.Exception("IsPartialMessage: Partial Length exceeded proposed length, Partial MID: " + MID + " Purged!");
                             File.Delete(Globals.SiteRootDirectory + @"Temp Inbound\" + MID + ".indata");

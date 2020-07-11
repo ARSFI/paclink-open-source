@@ -153,7 +153,7 @@ namespace Paclink
             // Label3
             // 
             _Label3.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, Conversions.ToByte(0));
-            _Label3.ForeColor = Color.FromArgb(Conversions.ToInteger(Conversions.ToByte(192)), Conversions.ToInteger(Conversions.ToByte(0)), Conversions.ToInteger(Conversions.ToByte(0)));
+            _Label3.ForeColor = Color.FromArgb(Convert.ToInt32(Conversions.ToByte(192)), Convert.ToInt32(Conversions.ToByte(0)), Convert.ToInt32(Conversions.ToByte(0)));
             _Label3.Location = new Point(40, 172);
             _Label3.Name = "_Label3";
             _Label3.Size = new Size(251, 57);

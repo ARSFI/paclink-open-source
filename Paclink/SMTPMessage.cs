@@ -209,8 +209,8 @@ namespace Paclink
             bool blnValidSender = false;
             cllToAddresses = new Collection();
             cllCcAddresses = new Collection();
-            string strPreDecode = Header.Replace("," + Constants.vbCrLf, ";");
-            var objTextStream = new StringReader(strPreDecode + Constants.vbCrLf + Constants.vbCrLf);
+            string strPreDecode = Header.Replace("," + Globals.CRLF, ";");
+            var objTextStream = new StringReader(strPreDecode + Globals.CRLF + Globals.CRLF);
             do
             {
                 string strLine = objTextStream.ReadLine();
@@ -371,7 +371,7 @@ namespace Paclink
         {
             if (Mime.Length < 20)
                 return false;
-            var objStringReader = new StringReader(Mime + Constants.vbCrLf + Constants.vbCrLf);
+            var objStringReader = new StringReader(Mime + Globals.CRLF + Globals.CRLF);
             var sbdHeader = new StringBuilder();
             string strLine;
             string strNextParameter = "";
@@ -380,7 +380,7 @@ namespace Paclink
                 strLine = objStringReader.ReadLine();
                 if (string.IsNullOrEmpty(strLine))
                 {
-                    sbdHeader.Append(strNextParameter + Constants.vbCrLf);
+                    sbdHeader.Append(strNextParameter + Globals.CRLF);
                     Header = sbdHeader.ToString();
                     return true;
                 }
@@ -397,7 +397,7 @@ namespace Paclink
                 }
                 else
                 {
-                    sbdHeader.Append(strNextParameter + Constants.vbCrLf);
+                    sbdHeader.Append(strNextParameter + Globals.CRLF);
                     strNextParameter = strLine;
                 }
             }
@@ -412,33 +412,33 @@ namespace Paclink
             int intIndex;
             if (Information.IsDate(MessageDate))
             {
-                sbdHeader.Append("Date: " + DateToRFC822Date(MessageDate) + Constants.vbCrLf);
+                sbdHeader.Append("Date: " + DateToRFC822Date(MessageDate) + Globals.CRLF);
             }
             else
             {
-                sbdHeader.Append("Date: " + DateToRFC822Date(DateTime.UtcNow) + Constants.vbCrLf);
+                sbdHeader.Append("Date: " + DateToRFC822Date(DateTime.UtcNow) + Globals.CRLF);
             }
 
             if (!string.IsNullOrEmpty(Sender.SMTPAddress))
             {
-                sbdHeader.Append("From: " + Sender.SMTPAddress + Constants.vbCrLf);
+                sbdHeader.Append("From: " + Sender.SMTPAddress + Globals.CRLF);
                 if (string.IsNullOrEmpty(ReplyTo.RadioAddress))
                 {
-                    sbdHeader.Append("Reply-To: " + Sender.SMTPAddress + Constants.vbCrLf);
+                    sbdHeader.Append("Reply-To: " + Sender.SMTPAddress + Globals.CRLF);
                 }
                 else
                 {
-                    sbdHeader.Append("Reply-To: " + ReplyTo.SMTPAddress + Constants.vbCrLf);
+                    sbdHeader.Append("Reply-To: " + ReplyTo.SMTPAddress + Globals.CRLF);
                 }
             }
 
             if (!string.IsNullOrEmpty(Subject))
-                sbdHeader.Append("Subject: " + Subject + Constants.vbCrLf);
+                sbdHeader.Append("Subject: " + Subject + Globals.CRLF);
             if (cllToAddresses.Count != 0)
             {
                 if (cllToAddresses.Count == 1)
                 {
-                    sbdHeader.Append("To: " + ((WinlinkAddress)cllToAddresses[1]).SMTPAddress + Constants.vbCrLf);
+                    sbdHeader.Append("To: " + ((WinlinkAddress)cllToAddresses[1]).SMTPAddress + Globals.CRLF);
                 }
                 else
                 {
@@ -447,15 +447,15 @@ namespace Paclink
                     {
                         if (intIndex == 1)
                         {
-                            sbdHeader.Append("To: " + ((WinlinkAddress)cllToAddresses[1]).SMTPAddress + "," + Constants.vbCrLf);
+                            sbdHeader.Append("To: " + ((WinlinkAddress)cllToAddresses[1]).SMTPAddress + "," + Globals.CRLF);
                         }
                         else if (intIndex == cllToAddresses.Count)
                         {
-                            sbdHeader.Append(" " + ((WinlinkAddress)cllToAddresses[intIndex]).SMTPAddress + Constants.vbCrLf);
+                            sbdHeader.Append(" " + ((WinlinkAddress)cllToAddresses[intIndex]).SMTPAddress + Globals.CRLF);
                         }
                         else
                         {
-                            sbdHeader.Append(" " + ((WinlinkAddress)cllToAddresses[intIndex]).SMTPAddress + "," + Constants.vbCrLf);
+                            sbdHeader.Append(" " + ((WinlinkAddress)cllToAddresses[intIndex]).SMTPAddress + "," + Globals.CRLF);
                         }
                     }
                 }
@@ -465,7 +465,7 @@ namespace Paclink
             {
                 if (cllCcAddresses.Count == 1)
                 {
-                    sbdHeader.Append("Cc: " + ((WinlinkAddress)cllCcAddresses[1]).SMTPAddress + Constants.vbCrLf);
+                    sbdHeader.Append("Cc: " + ((WinlinkAddress)cllCcAddresses[1]).SMTPAddress + Globals.CRLF);
                 }
                 else
                 {
@@ -474,28 +474,28 @@ namespace Paclink
                     {
                         if (intIndex == 1)
                         {
-                            sbdHeader.Append("Cc: " + ((WinlinkAddress)cllCcAddresses[1]).SMTPAddress + "," + Constants.vbCrLf);
+                            sbdHeader.Append("Cc: " + ((WinlinkAddress)cllCcAddresses[1]).SMTPAddress + "," + Globals.CRLF);
                         }
                         else if (intIndex == cllCcAddresses.Count)
                         {
-                            sbdHeader.Append(" " + ((WinlinkAddress)cllCcAddresses[intIndex]).SMTPAddress + Constants.vbCrLf);
+                            sbdHeader.Append(" " + ((WinlinkAddress)cllCcAddresses[intIndex]).SMTPAddress + Globals.CRLF);
                         }
                         else
                         {
-                            sbdHeader.Append(" " + ((WinlinkAddress)cllCcAddresses[intIndex]).SMTPAddress + "," + Constants.vbCrLf);
+                            sbdHeader.Append(" " + ((WinlinkAddress)cllCcAddresses[intIndex]).SMTPAddress + "," + Globals.CRLF);
                         }
                     }
                 }
             }
 
             if (!string.IsNullOrEmpty(MessageId))
-                sbdHeader.Append("Message-ID: " + MessageId + Constants.vbCrLf);
+                sbdHeader.Append("Message-ID: " + MessageId + Globals.CRLF);
             if (dttExpirationDate > dttMessageDate)
             {
-                sbdHeader.Append("X-Cancel: " + Globals.FormatDate(dttExpirationDate) + Constants.vbCrLf);
+                sbdHeader.Append("X-Cancel: " + Globals.FormatDate(dttExpirationDate) + Globals.CRLF);
             }
 
-            sbdHeader.Append("MIME-Version: 1.0" + Constants.vbCrLf);
+            sbdHeader.Append("MIME-Version: 1.0" + Globals.CRLF);
             Header = sbdHeader.ToString();
         } // EncodeHeader
 
@@ -593,8 +593,8 @@ namespace Paclink
                         {
                             if (strDateParts[5].Substring(0, 1) != "-")
                                 blnWest = false;
-                            intOffsetHours = Conversions.ToInteger(strDateParts[5].Substring(1, 2));
-                            intOffsetMinutes = Conversions.ToInteger(strDateParts[5].Substring(3, 2));
+                            intOffsetHours = Convert.ToInt32(strDateParts[5].Substring(1, 2));
+                            intOffsetMinutes = Convert.ToInt32(strDateParts[5].Substring(3, 2));
                             break;
                         }
                 }
@@ -649,7 +649,7 @@ namespace Paclink
                 if (!string.IsNullOrEmpty(strLine.Trim()))
                     blnBlankLine = false;
                 if (!blnBlankLine)
-                    sbdBody.Append(strLine + Constants.vbCrLf);
+                    sbdBody.Append(strLine + Globals.CRLF);
                 if (string.IsNullOrEmpty(strLine.Trim()))
                 {
                     blnBlankLine = true;
@@ -658,7 +658,7 @@ namespace Paclink
             while (true);
             strBody = sbdBody.ToString().Trim();
             if (string.IsNullOrEmpty(strBody))
-                strBody = "<no message body>" + Constants.vbCrLf;
+                strBody = "<no message body>" + Globals.CRLF;
             return strBody;
         } // FormatMessageBody
 

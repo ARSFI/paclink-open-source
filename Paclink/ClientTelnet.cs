@@ -225,7 +225,7 @@ namespace Paclink
                     // Return False
                     // End If
                     objTCPPort.LingerState = new LingerOption(true, 5);
-                    dttLogonStart = DateAndTime.Now;
+                    dttLogonStart = DateTime.Now;
                     Task connectTask = null;
                     if (Globals.UseRMSRelay() == false)
                     {
@@ -384,7 +384,7 @@ namespace Paclink
                                     }
                                 }
 
-                                var bytesToSend = Globals.GetBytes("." + strPactorCallsign + Constants.vbCr);
+                                var bytesToSend = Globals.GetBytes("." + strPactorCallsign + Globals.CR);
                                 objTCPPort.GetStream().Write(bytesToSend, 0, bytesToSend.Length);
                                 Globals.queChannelDisplay.Enqueue("B" + Globals.SiteCallsign);
                                 enmState = ELinkStates.Password;
@@ -399,7 +399,7 @@ namespace Paclink
                             if (Strings.InStr(strLine, "Password") != 0)
                             {
                                 var objEncoder = new ASCIIEncoding();
-                                var bytesToSend = Globals.GetBytes("CMSTelnet" + Constants.vbCr);
+                                var bytesToSend = Globals.GetBytes("CMSTelnet" + Globals.CR);
                                 objTCPPort.GetStream().Write(bytesToSend, 0, bytesToSend.Length);
                                 Globals.queChannelDisplay.Enqueue("B(CMS password)");
                                 enmState = ELinkStates.Connected;

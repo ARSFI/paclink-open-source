@@ -21,16 +21,16 @@ namespace Paclink
             double dblLon;
             strUCGridSq = strGridSquare.Trim().ToUpper();
             strAlpha = "ABCDEFGHIJKLMNOPQRSTUVWX";
-            dblLat = -100 + (10 * (1 + strAlpha.IndexOf(strUCGridSq.Substring(1, 1))) + Conversions.ToInteger(strUCGridSq.Substring(3, 1)));
+            dblLat = -100 + (10 * (1 + strAlpha.IndexOf(strUCGridSq.Substring(1, 1))) + Convert.ToInt32(strUCGridSq.Substring(3, 1)));
             if (strAlpha.IndexOf(strUCGridSq.Substring(0, 1)) < 9)
             {
                 // West lon no rounding
-                dblLon = -200 + (20 * (1 + strAlpha.IndexOf(strUCGridSq.Substring(0, 1))) + 2 * Conversions.ToInteger(strUCGridSq.Substring(2, 1)));
+                dblLon = -200 + (20 * (1 + strAlpha.IndexOf(strUCGridSq.Substring(0, 1))) + 2 * Convert.ToInt32(strUCGridSq.Substring(2, 1)));
             }
             else
             {
                 // East lon no rounding
-                dblLon = 20 * (1 + strAlpha.IndexOf(strUCGridSq.Substring(0, 1))) - 200 + 2 * Conversions.ToInteger(strUCGridSq.Substring(2, 1));
+                dblLon = 20 * (1 + strAlpha.IndexOf(strUCGridSq.Substring(0, 1))) - 200 + 2 * Convert.ToInt32(strUCGridSq.Substring(2, 1));
             }
 
             if (strUCGridSq.Length != 6)
@@ -53,26 +53,26 @@ namespace Paclink
             double dblMin;
             if (dblLat < 0)
             {
-                intDeg = Conversions.ToInteger(Math.Floor(-dblLat));
+                intDeg = Convert.ToInt32(Math.Floor(-dblLat));
                 dblMin = -(dblLat + intDeg);
                 strLat = Strings.Format(intDeg, "00") + Strings.Format(60 * dblMin, "00.00") + "S";
             }
             else
             {
-                intDeg = Conversions.ToInteger(Math.Floor(dblLat));
+                intDeg = Convert.ToInt32(Math.Floor(dblLat));
                 dblMin = dblLat - intDeg;
                 strLat = Strings.Format(intDeg, "00") + Strings.Format(60 * dblMin, "00.00") + "N";
             }
 
             if (dblLon < 0)
             {
-                intDeg = Conversions.ToInteger(Math.Floor(-dblLon));
+                intDeg = Convert.ToInt32(Math.Floor(-dblLon));
                 dblMin = -(dblLon + intDeg);
                 strLon = Strings.Format(intDeg, "000") + Strings.Format(60 * dblMin, "00.00") + "W";
             }
             else
             {
-                intDeg = Conversions.ToInteger(Math.Floor(dblLon));
+                intDeg = Convert.ToInt32(Math.Floor(dblLon));
                 dblMin = dblLon - intDeg;
                 strLon = Strings.Format(intDeg, "000") + Strings.Format(60 * dblMin, "00.00") + "E";
             }

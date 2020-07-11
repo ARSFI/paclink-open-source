@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using Microsoft.VisualBasic;
@@ -49,7 +50,7 @@ namespace Paclink
                 {
                     if (objSMTPSessions[intIndex] is object)
                     {
-                        if (objSMTPSessions[intIndex].Timestamp > DateAndTime.Now.AddMinutes(-30))
+                        if (objSMTPSessions[intIndex].Timestamp > DateTime.Now.AddMinutes(-30))
                         {
                             objSMTPSessions[intIndex].Close();
                             objSMTPSessions[intIndex] = null;

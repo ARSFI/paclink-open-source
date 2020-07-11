@@ -20,6 +20,9 @@ namespace Paclink
 {
     static class Globals
     {
+        public const string LF = "\n";
+        public const string CR = "\r";
+        public const string CRLF = CR + LF;
 
         // Use this constant to clear an RTF text display...
         public const string CLEAR = "\u0001";
@@ -306,7 +309,7 @@ namespace Paclink
                 }
             }
 
-            Debug.Write(" " + DateAndTime.Now.Second.ToString() + "." + Strings.Format(DateAndTime.Now.Millisecond, "000") + " ");
+            Debug.Write(" " + DateTime.Now.Second.ToString() + "." + Strings.Format(DateTime.Now.Millisecond, "000") + " ");
             Debug.WriteLine("");
         } // FrameDebug
 
@@ -367,8 +370,8 @@ namespace Paclink
             lLen = lLength;
             for (n = 1; n <= 4; n++)
             {
-                lQ = lLen / Conversions.ToInteger(Math.Pow(256, 4 - n)); // note integer divide 
-                lLen = lLen - Conversions.ToInteger(lQ * Math.Pow(256, 4 - n));
+                lQ = lLen / Convert.ToInt32(Math.Pow(256, 4 - n)); // note integer divide 
+                lLen = lLen - Convert.ToInt32(lQ * Math.Pow(256, 4 - n));
                 bLength[4 - n] = Conversions.ToByte(lQ);
             }
 
@@ -501,8 +504,8 @@ namespace Paclink
                         {
                             if (sDateParts[5].Substring(0, 1) != "-")
                                 bWest = false;
-                            nOffsetHours = Conversions.ToInteger(sDateParts[5].Substring(1, 2));
-                            nOffsetMinutes = Conversions.ToInteger(sDateParts[5].Substring(3, 2));
+                            nOffsetHours = Convert.ToInt32(sDateParts[5].Substring(1, 2));
+                            nOffsetMinutes = Convert.ToInt32(sDateParts[5].Substring(3, 2));
                             break;
                         }
                 }
@@ -651,7 +654,7 @@ namespace Paclink
             {
                 try
                 {
-                    lSSID = Conversions.ToInteger(strCallsign.Substring(intDash + 1)); // Try to convert to integer a failure inidcates non integer
+                    lSSID = Convert.ToInt32(strCallsign.Substring(intDash + 1)); // Try to convert to integer a failure inidcates non integer
                     if (lSSID < 1 | lSSID > 15)
                         return false; // must be 1-15
                 }
@@ -712,7 +715,7 @@ namespace Paclink
             {
                 try
                 {
-                    lSSID = Conversions.ToInteger(strName.Substring(intDash + 1)); // Try to convert to integer a failure inidcates non integer
+                    lSSID = Convert.ToInt32(strName.Substring(intDash + 1)); // Try to convert to integer a failure inidcates non integer
                     if (lSSID < 1 | lSSID > 15)
                         return false; // must be 1-15
                 }
@@ -920,7 +923,7 @@ namespace Paclink
             // 
             // This routine runs as a thread to report our version information.
             // 
-            bool blnReportClosing = Conversions.ToBoolean(objReportClosing);
+            bool blnReportClosing = Convert.ToBoolean(objReportClosing);
             string strOptions;
             if (blnReportClosing)
             {
@@ -962,7 +965,7 @@ namespace Paclink
                 var strTokens = strKHz.Split('.');
                 if (Information.IsNumeric(strTokens[0]))
                 {
-                    intFrequency = Conversions.ToInteger(strTokens[0]) * 1000;
+                    intFrequency = Convert.ToInt32(strTokens[0]) * 1000;
                 }
 
                 if (strTokens.Length > 1 && Information.IsNumeric(strTokens[1]))
@@ -984,7 +987,7 @@ namespace Paclink
                             }
                     }
 
-                    return intFrequency + Conversions.ToInteger(strHertz);
+                    return intFrequency + Convert.ToInt32(strHertz);
                 }
             }
             catch
@@ -1036,25 +1039,25 @@ namespace Paclink
                 {
                     intPtr = strJustFreq.IndexOf(".");
                     intDecimals = strJustFreq.Substring(1 + intPtr).Trim().Length;
-                    intFreqHz = 1000 * Conversions.ToInteger(strJustFreq.Substring(0, intPtr));
+                    intFreqHz = 1000 * Convert.ToInt32(strJustFreq.Substring(0, intPtr));
                     var switchExpr = intDecimals;
                     switch (switchExpr)
                     {
                         case 1:
                             {
-                                intFreqHz += 100 * Conversions.ToInteger(strJustFreq.Substring(1 + intPtr));
+                                intFreqHz += 100 * Convert.ToInt32(strJustFreq.Substring(1 + intPtr));
                                 break;
                             }
 
                         case 2:
                             {
-                                intFreqHz += 10 * Conversions.ToInteger(strJustFreq.Substring(1 + intPtr).Trim());
+                                intFreqHz += 10 * Convert.ToInt32(strJustFreq.Substring(1 + intPtr).Trim());
                                 break;
                             }
 
                         case 3:
                             {
-                                intFreqHz += Conversions.ToInteger(strJustFreq.Substring(1 + intPtr).Trim());
+                                intFreqHz += Convert.ToInt32(strJustFreq.Substring(1 + intPtr).Trim());
                                 break;
                             }
                     }
@@ -1065,24 +1068,24 @@ namespace Paclink
                 {
                     intPtr = strJustFreq.IndexOf(",");
                     intDecimals = strJustFreq.Substring(1 + intPtr).Trim().Length;
-                    intFreqHz = 1000 * Conversions.ToInteger(strJustFreq.Substring(0, intPtr));
+                    intFreqHz = 1000 * Convert.ToInt32(strJustFreq.Substring(0, intPtr));
                     switch (intDecimals)
                     {
                         case 1:
                             {
-                                intFreqHz += 100 * Conversions.ToInteger(strJustFreq.Substring(1 + intPtr));
+                                intFreqHz += 100 * Convert.ToInt32(strJustFreq.Substring(1 + intPtr));
                                 break;
                             }
 
                         case 2:
                             {
-                                intFreqHz += 10 * Conversions.ToInteger(strJustFreq.Substring(1 + intPtr).Trim());
+                                intFreqHz += 10 * Convert.ToInt32(strJustFreq.Substring(1 + intPtr).Trim());
                                 break;
                             }
 
                         case 3:
                             {
-                                intFreqHz += Conversions.ToInteger(strJustFreq.Substring(1 + intPtr).Trim());
+                                intFreqHz += Convert.ToInt32(strJustFreq.Substring(1 + intPtr).Trim());
                                 break;
                             }
                     }
@@ -1091,7 +1094,7 @@ namespace Paclink
                 }
                 else
                 {
-                    intFreqHz = Conversions.ToInteger(strFreqKHz) * 1000;
+                    intFreqHz = Convert.ToInt32(strFreqKHz) * 1000;
                     return true;
                 }
             }
@@ -1260,7 +1263,7 @@ namespace Paclink
             if (!string.IsNullOrEmpty(strTNC))
             {
                 // Check the mode versus TNC type.
-                intMode = Conversions.ToInteger(strFreqTokens[2]);
+                intMode = Convert.ToInt32(strFreqTokens[2]);
                 if (intMode == 21 | intMode == 22)
                 {
                     // We don't support Winmor
@@ -1373,7 +1376,7 @@ namespace Paclink
             }
             else
             {
-                var switchExpr = Conversions.ToInteger(strFreqTokens[2]); // Mode
+                var switchExpr = Convert.ToInt32(strFreqTokens[2]); // Mode
                 switch (switchExpr)
                 {
                     // Case 0 : strMode = "1200"
@@ -1620,7 +1623,7 @@ namespace Paclink
             // This routine runs as a thread to get the list of channels.
             // When it finishes, it sets blnFinishedGettingChannels True and returns the list in lstGateways.
             // 
-            bool blnPacketChannels = Conversions.ToBoolean(objArgument);
+            bool blnPacketChannels = Convert.ToBoolean(objArgument);
             // 
             // Try to get the full list of channels matching our service code(s).
             // 

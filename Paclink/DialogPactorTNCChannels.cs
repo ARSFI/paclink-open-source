@@ -312,7 +312,7 @@ namespace Paclink
                     cmbTNCBaudRate.Items.Add("38400");
                     cmbTNCBaudRate.Items.Add("57600");
                     cmbTNCBaudRate.Items.Add("115200");
-                    if (Conversions.ToInteger(withBlock.TNCBaudRate) < 38400)
+                    if (Convert.ToInt32(withBlock.TNCBaudRate) < 38400)
                         withBlock.TNCBaudRate = "38400";
                 }
                 else
@@ -338,9 +338,9 @@ namespace Paclink
         {
             stcChannel.ChannelType = EChannelModes.PactorTNC; // TODO: Needs error checking for some parameters
             stcChannel.ChannelName = cmbChannelName.Text;
-            stcChannel.Priority = Conversions.ToInteger(nudPriority.Value);
+            stcChannel.Priority = Convert.ToInt32(nudPriority.Value);
             stcChannel.Enabled = chkChannelEnabled.Checked;
-            stcChannel.TNCTimeout = Conversions.ToInteger(nudActivityTimeout.Value);
+            stcChannel.TNCTimeout = Convert.ToInt32(nudActivityTimeout.Value);
             stcChannel.TNCSerialPort = cmbTNCSerialPort.Text;
             stcChannel.TNCBaudRate = cmbTNCBaudRate.Text;
             stcChannel.TNCConfigurationFile = txtTNCConfigurationFile.Text;
@@ -395,8 +395,8 @@ namespace Paclink
                 stcChannel.RDOControl = "Manual";
             }
 
-            stcChannel.TNCFSKLevel = Conversions.ToInteger(nudFSKLevel.Value);
-            stcChannel.TNCPSKLevel = Conversions.ToInteger(nudPSKLevel.Value);
+            stcChannel.TNCFSKLevel = Convert.ToInt32(nudFSKLevel.Value);
+            stcChannel.TNCPSKLevel = Convert.ToInt32(nudPSKLevel.Value);
             stcChannel.TNCBusyHold = chkBusyHold.Checked;
             stcChannel.PactorId = chkIDEnabled.Checked;
             stcChannel.RemoteCallsign = GetCallSign();
@@ -706,7 +706,7 @@ namespace Paclink
                 cmbTNCBaudRate.Items.Add("38400");
                 cmbTNCBaudRate.Items.Add("57600");
                 cmbTNCBaudRate.Items.Add("115200");
-                if (Conversions.ToInteger(stcSelectedChannel.TNCBaudRate) < 38400)
+                if (Convert.ToInt32(stcSelectedChannel.TNCBaudRate) < 38400)
                     stcSelectedChannel.TNCBaudRate = "38400";
             }
             else
@@ -747,7 +747,7 @@ namespace Paclink
                 return;
             }
 
-            if (Conversions.ToInteger(txtAudioCenter.Text.Trim()) < 1000 | Conversions.ToInteger(txtAudioCenter.Text.Trim()) > 2300)
+            if (Convert.ToInt32(txtAudioCenter.Text.Trim()) < 1000 | Convert.ToInt32(txtAudioCenter.Text.Trim()) > 2300)
             {
                 Interaction.MsgBox("Audio Tones Center must be between 1000 and 2300 Hz", MsgBoxStyle.Exclamation, "Tone Center Error");
                 return;
@@ -824,7 +824,7 @@ namespace Paclink
                 return;
             }
 
-            if (Conversions.ToInteger(txtAudioCenter.Text.Trim()) < 1000 | Conversions.ToInteger(txtAudioCenter.Text.Trim()) > 2300)
+            if (Convert.ToInt32(txtAudioCenter.Text.Trim()) < 1000 | Convert.ToInt32(txtAudioCenter.Text.Trim()) > 2300)
             {
                 Interaction.MsgBox("Audio Tones Center must be between 1000 and 2300 Hz", MsgBoxStyle.Exclamation, "Tone Center Error");
                 return;

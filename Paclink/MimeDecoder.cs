@@ -111,7 +111,7 @@ namespace Paclink
                                 part.Content.DecodeTo(stream);
                                 Attachment stcAttachment = new Attachment()
                                 {
-                                    FileName = part.FileName.Replace(Constants.vbCr, "").Replace(Constants.vbLf, ""),
+                                    FileName = part.FileName.Replace(Globals.CR, "").Replace(Globals.LF, ""),
                                     Image = stream.ToArray()
                                 };
                                 aryAttachments.Add(stcAttachment);

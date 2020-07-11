@@ -135,7 +135,7 @@ namespace Paclink
                 {
                     ChannelType = EChannelModes.Telnet,
                     ChannelName = cmbChannelName.Text,
-                    Priority = Conversions.ToInteger(nudPriority.Value),
+                    Priority = Convert.ToInt32(nudPriority.Value),
                     Enabled = chkEnabled.Checked,
                     EnableAutoforward = true, // Telnet Channels always enabled
                     RemoteCallsign = "WL2K"
@@ -179,7 +179,7 @@ namespace Paclink
                     var withBlock = stcUpdateChannel;
                     withBlock.ChannelType = EChannelModes.Telnet;
                     withBlock.ChannelName = cmbChannelName.Text;
-                    withBlock.Priority = Conversions.ToInteger(nudPriority.Value);
+                    withBlock.Priority = Convert.ToInt32(nudPriority.Value);
                     withBlock.Enabled = chkEnabled.Checked;
                     withBlock.EnableAutoforward = true; // Telnet Channels always enabled
                     withBlock.RemoteCallsign = "WL2K";

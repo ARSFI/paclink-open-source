@@ -44,7 +44,7 @@ namespace Paclink
                     objKey.SetValue("POP3 Server", "Localhost");
                     objKey.SetValue("POP3 Prompt for Password", 0);
                     objKey.SetValue("POP3 Skip Account", 0);
-                    Interaction.MsgBox("Account " + strAccount + " has been added to your local Outlook Express." + Constants.vbCr + "Shut down and restart Outlook Express and be sure to set" + Constants.vbCr + " the account password in Outlook Express before using the account." + Constants.vbCr + "If your OE is not updated or you are using another Client" + Constants.vbCr + "you may add the account manually.", MsgBoxStyle.Information, "Account Added");
+                    Interaction.MsgBox("Account " + strAccount + " has been added to your local Outlook Express." + Globals.CR + "Shut down and restart Outlook Express and be sure to set" + Globals.CR + " the account password in Outlook Express before using the account." + Globals.CR + "If your OE is not updated or you are using another Client" + Globals.CR + "you may add the account manually.", MsgBoxStyle.Information, "Account Added");
 
 
 

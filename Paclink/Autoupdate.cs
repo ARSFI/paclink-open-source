@@ -726,12 +726,12 @@ namespace Paclink
                 var loopTo = strVA.Length - 1;
                 for (intIndex = 0; intIndex <= loopTo; intIndex++)
                 {
-                    if (Conversions.ToInteger(strVA[intIndex]) < Conversions.ToInteger(strVB[intIndex]))
+                    if (Convert.ToInt32(strVA[intIndex]) < Convert.ToInt32(strVB[intIndex]))
                     {
                         return -1;
                     }
 
-                    if (Conversions.ToInteger(strVA[intIndex]) > Conversions.ToInteger(strVB[intIndex]))
+                    if (Convert.ToInt32(strVA[intIndex]) > Convert.ToInt32(strVB[intIndex]))
                     {
                         return 1;
                     }
@@ -805,8 +805,8 @@ namespace Paclink
                 // Dim strLogPath As String = strExecutionDirectory & "\Logs"
                 string strLogPath = strLogsDirectory;
                 strLogPath += @"\" + strAppProductName + " Autoupdate";
-                strLogPath += " " + Strings.Format(DateTime.UtcNow, "yyyyMMdd") + ".log";
-                File.AppendAllText(strLogPath, TimestampEx() + "  " + strData + Constants.vbCrLf);
+                strLogPath += " " + DateTime.UtcNow.ToString("yyyyMMdd") + ".log";
+                File.AppendAllText(strLogPath, TimestampEx() + "  " + strData + Globals.CRLF);
             }
             catch
             {

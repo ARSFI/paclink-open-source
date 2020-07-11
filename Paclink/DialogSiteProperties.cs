@@ -154,7 +154,7 @@ namespace Paclink
                 Interaction.MsgBox("Attachment limit must be between 0 and 120000. 0 blocks all attachments.", MsgBoxStyle.Exclamation, "Attachment Limit Error");
                 return;
             }
-            else if (Conversions.ToInteger(txtSizeLimit.Text) < 0 | Conversions.ToInteger(txtSizeLimit.Text) > 120000)
+            else if (Convert.ToInt32(txtSizeLimit.Text) < 0 | Convert.ToInt32(txtSizeLimit.Text) > 120000)
             {
                 Interaction.MsgBox("Attachment limit must be between 0 and 120000. 0 blocks all attachments.", MsgBoxStyle.Exclamation, "Attachment Limit Error");
                 return;
@@ -185,7 +185,7 @@ namespace Paclink
             {
                 if (Information.IsNumeric(strTokens[1]))
                 {
-                    int intSSID = Conversions.ToInteger(strTokens[1]);
+                    int intSSID = Convert.ToInt32(strTokens[1]);
                     if (intSSID >= 1 & intSSID <= 15)
                     {
                         blnValidSSID = true;
@@ -241,8 +241,8 @@ namespace Paclink
             Globals.POP3Password = txtPOP3Password.Text.ToUpper().Trim();
             Globals.SiteGridSquare = txtGridSquare.Text.Trim();
             Globals.strServiceCodes = txtServiceCodes.Text.ToUpper().Trim();
-            Globals.intSMTPPortNumber = Conversions.ToInteger(txtSMTPPortNumber.Text);
-            Globals.intPOP3PortNumber = Conversions.ToInteger(txtPOP3PortNumber.Text);
+            Globals.intSMTPPortNumber = Convert.ToInt32(txtSMTPPortNumber.Text);
+            Globals.intPOP3PortNumber = Convert.ToInt32(txtPOP3PortNumber.Text);
             Globals.blnLAN = chkLANAccessable.Checked;
             Globals.blnEnableRadar = chkEnableRadar.Checked;
             Globals.blnUseRMSRelay = rdoUseRMSRelay.Checked;
