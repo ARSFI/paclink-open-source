@@ -1,6 +1,9 @@
 ﻿using Microsoft.VisualBasic;
+using System;
+using System.IO;
+using System.Windows.Forms;
 
-namespace RMS_Link_Test.My
+namespace RMS_Link_Test
 {
 
     // The following events are availble for MyApplication:
@@ -10,19 +13,23 @@ namespace RMS_Link_Test.My
     // UnhandledException: Raised if the application encounters an unhandled exception.
     // StartupNextInstance: Raised when launching a single-instance application and the application is already active. 
     // NetworkAvailabilityChanged: Raised when the network connection is connected or disconnected.
-    internal partial class MyApplication
+    static class MyApplication
     {
-        public MyApplication()
+        [STAThread]
+        static void Main()
         {
-            this.UnhandledException += MyUnhandledException;
+            Application.ThreadException += Application_ThreadException;
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Main());
         }
 
-        private void MyUnhandledException(object s, Microsoft.VisualBasic.ApplicationServices.UnhandledExceptionEventArgs e)
+        private static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
-            string strUnhandledException = Globals.TimestampEx() + " [" + Globals.strProductVersion + "] " + s.ToString() + ": " + Constants.vbCrLf + e.Exception.Message.Trim() + Constants.vbCrLf + e.Exception.StackTrace + Constants.vbCrLf + e.Exception.TargetSite.ToString() + Constants.vbCrLf;
+            string strUnhandledException = Globals.TimestampEx() + " [" + Globals.strProductVersion + "] " + sender.ToString() + ": " + Globals.CRLF + e.Exception.Message.Trim() + Globals.CRLF + e.Exception.StackTrace + Globals.CRLF + e.Exception.TargetSite.ToString() + Globals.CRLF;
 
-            MyProject.Computer.FileSystem.WriteAllText(Globals.strExecutionDirectory + "RMS Link Test Unhandled Exceptions.log", strUnhandledException, true);
-            Interaction.MsgBox(strUnhandledException, MsgBoxStyle.Critical);
+            File.WriteAllText(Globals.strExecutionDirectory + "RMS Link Test Unhandled Exceptions.log", strUnhandledException);
+            MessageBox.Show(strUnhandledException, "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
     }
 }

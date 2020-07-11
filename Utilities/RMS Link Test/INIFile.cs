@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace RMS_Link_Test
 {
@@ -26,9 +25,9 @@ namespace RMS_Link_Test
 
         public void Load()
         {
-            if (My.MyProject.Computer.FileSystem.FileExists(strFilePath))
+            if (File.Exists(strFilePath))
             {
-                string strContent = My.MyProject.Computer.FileSystem.ReadAllText(strFilePath);
+                string strContent = File.ReadAllText(strFilePath);
                 string strCurrentSection = "";
                 var objStringReader = new StringReader(strContent);
                 dicSections.Clear();
@@ -79,7 +78,7 @@ namespace RMS_Link_Test
                     var sbdContent = new StringBuilder();
                     foreach (string strSection in dicSections.Keys)
                     {
-                        sbdContent.AppendLine(Constants.vbCrLf + "[" + strSection + "]");
+                        sbdContent.AppendLine(Globals.CRLF + "[" + strSection + "]");
                         foreach (string strKey in dicSections[strSection].Keys)
                         {
                             string strValue = dicSections[strSection][strKey];
@@ -87,7 +86,7 @@ namespace RMS_Link_Test
                         }
                     }
 
-                    My.MyProject.Computer.FileSystem.WriteAllText(strFilePath, sbdContent.ToString(), false);
+                    File.WriteAllText(strFilePath, sbdContent.ToString());
                 }
                 catch
                 {
@@ -102,7 +101,7 @@ namespace RMS_Link_Test
             {
                 try
                 {
-                    blnResult = Conversions.ToBoolean(GetRecord(strSection, strKey, blnDefault.ToString()));
+                    blnResult = Convert.ToBoolean(GetRecord(strSection, strKey, blnDefault.ToString()));
                 }
                 catch
                 {
@@ -120,7 +119,7 @@ namespace RMS_Link_Test
             {
                 try
                 {
-                    intResult = Conversions.ToInteger(GetRecord(strSection, strKey, intDefault.ToString()));
+                    intResult = Convert.ToInt32(GetRecord(strSection, strKey, intDefault.ToString()));
                 }
                 catch
                 {
@@ -143,7 +142,7 @@ namespace RMS_Link_Test
         {
             if (Application.StartupPath.Contains("Source"))
             {
-                Globals.strExecutionDirectory = Path.Combine(Path.GetPathRoot(My.MyProject.Computer.FileSystem.SpecialDirectories.ProgramFiles), @"RMS\RMS Link Test\");
+                Globals.strExecutionDirectory = Path.Combine(Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)), @"RMS\RMS Link Test\");
                 strFilePath = Globals.strExecutionDirectory + Application.ProductName + ".ini";
             }
             else

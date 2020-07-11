@@ -4,8 +4,6 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using WinlinkInterop;
 
 namespace RMS_Link_Test
@@ -332,7 +330,7 @@ namespace RMS_Link_Test
             // txtMain
             // 
             _txtMain.Dock = DockStyle.Fill;
-            _txtMain.Font = new Font("Microsoft Sans Serif", 9.0F, FontStyle.Regular, GraphicsUnit.Point, Conversions.ToByte(0));
+            _txtMain.Font = new Font("Microsoft Sans Serif", 9.0F, FontStyle.Regular, GraphicsUnit.Point, Convert.ToByte(0));
             _txtMain.Location = new Point(0, 0);
             _txtMain.Multiline = true;
             _txtMain.Name = "_txtMain";
@@ -386,11 +384,11 @@ namespace RMS_Link_Test
             objWL2KInterop = new WinlinkInterop.WinlinkInterop("W4LINK");
             if (objWL2KInterop.HaveInternetConnection(true) == false)
             {
-                txtMain.AppendText("Cannot perform test.  Your computer does not have an Internet connection." + Constants.vbCrLf);
+                txtMain.AppendText("Cannot perform test.  Your computer does not have an Internet connection." + Globals.CRLF);
                 return;
             }
 
-            txtMain.Text = "Ports used by Winlink: 443, 8772, 8773" + Constants.vbCrLf + Constants.vbCrLf + "Click 'Start-test' to run the link test" + Constants.vbCrLf;
+            txtMain.Text = "Ports used by Winlink: 443, 8772, 8773" + Globals.CRLF + Globals.CRLF + "Click 'Start-test' to run the link test" + Globals.CRLF;
             txtMain.Select(0, 0);
             tmrPoll.Start();
         }
@@ -446,7 +444,7 @@ namespace RMS_Link_Test
             // 
             mnuStartTest.Enabled = false;
             txtMain.Clear();
-            txtMain.Text = "Test started " + Globals.TimestampEx() + " UTC" + Constants.vbCrLf;
+            txtMain.Text = "Test started " + Globals.TimestampEx() + " UTC" + Globals.CRLF;
             Log("");
             Log("Testing CMS telnet connection to cms.winlink.org through port 8772...");
             txtMain.Refresh();
@@ -454,7 +452,7 @@ namespace RMS_Link_Test
             objStopwatch.Reset();
             objStopwatch.Start();
             var objCMSconnection = objWL2KInterop.ConnectToServer("", 8772, false, 10);
-            intResponseTime = Conversions.ToInteger(objStopwatch.ElapsedMilliseconds);
+            intResponseTime = Convert.ToInt32(objStopwatch.ElapsedMilliseconds);
             objStopwatch.Stop();
             if (objCMSconnection == null)
             {
@@ -476,7 +474,7 @@ namespace RMS_Link_Test
             objStopwatch.Reset();
             objStopwatch.Start();
             objCMSconnection = objWL2KInterop.ConnectToServer("", 8773, true, 10);
-            intResponseTime = Conversions.ToInteger(objStopwatch.ElapsedMilliseconds);
+            intResponseTime = Convert.ToInt32(objStopwatch.ElapsedMilliseconds);
             objStopwatch.Stop();
             if (objCMSconnection == null || objCMSconnection.blnSSL == false)
             {
@@ -499,7 +497,7 @@ namespace RMS_Link_Test
             objStopwatch.Reset();
             objStopwatch.Start();
             bool blnResult = objWL2KInterop.PingCMS();
-            intResponseTime = Conversions.ToInteger(objStopwatch.ElapsedMilliseconds);
+            intResponseTime = Convert.ToInt32(objStopwatch.ElapsedMilliseconds);
             objStopwatch.Stop();
             if (blnResult)
             {
@@ -520,7 +518,7 @@ namespace RMS_Link_Test
             objStopwatch.Reset();
             objStopwatch.Start();
             var lstFiles = objWL2KInterop.GetAutoupdateFileList(false);
-            intResponseTime = Conversions.ToInteger(objStopwatch.ElapsedMilliseconds);
+            intResponseTime = Convert.ToInt32(objStopwatch.ElapsedMilliseconds);
             objStopwatch.Stop();
             if (lstFiles.Count > 0)
             {
@@ -542,7 +540,7 @@ namespace RMS_Link_Test
             objStopwatch.Start();
             if (objWL2KInterop.TestConnection("www.winlink.org", 443))
             {
-                intResponseTime = Conversions.ToInteger(objStopwatch.ElapsedMilliseconds);
+                intResponseTime = Convert.ToInt32(objStopwatch.ElapsedMilliseconds);
                 objStopwatch.Stop();
                 Log("  Successfully connected to www.winlink.org thorugh port 443 in " + intResponseTime.ToString() + " Milliseconds");
             }
@@ -564,7 +562,7 @@ namespace RMS_Link_Test
             string strSFI = objSFI.GetSFI(Globals.strExecutionDirectory);
             if (!string.IsNullOrEmpty(strSFI))
             {
-                intResponseTime = Conversions.ToInteger(objStopwatch.ElapsedMilliseconds);
+                intResponseTime = Convert.ToInt32(objStopwatch.ElapsedMilliseconds);
                 objStopwatch.Stop();
                 Log("  Successfully connected to https://services.swpc.noaa.gov/text/sgas.txt thorugh port 443 in " + intResponseTime.ToString() + " Milliseconds");
             }
@@ -613,7 +611,7 @@ namespace RMS_Link_Test
             // 
             if (true | blnCrLf)
             {
-                strText += Constants.vbCrLf;
+                strText += Globals.CRLF;
             }
 
             txtMain.AppendText(strText);
