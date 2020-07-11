@@ -77,7 +77,7 @@ namespace Paclink
         private void FillChannelList()
         {
             cmbChannelName.Items.Clear();
-            foreach (TChannelProperties stcChannel in Channels.Entries)
+            foreach (TChannelProperties stcChannel in Channels.Entries.Values)
             {
                 if (stcChannel.ChannelType == EChannelModes.PacketAGW)
                 {
@@ -243,7 +243,7 @@ namespace Paclink
         {
             if (!string.IsNullOrEmpty(cmbChannelName.Text) & cmbChannelName.Text != "<Enter a new channel>")
             {
-                if (Channels.Entries.Contains(cmbChannelName.Text))
+                if (Channels.Entries.ContainsKey(cmbChannelName.Text))
                 {
                     SetEntries();
                 }

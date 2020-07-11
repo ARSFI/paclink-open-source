@@ -3,11 +3,9 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
-    [DesignerGenerated()]
     public partial class DialogAutoupdate : Form
     {
 
@@ -53,7 +51,7 @@ namespace Paclink
             // Label1
             // 
             _Label1.AutoSize = true;
-            _Label1.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point, Conversions.ToByte(0));
+            _Label1.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point, Convert.ToByte(0));
             _Label1.Location = new Point(13, 26);
             _Label1.Name = "_Label1";
             _Label1.Size = new Size(310, 64);

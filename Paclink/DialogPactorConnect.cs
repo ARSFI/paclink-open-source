@@ -202,7 +202,7 @@ namespace Paclink
                 try
                 {
                     intHz -= Convert.ToInt32(stcChannel.AudioToneCenter);
-                    lblUSB.Text = "USB Dial: " + Strings.Format(intHz / (double)1000, "##0000.000") + " KHz";
+                    lblUSB.Text = "USB Dial: " + (intHz / (double)1000).ToString("##0000.000") + " KHz";
                 }
                 catch
                 {
@@ -239,7 +239,7 @@ namespace Paclink
                 try
                 {
                     intHz -= Convert.ToInt32(stcChannel.AudioToneCenter);
-                    lblUSB.Text = "USB Dial: " + Strings.Format(intHz / (double)1000, "##0000.000") + " KHz";
+                    lblUSB.Text = "USB Dial: " + (intHz / (double)1000).ToString("##0000.000") + " KHz";
                     stcChannel.RDOCenterFrequency = strCenterFreq;
                     Globals.objRadioControl.SetParameters(ref stcChannel);
                 }

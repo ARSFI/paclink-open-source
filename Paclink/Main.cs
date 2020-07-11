@@ -5,7 +5,6 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -97,7 +96,7 @@ namespace Paclink
             if ((strText ?? "") == Globals.CLEAR)
             {
                 ChannelDisplay.Clear();
-                File.WriteAllText(Globals.SiteRootDirectory + @"Logs\Channel Events " + Strings.Format(DateTime.UtcNow, "yyyyMMdd") + ".log", Globals.CRLF);
+                File.WriteAllText(Globals.SiteRootDirectory + @"Logs\Channel Events " + DateTime.UtcNow.ToString("yyyyMMdd") + ".log", Globals.CRLF);
                 return;
             }
             else if (string.IsNullOrEmpty(strText))
@@ -654,7 +653,7 @@ namespace Paclink
             {
                 for (int intPriority = 1; intPriority <= 5; intPriority++)
                 {
-                    foreach (TChannelProperties stcChannel in Channels.Entries)
+                    foreach (TChannelProperties stcChannel in Channels.Entries.Values)
                     {
                         if (stcChannel.Enabled == true & stcChannel.ChannelType != EChannelModes.Winmor)
                         {
@@ -675,9 +674,9 @@ namespace Paclink
                     }
                 }
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("Main.UpdateChannelsList A] " + Information.Err().Description);
+                Logs.Exception("Main.UpdateChannelsList A] " + e.Message);
             }
 
             try
@@ -689,9 +688,9 @@ namespace Paclink
                     mnuConnectTo.DropDownItems.Add(mnuItem);
                 }
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("Main.UpdateChannelsList B] " + Information.Err().Description);
+                Logs.Exception("Main.UpdateChannelsList B] " + e.Message);
             }
         } // UpdateChannelsList
 
@@ -704,9 +703,9 @@ namespace Paclink
                 if (Globals.objSMTPPort is object)
                     Globals.objSMTPPort.Listen(false);
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[Main.mnuProperties_Click A] " + Information.Err().Description);
+                Logs.Exception("[Main.mnuProperties_Click A] " + ex.Message);
             }
 
             try
@@ -714,9 +713,9 @@ namespace Paclink
                 if (Globals.objPOP3Port is object)
                     Globals.objPOP3Port.Listen(false);
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[Main.mnuProperties_Click B] " + Information.Err().Description);
+                Logs.Exception("[Main.mnuProperties_Click B] " + ex.Message);
             }
 
             var dlgProperties = new DialogSiteProperties();
@@ -730,21 +729,21 @@ namespace Paclink
             try
             {
                 // Open SMTP/POP3 ports...
-                if (!Information.IsNothing(Globals.objSMTPPort))
+                if (Globals.objSMTPPort != null)
                 {
                     Globals.objSMTPPort.LocalPort = Globals.intSMTPPortNumber;
                     Globals.objSMTPPort.Listen(true);
                 }
 
-                if (!Information.IsNothing(Globals.objPOP3Port))
+                if (Globals.objPOP3Port != null)
                 {
                     Globals.objPOP3Port.LocalPort = Globals.intPOP3PortNumber;
                     Globals.objPOP3Port.Listen(true);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Interaction.MsgBox("Error restarting POP3 and SMTP Ports: " + Information.Err().Description);
+                MessageBox.Show("Error restarting POP3 and SMTP Ports: " + ex.Message);
             }
         } // mnuProperties_Click
 

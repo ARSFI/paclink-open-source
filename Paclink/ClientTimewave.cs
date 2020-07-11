@@ -543,7 +543,7 @@ namespace Paclink
             {
                 if (dttTimeout < DateTime.Now)
                 {
-                    Globals.queChannelDisplay.Enqueue("G #Connect Script Timeout at " + Strings.Format(DateTime.UtcNow, "yyyy/MM/dd HH:mm UTC") + " ... Disconnecting");
+                    Globals.queChannelDisplay.Enqueue("G #Connect Script Timeout at " + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm UTC") + " ... Disconnecting");
                     return false;
                 }
 

@@ -117,7 +117,7 @@ namespace Paclink
             // Label9
             // 
             _Label9.AutoSize = true;
-            _Label9.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, Conversions.ToByte(0));
+            _Label9.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, Convert.ToByte(0));
             _Label9.Location = new Point(13, 113);
             _Label9.Name = "_Label9";
             _Label9.Size = new Size(108, 13);
@@ -178,7 +178,7 @@ namespace Paclink
             // Label3
             // 
             _Label3.AutoSize = true;
-            _Label3.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, Conversions.ToByte(0));
+            _Label3.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, Convert.ToByte(0));
             _Label3.Location = new Point(342, 34);
             _Label3.Name = "_Label3";
             _Label3.Size = new Size(101, 13);
@@ -197,7 +197,7 @@ namespace Paclink
             // Label1
             // 
             _Label1.AutoSize = true;
-            _Label1.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, Conversions.ToByte(0));
+            _Label1.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, Convert.ToByte(0));
             _Label1.Location = new Point(9, 34);
             _Label1.Name = "_Label1";
             _Label1.Size = new Size(91, 13);

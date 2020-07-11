@@ -6,7 +6,6 @@ using System.Windows.Forms;
 
 namespace Paclink
 {
-    [Microsoft.VisualBasic.CompilerServices.DesignerGenerated()]
     public partial class DialogChangePassword : Form
     {
 

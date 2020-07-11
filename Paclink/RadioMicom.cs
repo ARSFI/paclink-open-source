@@ -406,7 +406,7 @@ namespace Paclink
                 rc = GetMICOMData(ref argNRBytes, ref Result);
                 if (Result[9] == OpCode - 1)
                 {
-                    MICOMRptSSBStateRet = Conversions.ToByte(Result[10] + Conversions.ToByte(1)); // return 1 for LSB or 2 for USB
+                    MICOMRptSSBStateRet = Convert.ToByte(Result[10] + Convert.ToByte(1)); // return 1 for LSB or 2 for USB
                 }
                 else
                 {
@@ -612,8 +612,8 @@ namespace Paclink
             var Result = new byte[SizeofACK + 1];
             byte rc;
             Mydata[0] = 0; // No Report required
-            Mydata[1] = Conversions.ToByte(PWR >> 8);  // Power out 25,62,100 or 125
-            Mydata[2] = Conversions.ToByte(PWR & 0xFF);
+            Mydata[1] = Convert.ToByte(PWR >> 8);  // Power out 25,62,100 or 125
+            Mydata[2] = Convert.ToByte(PWR & 0xFF);
             rc = Cmd2MICOM(DataLen, RadioMicom.FrmTo, OpCode, Mydata); // send command to MICOM
             if (rc != 0)
             {
@@ -829,13 +829,13 @@ namespace Paclink
         {
             byte LongToLineRet = default;
             int NR1 = NR;
-            Result[3] = Conversions.ToByte(NR1 & 0xFF);
+            Result[3] = Convert.ToByte(NR1 & 0xFF);
             NR1 = NR1 >> 8;
-            Result[2] = Conversions.ToByte(NR1 & 0xFF);
+            Result[2] = Convert.ToByte(NR1 & 0xFF);
             NR1 = NR1 >> 8;
-            Result[1] = Conversions.ToByte(NR1 & 0xFF);
+            Result[1] = Convert.ToByte(NR1 & 0xFF);
             NR1 = NR1 >> 8;
-            Result[0] = Conversions.ToByte(NR1 & 0xFF);
+            Result[0] = Convert.ToByte(NR1 & 0xFF);
             LongToLineRet = 0;
             return LongToLineRet;
         }
@@ -877,7 +877,7 @@ namespace Paclink
             OutMsg[3] = OpCode;
             if (DataLen > 1)
             {
-                var loopTo = DataLen - Conversions.ToByte(2);
+                var loopTo = DataLen - Convert.ToByte(2);
                 for (I = 0; I <= loopTo; I++)
                     OutMsg[4 + I] = data[I];
             }
@@ -930,7 +930,7 @@ namespace Paclink
                         I = MICOMSendACK();
                     }
 
-                    GetMICOMDataRet = Conversions.ToByte(NRBytes);
+                    GetMICOMDataRet = Convert.ToByte(NRBytes);
                 }
             }
             else
@@ -959,7 +959,7 @@ namespace Paclink
                 Sum = Conversions.ToShort(Sum & 0xFF); // 255
             }
 
-            ChkSumRet = Conversions.ToByte(Sum & 0xFF); // 255
+            ChkSumRet = Convert.ToByte(Sum & 0xFF); // 255
             return ChkSumRet;
         }
 

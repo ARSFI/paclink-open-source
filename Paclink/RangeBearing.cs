@@ -55,26 +55,26 @@ namespace Paclink
             {
                 intDeg = Convert.ToInt32(Math.Floor(-dblLat));
                 dblMin = -(dblLat + intDeg);
-                strLat = Strings.Format(intDeg, "00") + Strings.Format(60 * dblMin, "00.00") + "S";
+                strLat = intDeg.ToString("00") + (60 * dblMin).ToString("00.00") + "S";
             }
             else
             {
                 intDeg = Convert.ToInt32(Math.Floor(dblLat));
                 dblMin = dblLat - intDeg;
-                strLat = Strings.Format(intDeg, "00") + Strings.Format(60 * dblMin, "00.00") + "N";
+                strLat = intDeg.ToString("00") + (60 * dblMin).ToString("00.00") + "N";
             }
 
             if (dblLon < 0)
             {
                 intDeg = Convert.ToInt32(Math.Floor(-dblLon));
                 dblMin = -(dblLon + intDeg);
-                strLon = Strings.Format(intDeg, "000") + Strings.Format(60 * dblMin, "00.00") + "W";
+                strLon = intDeg.ToString("000") + (60 * dblMin).ToString("00.00") + "W";
             }
             else
             {
                 intDeg = Convert.ToInt32(Math.Floor(dblLon));
                 dblMin = dblLon - intDeg;
-                strLon = Strings.Format(intDeg, "000") + Strings.Format(60 * dblMin, "00.00") + "E";
+                strLon = intDeg.ToString("000") + (60 * dblMin).ToString("00.00") + "E";
             }
         }  // GridSq2NMEALatLon
 

@@ -225,7 +225,7 @@ namespace Paclink
             {
                 strKilohertz = Globals.StripMode(strKilohertz); // Strip off any mode designator
                 int intHertz = Globals.KHzToHz(strKilohertz) - Convert.ToInt32(strAudioCenterFrequency);
-                string strHertz = Strings.Format(intHertz, "000000000");
+                string strHertz = intHertz.ToString("000000000");
                 switch (strRadioType)
                 {
                     case "Yaesu FT-857":
@@ -263,10 +263,10 @@ namespace Paclink
                             bytCommand[3] = 0;
                             bytCommand[4] = 0x85;
                             SendCommand(bytCommand);
-                            bytCommand[0] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(0, 1)) * 16 + Convert.ToInt32(strHertz.Substring(1, 1)));
-                            bytCommand[1] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(2, 1)) * 16 + Convert.ToInt32(strHertz.Substring(3, 1)));
-                            bytCommand[2] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(4, 1)) * 16 + Convert.ToInt32(strHertz.Substring(5, 1)));
-                            bytCommand[3] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(6, 1)) * 16 + Convert.ToInt32(strHertz.Substring(7, 1)));
+                            bytCommand[0] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(0, 1)) * 16 + Convert.ToInt32(strHertz.Substring(1, 1)));
+                            bytCommand[1] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(2, 1)) * 16 + Convert.ToInt32(strHertz.Substring(3, 1)));
+                            bytCommand[2] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(4, 1)) * 16 + Convert.ToInt32(strHertz.Substring(5, 1)));
+                            bytCommand[3] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(6, 1)) * 16 + Convert.ToInt32(strHertz.Substring(7, 1)));
                             bytCommand[4] = 1;
                             return SendCommand(bytCommand);
                         }
@@ -295,10 +295,10 @@ namespace Paclink
                             bytCommand[4] = 0x9;
                             SendCommand(bytCommand);
                             // Set frequency
-                            bytCommand[0] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(0, 1)) * 16 + Convert.ToInt32(strHertz.Substring(1, 1)));
-                            bytCommand[1] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(2, 1)) * 16 + Convert.ToInt32(strHertz.Substring(3, 1)));
-                            bytCommand[2] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(4, 1)) * 16 + Convert.ToInt32(strHertz.Substring(5, 1)));
-                            bytCommand[3] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(6, 1)) * 16 + Convert.ToInt32(strHertz.Substring(7, 1)));
+                            bytCommand[0] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(0, 1)) * 16 + Convert.ToInt32(strHertz.Substring(1, 1)));
+                            bytCommand[1] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(2, 1)) * 16 + Convert.ToInt32(strHertz.Substring(3, 1)));
+                            bytCommand[2] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(4, 1)) * 16 + Convert.ToInt32(strHertz.Substring(5, 1)));
+                            bytCommand[3] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(6, 1)) * 16 + Convert.ToInt32(strHertz.Substring(7, 1)));
                             bytCommand[4] = 1;
                             return SendCommand(bytCommand);
                         }
@@ -309,7 +309,7 @@ namespace Paclink
                         {
                             try
                             {
-                                string strFrequency = Strings.Format(intHertz, "00000000");
+                                string strFrequency = intHertz.ToString("00000000");
                                 SendCommand("MD02;");                   // Set USB
                                 SendCommand("FA" + strFrequency + ";"); // Set frequency
                             }
@@ -341,10 +341,10 @@ namespace Paclink
                             SendCommand(bytCommand);
 
                             // Set frequency...
-                            bytCommand[0] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(6, 1)) * 16 + Convert.ToInt32(strHertz.Substring(7, 1)));
-                            bytCommand[1] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(4, 1)) * 16 + Convert.ToInt32(strHertz.Substring(5, 1)));
-                            bytCommand[2] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(2, 1)) * 16 + Convert.ToInt32(strHertz.Substring(3, 1)));
-                            bytCommand[3] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(0, 1)) * 16 + Convert.ToInt32(strHertz.Substring(1, 1)));
+                            bytCommand[0] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(6, 1)) * 16 + Convert.ToInt32(strHertz.Substring(7, 1)));
+                            bytCommand[1] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(4, 1)) * 16 + Convert.ToInt32(strHertz.Substring(5, 1)));
+                            bytCommand[2] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(2, 1)) * 16 + Convert.ToInt32(strHertz.Substring(3, 1)));
+                            bytCommand[3] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(0, 1)) * 16 + Convert.ToInt32(strHertz.Substring(1, 1)));
                             bytCommand[4] = 0xA;
                             SendCommand(bytCommand);
                             break;
@@ -367,7 +367,7 @@ namespace Paclink
             try
             {
                 int intHertz = Globals.KHzToHz(strKilohertz);
-                string strHertz = Strings.Format(intHertz, "000000000");
+                string strHertz = intHertz.ToString("000000000");
                 switch (strRadioType)
                 {
                     case "Yaesu FT-857":
@@ -390,10 +390,10 @@ namespace Paclink
                             SendCommand(bytCommand);
 
                             // Set the frequency...
-                            bytCommand[0] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(0, 1)) * 16 + Convert.ToInt32(strHertz.Substring(1, 1)));
-                            bytCommand[1] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(2, 1)) * 16 + Convert.ToInt32(strHertz.Substring(3, 1)));
-                            bytCommand[2] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(4, 1)) * 16 + Convert.ToInt32(strHertz.Substring(5, 1)));
-                            bytCommand[3] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(6, 1)) * 16 + Convert.ToInt32(strHertz.Substring(7, 1)));
+                            bytCommand[0] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(0, 1)) * 16 + Convert.ToInt32(strHertz.Substring(1, 1)));
+                            bytCommand[1] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(2, 1)) * 16 + Convert.ToInt32(strHertz.Substring(3, 1)));
+                            bytCommand[2] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(4, 1)) * 16 + Convert.ToInt32(strHertz.Substring(5, 1)));
+                            bytCommand[3] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(6, 1)) * 16 + Convert.ToInt32(strHertz.Substring(7, 1)));
                             bytCommand[4] = 1;
                             return SendCommand(bytCommand);
                         }
@@ -422,10 +422,10 @@ namespace Paclink
                             bytCommand[4] = 0x9;
                             SendCommand(bytCommand);
                             // Set frequency
-                            bytCommand[0] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(0, 1)) * 16 + Convert.ToInt32(strHertz.Substring(1, 1)));
-                            bytCommand[1] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(2, 1)) * 16 + Convert.ToInt32(strHertz.Substring(3, 1)));
-                            bytCommand[2] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(4, 1)) * 16 + Convert.ToInt32(strHertz.Substring(5, 1)));
-                            bytCommand[3] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(6, 1)) * 16 + Convert.ToInt32(strHertz.Substring(7, 1)));
+                            bytCommand[0] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(0, 1)) * 16 + Convert.ToInt32(strHertz.Substring(1, 1)));
+                            bytCommand[1] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(2, 1)) * 16 + Convert.ToInt32(strHertz.Substring(3, 1)));
+                            bytCommand[2] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(4, 1)) * 16 + Convert.ToInt32(strHertz.Substring(5, 1)));
+                            bytCommand[3] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(6, 1)) * 16 + Convert.ToInt32(strHertz.Substring(7, 1)));
                             bytCommand[4] = 1;
                             return SendCommand(bytCommand);
                         }
@@ -438,10 +438,10 @@ namespace Paclink
                             bytCommand[3] = 0;
                             bytCommand[4] = 7;
                             SendCommand(bytCommand);
-                            bytCommand[0] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(0, 1)) * 16 + Convert.ToInt32(strHertz.Substring(1, 1)));
-                            bytCommand[1] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(2, 1)) * 16 + Convert.ToInt32(strHertz.Substring(3, 1)));
-                            bytCommand[2] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(4, 1)) * 16 + Convert.ToInt32(strHertz.Substring(5, 1)));
-                            bytCommand[3] = Conversions.ToByte(Convert.ToInt32(strHertz.Substring(6, 1)) * 16 + Convert.ToInt32(strHertz.Substring(7, 1)));
+                            bytCommand[0] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(0, 1)) * 16 + Convert.ToInt32(strHertz.Substring(1, 1)));
+                            bytCommand[1] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(2, 1)) * 16 + Convert.ToInt32(strHertz.Substring(3, 1)));
+                            bytCommand[2] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(4, 1)) * 16 + Convert.ToInt32(strHertz.Substring(5, 1)));
+                            bytCommand[3] = Convert.ToByte(Convert.ToInt32(strHertz.Substring(6, 1)) * 16 + Convert.ToInt32(strHertz.Substring(7, 1)));
                             bytCommand[4] = 1;
                             return SendCommand(bytCommand);
                         }

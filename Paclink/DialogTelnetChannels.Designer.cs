@@ -164,7 +164,7 @@ namespace Paclink
             // Label9
             // 
             _Label9.AutoSize = true;
-            _Label9.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, Conversions.ToByte(0));
+            _Label9.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, Convert.ToByte(0));
             _Label9.Location = new Point(119, 9);
             _Label9.Name = "_Label9";
             _Label9.Size = new Size(481, 13);

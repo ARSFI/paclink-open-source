@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -58,18 +56,18 @@ namespace Paclink
             }
             catch
             {
-                Interaction.MsgBox("Polling interval must be an integer between 3 and 120 minutes!");
+                MessageBox.Show("Polling interval must be an integer between 3 and 120 minutes!");
                 return;
             }
 
             if (AutoPollInterval < 3 | AutoPollInterval > 120)
             {
-                Interaction.MsgBox("Polling interval must be an integer between 3 and 120 minutes!");
+                MessageBox.Show("Polling interval must be an integer between 3 and 120 minutes!");
                 return;
             }
             else if (AutoPollInterval < 15)
             {
-                if (Interaction.MsgBox("To reduce QRM and channel loading polling intervals less than 15" + Globals.CRLF + "minutes should be used only during emergencies!   Continue?", MsgBoxStyle.YesNo, "Short Polling Interval!") != MsgBoxResult.Yes)
+                if (MessageBox.Show("To reduce QRM and channel loading polling intervals less than 15" + Globals.CRLF + "minutes should be used only during emergencies!   Continue?", "Short Polling Interval!", MessageBoxButtons.YesNo) != DialogResult.Yes)
 
                     return;
             }

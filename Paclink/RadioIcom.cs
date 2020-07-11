@@ -118,7 +118,7 @@ namespace Paclink
             // Opens the serial port used to control the radio. Returns true if port opens...
 
             strCIVAddress = Channel.CIVAddress;
-            bytCIVAddress = Conversions.ToByte("&H" + strCIVAddress);
+            bytCIVAddress = Convert.ToByte("&H" + strCIVAddress);
             if (Channel.RDOControl == "Via PTCII")
             {
                 blnViaPTC = true;
@@ -216,8 +216,8 @@ namespace Paclink
                 case "Icom (other NMEA)":
                     {
                         SendCommand(ComputeNMEACommand("REMOTE,ON"));
-                        SendCommand(ComputeNMEACommand("RXF," + Strings.Format(intHertz / (double)1000000, "#0.000000")));
-                        SendCommand(ComputeNMEACommand("TXF," + Strings.Format(intHertz / (double)1000000, "#0.000000")));
+                        SendCommand(ComputeNMEACommand("RXF," + (intHertz / (double)1000000).ToString("#0.000000")));
+                        SendCommand(ComputeNMEACommand("TXF," + (intHertz / (double)1000000).ToString("#0.000000")));
                         break;
                     }
 
@@ -345,7 +345,7 @@ namespace Paclink
                 case "Icom IC-746pro":
                 case "Icom IC-756pro":
                     {
-                        strHertz = Strings.Format(Convert.ToInt32(intHertz), "000000000");
+                        strHertz = Convert.ToInt32(intHertz).ToString("000000000");
                         intPa1 = 16 * Convert.ToInt32(strHertz.Substring(7, 1)) + Convert.ToInt32(strHertz.Substring(8, 1));
                         intPa2 = 16 * Convert.ToInt32(strHertz.Substring(5, 1)) + Convert.ToInt32(strHertz.Substring(6, 1));
                         intPa3 = 16 * Convert.ToInt32(strHertz.Substring(3, 1)) + Convert.ToInt32(strHertz.Substring(4, 1));
@@ -357,11 +357,11 @@ namespace Paclink
                         bytCommand[2] = bytCIVAddress;
                         bytCommand[3] = 0xF1;
                         bytCommand[4] = 0x5; // Set frequency command
-                        bytCommand[5] = Conversions.ToByte(intPa1);
-                        bytCommand[6] = Conversions.ToByte(intPa2);
-                        bytCommand[7] = Conversions.ToByte(intPa3);
-                        bytCommand[8] = Conversions.ToByte(intPa4);
-                        bytCommand[9] = Conversions.ToByte(intPa5);
+                        bytCommand[5] = Convert.ToByte(intPa1);
+                        bytCommand[6] = Convert.ToByte(intPa2);
+                        bytCommand[7] = Convert.ToByte(intPa3);
+                        bytCommand[8] = Convert.ToByte(intPa4);
+                        bytCommand[9] = Convert.ToByte(intPa5);
                         bytCommand[10] = 0xFD;
                         SendCommand(bytCommand);
                         break;
@@ -369,7 +369,7 @@ namespace Paclink
 
                 default:
                     {
-                        strHertz = Strings.Format(Convert.ToInt32(intHertz), "00000000");
+                        strHertz = Convert.ToInt32(intHertz).ToString("00000000");
                         intPa1 = 16 * Convert.ToInt32(strHertz.Substring(6, 1)) + Convert.ToInt32(strHertz.Substring(7, 1));
                         intPa2 = 16 * Convert.ToInt32(strHertz.Substring(4, 1)) + Convert.ToInt32(strHertz.Substring(5, 1));
                         intPa3 = 16 * Convert.ToInt32(strHertz.Substring(2, 1)) + Convert.ToInt32(strHertz.Substring(3, 1));
@@ -380,10 +380,10 @@ namespace Paclink
                         bytCommand[2] = bytCIVAddress;
                         bytCommand[3] = 0xF1;
                         bytCommand[4] = 0x5; // Set frequency command
-                        bytCommand[5] = Conversions.ToByte(intPa1);
-                        bytCommand[6] = Conversions.ToByte(intPa2);
-                        bytCommand[7] = Conversions.ToByte(intPa3);
-                        bytCommand[8] = Conversions.ToByte(intPa4);
+                        bytCommand[5] = Convert.ToByte(intPa1);
+                        bytCommand[6] = Convert.ToByte(intPa2);
+                        bytCommand[7] = Convert.ToByte(intPa3);
+                        bytCommand[8] = Convert.ToByte(intPa4);
                         bytCommand[9] = 0xFD;
                         SendCommand(bytCommand);
                         break;

@@ -501,7 +501,7 @@ namespace Paclink
                                 dttMostRecentBackup = dttFileDate;
                             }
 
-                            string strExpire = Strings.Format(dttOldestToKeep, "yyyyMMddHHmmss");
+                            string strExpire = dttOldestToKeep.ToString("yyyyMMddHHmmss");
                             // See if this file has expired.
                             if (strFileDate.CompareTo(strExpire) < 0)
                             {

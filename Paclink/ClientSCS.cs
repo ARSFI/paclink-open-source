@@ -709,7 +709,7 @@ namespace Paclink
                 intActivityTimer += 1;
             if (intActivityTimer > 60 * Globals.stcSelectedChannel.TNCTimeout)
             {
-                Globals.queChannelDisplay.Enqueue("R*** " + Globals.stcSelectedChannel.TNCTimeout.ToString() + " minute activity timeout at " + Strings.Format(DateTime.UtcNow, "yyyy/MM/dd HH:mm UTC"));
+                Globals.queChannelDisplay.Enqueue("R*** " + Globals.stcSelectedChannel.TNCTimeout.ToString() + " minute activity timeout at " + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm UTC"));
                 ImmediateDisconnect();
                 var dttStartDisconnect = DateTime.Now;
                 while (DateTime.Now.Subtract(dttStartDisconnect).TotalMilliseconds < 2000)
@@ -742,7 +742,7 @@ namespace Paclink
                 if (intScriptTimer > Globals.stcSelectedChannel.TNCScriptTimeout)
                 {
                     intConnectScriptPtr = -1;
-                    Globals.queChannelDisplay.Enqueue("R #Connect Script Timeout at " + Strings.Format(DateTime.UtcNow, "yyyy/MM/dd HH:mm UTC") + " - disconnecting");
+                    Globals.queChannelDisplay.Enqueue("R #Connect Script Timeout at " + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm UTC") + " - disconnecting");
                     ImmediateDisconnect();
                     enmState = ELinkStates.LinkFailed;
                 }
@@ -1162,8 +1162,8 @@ namespace Paclink
                 if (bytStatus.Length == 4 | bytStatus.Length == 7)
                 {
                     // Decode the basic status byte...
-                    bytLink = (byte)(bytStatus[3] & Conversions.ToByte(0x7));
-                    bytMode = (byte)(bytStatus[3] & Conversions.ToByte(0x70));
+                    bytLink = (byte)(bytStatus[3] & Convert.ToByte(0x7));
+                    bytMode = (byte)(bytStatus[3] & Convert.ToByte(0x70));
                     var switchExpr = bytMode;
                     switch (switchExpr)
                     {
@@ -1206,7 +1206,7 @@ namespace Paclink
                             }
                     }
 
-                    bytDirection = (byte)(bytStatus[3] & Conversions.ToByte(0x8));
+                    bytDirection = (byte)(bytStatus[3] & Convert.ToByte(0x8));
                     if ((int)bytDirection > 0)
                         objHostPort.blnISS = true;
                     else
@@ -1581,7 +1581,7 @@ namespace Paclink
                 blnCommandReply = false;
                 try
                 {
-                    objHostPort.SendHostCommandPacket(bytCommand, Conversions.ToByte(intChannel));
+                    objHostPort.SendHostCommandPacket(bytCommand, Convert.ToByte(intChannel));
                     objHostPort.Poll();
                     var dttStart = DateTime.Now;
                 }
@@ -1601,7 +1601,7 @@ namespace Paclink
                 blnCommandReply = false;
                 try
                 {
-                    objHostPort.SendHostCommandPacket(strCommand, Conversions.ToByte(intChannel));
+                    objHostPort.SendHostCommandPacket(strCommand, Convert.ToByte(intChannel));
                     objHostPort.Poll();
                     var dttStart = DateTime.Now;
                 }
@@ -1875,8 +1875,8 @@ namespace Paclink
                 for (int intIndex = 2, loopTo = bytPendingFrame.Length - 3; intIndex <= loopTo; intIndex++)
                     intCRC = Crc.UpdCrc(bytPendingFrame[intIndex], intCRC);
                 intCRC = ~intCRC;
-                bytPendingFrame[bytPendingFrame.Length - 2] = Conversions.ToByte(intCRC & 0xFF);
-                bytPendingFrame[bytPendingFrame.Length - 1] = Conversions.ToByte((intCRC & 0xFF00) / 256);
+                bytPendingFrame[bytPendingFrame.Length - 2] = Convert.ToByte(intCRC & 0xFF);
+                bytPendingFrame[bytPendingFrame.Length - 1] = Convert.ToByte((intCRC & 0xFF00) / 256);
             }
             catch
             {
@@ -1931,9 +1931,9 @@ namespace Paclink
             for (int intIndex = 2, loopTo = intUpperbound - 2; intIndex <= loopTo; intIndex++)
                 intCRC = Crc.UpdCrc(bytFrame[intIndex], intCRC);
             intCRC = ~intCRC;
-            if (bytFrame[intUpperbound - 1] != Conversions.ToByte(intCRC & 0xFF))
+            if (bytFrame[intUpperbound - 1] != Convert.ToByte(intCRC & 0xFF))
                 return false;
-            if (bytFrame[intUpperbound] != Conversions.ToByte((intCRC & 0xFF00) / 256))
+            if (bytFrame[intUpperbound] != Convert.ToByte((intCRC & 0xFF00) / 256))
                 return false;
             return true;
         } // CheckCRC
@@ -2244,7 +2244,7 @@ namespace Paclink
             intPendingPoll = (intPendingPoll + 1) % 4;
             if (intPendingPoll == 0)         // 
             {
-                SendHostCommandPacket("L", Conversions.ToByte(Globals.stcSelectedChannel.TNCPort));
+                SendHostCommandPacket("L", Convert.ToByte(Globals.stcSelectedChannel.TNCPort));
                 return;
             }
 
@@ -2289,9 +2289,9 @@ namespace Paclink
                 var bytFrame = new byte[bytData.Length + 6 + 1];
                 bytFrame[0] = 0xAA;
                 bytFrame[1] = 0xAA;
-                bytFrame[2] = Conversions.ToByte(intChannel);
+                bytFrame[2] = Convert.ToByte(intChannel);
                 bytFrame[3] = 0;
-                bytFrame[4] = Conversions.ToByte(bytData.Length - 1);
+                bytFrame[4] = Convert.ToByte(bytData.Length - 1);
                 for (int intIndex = 0, loopTo = bytFrame[4]; intIndex <= loopTo; intIndex++)
                     bytFrame[intIndex + 5] = bytData[intIndex];
                 queDataOutbound.Enqueue(bytFrame);
@@ -2654,7 +2654,7 @@ namespace Paclink
                         if (bytPayload[2] != 0)
                         {
                             int intChannel = bytPayload[2] - 1;
-                            SendHostCommandPacket("G3", Conversions.ToByte(intChannel));
+                            SendHostCommandPacket("G3", Convert.ToByte(intChannel));
                         }
 
                         break;
@@ -2710,7 +2710,7 @@ namespace Paclink
                 bytFrame[1] = 0xAA;
                 bytFrame[2] = intChannel;
                 bytFrame[3] = 1;
-                bytFrame[4] = Conversions.ToByte(bytCommand.Length - 1);
+                bytFrame[4] = Convert.ToByte(bytCommand.Length - 1);
                 for (int intIndex = 5, loopTo = bytFrame[4] + 5; intIndex <= loopTo; intIndex++)
                     bytFrame[intIndex] = bytCommand[intIndex - 5];
                 queCommandOutbound.Enqueue(bytFrame);
@@ -2732,9 +2732,9 @@ namespace Paclink
                 bytFrame[1] = 0xAA;
                 bytFrame[2] = intChannel;
                 bytFrame[3] = 1;
-                bytFrame[4] = Conversions.ToByte(strCommand.Length - 1);
+                bytFrame[4] = Convert.ToByte(strCommand.Length - 1);
                 for (int intIndex = 5, loopTo = bytFrame[4] + 5; intIndex <= loopTo; intIndex++)
-                    bytFrame[intIndex] = Conversions.ToByte(Strings.Asc(strCommand[intIndex - 5]));
+                    bytFrame[intIndex] = Convert.ToByte(Strings.Asc(strCommand[intIndex - 5]));
                 queCommandOutbound.Enqueue(bytFrame);
             }
             else
@@ -2833,7 +2833,7 @@ namespace Paclink
                 if ((int)bytPendingFrame[3] >= 0x80)
                     blnAlternate = true;
                 if (blnAlternate == true)
-                    bytPendingFrame[3] = (byte)(bytPendingFrame[3] | Conversions.ToByte(0x80));
+                    bytPendingFrame[3] = (byte)(bytPendingFrame[3] | Convert.ToByte(0x80));
                 blnAlternate = !blnAlternate;
 
                 // Fill in the CRC bytes...

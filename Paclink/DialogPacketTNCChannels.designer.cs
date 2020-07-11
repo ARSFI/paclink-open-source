@@ -200,7 +200,7 @@ namespace Paclink
             // Label3
             // 
             _Label3.AutoSize = true;
-            _Label3.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, Conversions.ToByte(0));
+            _Label3.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, Convert.ToByte(0));
             _Label3.Location = new Point(323, 36);
             _Label3.Name = "_Label3";
             _Label3.Size = new Size(101, 13);
@@ -219,7 +219,7 @@ namespace Paclink
             // Label1
             // 
             _Label1.AutoSize = true;
-            _Label1.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, Conversions.ToByte(0));
+            _Label1.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, Convert.ToByte(0));
             _Label1.Location = new Point(16, 36);
             _Label1.Name = "_Label1";
             _Label1.Size = new Size(91, 13);
@@ -265,7 +265,7 @@ namespace Paclink
             // Label14
             // 
             _Label14.AutoSize = true;
-            _Label14.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, Conversions.ToByte(0));
+            _Label14.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, Convert.ToByte(0));
             _Label14.Location = new Point(153, 67);
             _Label14.Name = "_Label14";
             _Label14.Size = new Size(59, 13);
@@ -532,7 +532,7 @@ namespace Paclink
             // lblTNCPort
             // 
             _lblTNCPort.AutoSize = true;
-            _lblTNCPort.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, Conversions.ToByte(0));
+            _lblTNCPort.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, Convert.ToByte(0));
             _lblTNCPort.Location = new Point(509, 73);
             _lblTNCPort.Name = "_lblTNCPort";
             _lblTNCPort.Size = new Size(54, 13);
@@ -551,7 +551,7 @@ namespace Paclink
             // Label9
             // 
             _Label9.AutoSize = true;
-            _Label9.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, Conversions.ToByte(0));
+            _Label9.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, Convert.ToByte(0));
             _Label9.Location = new Point(159, 9);
             _Label9.Name = "_Label9";
             _Label9.Size = new Size(481, 13);
@@ -668,7 +668,7 @@ namespace Paclink
             // lblFrequency
             // 
             _lblFrequency.AutoSize = true;
-            _lblFrequency.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, Conversions.ToByte(0));
+            _lblFrequency.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, Convert.ToByte(0));
             _lblFrequency.Location = new Point(570, 36);
             _lblFrequency.Name = "_lblFrequency";
             _lblFrequency.Size = new Size(70, 13);

@@ -630,7 +630,7 @@ namespace Paclink
             string sMonth;
             sDay = sDays.Substring(3 * (int)dtUTCDate.DayOfWeek, 3) + ", ";
             sMonth = " " + sMonths.Substring(3 * (dtUTCDate.Month - 1), 3) + " ";
-            return sDay + Strings.Format(dtUTCDate, "dd") + sMonth + Strings.Format(dtUTCDate, "yyyy") + " " + Strings.Format(dtUTCDate, "HH:mm:ss") + " -0000";
+            return sDay + dtUTCDate.ToString("dd") + sMonth + dtUTCDate.ToString("yyyy") + " " + dtUTCDate.ToString("HH:mm:ss") + " -0000";
         } // DateToRFC822Date
 
         private string FormatMessageBody(string strSender, string strBody)

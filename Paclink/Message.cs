@@ -975,11 +975,11 @@ namespace Paclink
             bytFormatted = new byte[intFormattedUpperBound + 1];
             bytFormatted[intPosition] = SOH;
             intPosition += 1;
-            bytFormatted[intPosition] = Conversions.ToByte(Subject.Length + strOffset.Length + 2);
+            bytFormatted[intPosition] = Convert.ToByte(Subject.Length + strOffset.Length + 2);
             intPosition += 1;
             foreach (char c in Subject)
             {
-                bytFormatted[intPosition] = Conversions.ToByte(Strings.Asc(c));
+                bytFormatted[intPosition] = Convert.ToByte(Strings.Asc(c));
                 intPosition += 1;
             }
 
@@ -987,7 +987,7 @@ namespace Paclink
             intPosition += 1;
             foreach (char c in strOffset)
             {
-                bytFormatted[intPosition] = Conversions.ToByte(Strings.Asc(c));
+                bytFormatted[intPosition] = Convert.ToByte(Strings.Asc(c));
                 intPosition += 1;
             }
 
@@ -1029,7 +1029,7 @@ namespace Paclink
                         else
                         {
                             // The byte count is the remaining bytes if 250 or less are remaining
-                            bytFormatted[intPosition] = Conversions.ToByte(intRemainder);
+                            bytFormatted[intPosition] = Convert.ToByte(intRemainder);
                             intSTXBlockByteCount = intRemainder - 1;
                         }
 
@@ -1056,7 +1056,7 @@ namespace Paclink
                     {
                         bytFormatted[intPosition] = EOT;
                         intPosition += 1;
-                        bytFormatted[intPosition] = Conversions.ToByte((intCheckSum & 0xFF) * -1 & 0xFF);
+                        bytFormatted[intPosition] = Convert.ToByte((intCheckSum & 0xFF) * -1 & 0xFF);
                         if (intPosition == Information.UBound(bytFormatted))
                         {
                             return true;

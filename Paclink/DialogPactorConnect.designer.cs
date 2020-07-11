@@ -96,7 +96,7 @@ namespace Paclink
             // 
             // lblUSB
             // 
-            _lblUSB.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point, Conversions.ToByte(0));
+            _lblUSB.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point, Convert.ToByte(0));
             _lblUSB.Location = new Point(28, 122);
             _lblUSB.Name = "_lblUSB";
             _lblUSB.Size = new Size(359, 16);
@@ -109,7 +109,7 @@ namespace Paclink
             // 
             _lblBusy.BackColor = Color.Yellow;
             _lblBusy.BorderStyle = BorderStyle.FixedSingle;
-            _lblBusy.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, Conversions.ToByte(0));
+            _lblBusy.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, Convert.ToByte(0));
             _lblBusy.Location = new Point(45, 9);
             _lblBusy.Name = "_lblBusy";
             _lblBusy.Size = new Size(324, 24);
@@ -121,7 +121,7 @@ namespace Paclink
             // Label4
             // 
             _Label4.AutoSize = true;
-            _Label4.Font = new Font("Microsoft Sans Serif", 12.0F, FontStyle.Bold, GraphicsUnit.Point, Conversions.ToByte(0));
+            _Label4.Font = new Font("Microsoft Sans Serif", 12.0F, FontStyle.Bold, GraphicsUnit.Point, Convert.ToByte(0));
             _Label4.Location = new Point(31, 148);
             _Label4.Name = "_Label4";
             _Label4.Size = new Size(352, 20);
@@ -163,7 +163,7 @@ namespace Paclink
             // lblPMBOType
             // 
             _lblPMBOType.BorderStyle = BorderStyle.Fixed3D;
-            _lblPMBOType.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, Conversions.ToByte(0));
+            _lblPMBOType.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, Convert.ToByte(0));
             _lblPMBOType.Location = new Point(92, 43);
             _lblPMBOType.Name = "_lblPMBOType";
             _lblPMBOType.Size = new Size(231, 22);

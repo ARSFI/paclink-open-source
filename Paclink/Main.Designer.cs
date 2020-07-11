@@ -426,7 +426,7 @@ namespace Paclink
             // 
             // mnuMinutesRemaining
             // 
-            _mnuMinutesRemaining.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, Conversions.ToByte(0));
+            _mnuMinutesRemaining.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, Convert.ToByte(0));
             _mnuMinutesRemaining.ForeColor = SystemColors.ControlText;
             _mnuMinutesRemaining.Name = "_mnuMinutesRemaining";
             _mnuMinutesRemaining.Size = new Size(121, 20);

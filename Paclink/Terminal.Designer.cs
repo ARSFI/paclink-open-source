@@ -67,7 +67,7 @@ namespace Paclink
             // txtKeyboard
             // 
             _txtKeyboard.Dock = DockStyle.Bottom;
-            _txtKeyboard.Font = new Font("Courier New", 12.0F, FontStyle.Regular, GraphicsUnit.Point, Conversions.ToByte(0));
+            _txtKeyboard.Font = new Font("Courier New", 12.0F, FontStyle.Regular, GraphicsUnit.Point, Convert.ToByte(0));
             _txtKeyboard.Location = new Point(0, 479);
             _txtKeyboard.Name = "_txtKeyboard";
             _txtKeyboard.Size = new Size(634, 26);
@@ -141,7 +141,7 @@ namespace Paclink
             // 
             _txtDisplay.BackColor = Color.White;
             _txtDisplay.Dock = DockStyle.Fill;
-            _txtDisplay.Font = new Font("Courier New", 12.0F, FontStyle.Regular, GraphicsUnit.Point, Conversions.ToByte(0));
+            _txtDisplay.Font = new Font("Courier New", 12.0F, FontStyle.Regular, GraphicsUnit.Point, Convert.ToByte(0));
             _txtDisplay.Location = new Point(0, 24);
             _txtDisplay.MaxLength = 0;
             _txtDisplay.Multiline = true;

@@ -34,11 +34,11 @@ namespace Paclink
                     intTimeout = 0;
                     if (Globals.UseRMSRelay())
                     {
-                        Globals.queChannelDisplay.Enqueue("R*** No connection to RMS Relay at " + Strings.Format(DateTime.UtcNow, "yyyy/MM/dd HH:mm UTC"));
+                        Globals.queChannelDisplay.Enqueue("R*** No connection to RMS Relay at " + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm UTC"));
                     }
                     else
                     {
-                        Globals.queChannelDisplay.Enqueue("R*** No connection to WL2K CMS Telnet at " + Strings.Format(DateTime.UtcNow, "yyyy/MM/dd HH:mm UTC"));
+                        Globals.queChannelDisplay.Enqueue("R*** No connection to WL2K CMS Telnet at " + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm UTC"));
                     }
 
                     enmState = ELinkStates.LinkFailed;

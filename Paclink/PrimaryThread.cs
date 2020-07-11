@@ -495,7 +495,7 @@ namespace Paclink
             Globals.strConnectedGridSquare = "";
             try
             {
-                if (Channels.Entries.Contains(strChannelName))
+                if (Channels.Entries.ContainsKey(strChannelName))
                 {
                     Globals.stcSelectedChannel = (TChannelProperties)Channels.Entries[strChannelName];
                 }

@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using Ionic.Zip;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using WinlinkInterop;
 
 namespace Paclink
@@ -120,10 +119,7 @@ namespace Paclink
             // 
             // Converts a text string to a byte array.
             // 
-            var bytBuffer = new byte[strText.Length];
-            for (int intIndex = 0, loopTo = bytBuffer.Length - 1; intIndex <= loopTo; intIndex++)
-                bytBuffer[intIndex] = Conversions.ToByte(Strings.Asc(strText.Substring(intIndex, 1)));
-            return bytBuffer;
+            return ASCIIEncoding.ASCII.GetBytes(strText);
         }
 
         private void AutoupdateTimerEvent(object s, System.Timers.ElapsedEventArgs e)
@@ -752,7 +748,7 @@ namespace Paclink
             // 
             // Returns the current time/date formatted
             // 
-            return Strings.Format(DateTime.UtcNow, @"yyyy\/MM\/dd HH\:mm\:ss");
+            return DateTime.UtcNow.ToString(@"yyyy/MM/dd HH:mm:ss");
         }
 
         private string[] GetAutoupdateVersionInfo(string strFile)

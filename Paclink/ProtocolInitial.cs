@@ -114,7 +114,7 @@ namespace Paclink
             }
             else if (Information.IsNumeric(strTokens[1]))
             {
-                return "N" + Strings.Format(Convert.ToInt32(strTokens[1]), "0#");
+                return "N" + Convert.ToInt32(strTokens[1]).ToString("0#");
             }
             else
             {
@@ -316,7 +316,7 @@ namespace Paclink
                                 uint intResult;
                                 // This is compatible with WL2K secure login and generates the same ;PR: reply as AirMail 
                                 intResult = WinlinkAuth.ChallengedPassword(strChallengePhrase, Globals.SecureLoginPassword);
-                                strSecureReply = ";PR: " + Strings.Format(intResult, "0000000000").Substring(2, 8);
+                                strSecureReply = ";PR: " + intResult.ToString("0000000000").Substring(2, 8);
                                 Send(strSecureReply);
                             }
 
@@ -405,7 +405,7 @@ namespace Paclink
             if (!string.IsNullOrEmpty(strChallengePhrase) & !string.IsNullOrEmpty(strPassword))
             {
                 uint intResult = WinlinkAuth.ChallengedPassword(strChallengePhrase, strPassword);
-                strFW += "|" + Strings.Format(intResult, "0000000000").Substring(2, 8);
+                strFW += "|" + intResult.ToString("0000000000").Substring(2, 8);
             }
 
             return strFW;

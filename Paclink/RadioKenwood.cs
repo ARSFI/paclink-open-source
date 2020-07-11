@@ -217,7 +217,7 @@ namespace Paclink
             SendCommand("PR0;"); // Turn off any speech processor (not used on all models)
             try
             {
-                string strHertz = Strings.Format(intHertz, "00000000000");
+                string strHertz = intHertz.ToString("00000000000");
                 switch (strRadioType)
                 {
                     case "Kenwood TS-450":
@@ -287,9 +287,9 @@ namespace Paclink
                                 int intHighCO = 1200 + Convert.ToInt32(strAudioCenterFrequency);
                                 int intLowCO = Convert.ToInt32(strAudioCenterFrequency) - 1200;
                                 int intIndex = intHighCO / 200 - 7;
-                                SendCommand("SH" + Strings.Format(intIndex, "00") + ";"); // 1200 Hz above Audio Center
+                                SendCommand("SH" + intIndex.ToString("00") + ";"); // 1200 Hz above Audio Center
                                 intIndex = Math.Min(10, intLowCO / 100) + 1;
-                                return SendCommand("SL" + Strings.Format(intIndex, "00") + ";"); // 1200 Hz below Audio Center
+                                return SendCommand("SL" + intIndex.ToString("00") + ";"); // 1200 Hz below Audio Center
                             }
                             // set the narrow filter
                             else
@@ -297,9 +297,9 @@ namespace Paclink
                                 int intHighCO = 300 + Convert.ToInt32(strAudioCenterFrequency);
                                 int intLowCO = Convert.ToInt32(strAudioCenterFrequency) - 300;
                                 int intIndex = intHighCO / 200 - 7;
-                                SendCommand("SH" + Strings.Format(intIndex, "00") + ";"); // 300 Hz above Audio Center
+                                SendCommand("SH" + intIndex.ToString("00") + ";"); // 300 Hz above Audio Center
                                 intIndex = Math.Min(10, intLowCO / 100) + 1;
-                                return SendCommand("SL" + Strings.Format(intIndex, "00") + ";");
+                                return SendCommand("SL" + intIndex.ToString("00") + ";");
                             } // 300 Hz below Audio Center
                         }
                         catch
@@ -430,7 +430,7 @@ namespace Paclink
             int intHertz = Globals.KHzToHz(strKilohertz);
             try
             {
-                string strFreqHz = Strings.Format(intHertz, "00000000000");
+                string strFreqHz = intHertz.ToString("00000000000");
                 switch (strRadioType)
                 {
                     case "Kenwood TS-2000":

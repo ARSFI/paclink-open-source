@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using WinlinkServiceClasses;
 
 namespace Paclink
@@ -94,7 +92,7 @@ namespace Paclink
         // This class consists of only shared variables and methods for 
         // saving, updating, recalling, and deleting channel declarations.
         // 
-        public static Collection Entries; // Holds a memory image of all channel structures
+        public static Dictionary<string, TChannelProperties> Entries; // Holds a memory image of all channel structures
 
         public static bool IsChannel(string strChannelName)
         {
@@ -130,7 +128,7 @@ namespace Paclink
             // Fill the Channels.Entries collection with the property structures of
             // all of the defined channels.
             // 
-            Entries = new Collection();
+            Entries = new Dictionary<string, TChannelProperties>();
             string strChannelNames = Globals.objINIFile.GetString("Properties", "Channel Names", "");
             var strChannelList = strChannelNames.Split('|');
             foreach (var strName in strChannelList)
@@ -255,9 +253,9 @@ namespace Paclink
                             }
                     }
 
-                    if (Entries.Contains(strName) == false)
+                    if (Entries.ContainsKey(strName) == false)
                     {
-                        Entries.Add(stcChannel, stcChannel.ChannelName);
+                        Entries.Add(stcChannel.ChannelName, stcChannel);
                     }
                     else
                     {
@@ -432,9 +430,9 @@ namespace Paclink
                 else if (File.Exists(strScriptFilePath))
                     File.Delete(strScriptFilePath);
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[Channels.SaveScript] " + Information.Err().Description);
+                Logs.Exception("[Channels.SaveScript] " + e.Message);
             }
         } // SaveScript
 
@@ -455,9 +453,9 @@ namespace Paclink
                     return null;
                 }
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[Channels.GetScript] " + Information.Err().Description);
+                Logs.Exception("[Channels.GetScript] " + e.Message);
             }
 
             return null;

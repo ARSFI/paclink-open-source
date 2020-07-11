@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
@@ -7,8 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+using System.Windows.Forms;
 
 namespace Paclink
 {
@@ -65,7 +66,7 @@ namespace Paclink
             public int WaitDisconnect; // holds the number of seconds been waiting for disconnect
         }
 
-        private Collection cllOutboundQueue = new Collection();
+        private List<OutboundAGWPacket> cllOutboundQueue = new List<OutboundAGWPacket>();
 
         private struct OutboundAGWPacket
         {
@@ -154,7 +155,7 @@ namespace Paclink
                                     {
                                     }
 
-                                    cllOutboundQueue.Remove(i); // when removed at i don't increment i...i now points to the next item in the collection
+                                    cllOutboundQueue.RemoveAt(i); // when removed at i don't increment i...i now points to the next item in the collection
                                 }
                                 else
                                 {
@@ -176,7 +177,7 @@ namespace Paclink
                                 ConnectedCall.ActivityTimer = 0;
                                 ConnectedCall.WaitDisconnect = 0;
                                 ConnectedCall.FramesOutstanding += 1;
-                                cllOutboundQueue.Remove(i); // When removed at i don't increment i...i now points to the next item in the collection
+                                cllOutboundQueue.RemoveAt(i); // When removed at i don't increment i...i now points to the next item in the collection
                             }
                             else
                             {
@@ -187,7 +188,7 @@ namespace Paclink
                     // Increment and test activity timers
                     if (intConnectTimer > Globals.stcSelectedChannel.AGWScriptTimeout)
                     {
-                        Globals.queChannelDisplay.Enqueue("R*** " + Globals.stcSelectedChannel.AGWScriptTimeout.ToString() + " second connection timeout at " + Strings.Format(DateTime.UtcNow, "yyyy/MM/dd HH:mm UTC"));
+                        Globals.queChannelDisplay.Enqueue("R*** " + Globals.stcSelectedChannel.AGWScriptTimeout.ToString() + " second connection timeout at " + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm UTC"));
                         DirtyDisconnect();
                         enmState = ELinkStates.LinkFailed;
                     }
@@ -195,14 +196,14 @@ namespace Paclink
                     ConnectedCall.ActivityTimer += 1;
                     if (ConnectedCall.ActivityTimer > 60 * Globals.stcSelectedChannel.AGWTimeout)
                     {
-                        Globals.queChannelDisplay.Enqueue("R*** " + Globals.stcSelectedChannel.AGWTimeout.ToString() + " minute activity timeout at " + Strings.Format(DateTime.UtcNow, "yyyy/MM/dd HH:mm UTC"));
+                        Globals.queChannelDisplay.Enqueue("R*** " + Globals.stcSelectedChannel.AGWTimeout.ToString() + " minute activity timeout at " + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm UTC"));
                         DirtyDisconnect();
                         enmState = ELinkStates.LinkFailed;
                     }
 
                     if (intScriptTimer > Globals.stcSelectedChannel.AGWScriptTimeout)
                     {
-                        Globals.queChannelDisplay.Enqueue("GConnect Script Timeout at " + Strings.Format(DateTime.UtcNow, "yyyy/MM/dd HH:mm UTC") + " # ... Disconnecting");
+                        Globals.queChannelDisplay.Enqueue("GConnect Script Timeout at " + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm UTC") + " # ... Disconnecting");
                         DirtyDisconnect();
                         enmState = ELinkStates.LinkFailed;
                     }
@@ -214,9 +215,9 @@ namespace Paclink
 
                     AGWRequestFramesOutstanding(); // Request frames outstanding 
                 }
-                catch
+                catch (Exception e)
                 {
-                    Logs.Exception("[ClientAGW.Poll] " + Information.Err().Description);
+                    Logs.Exception("[ClientAGW.Poll] " + e.Message);
                 }
             }
         }
@@ -231,9 +232,9 @@ namespace Paclink
                 Thread.Sleep(1000);
                 ProcessPortInput();
             }
-            catch
+            catch (Exception e)
             {
-                Interaction.MsgBox("[Release] " + Information.Err().Description);
+                MessageBox.Show("[Release] " + e.Message);
             }
 
             try
@@ -276,7 +277,7 @@ namespace Paclink
             blnDisconnectPending = false;
             if (!string.IsNullOrEmpty(Globals.stcSelectedChannel.AGWScript))
             {
-                ConnectScript = Globals.stcSelectedChannel.AGWScript.Replace(Globals.LF, "").Split(Conversions.ToChar(Globals.CR));
+                ConnectScript = Globals.stcSelectedChannel.AGWScript.Replace(Globals.LF, "").Split(Convert.ToChar(Globals.CR));
             }
 
             try
@@ -284,7 +285,7 @@ namespace Paclink
                 blnLoggedIn = false;
                 blnPollEnabled = false;
                 cllOutboundQueue = null;
-                cllOutboundQueue = new Collection();
+                cllOutboundQueue = new List<OutboundAGWPacket>();
                 ConnectedCall = default;
                 ConnectedCall = new ConnectedCalls();
                 try
@@ -340,9 +341,9 @@ namespace Paclink
                 blnPollEnabled = blnLoggedIn;
                 return blnLoggedIn;
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[ClientAGW.Initialize] " + Information.Err().Description);
+                Logs.Exception("[ClientAGW.Initialize] " + e.Message);
                 return false;
             }
         }  // Initialize
@@ -389,7 +390,7 @@ namespace Paclink
                     }
 
                     var bytTemp = new byte[36];
-                    bytTemp[0] = Conversions.ToByte(ConnectedCall.Port - 1);
+                    bytTemp[0] = Convert.ToByte(ConnectedCall.Port - 1);
                     objASCIIEncoding.GetBytes("D", 0, 1, bytTemp, 4);
                     objASCIIEncoding.GetBytes(Globals.SiteCallsign, 0, Globals.SiteCallsign.Length, bytTemp, 8);
                     objASCIIEncoding.GetBytes(ConnectedCall.Callsign, 0, ConnectedCall.Callsign.Length, bytTemp, 18);
@@ -404,9 +405,9 @@ namespace Paclink
                     objQ = default;
                 }
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[ClientAGW.DataToSend] " + Information.Err().Description);
+                Logs.Exception("[ClientAGW.DataToSend] " + e.Message);
             }
         } // DataToSend
 
@@ -429,7 +430,7 @@ namespace Paclink
                 }
                 else // normal disconnect
                 {
-                    bytTemp[0] = Conversions.ToByte(ConnectedCall.Port - 1);
+                    bytTemp[0] = Convert.ToByte(ConnectedCall.Port - 1);
                     objASCIIEncoding.GetBytes("d", 0, 1, bytTemp, 4);
                     objASCIIEncoding.GetBytes(Globals.SiteCallsign, 0, Globals.SiteCallsign.Length, bytTemp, 8);
                     objASCIIEncoding.GetBytes(ConnectedCall.Callsign, 0, ConnectedCall.Callsign.Length, bytTemp, 18);
@@ -438,14 +439,14 @@ namespace Paclink
                     objD.Port = ConnectedCall.Port;
                     objD.IsDisconnect = true;
                     dttStartDisconnect = DateTime.Now;
-                    cllOutboundQueue.Add(objD, ConnectedCall.Callsign); // add the packet to the Outbound Queue collection
+                    cllOutboundQueue.Add(objD); // add the packet to the Outbound Queue collection
                     blnDisconnectPending = true;
                     blnPollEnabled = true;
                 }
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[ClientAGW.NormalDisconnect] " + Information.Err().Description);
+                Logs.Exception("[ClientAGW.NormalDisconnect] " + e.Message);
             }
         } // NormalDisconnect
 
@@ -464,7 +465,7 @@ namespace Paclink
             {
                 lQ = lLen / Convert.ToInt32(Math.Pow(256, 4 - n)); // note integer divide 
                 lLen = lLen - Convert.ToInt32(lQ * Math.Pow(256, 4 - n));
-                bLength[4 - n] = Conversions.ToByte(lQ);
+                bLength[4 - n] = Convert.ToByte(lQ);
             }
 
             ComputeLengthBRet = bLength;
@@ -522,9 +523,9 @@ namespace Paclink
             {
                 objTCPPort.GetStream().Write(bytTemp, 0, bytTemp.Length);
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[AGWRegisterCallsign] " + Information.Err().Description);
+                Logs.Exception("[AGWRegisterCallsign] " + e.Message);
             }
         } // AGWRegiserCallsign
 
@@ -540,9 +541,9 @@ namespace Paclink
             {
                 objTCPPort.GetStream().Write(bytTemp, 0, bytTemp.Length);
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[AGWUnRegisterCallsign] " + Information.Err().Description);
+                Logs.Exception("[AGWUnRegisterCallsign] " + e.Message);
             }
         } // AGWUnRegisterCallsign
 
@@ -597,7 +598,7 @@ namespace Paclink
                 if (ConnectedCall.Port > 0)
                 {
                     var bytTemp = new byte[36];
-                    bytTemp[0] = Conversions.ToByte(ConnectedCall.Port - 1);
+                    bytTemp[0] = Convert.ToByte(ConnectedCall.Port - 1);
                     objASCIIEncoding.GetBytes("d", 0, 1, bytTemp, 4);
                     objASCIIEncoding.GetBytes(Globals.SiteCallsign, 0, Globals.SiteCallsign.Length, bytTemp, 8);
                     objASCIIEncoding.GetBytes(ConnectedCall.Callsign, 0, ConnectedCall.Callsign.Length, bytTemp, 18);
@@ -611,9 +612,9 @@ namespace Paclink
                     return false;
                 }
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[ClientAGW.DirtyDisconnect] " + Information.Err().Description);
+                Logs.Exception("[ClientAGW.DirtyDisconnect] " + e.Message);
                 return false;
             }
         }  // DirtyDisconnect
@@ -670,7 +671,7 @@ namespace Paclink
             if (string.IsNullOrEmpty(ConnectedCall.Callsign))
                 return;
             var bytTemp = new byte[36];
-            bytTemp[0] = Conversions.ToByte(intAGWPort - 1);
+            bytTemp[0] = Convert.ToByte(intAGWPort - 1);
             objASCIIEncoding.GetBytes("Y", 0, 1, bytTemp, 4);
             objASCIIEncoding.GetBytes(ConnectedCall.Callsign, 0, ConnectedCall.Callsign.Length, bytTemp, 18);
             objASCIIEncoding.GetBytes(Globals.SiteCallsign, 0, Globals.SiteCallsign.Length, bytTemp, 8);
@@ -678,9 +679,9 @@ namespace Paclink
             {
                 objTCPPort.GetStream().Write(bytTemp, 0, bytTemp.Length);
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[AGWRequestFramesOutstanding] " + Information.Err().Description);
+                Logs.Exception("[AGWRequestFramesOutstanding] " + e.Message);
             }
         } // AGWRequestFramesOutstanding
 
@@ -816,9 +817,9 @@ namespace Paclink
                 Globals.queChannelDisplay.Enqueue("R*** Registering " + Globals.SiteCallsign + " with AGW Engine");
                 AGWRegisterCallsign(Globals.SiteCallsign); // only one callsign may be registered for all ports!
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[ClientAGW.objTCPPort_OnReadyToSend] " + Information.Err().Description);
+                Logs.Exception("[ClientAGW.objTCPPort_OnReadyToSend] " + e.Message);
             }
         }
 
@@ -834,7 +835,7 @@ namespace Paclink
             if (RunScript(ref strVia, ref strTarget)) // Activates scripting, modifies sVia and sTarget
             {
                 ConnectedCall.Callsign = strTarget;
-                bytTemp[0] = Conversions.ToByte(intAGWPort - 1);
+                bytTemp[0] = Convert.ToByte(intAGWPort - 1);
                 objASCIIEncoding.GetBytes(Globals.SiteCallsign, 0, Globals.SiteCallsign.Length, bytTemp, 8);
                 objASCIIEncoding.GetBytes(strTarget, 0, strTarget.Length, bytTemp, 18);
                 if (string.IsNullOrEmpty(strVia))
@@ -856,7 +857,7 @@ namespace Paclink
                             break;
                     }
 
-                    bytDigis[0] = Conversions.ToByte(bytDigis.Length / (double)10);
+                    bytDigis[0] = Convert.ToByte(bytDigis.Length / (double)10);
                     Array.Copy(ComputeLengthB(bytDigis.Length), 0, bytTemp, 28, 4);
                     AppendBuffer(ref bytTemp, bytDigis);
                 }
@@ -870,9 +871,9 @@ namespace Paclink
                     enmState = ELinkStates.Connecting;
                     return true;
                 }
-                catch
+                catch (Exception e)
                 {
-                    Logs.Exception("[ClientAGW.Connect] " + Information.Err().Description);
+                    Logs.Exception("[ClientAGW.Connect] " + e.Message);
                     return false;
                 }
             }
@@ -970,11 +971,11 @@ namespace Paclink
                     {
                         if (Text.StartsWith("***"))
                         {
-                            Globals.queChannelDisplay.Enqueue("R " + Text + " at " + Strings.Format(DateTime.UtcNow, "yyyy/MM/dd HH:mm:ss UTC"));
+                            Globals.queChannelDisplay.Enqueue("R " + Text + " at " + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss UTC"));
                         }
                         else
                         {
-                            Globals.queChannelDisplay.Enqueue("R*** " + Text + " at " + Strings.Format(DateTime.UtcNow, "yyyy/MM/dd HH:mm:ss UTC"));
+                            Globals.queChannelDisplay.Enqueue("R*** " + Text + " at " + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss UTC"));
                         }
                         // queChannelStatus.Enqueue("Connected")
                         enmState = ELinkStates.Connected;
@@ -1034,7 +1035,7 @@ namespace Paclink
                 var bytTemp = new byte[36];
                 if (!blnLoggedIn)
                     return SequenceScriptRet;
-                bytTemp[0] = Conversions.ToByte(intAGWPort - 1);
+                bytTemp[0] = Convert.ToByte(intAGWPort - 1);
                 objASCIIEncoding.GetBytes("D", 0, 1, bytTemp, 4);
                 objASCIIEncoding.GetBytes(Globals.SiteCallsign, 0, Globals.SiteCallsign.Length, bytTemp, 8);
                 objASCIIEncoding.GetBytes(From, 0, From.Length, bytTemp, 18);
@@ -1148,14 +1149,14 @@ namespace Paclink
             try
             {
                 lDataLength = ComputeLengthL(bytFrame, 28);
-                strFrameType = Conversions.ToString((char)bytFrame[4]);
+                strFrameType = Convert.ToString((char)bytFrame[4]);
                 switch (strFrameType)
                 {
                     case "R":   // Version request reply (used for ping)
                         {
                             strVersion = (bytFrame[36] + 256 * bytFrame[37]).ToString();
                             strVersion = strVersion + "." + (bytFrame[40] + 256 * bytFrame[41]).ToString();
-                            Globals.queChannelDisplay.Enqueue("PAGWPE Status OK @" + Strings.Format(DateTime.UtcNow, "HH:mm") + " Ver:" + strVersion);
+                            Globals.queChannelDisplay.Enqueue("PAGWPE Status OK @" + DateTime.UtcNow.ToString("HH:mm") + " Ver:" + strVersion);
                             break;
                         }
 

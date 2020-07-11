@@ -220,7 +220,7 @@ namespace Paclink
             // This function returns the current time/date in 
             // 2004/08/24 05:33 format string...
 
-            return Strings.Format(DateTime.UtcNow, "yyyy/MM/dd HH:mm");
+            return DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm");
         } // Timestamp
 
         public static string TimestampEx()
@@ -228,21 +228,21 @@ namespace Paclink
             // This function returns the current time/date in 
             // 2004/08/24 05:33:12 format string...
 
-            return Strings.Format(DateTime.UtcNow, "yyyy/MM/dd HH:mm:ss");
+            return DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
         } // TimestampEx
 
         public static string FormatDate(DateTime dttDate)
         {
             // Returns the dttDate as a string in Winlink format (Example: 2004/08/24 07:23)...
 
-            return Strings.Format(dttDate, "yyyy/MM/dd HH:mm");
+            return dttDate.ToString("yyyy/MM/dd HH:mm");
         } // FormatDate (Date)
 
         public static string FormatDate(string strDate)
         {
             // Returns the strDate as a string in Winlink format (Example: 2004/08/24 07:23)...
 
-            return Strings.Format(Conversions.ToDate(strDate), "yyyy/MM/dd HH:mm");
+            return Conversions.ToDate(strDate).ToString("yyyy/MM/dd HH:mm");
         } // FormatDate (String)
 
         public static string ReformatDate(string strSource)
@@ -309,7 +309,7 @@ namespace Paclink
                 }
             }
 
-            Debug.Write(" " + DateTime.Now.Second.ToString() + "." + Strings.Format(DateTime.Now.Millisecond, "000") + " ");
+            Debug.Write(" " + DateTime.Now.Second.ToString() + "." + DateTime.Now.Millisecond.ToString("000") + " ");
             Debug.WriteLine("");
         } // FrameDebug
 
@@ -319,7 +319,7 @@ namespace Paclink
 
             var bytBuffer = new byte[strText.Length];
             for (int intIndex = 0, loopTo = bytBuffer.Length - 1; intIndex <= loopTo; intIndex++)
-                bytBuffer[intIndex] = Conversions.ToByte(Strings.Asc(strText.Substring(intIndex, 1)));
+                bytBuffer[intIndex] = Convert.ToByte(Strings.Asc(strText.Substring(intIndex, 1)));
             return bytBuffer;
         } // GetBytes
 
@@ -372,7 +372,7 @@ namespace Paclink
             {
                 lQ = lLen / Convert.ToInt32(Math.Pow(256, 4 - n)); // note integer divide 
                 lLen = lLen - Convert.ToInt32(lQ * Math.Pow(256, 4 - n));
-                bLength[4 - n] = Conversions.ToByte(lQ);
+                bLength[4 - n] = Convert.ToByte(lQ);
             }
 
             ComputeLengthBRet = bLength;
@@ -540,7 +540,7 @@ namespace Paclink
             string sMonth;
             sDay = sDays.Substring(3 * (int)dtUTCDate.DayOfWeek, 3) + ", ";
             sMonth = " " + sMonths.Substring(3 * (dtUTCDate.Month - 1), 3) + " ";
-            return sDay + Strings.Format(dtUTCDate, "dd") + sMonth + Strings.Format(dtUTCDate, "yyyy") + " " + Strings.Format(dtUTCDate, "HH:mm:ss") + " -0000";
+            return sDay + dtUTCDate.ToString("dd") + sMonth + dtUTCDate.ToString("yyyy") + " " + dtUTCDate.ToString("HH:mm:ss") + " -0000";
         } // DateToRFC822Date
 
         public static string ParseAddress(string strLine)
@@ -811,7 +811,7 @@ namespace Paclink
             if (Channels.Entries.Count == 0)
                 return false;
             var stcChannel = default(TChannelProperties);
-            foreach (TChannelProperties currentStcChannel in Channels.Entries)
+            foreach (TChannelProperties currentStcChannel in Channels.Entries.Values)
             {
                 stcChannel = currentStcChannel;
                 if (stcChannel.ChannelType != EChannelModes.PactorTNC & stcChannel.Enabled == true)
@@ -1718,7 +1718,7 @@ namespace Paclink
             // 
             // Return the current UTC time in the format yyyymmddhhmmss
             // 
-            return Strings.Format(DateTime.UtcNow, "yyyyMMddHHmmss");
+            return DateTime.UtcNow.ToString("yyyyMMddHHmmss");
         }
 
         public static DateTime ParseNetworkDate(string strDate, [Optional, DateTimeConstant(627667488000000000/* #1/1/1990# */)] DateTime dttDefaultDate, string strComment = "")

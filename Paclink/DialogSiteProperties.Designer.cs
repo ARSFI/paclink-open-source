@@ -172,7 +172,7 @@ namespace Paclink
             // txtSiteCallsign
             // 
             _txtSiteCallsign.CharacterCasing = CharacterCasing.Upper;
-            _txtSiteCallsign.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, Conversions.ToByte(0));
+            _txtSiteCallsign.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, Convert.ToByte(0));
             _txtSiteCallsign.Location = new Point(174, 37);
             _txtSiteCallsign.Name = "_txtSiteCallsign";
             _txtSiteCallsign.Size = new Size(111, 20);
@@ -272,7 +272,7 @@ namespace Paclink
             // Label8
             // 
             _Label8.AutoSize = true;
-            _Label8.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, Conversions.ToByte(0));
+            _Label8.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, Convert.ToByte(0));
             _Label8.Location = new Point(171, 9);
             _Label8.Name = "_Label8";
             _Label8.Size = new Size(311, 16);
@@ -325,7 +325,7 @@ namespace Paclink
             // txtRMSRelayIPPath
             // 
             _txtRMSRelayIPPath.Enabled = false;
-            _txtRMSRelayIPPath.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, Conversions.ToByte(0));
+            _txtRMSRelayIPPath.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, Convert.ToByte(0));
             _txtRMSRelayIPPath.Location = new Point(240, 41);
             _txtRMSRelayIPPath.Name = "_txtRMSRelayIPPath";
             _txtRMSRelayIPPath.Size = new Size(140, 20);

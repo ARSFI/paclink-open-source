@@ -20,7 +20,7 @@ namespace Paclink
             // Writes the indicated text to the channel event log...
 
             lock (objLogLock)
-                File.WriteAllText(Globals.SiteRootDirectory + @"Logs\Channel Events " + Strings.Format(DateTime.UtcNow, "yyyyMMdd") + ".log", Globals.TimestampEx() + " " + strText + Globals.CRLF);
+                File.WriteAllText(Globals.SiteRootDirectory + @"Logs\Channel Events " + DateTime.UtcNow.ToString("yyyyMMdd") + ".log", Globals.TimestampEx() + " " + strText + Globals.CRLF);
         } // WriteChannelEvent
 
         public static void SMTPEvent(string strText)
@@ -28,7 +28,7 @@ namespace Paclink
             // Writes the indicated text to the SMTP/POP3 event log...
 
             lock (objLogLock)
-                File.WriteAllText(Globals.SiteRootDirectory + @"Logs\SMTP Events " + Strings.Format(DateTime.UtcNow, "yyyyMMdd") + ".log", Globals.TimestampEx() + " " + strText + Globals.CRLF);
+                File.WriteAllText(Globals.SiteRootDirectory + @"Logs\SMTP Events " + DateTime.UtcNow.ToString("yyyyMMdd") + ".log", Globals.TimestampEx() + " " + strText + Globals.CRLF);
         } // WriteSMTPEvent
         // 
         // Writes the indicated text to the exception log.
@@ -38,7 +38,7 @@ namespace Paclink
         {
             lock (objLogLock)
             {
-                File.WriteAllText(Globals.SiteRootDirectory + @"Logs\Exceptions " + Strings.Format((object)DateTime.UtcNow, "yyyyMMdd") + ".log", Globals.TimestampEx() + " [" + Application.ProductVersion + "] " + strText + Globals.CRLF);
+                File.WriteAllText(Globals.SiteRootDirectory + @"Logs\Exceptions " + (object)DateTime.UtcNow.ToString("yyyyMMdd") + ".log", Globals.TimestampEx() + " [" + Application.ProductVersion + "] " + strText + Globals.CRLF);
                 // Write to the central logging system
                 if (blnReportToLog)
                 {
@@ -55,7 +55,7 @@ namespace Paclink
         {
             // Writes the indicated text to the trace log...
             lock (objLogLock)
-                File.WriteAllText(Globals.SiteRootDirectory + @"Logs\Trace " + Strings.Format(DateTime.UtcNow, "yyyyMMdd") + ".log", Globals.TimestampEx() + " [" + Application.ProductVersion + "] " + strText + Globals.CRLF);
+                File.WriteAllText(Globals.SiteRootDirectory + @"Logs\Trace " + DateTime.UtcNow.ToString("yyyyMMdd") + ".log", Globals.TimestampEx() + " [" + Application.ProductVersion + "] " + strText + Globals.CRLF);
         } // Exception
 
         public static void WriteDebug(string strText)
@@ -65,7 +65,7 @@ namespace Paclink
             {
                 try
                 {
-                    File.WriteAllText(Globals.SiteRootDirectory + @"Logs\WINMORdebug " + Strings.Format(DateTime.UtcNow, "yyyyMMdd") + ".log", Globals.TimestampEx() + " [" + Application.ProductVersion + "] " + strText + Globals.CRLF);
+                    File.WriteAllText(Globals.SiteRootDirectory + @"Logs\WINMORdebug " + DateTime.UtcNow.ToString("yyyyMMdd") + ".log", Globals.TimestampEx() + " [" + Application.ProductVersion + "] " + strText + Globals.CRLF);
                 }
                 catch
                 {
@@ -80,7 +80,7 @@ namespace Paclink
             {
                 try
                 {
-                    File.WriteAllText(Globals.SiteRootDirectory + @"Logs\Autoupdate " + Strings.Format(DateTime.UtcNow, "yyyyMMdd") + ".log", Globals.TimestampEx() + " [" + Application.ProductVersion + "] " + strText + Globals.CRLF);
+                    File.WriteAllText(Globals.SiteRootDirectory + @"Logs\Autoupdate " + DateTime.UtcNow.ToString("yyyyMMdd") + ".log", Globals.TimestampEx() + " [" + Application.ProductVersion + "] " + strText + Globals.CRLF);
                 }
                 catch
                 {

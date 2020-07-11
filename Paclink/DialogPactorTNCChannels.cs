@@ -188,7 +188,7 @@ namespace Paclink
         private void FillChannelList()
         {
             cmbChannelName.Items.Clear();
-            foreach (TChannelProperties stcChannel in Channels.Entries)
+            foreach (TChannelProperties stcChannel in Channels.Entries.Values)
             {
                 if (stcChannel.ChannelType == EChannelModes.PactorTNC)
                 {
@@ -424,7 +424,7 @@ namespace Paclink
         {
             if (!string.IsNullOrEmpty(cmbChannelName.Text) & cmbChannelName.Text != "<Enter a new channel>")
             {
-                if (Channels.Entries.Contains(cmbChannelName.Text))
+                if (Channels.Entries.ContainsKey(cmbChannelName.Text))
                 {
                     SetEntries();
                 }
@@ -757,7 +757,7 @@ namespace Paclink
             {
                 try
                 {
-                    byte byt = Conversions.ToByte("&H" + txtRadioAddress.Text.ToUpper().Trim());
+                    byte byt = Convert.ToByte("&H" + txtRadioAddress.Text.ToUpper().Trim());
                 }
                 catch
                 {
@@ -834,7 +834,7 @@ namespace Paclink
             {
                 try
                 {
-                    byte byt = Conversions.ToByte("&H" + txtRadioAddress.Text.ToUpper().Trim());
+                    byte byt = Convert.ToByte("&H" + txtRadioAddress.Text.ToUpper().Trim());
                 }
                 catch
                 {

@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -253,7 +252,7 @@ namespace Paclink
             // lblVersion
             // 
             _lblVersion.BorderStyle = BorderStyle.FixedSingle;
-            _lblVersion.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, Conversions.ToByte(0));
+            _lblVersion.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, Convert.ToByte(0));
             _lblVersion.Location = new Point(105, 9);
             _lblVersion.Name = "_lblVersion";
             _lblVersion.Size = new Size(176, 24);
@@ -285,7 +284,7 @@ namespace Paclink
             // 
             _lnkARSFI.AutoSize = true;
             _lnkARSFI.BorderStyle = BorderStyle.Fixed3D;
-            _lnkARSFI.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point, Conversions.ToByte(0));
+            _lnkARSFI.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point, Convert.ToByte(0));
             _lnkARSFI.Location = new Point(119, 219);
             _lnkARSFI.Name = "_lnkARSFI";
             _lnkARSFI.Size = new Size(120, 18);
@@ -297,7 +296,7 @@ namespace Paclink
             // 
             _lnkWL2K.AutoSize = true;
             _lnkWL2K.BorderStyle = BorderStyle.Fixed3D;
-            _lnkWL2K.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point, Conversions.ToByte(0));
+            _lnkWL2K.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point, Convert.ToByte(0));
             _lnkWL2K.Location = new Point(119, 78);
             _lnkWL2K.Name = "_lnkWL2K";
             _lnkWL2K.Size = new Size(134, 18);
