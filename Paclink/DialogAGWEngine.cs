@@ -113,7 +113,7 @@ namespace Paclink
         public static void InitializeAGWProperties()
         {
             AGWLocation = Globals.objINIFile.GetInteger(Application.ProductName, "AGW Location", 0);
-            AGWPath = Globals.objINIFile.GetString(Application.ProductName, "AGW Path", Path.Combine(My.MyProject.Computer.FileSystem.SpecialDirectories.ProgramFiles, @"AGWsoft\Packet Engine Pro\"));
+            AGWPath = Globals.objINIFile.GetString(Application.ProductName, "AGW Path", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"AGWsoft\Packet Engine Pro\"));
             AGWHost = Globals.objINIFile.GetString(Application.ProductName, "AGW Host", "Localhost");
             AGWTCPPort = Globals.objINIFile.GetInteger(Application.ProductName, "AGW Port", 8000);
             AGWUserId = Globals.objINIFile.GetString(Application.ProductName, "AGW User Id", "");
@@ -296,7 +296,7 @@ namespace Paclink
         private void btnBrowse_Click(object sender, EventArgs e)
         {
             var openFileDialog1 = new OpenFileDialog();
-            openFileDialog1.InitialDirectory = Path.Combine(My.MyProject.Computer.FileSystem.SpecialDirectories.ProgramFiles, @"AGWsoft\Packet Engine Pro");
+            openFileDialog1.InitialDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"AGWsoft\Packet Engine Pro");
             openFileDialog1.Filter = "exe files |*.exe";
             openFileDialog1.RestoreDirectory = true;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)

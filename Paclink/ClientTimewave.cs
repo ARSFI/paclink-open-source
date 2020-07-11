@@ -1409,7 +1409,7 @@ namespace Paclink
                 if (File.Exists(strAPSFile))
                 {
                     // Read the configuration files...
-                    strConfiguration = My.MyProject.Computer.FileSystem.ReadAllText(strAPSFile);
+                    strConfiguration = File.ReadAllText(strAPSFile);
                 }
 
                 var objStringReader = new StringReader(strConfiguration);

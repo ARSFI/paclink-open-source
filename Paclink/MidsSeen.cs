@@ -24,7 +24,7 @@ namespace Paclink
                     string strMessagesSeenPath = Globals.SiteRootDirectory + @"Data\Mids Seen.dat";
                     if (File.Exists(strMessagesSeenPath))
                     {
-                        strMessageIdString = My.MyProject.Computer.FileSystem.ReadAllText(strMessagesSeenPath);
+                        strMessageIdString = File.ReadAllText(strMessagesSeenPath);
                     }
                     else
                     {
@@ -34,7 +34,7 @@ namespace Paclink
                     if (strMessageIdString.IndexOf(strMessageId) == -1)
                     {
                         string strMessageIdRecord = Globals.TimestampEx() + " " + strMessageId + Globals.CRLF;
-                        My.MyProject.Computer.FileSystem.WriteAllText(strMessagesSeenPath, strMessageIdRecord, true);
+                        File.WriteAllText(strMessagesSeenPath, strMessageIdRecord);
                     }
                 }
                 catch
@@ -56,7 +56,7 @@ namespace Paclink
                     string strMessagesSeenPath = Globals.SiteRootDirectory + @"Data\Mids Seen.dat";
                     if (File.Exists(strMessagesSeenPath))
                     {
-                        string strMessageIdString = My.MyProject.Computer.FileSystem.ReadAllText(strMessagesSeenPath);
+                        string strMessageIdString = File.ReadAllText(strMessagesSeenPath);
                         intResult = strMessageIdString.IndexOf(strMessageId);
                     }
                     else
@@ -91,7 +91,7 @@ namespace Paclink
                     try
                     {
                         // Get the Mids Seen file content...
-                        strMessageIdString = My.MyProject.Computer.FileSystem.ReadAllText(strMessagesSeenPath);
+                        strMessageIdString = File.ReadAllText(strMessagesSeenPath);
 
                         // Parse into records and test each record for a timestamp...
                         strMessageIdString = strMessageIdString.Replace(Globals.CRLF, Globals.CR);
@@ -108,7 +108,7 @@ namespace Paclink
                         }
 
                         // Rewrite the Mids Seen file...
-                        My.MyProject.Computer.FileSystem.WriteAllText(strMessagesSeenPath, sbdRecords.ToString(), false);
+                        File.WriteAllText(strMessagesSeenPath, sbdRecords.ToString());
                     }
                     catch
                     {

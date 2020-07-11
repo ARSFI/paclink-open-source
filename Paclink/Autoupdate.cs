@@ -845,7 +845,7 @@ namespace Paclink
                     // 
                     // Delete it all
                     // 
-                    My.MyProject.Computer.FileSystem.DeleteDirectory(strPath, Microsoft.VisualBasic.FileIO.DeleteDirectoryOption.DeleteAllContents);
+                    Directory.Delete(strPath, true);
                 }
                 catch (Exception ex)
                 {

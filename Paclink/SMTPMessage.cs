@@ -84,7 +84,7 @@ namespace Paclink
             if (!string.IsNullOrEmpty(Mime))
             {
                 string strMessageFilePath = Globals.SiteRootDirectory + @"To Winlink\" + MessageId + ".mime";
-                My.MyProject.Computer.FileSystem.WriteAllText(strMessageFilePath, Mime, false);
+                File.WriteAllText(strMessageFilePath, Mime);
                 MidsSeen.AddMessageId(MessageId);
                 LocalDelivery();
                 return true;
@@ -149,7 +149,7 @@ namespace Paclink
                     string strMessageFilePath = Globals.SiteRootDirectory + @"Accounts\" + objAddress.RadioAddress + @"_Account\" + MessageId + ".mime";
                     try
                     {
-                        My.MyProject.Computer.FileSystem.WriteAllText(strMessageFilePath, Mime, false);
+                        File.WriteAllText(strMessageFilePath, Mime);
                     }
                     catch
                     {
@@ -166,7 +166,7 @@ namespace Paclink
                     string strMessageFilePath = Globals.SiteRootDirectory + @"Accounts\" + objAddress.RadioAddress + @"_Account\" + MessageId + ".mime";
                     try
                     {
-                        My.MyProject.Computer.FileSystem.WriteAllText(strMessageFilePath, Mime, false);
+                        File.WriteAllText(strMessageFilePath, Mime);
                     }
                     catch
                     {

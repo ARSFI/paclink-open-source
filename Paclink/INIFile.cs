@@ -31,7 +31,7 @@ namespace Paclink
             }
             else
             {
-                Globals.SiteBinDirectory = Path.Combine(Path.GetPathRoot(My.MyProject.Computer.FileSystem.SpecialDirectories.ProgramFiles), @"Paclink\bin\");
+                Globals.SiteBinDirectory = Path.Combine(Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)), @"Paclink\bin\");
             }
 
             strFilePath = Globals.SiteBinDirectory + Application.ProductName + ".ini";

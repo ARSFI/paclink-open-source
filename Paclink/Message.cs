@@ -70,7 +70,7 @@ namespace Paclink
 
         internal Message(string strFilePath)
         {
-            Mime = My.MyProject.Computer.FileSystem.ReadAllText(strFilePath);
+            Mime = File.ReadAllText(strFilePath);
             bytUncompressed = new byte[1];
             bytCompressed = new byte[1];
             DecodeMime();
@@ -94,7 +94,7 @@ namespace Paclink
                 return false;
             if (!string.IsNullOrEmpty(Mime))
             {
-                My.MyProject.Computer.FileSystem.WriteAllText(strFilePath, Mime, false);
+                File.WriteAllText(strFilePath, Mime);
                 return true;
             }
             else
@@ -178,7 +178,7 @@ namespace Paclink
             if (!string.IsNullOrEmpty(Mime))
             {
                 string strMessageFilePath = Globals.SiteRootDirectory + @"From Winlink\" + MessageId + ".mime";
-                My.MyProject.Computer.FileSystem.WriteAllText(strMessageFilePath, Mime, false);
+                File.WriteAllText(strMessageFilePath, Mime);
                 return true;
             }
             else

@@ -116,7 +116,7 @@ namespace Paclink
                         string strData = sbd.ToString().Replace(Globals.LF, "");
                         strData = strData.Replace(Globals.CR, Globals.CRLF);
                         txtDisplay.AppendText(strData);
-                        My.MyProject.Computer.FileSystem.WriteAllText(strLog, strData, true);
+                        File.WriteAllText(strLog, strData);
                     }
                 }
             }
@@ -340,7 +340,7 @@ namespace Paclink
             sbdProperties.Append("Left " + Left.ToString() + Globals.CRLF);
             sbdProperties.Append("Width " + Width.ToString() + Globals.CRLF);
             sbdProperties.Append("Height " + Height.ToString() + Globals.CRLF);
-            My.MyProject.Computer.FileSystem.WriteAllText(Globals.SiteRootDirectory + @"Data\Simple Terminal.stx", sbdProperties.ToString(), false);
+            File.WriteAllText(Globals.SiteRootDirectory + @"Data\Simple Terminal.stx", sbdProperties.ToString());
         } // SaveCurrentProperties
 
         private void LoadSavedProperties()
@@ -349,7 +349,7 @@ namespace Paclink
             string strPath = Globals.SiteRootDirectory + @"Data\Simple Terminal.stx";
             if (File.Exists(strPath))
             {
-                strProperties = My.MyProject.Computer.FileSystem.ReadAllText(strPath);
+                strProperties = File.ReadAllText(strPath);
             }
             else
             {

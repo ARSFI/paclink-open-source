@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{17605A58-990F-004D-063D-2BF61B29BCEC}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>Paclink.My.MyApplication</StartupObject>
+    <StartupObject>Paclink.MyApplication</StartupObject>
     <RootNamespace>Paclink</RootNamespace>
     <AssemblyName>Paclink</AssemblyName>
     <MyType>WindowsForms</MyType>
@@ -145,8 +145,6 @@
     <Import Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="My Project\MyNamespace.Dynamic.Designer.cs" />
-    <Compile Include="My Project\MyNamespace.Static.1.Designer.cs" />
     <Compile Include="Accounts.cs" />
     <Compile Include="ApplicationEvents.cs" />
     <Compile Include="Autoupdate.cs" />
@@ -264,10 +262,6 @@
     <Compile Include="MimeDecoder.cs" />
     <Compile Include="MimeEncoder.cs" />
     <Compile Include="My Project\AssemblyInfo.cs" />
-    <Compile Include="My Project\Application.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Application.myapp</DependentUpon>
-    </Compile>
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -384,10 +378,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="My Project\Application.myapp">
-      <Generator>MyApplicationCodeGenerator</Generator>
-      <LastGenOutput>Application.Designer.cs</LastGenOutput>
-    </None>
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <CustomToolNamespace>Paclink.My</CustomToolNamespace>

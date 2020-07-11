@@ -104,7 +104,7 @@ namespace Paclink
                     if (DialogSiteProperties.IsValid() == false)
                     {
                         Interaction.MsgBox("Paclink must have a valid initial configuration to continue...", MsgBoxStyle.Information);
-                        My.MyProject.Forms.Main.Close();
+                        MyApplication.Forms.Main.Close();
                         return;
                     }
                 }
@@ -125,14 +125,14 @@ namespace Paclink
 
             try
             {
-                My.MyProject.Forms.Main.UpdateChannelsList();
+                MyApplication.Forms.Main.UpdateChannelsList();
             }
             catch
             {
                 Logs.Exception("[Main.Startup G] " + Information.Err().Description);
             }
 
-            My.MyProject.Forms.Main.Text = "Paclink - " + Globals.SiteCallsign;
+            MyApplication.Forms.Main.Text = "Paclink - " + Globals.SiteCallsign;
             if (Globals.UseRMSRelay())
             {
                 Globals.queChannelDisplay.Enqueue("G*** Paclink is set to connect to RMS Relay.");
@@ -144,7 +144,7 @@ namespace Paclink
             }
 
             Globals.queChannelDisplay.Enqueue("G*** Paclink " + Application.ProductVersion + " ready...");
-            My.MyProject.Forms.Main.mnuMain.Enabled = true;
+            MyApplication.Forms.Main.mnuMain.Enabled = true;
             if (!Information.IsNothing(thrSMTP))
             {
                 thrSMTP.Abort();
@@ -232,7 +232,7 @@ namespace Paclink
                     var strWinlinkMessages = Directory.GetFiles(Globals.SiteRootDirectory + @"From Winlink\", "*.mime");
                     foreach (string strWinlinkMessage in strWinlinkMessages)
                     {
-                        string strMime = My.MyProject.Computer.FileSystem.ReadAllText(strWinlinkMessage);
+                        string strMime = File.ReadAllText(strWinlinkMessage);
                         var objWinlinkMessage = new SMTPMessage(strMime, false);
                         if (objWinlinkMessage.IsAccepted)
                         {

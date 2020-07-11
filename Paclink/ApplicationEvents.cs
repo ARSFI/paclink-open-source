@@ -1,7 +1,8 @@
 ﻿using System;
-using Microsoft.VisualBasic;
+using System.IO;
+using System.Windows.Forms;
 
-namespace Paclink.My
+namespace Paclink
 {
     // 
     // The following events are availble for MyApplication:
@@ -12,19 +13,34 @@ namespace Paclink.My
     // StartupNextInstance: Raised when launching a single-instance application and the application is already active. 
     // NetworkAvailabilityChanged: Raised when the network connection is connected or disconnected.
     // 
-    internal partial class MyApplication
+    static class MyApplication
     {
-        private void MyUnhandledException(object s, Microsoft.VisualBasic.ApplicationServices.UnhandledExceptionEventArgs e)
+        public static class Forms
         {
-            string strUnhandledException = Globals.TimestampEx() + " [" + Globals.strProductVersion + "] " + s.ToString() + ": " + Globals.CRLF + e.Exception.Message + Globals.CRLF + e.Exception.StackTrace + Globals.CRLF + e.Exception.TargetSite.ToString() + Globals.CRLF + Globals.CRLF;
-
-            MyProject.Computer.FileSystem.WriteAllText(Globals.SiteRootDirectory + @"Logs\Unhandled Exceptions.log", strUnhandledException, true);
-            Interaction.MsgBox(strUnhandledException, MsgBoxStyle.Critical, "Unhandled Exception Error");
-            Environment.Exit(0);
-            ReportUnhandledException(s, e);
+            public static Main Main;
         }
 
-        private void ReportUnhandledException(object s, Microsoft.VisualBasic.ApplicationServices.UnhandledExceptionEventArgs e)
+        [STAThread]
+        static void Main()
+        {
+            Application.ThreadException += Application_ThreadException;
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Forms.Main = new Main();
+            Application.Run(Forms.Main);
+        }
+
+        private static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
+        {
+            string strUnhandledException = Globals.TimestampEx() + " [" + Globals.strProductVersion + "] " + sender.ToString() + ": " + Globals.CRLF + e.Exception.Message.Trim() + Globals.CRLF + e.Exception.StackTrace + Globals.CRLF + e.Exception.TargetSite.ToString() + Globals.CRLF;
+
+            File.WriteAllText(Globals.SiteRootDirectory + @"Logs\Unhandled Exceptions.log", strUnhandledException);
+            MessageBox.Show(strUnhandledException, "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            Environment.Exit(0);
+            ReportUnhandledException(sender, e);
+        }
+
+        private static void ReportUnhandledException(object s, System.Threading.ThreadExceptionEventArgs e)
         {
             // 
             // Write a message to the central log for an unhandled exception.

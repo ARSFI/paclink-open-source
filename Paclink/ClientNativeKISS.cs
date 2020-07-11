@@ -172,7 +172,7 @@ namespace Paclink
             {
                 try
                 {
-                    strConfiguration = My.MyProject.Computer.FileSystem.ReadAllText(strAPSFile);
+                    strConfiguration = File.ReadAllText(strAPSFile);
                     var objStringReader = new StringReader(strConfiguration);
                     do
                     {

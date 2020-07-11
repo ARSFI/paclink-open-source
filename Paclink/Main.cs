@@ -97,7 +97,7 @@ namespace Paclink
             if ((strText ?? "") == Globals.CLEAR)
             {
                 ChannelDisplay.Clear();
-                My.MyProject.Computer.FileSystem.WriteAllText(Globals.SiteRootDirectory + @"Logs\Channel Events " + Strings.Format(DateTime.UtcNow, "yyyyMMdd") + ".log", Globals.CRLF, true);
+                File.WriteAllText(Globals.SiteRootDirectory + @"Logs\Channel Events " + Strings.Format(DateTime.UtcNow, "yyyyMMdd") + ".log", Globals.CRLF);
                 return;
             }
             else if (string.IsNullOrEmpty(strText))
@@ -348,7 +348,7 @@ namespace Paclink
             else
             {
                 Globals.blnRunningInTestMode = true;
-                string strProgramFiles = Path.GetPathRoot(My.MyProject.Computer.FileSystem.SpecialDirectories.ProgramFiles);
+                string strProgramFiles = Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
                 Globals.SiteRootDirectory = Path.Combine(strProgramFiles, @"Paclink\");
                 Globals.SiteBinDirectory = Globals.SiteRootDirectory + @"Bin\";
                 mnuTest.Visible = false;

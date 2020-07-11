@@ -143,7 +143,7 @@ namespace Paclink
                         return;
                     }
 
-                    string strAGWData = My.MyProject.Computer.FileSystem.ReadAllText(strAGWIniPath);
+                    string strAGWData = File.ReadAllText(strAGWIniPath);
                     int intAGWPorts;
                     var blnMainFlag = default(bool);
                     var srdAGWData = new StringReader(strAGWData);
@@ -172,7 +172,7 @@ namespace Paclink
                         string strPortIniFile = DialogAGWEngine.AGWPath + "PORT" + intIndex.ToString() + ".ini";
                         if (File.Exists(strPortIniFile))
                         {
-                            string strPortData = My.MyProject.Computer.FileSystem.ReadAllText(strPortIniFile);
+                            string strPortData = File.ReadAllText(strPortIniFile);
                             var srdPortData = new StringReader(strPortData);
                             do
                             {

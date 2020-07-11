@@ -427,7 +427,7 @@ namespace Paclink
                 string strScriptFilePath = Globals.SiteRootDirectory + @"Data\" + strChannel + ".script";
                 if (strScript is object && strScript.Length > 0)
                 {
-                    My.MyProject.Computer.FileSystem.WriteAllText(strScriptFilePath, strScript, false);
+                    File.WriteAllText(strScriptFilePath, strScript);
                 }
                 else if (File.Exists(strScriptFilePath))
                     File.Delete(strScriptFilePath);
@@ -448,7 +448,7 @@ namespace Paclink
                 string strScriptFilePath = Globals.SiteRootDirectory + @"Data\" + strChannel + ".script";
                 if (File.Exists(strScriptFilePath))
                 {
-                    return My.MyProject.Computer.FileSystem.ReadAllText(strScriptFilePath);
+                    return File.ReadAllText(strScriptFilePath);
                 }
                 else
                 {
@@ -516,11 +516,11 @@ namespace Paclink
             // 
             if (VHFchannels)
             {
-                My.MyProject.Computer.FileSystem.WriteAllText(Globals.SiteRootDirectory + @"Data\RMS VHF Channels.dat", sbdChannels.ToString(), false);
+                File.WriteAllText(Globals.SiteRootDirectory + @"Data\RMS VHF Channels.dat", sbdChannels.ToString());
             }
             else
             {
-                My.MyProject.Computer.FileSystem.WriteAllText(Globals.SiteRootDirectory + @"Data\RMS Channels.dat", sbdChannels.ToString(), false);
+                File.WriteAllText(Globals.SiteRootDirectory + @"Data\RMS Channels.dat", sbdChannels.ToString());
             }
 
             return "";
