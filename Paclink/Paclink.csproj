@@ -93,13 +93,6 @@
     <Reference Include="BouncyCastle.Crypto, Version=1.8.5.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
       <HintPath>..\packages\Portable.BouncyCastle.1.8.5\lib\net40\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
-    <Reference Include="AxInterop.BPQCTRLLib">
-      <HintPath>..\..\..\Winlink Common\ThirdPartyDLLs\AxInterop.BPQCTRLLib.dll</HintPath>
-    </Reference>
-    <Reference Include="Interop.BPQCTRLLib">
-      <HintPath>..\..\..\Winlink Common\ThirdPartyDLLs\Interop.BPQCTRLLib.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
     <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
       <HintPath>..\packages\Ionic.Zip.1.9.1.8\lib\Ionic.Zip.dll</HintPath>
     </Reference>
@@ -109,7 +102,7 @@
     </Reference>
     <Reference Include="SyslogLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Winlink_Common\SyslogLib 3.5\SyslogLib\bin\Release\SyslogLib.dll</HintPath>
+      <HintPath>..\Libraries\SyslogLib\bin\Debug\SyslogLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -123,15 +116,15 @@
     <Reference Include="System.Xml" />
     <Reference Include="TNCKissInterface, Version=1.1.0.19, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\TNCKissInterface\TNCKissInterface\bin\Release\TNCKissInterface.dll</HintPath>
+      <HintPath>..\..\TNCKissInterface\TNCKissInterface\bin\Debug\TNCKissInterface.dll</HintPath>
     </Reference>
     <Reference Include="WinlinkRegistration, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Winlink_Common\WinlinkRegistration 3.5\bin\Release\WinlinkRegistration.dll</HintPath>
+      <HintPath>..\Libraries\WinlinkRegistration\bin\Debug\WinlinkRegistration.dll</HintPath>
     </Reference>
     <Reference Include="WinlinkServiceClasses, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Winlink_Common\WinlinkServiceClasses 3.5\WinlinkServiceClasses\bin\Release\WinlinkServiceClasses.dll</HintPath>
+      <HintPath>..\Libraries\WinlinkServiceClasses\bin\Debug\WinlinkServiceClasses.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
