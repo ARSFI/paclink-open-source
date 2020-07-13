@@ -7,50 +7,6 @@ namespace WinlinkInterop
 {
     public static class Enumerations
     {
-        public enum WL2KPostType
-        {
-            WLW = 0,
-            CMS,
-            AU
-        }
-
-        public enum WL2KOperatingMode
-        {
-            // Edited by RM 1/31/2013 to agree with Mapping used by CMS 
-            // Packet_300 = 0
-            Packet_1200 = 0,
-            Packet_2400 = 1,
-            Packet_4800 = 2,
-            Packet_9600 = 3,
-            Packet_19200 = 4,
-            Packet_38400 = 5,
-            Packet_GT38400 = 6,
-            Pactor_1 = 11,
-            Pactor_12 = 12,
-            Pactor_123 = 13,
-            Pactor_2 = 14,
-            Pactor_23 = 15,
-            Pactor_3 = 16,
-            Pactor_1234 = 17,
-            Pactor_234 = 18,
-            Pactor_34 = 19,
-            Pactor_4 = 20,
-            WINMOR_500 = 21,
-            WINMOR_1600 = 22,
-            SCSRobustPacket = 30,
-            VaraFM_1200 = 51,
-            VaraFM_9600 = 52
-        }
-
-        public enum WL2KGroupReference
-        {
-            TestSite = 0,
-            PublicSite = 1,
-            EMCOMMSite = 2,
-            MARSSite = 3,
-            UKCadetSite = 4
-        }
-
         public enum AccountValidationCodes
         {
             NoInternet = 0,              // Could not validate, because we do not have a connection to the server
@@ -86,9 +42,6 @@ namespace WinlinkInterop
             // 
             public string strHostAddress;
             public int intPort;
-            public string strCMSCity;
-            public string strCMSName;
-            public string strCMSIP;
             public bool blnSSL;
             public TcpClient objTcpClient;
             public SslStream objSSL;
@@ -97,9 +50,6 @@ namespace WinlinkInterop
             {
                 // Constructor
                 objTcpClient = null;
-                strCMSCity = "";
-                strCMSName = "";
-                strCMSIP = "";
                 blnSSL = false;
                 strHostAddress = "";
                 intPort = 0;
@@ -134,13 +84,6 @@ namespace WinlinkInterop
                 {
                 }
             }
-        }
-
-        public enum ChannelTypeSet
-        {
-            PactorOnly,
-            HFchannels,
-            AllChannels
         }
 
         public class GroupAddressEntry
@@ -196,40 +139,6 @@ namespace WinlinkInterop
             }
         }
 
-        public class clsSysop
-        {
-            public string strBaseCallsign;            // Base callsign of the RMS
-            public string strName;                    // Name of the sysop
-            public string strEmail;                   // E-mail address
-        }
-
-        public class PasswordEntry
-        {
-            public string strCallsign;                // Callsign
-            public string strChallenge;               // Password challenge string
-            public string strPasswordHash;            // Password hash code
-        }
-
-        // 
-        // Class with arguments for /sysop/add
-        // 
-        public class SysopInfo
-        {
-            public string Callsign;
-            public string City;
-            public string Comments;
-            public string Country;
-            public string Email;
-            public string GridSquare;
-            public string Phones;
-            public string PostalCode;
-            public string State;
-            public string StreetAddress1;
-            public string StreetAddress2;
-            public string SysopName;
-            public string Website;
-        }
-
         // 
         // Class used to pass parameters to and receive results from an API service call.
         // 
@@ -244,31 +153,6 @@ namespace WinlinkInterop
             public bool blnFinished = false;
             public bool blnConnectTimeout = false;     // Timeout while trying to connect to a CMS
             public bool blnAbort = false;
-        }
-
-        // -----------------------------------------------------------------------
-        // Class describing an SMTP mail server.
-        // 
-        public class SmtpMailServer
-        {
-            public string strUser = "";                     // Name Of the user To log onto the mail server */
-            public string strPassword = "";                 // Password For mail server */
-            public string strMailServer = "127.0.0.1";      // Domain name Or IP address Of mail server */
-            public int intMailPort = 25;                    // IP port used On the mail server */
-        }
-
-        // ---------------------------------------------------------------------------------
-        // Class describing a Winlink SMTP message.
-        // 
-        public class SmtpMessage
-        {
-            public string strMessageText;                   // Message text */
-            public string strMessageID;                     // ID Of this message */
-            public string strRecipients;                    // Recipients Of message */
-            public string strFrom;                          // Sender */
-            public string strSubject;                       // Subject Of message */
-            public DateTime dttMessageTime;                 // Timestamp */
-            public DateTime dttSendTime;                    // Time When message was sent */
         }
     }
 }

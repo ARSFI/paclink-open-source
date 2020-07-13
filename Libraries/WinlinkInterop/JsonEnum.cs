@@ -3,7 +3,6 @@
 // 
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace WinlinkInterop
 {
@@ -27,7 +26,7 @@ namespace WinlinkInterop
         public void Add(string strEnumItem, string strEnumValue = "")
         {
             // 
-            // Set a mapping from an e-num string to its associated numberic value.
+            // Set a mapping from an e-num string to its associated numeric value.
             // 
             if (string.IsNullOrEmpty(strEnumValue))
             {
@@ -48,7 +47,7 @@ namespace WinlinkInterop
             // 
             var sbOutput = new StringBuilder();
             bool blnFirst = true;
-            var aryItems = strInput.Split(Conversions.ToChar(",\""));
+            var aryItems = strInput.Split(',', '"');
             foreach (string strItem in aryItems)
             {
                 var item = strItem;
