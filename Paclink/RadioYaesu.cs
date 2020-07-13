@@ -542,7 +542,7 @@ namespace Paclink
             {
                 string strBuffer = "";
                 for (int intIndex = 0, loopTo = bytCommand.Length - 1; intIndex <= loopTo; intIndex++)
-                    strBuffer = strBuffer + Strings.Right("00" + Conversion.Hex(bytCommand[intIndex]), 2);
+                    strBuffer = strBuffer + "00" + Conversion.Hex(bytCommand[intIndex]).Right(2);
                 Globals.objSCSClient.SendRadioCommand("#TRX T " + strBuffer); // Use the Transfer capability of the TRX commands
             }
             else
@@ -566,7 +566,7 @@ namespace Paclink
                     // Must convert string back to ASCII (from Han's code)...
                     string strTemp = "";
                     for (int intIndex = 0, loopTo = strCommand.Length - 1; intIndex <= loopTo; intIndex++)
-                        strTemp = strTemp + Strings.Right("00" + Conversion.Hex(Strings.Asc(strCommand.Substring(intIndex, 1))), 2);
+                        strTemp = strTemp + ("00" + Conversion.Hex(Strings.Asc(strCommand.Substring(intIndex, 1)))).Right(2);
                     Globals.objSCSClient.SendRadioCommand("#TRX T " + strTemp); // Use the Transfer capability of the TRX commands
                 }
                 else

@@ -142,13 +142,13 @@ namespace Paclink
                 return ReplyOK;
             }
 
-            if ((Strings.Right(strInputStream, 2) ?? "") == Globals.CRLF)
+            if ((strInputStream.Right(2) ?? "") == Globals.CRLF)
             {
                 // This is for a complete command or the CRLF to complete the command...
                 strInputStream = strCommandBuffer + strInputStream;
-                strCommand = Strings.Left(strInputStream, 4).ToUpper().Trim();
+                strCommand = strInputStream.Left(4).ToUpper().Trim();
                 strCommandBuffer = "";
-                strParameter = Strings.Trim(Strings.Mid(strInputStream, 5, strInputStream.Length - 6));
+                strParameter = strInputStream.Substring(4).Trim();
             }
             else
             {
@@ -383,8 +383,8 @@ namespace Paclink
                         {
                             intCount = intCount + 1;
                             strId = objFileInfo.FullName;
-                            intLastSlashPosition = Strings.InStrRev(strId, @"\");
-                            strId = Strings.Mid(strId, intLastSlashPosition + 1);
+                            intLastSlashPosition = strId.LastIndexOf(@"\");
+                            strId = strId.Substring(intLastSlashPosition + 1);
                             strId = Strings.Replace(strId, ".mime", "");
                             UidlResponseRet = UidlResponseRet + intCount.ToString() + " " + strId + Globals.CRLF;
                         }
@@ -405,8 +405,8 @@ namespace Paclink
                     if (intIndex > 0 & intIndex <= intNumberOfMimeFiles)
                     {
                         strId = aryPendingMimeList[intIndex - 1].FullName;
-                        intLastSlashPosition = Strings.InStrRev(strId, @"\");
-                        strId = Strings.Mid(strId, intLastSlashPosition + 1);
+                        intLastSlashPosition = strId.LastIndexOf(@"\");
+                        strId = strId.Substring(intLastSlashPosition + 1);
                         strId = Strings.Replace(strId, ".mime", "");
                         UidlResponseRet = "+OK " + intIndex.ToString() + " " + strId + Globals.CRLF;
                     }
@@ -536,8 +536,8 @@ namespace Paclink
                             // Add byte stuffing for <CrLf . >
                             strMessage = Strings.Replace(strMessage, Globals.CRLF + ".", Globals.CRLF + "..");
                             string strMessageId = aryPendingMimeList[intIndex - 1].FullName;
-                            int nPosLastSlash = Strings.InStrRev(strMessageId, @"\");
-                            strMessageId = Strings.Mid(strMessageId, nPosLastSlash + 1);
+                            int nPosLastSlash = strMessageId.LastIndexOf(@"\");
+                            strMessageId = strMessageId.Substring(nPosLastSlash + 1);
                             strMessageId = Strings.Replace(strMessageId, ".mime", "");
                             Globals.queSMTPDisplay.Enqueue("G" + strMessageId + " delivered to " + strAccountName);
                             Globals.queSMTPDisplay.Enqueue("G   " + strFrom);

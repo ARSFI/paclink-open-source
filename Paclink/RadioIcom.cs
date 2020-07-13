@@ -404,7 +404,7 @@ namespace Paclink
             var loopTo = strBuffer.Length - 1;
             for (intIndex = 1; intIndex <= loopTo; intIndex++)
                 intCheckSum = intCheckSum ^ Strings.Asc(strBuffer.Substring(intIndex, 1));
-            strCheckSum = "*" + Strings.Right("0" + Conversion.Hex(intCheckSum), 2);
+            strCheckSum = "*" + "0" + Conversion.Hex(intCheckSum).Right(2);
             ComputeNMEACommandRet = strBuffer + strCheckSum + Globals.CRLF;
             return ComputeNMEACommandRet;
         } // ComputeNMEACommand
@@ -417,7 +417,7 @@ namespace Paclink
             {
                 string strBuffer = "";
                 for (int intIndex = 0, loopTo = bytCommand.Length - 1; intIndex <= loopTo; intIndex++)
-                    strBuffer = strBuffer + Strings.Right("00" + Conversion.Hex(bytCommand[intIndex]), 2);
+                    strBuffer = strBuffer + "00" + Conversion.Hex(bytCommand[intIndex]).Right(2);
                 Globals.objSCSClient.SendRadioCommand("#TRX T " + strBuffer); // Use the Transfer capability of the TRX commands
                 Thread.Sleep(100);   // W4PHS
             }
@@ -440,7 +440,7 @@ namespace Paclink
                 {
                     string strBuffer = "";
                     for (int intIndex = 0, loopTo = strCommand.Length - 1; intIndex <= loopTo; intIndex++)
-                        strBuffer = strBuffer + Strings.Right("00" + Conversion.Hex(Strings.Asc(strCommand.Substring(intIndex, 1))), 2);
+                        strBuffer = strBuffer + ("00" + Conversion.Hex(Strings.Asc(strCommand.Substring(intIndex, 1)))).Right(2);
                     Globals.objSCSClient.SendRadioCommand("#TRX T " + strBuffer); // Use the Transfer capability of the TRX commands
                     Thread.Sleep(100);   // W4PHS
                 }

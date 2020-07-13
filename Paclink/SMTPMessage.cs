@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -30,10 +29,10 @@ namespace Paclink
         private ArrayList aryAttachments = new ArrayList(); // An array of Attachment structures
         private string strMime = "";            // The entire message in mime format
         private string strBody = "";            // The body of the message
-        private DateTime dttMessageDate = Conversions.ToDate("00:00");
-        private DateTime dttExpirationDate = Conversions.ToDate("00:00");
-        private Collection cllToAddresses = new Collection();  // Collection of address objects
-        private Collection cllCcAddresses = new Collection();  // Collection of address objects
+        private DateTime dttMessageDate = new DateTime();
+        private DateTime dttExpirationDate = new DateTime();
+        private List<WinlinkAddress> cllToAddresses = new List<WinlinkAddress>();  // Collection of address objects
+        private List<WinlinkAddress> cllCcAddresses = new List<WinlinkAddress>();  // Collection of address objects
 
         internal SMTPMessage(string strNewMime, bool blnFromClient)
         {
@@ -151,9 +150,9 @@ namespace Paclink
                     {
                         File.WriteAllText(strMessageFilePath, Mime);
                     }
-                    catch
+                    catch (Exception e)
                     {
-                        Logs.Exception("[SMTPMessage.LocalDelivery] " + Information.Err().Description);
+                        Logs.Exception("[SMTPMessage.LocalDelivery] " + e.Message);
                     }
                 }
             }
@@ -168,9 +167,9 @@ namespace Paclink
                     {
                         File.WriteAllText(strMessageFilePath, Mime);
                     }
-                    catch
+                    catch (Exception e)
                     {
-                        Logs.Exception("[SMTPMessage.LocalDelivery] " + Information.Err().Description);
+                        Logs.Exception("[SMTPMessage.LocalDelivery] " + e.Message);
                     }
                 }
             }
@@ -207,8 +206,8 @@ namespace Paclink
             // result. (called by DecodeMime)...
 
             bool blnValidSender = false;
-            cllToAddresses = new Collection();
-            cllCcAddresses = new Collection();
+            cllToAddresses = new List<WinlinkAddress>();
+            cllCcAddresses = new List<WinlinkAddress>();
             string strPreDecode = Header.Replace("," + Globals.CRLF, ";");
             var objTextStream = new StringReader(strPreDecode + Globals.CRLF + Globals.CRLF);
             do
@@ -229,39 +228,39 @@ namespace Paclink
                         blnValidSender = true;
                     }
 
-                    Sender.RadioAddress = Strings.Trim(strLine.Substring(5));
+                    Sender.RadioAddress = strLine.Substring(5).Trim();
                 }
                 else if (strLineUpper.StartsWith("SENDER:"))
                 {
-                    Sender.RadioAddress = Strings.Trim(strLine.Substring(7));
+                    Sender.RadioAddress = strLine.Substring(7).Trim();
                 }
                 else if (strLineUpper.StartsWith("TO:"))
                 {
-                    strLine = Strings.Trim(strLine.Substring(3));
+                    strLine = strLine.Substring(3).Trim();
                     var strTo = strLine.Split(",;".ToCharArray());
                     foreach (string strToAddress in strTo)
                         AddAddress(strToAddress.Trim());
                 }
                 else if (strLineUpper.StartsWith("CC:"))
                 {
-                    strLine = Strings.Trim(strLine.Substring(3));
+                    strLine = strLine.Substring(3).Trim();
                     var strCc = strLine.Split(",;".ToCharArray());
                     foreach (string strCcAddress in strCc)
                         AddAddress(strCcAddress.Trim(), true);
                 }
                 else if (strLineUpper.StartsWith("SUBJECT:"))
                 {
-                    Subject = Strings.Trim(strLine.Substring(8));
+                    Subject = strLine.Substring(8).Trim();
                     if (string.IsNullOrEmpty(Subject))
                         Subject = "---";
                 }
                 else if (strLineUpper.StartsWith("MESSAGE-ID:"))
                 {
-                    MessageId = Strings.Trim(strLine.Substring(11));
+                    MessageId = strLine.Substring(11).Trim();
                 }
                 else if (strLineUpper.StartsWith("DATE:"))
                 {
-                    MessageDate = RFC822DateToDate(Strings.Trim(strLine.Substring(5)));
+                    MessageDate = RFC822DateToDate(strLine.Substring(5).Trim());
                 }
             }
             while (true);
@@ -318,7 +317,7 @@ namespace Paclink
                             WinlinkAddress objCcAddress = (WinlinkAddress)cllCcAddresses[intIndex];
                             if ((objAddress.RadioAddress ?? "") == (objCcAddress.RadioAddress ?? ""))
                             {
-                                cllCcAddresses.Remove(intIndex);
+                                cllCcAddresses.RemoveAt(intIndex);
                                 blnCcExists = false;
                                 break;
                             }
@@ -410,7 +409,7 @@ namespace Paclink
 
             var sbdHeader = new StringBuilder();
             int intIndex;
-            if (Information.IsDate(MessageDate))
+            if (MessageDate != null)
             {
                 sbdHeader.Append("Date: " + DateToRFC822Date(MessageDate) + Globals.CRLF);
             }
@@ -438,18 +437,18 @@ namespace Paclink
             {
                 if (cllToAddresses.Count == 1)
                 {
-                    sbdHeader.Append("To: " + ((WinlinkAddress)cllToAddresses[1]).SMTPAddress + Globals.CRLF);
+                    sbdHeader.Append("To: " + ((WinlinkAddress)cllToAddresses[0]).SMTPAddress + Globals.CRLF);
                 }
                 else
                 {
                     var loopTo = cllToAddresses.Count;
-                    for (intIndex = 1; intIndex <= loopTo; intIndex++)
+                    for (intIndex = 0; intIndex < loopTo; intIndex++)
                     {
-                        if (intIndex == 1)
+                        if (intIndex == 0)
                         {
-                            sbdHeader.Append("To: " + ((WinlinkAddress)cllToAddresses[1]).SMTPAddress + "," + Globals.CRLF);
+                            sbdHeader.Append("To: " + ((WinlinkAddress)cllToAddresses[0]).SMTPAddress + "," + Globals.CRLF);
                         }
-                        else if (intIndex == cllToAddresses.Count)
+                        else if (intIndex == cllToAddresses.Count - 1)
                         {
                             sbdHeader.Append(" " + ((WinlinkAddress)cllToAddresses[intIndex]).SMTPAddress + Globals.CRLF);
                         }
@@ -465,18 +464,18 @@ namespace Paclink
             {
                 if (cllCcAddresses.Count == 1)
                 {
-                    sbdHeader.Append("Cc: " + ((WinlinkAddress)cllCcAddresses[1]).SMTPAddress + Globals.CRLF);
+                    sbdHeader.Append("Cc: " + ((WinlinkAddress)cllCcAddresses[0]).SMTPAddress + Globals.CRLF);
                 }
                 else
                 {
                     var loopTo1 = cllCcAddresses.Count;
-                    for (intIndex = 1; intIndex <= loopTo1; intIndex++)
+                    for (intIndex = 0; intIndex < loopTo1; intIndex++)
                     {
-                        if (intIndex == 1)
+                        if (intIndex == 0)
                         {
-                            sbdHeader.Append("Cc: " + ((WinlinkAddress)cllCcAddresses[1]).SMTPAddress + "," + Globals.CRLF);
+                            sbdHeader.Append("Cc: " + ((WinlinkAddress)cllCcAddresses[0]).SMTPAddress + "," + Globals.CRLF);
                         }
-                        else if (intIndex == cllCcAddresses.Count)
+                        else if (intIndex == cllCcAddresses.Count - 1)
                         {
                             sbdHeader.Append(" " + ((WinlinkAddress)cllCcAddresses[intIndex]).SMTPAddress + Globals.CRLF);
                         }
@@ -519,7 +518,7 @@ namespace Paclink
                 if (intMonth < 1)
                     return DateTime.UtcNow;
                 string strNewDate = strDateParts[3] + "/" + intMonth.ToString() + "/" + strDateParts[1] + " " + strDateParts[4];
-                DateTime dttDate = Conversions.ToDate(strNewDate);
+                DateTime dttDate = DateTime.Parse(strNewDate);
                 var switchExpr = strDateParts[5];
                 switch (switchExpr)
                 {
@@ -612,9 +611,9 @@ namespace Paclink
 
                 return dttDate;
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[2837] " + strDate + " " + Information.Err().Description);
+                Logs.Exception("[2837] " + strDate + " " + e.Message);
                 return DateTime.UtcNow;
             }
         } // RFC822DateToDate

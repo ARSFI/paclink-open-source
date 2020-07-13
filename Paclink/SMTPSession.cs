@@ -3,8 +3,6 @@ using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Timers;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -176,10 +174,10 @@ namespace Paclink
                 }
 
                 // This is for a complete command or the CRLF to complete the command...
-                if ((Strings.Right(strInputStream, 2) ?? "") == Globals.CRLF)
+                if ((strInputStream.Right(2) ?? "") == Globals.CRLF)
                 {
                     strInputStream = strCommandBuffer + strInputStream;
-                    strCommand = Strings.UCase(Strings.Left(strInputStream, 4));
+                    strCommand = strInputStream.Left(4).ToUpper();
                     strCommandBuffer = "";
                 }
                 else
@@ -385,17 +383,17 @@ namespace Paclink
 
                             case "AUTH": // Authorization request check for type
                                 {
-                                    intPointer = Strings.InStr(strInputStream.ToUpper(), "PLAIN");
-                                    if (intPointer != 0 & strInputStream.Length < intPointer + 7)
+                                    intPointer = strInputStream.ToUpper().IndexOf("PLAIN");
+                                    if (intPointer != -1 & strInputStream.Length < intPointer + 8)
                                     {
                                         // Initial AUTH did NOT contain the Base64 Encode
                                         SMTPState = SessionState.AuthPlain;
                                         return "334 " + Globals.CRLF; // Reply for a AUTH PLAIN request
                                     }
-                                    else if (intPointer != 0)
+                                    else if (intPointer != -1)
                                     {
                                         // Base64 User/Password included in AUTH command (e.g Netscape)...
-                                        strTemporary = Strings.Trim(Strings.Mid(strInputStream, intPointer + 5));
+                                        strTemporary = strInputStream.Substring(intPointer + 5).Trim();
 
                                         // This decodes the Base64 Client reply for PLAIN for UserName and Password...
                                         UserPasswordDecode(ref strAccountName, ref strPassword, strTemporary);
@@ -414,10 +412,10 @@ namespace Paclink
                                             return "501 Authentication failed" + Globals.CRLF;
                                         }
                                     }
-                                    else if (Strings.InStr(strInputStream.ToUpper(), "LOGIN") != 0)
+                                    else if (strInputStream.ToUpper().IndexOf("LOGIN") != -1)
                                     {
-                                        intPointer = Strings.InStr(strInputStream.ToUpper(), "LOGIN");
-                                        if (strInputStream.Length < intPointer + 7)
+                                        intPointer = strInputStream.ToUpper().IndexOf("LOGIN");
+                                        if (strInputStream.Length < intPointer + 8)
                                         {
                                             // Initial AUTH did NOT contain the Base64 Encode
                                             SMTPState = SessionState.AuthLoginID;
@@ -429,7 +427,7 @@ namespace Paclink
                                             // LOGIN included a base64 encoded username on the line.  In this case, we skip
                                             // directly to request password
                                             // 
-                                            strTemporary = Strings.Trim(Strings.Mid(strInputStream, intPointer + 5));
+                                            strTemporary = strInputStream.Substring(intPointer + 5).Trim();
                                             strAccountName = Base64Decode(strTemporary);
                                             SMTPState = SessionState.AuthLoginPass;
                                             return "334 " + Base64Encode("Password:") + Globals.CRLF;
@@ -459,7 +457,7 @@ namespace Paclink
 
                         // Append data to the inbound string builder...
                         InboundMessage(strInputStream);
-                        if ((Strings.Right(Strings.Right(strMessageBody, 4) + strInputStream, 5) ?? "") == Globals.CRLF + "." + Globals.CRLF)
+                        if ((strMessageBody.Right(4) + strInputStream).Right(5) == Globals.CRLF + "." + Globals.CRLF)
                         {
                             // This is the end of data...
 
@@ -542,7 +540,7 @@ namespace Paclink
                         else
                         {
                             // Only need to buffer the last 4 Characters to be able catch end of data sequence above
-                            strMessageBody = Strings.Right(strMessageBody + strInputStream, 4);
+                            strMessageBody = strMessageBody + strInputStream.Right(4);
                             return "";
                         }
 
@@ -695,16 +693,16 @@ namespace Paclink
             }
 
             // Save the last two char as the next strNextTransparentBuffer...
-            strNextTransparentBuffer = Strings.Right(strTransparentBuffer + strMessage, 2);
+            strNextTransparentBuffer = (strTransparentBuffer + strMessage).Right(2);
 
             // Filter strTransparentBuffer for transparent "."
             do
             {
-                intPositionCrLfPeriod = Strings.InStr(strTransparentBuffer + strMessage, Globals.CRLF + ".");
-                if (intPositionCrLfPeriod != 0) // There is a transparent "."
+                intPositionCrLfPeriod = (strTransparentBuffer + strMessage).IndexOf(Globals.CRLF + ".");
+                if (intPositionCrLfPeriod != -1) // There is a transparent "."
                 {
-                    strRecordBuffer = strRecordBuffer + Strings.Left(strMessage, intPositionCrLfPeriod - 1);
-                    strMessage = Strings.Right(strMessage, Strings.Len(strMessage) - intPositionCrLfPeriod);  // skip the transparent "."
+                    strRecordBuffer = strRecordBuffer + strMessage.Left(intPositionCrLfPeriod - 1);
+                    strMessage = strMessage.Right(strMessage.Length - intPositionCrLfPeriod + 1);  // skip the transparent "."
                 }
                 else // No more transparent "." left in strMessage...
                 {
@@ -725,14 +723,14 @@ namespace Paclink
             int intIndex;
             int intSeed;
             string strName;
-            strName = Strings.Left(strTag, 8);
-            VBMath.Randomize();
-            for (intIndex = Strings.Len(Strings.Left(strTag, 8)) + 1; intIndex <= 12; intIndex++)
+            strName = strTag.Right(8);
+            var rng = new Random();
+            for (intIndex = strTag.Right(8).Length + 1; intIndex <= 12; intIndex++)
             {
-                intSeed = Convert.ToInt32(VBMath.Rnd() * 36);
+                intSeed = rng.Next(0, 36);
                 if (intSeed < 36)
                     intSeed = intSeed + 1;
-                strName = strName + Strings.Mid("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", intSeed, 1);
+                strName = strName + "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".Substring(intSeed, 1);
             }
 
             NewFilenameRet = strName;
@@ -765,9 +763,9 @@ namespace Paclink
             {
                 Base64DecodeRet = ASCIIEncoding.ASCII.GetString(Convert.FromBase64String(strB64String));
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[3203] " + Information.Err().Description);
+                Logs.Exception("[3203] " + e.Message);
                 Base64DecodeRet = "";
             }
 
@@ -783,9 +781,9 @@ namespace Paclink
             {
                 Base64EncodeRet = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(strText));
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[3201] " + Information.Err().Description);
+                Logs.Exception("[3201] " + e.Message);
                 Base64EncodeRet = "";
             }
 
@@ -804,16 +802,16 @@ namespace Paclink
             try
             {
                 bytDecodeBytes = Convert.FromBase64String(strB64String);
-                intCount = Information.UBound(bytDecodeBytes);
+                intCount = bytDecodeBytes.Length;
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[3202] " + Information.Err().Description);
+                Logs.Exception("[3202] " + e.Message);
             }
 
             if (intCount > 1)
             {
-                var loopTo = Information.UBound(bytDecodeBytes);
+                var loopTo = bytDecodeBytes.Length;
                 for (intCount = 0; intCount <= loopTo; intCount++)
                 {
                     if (bytDecodeBytes[intCount] != 0 & !blnPassword)

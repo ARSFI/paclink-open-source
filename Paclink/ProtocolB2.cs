@@ -459,7 +459,7 @@ namespace Paclink
                 }
 
                 intCheckSum = -intCheckSum;
-                string sChecksum = Strings.Right("0" + Conversion.Hex(intCheckSum & 0xFF), 2);
+                string sChecksum = "0" + Conversion.Hex(intCheckSum & 0xFF).Right(2);
                 StateChange(EB2States.ReceivingB2Acceptance);
                 Send("F> " + sChecksum, true);
             }

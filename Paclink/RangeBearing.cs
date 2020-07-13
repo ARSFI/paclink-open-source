@@ -1,6 +1,4 @@
 ﻿using System;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -93,25 +91,25 @@ namespace Paclink
                 {
                     case "N":
                         {
-                            NMEALatLon2DecRet = Conversion.Val(strLatLon.Substring(0, 2)) + Conversion.Val(strLatLon.Substring(2, 5)) / 60;
+                            NMEALatLon2DecRet = Convert.ToDouble(strLatLon.Substring(0, 2)) + Convert.ToDouble(strLatLon.Substring(2, 5)) / 60;
                             break;
                         }
 
                     case "S":
                         {
-                            NMEALatLon2DecRet = -(Conversion.Val(strLatLon.Substring(0, 2)) + Conversion.Val(strLatLon.Substring(2, 5)) / 60);
+                            NMEALatLon2DecRet = -(Convert.ToDouble(strLatLon.Substring(0, 2)) + Convert.ToDouble(strLatLon.Substring(2, 5)) / 60);
                             break;
                         }
 
                     case "E":
                         {
-                            NMEALatLon2DecRet = Conversion.Val(strLatLon.Substring(0, 3)) + Conversion.Val(strLatLon.Substring(3, 5)) / 60;
+                            NMEALatLon2DecRet = Convert.ToDouble(strLatLon.Substring(0, 3)) + Convert.ToDouble(strLatLon.Substring(3, 5)) / 60;
                             break;
                         }
 
                     case "W":
                         {
-                            NMEALatLon2DecRet = -(Conversion.Val(strLatLon.Substring(0, 3)) + Conversion.Val(strLatLon.Substring(3, 5)) / 60);
+                            NMEALatLon2DecRet = -(Convert.ToDouble(strLatLon.Substring(0, 3)) + Convert.ToDouble(strLatLon.Substring(3, 5)) / 60);
                             break;
                         }
 
@@ -199,30 +197,30 @@ namespace Paclink
                 // N lat and E lon are +, S lat and W lon are -
                 // Input Format is NMEA DD-mm.mmN/S or DDD-mm.mmE/W  ( e.g 08012.34W) 
                 string strCompass;
-                strCompass = Strings.Right(strLatLon, 1);
+                strCompass = strLatLon.Right(1);
                 switch (strCompass)
                 {
                     case "N":
                         {
-                            LatLon2DecRet = Conversion.Val(Strings.Left(strLatLon, 2)) + Conversion.Val(strLatLon.Substring(3, 5)) / 60;
+                            LatLon2DecRet = Convert.ToDouble(strLatLon.Right(2)) + Convert.ToDouble(strLatLon.Substring(3, 5)) / 60;
                             break;
                         }
 
                     case "S":
                         {
-                            LatLon2DecRet = -(Conversion.Val(Strings.Left(strLatLon, 2)) + Conversion.Val(strLatLon.Substring(3, 5)) / 60);
+                            LatLon2DecRet = -(Convert.ToDouble(strLatLon.Right(2)) + Convert.ToDouble(strLatLon.Substring(3, 5)) / 60);
                             break;
                         }
 
                     case "E":
                         {
-                            LatLon2DecRet = Conversion.Val(Strings.Left(strLatLon, 3)) + Conversion.Val(strLatLon.Substring(4, 5)) / 60;
+                            LatLon2DecRet = Convert.ToDouble(strLatLon.Right(3)) + Convert.ToDouble(strLatLon.Substring(4, 5)) / 60;
                             break;
                         }
 
                     case "W":
                         {
-                            LatLon2DecRet = -(Conversion.Val(Strings.Left(strLatLon, 3)) + Conversion.Val(strLatLon.Substring(4, 5)) / 60);
+                            LatLon2DecRet = -(Convert.ToDouble(strLatLon.Right(3)) + Convert.ToDouble(strLatLon.Substring(4, 5)) / 60);
                             break;
                         }
 

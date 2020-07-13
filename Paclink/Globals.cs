@@ -154,6 +154,23 @@ namespace Paclink
             public int compressedSize;
         }
 
+        public static string Left(this String str, int length)
+        {
+            return str.Substring(0, length);
+        }
+
+        public static string Right(this String str, int length)
+        {
+            if (str.Length >= length)
+            {
+                return str.Substring(str.Length - length, length);
+            }
+            else
+            {
+                return str;
+            }
+        }
+
         public static void ResetProgressBar(int intValue = 0)
         {
             queProgressDisplay.Enqueue(0);
