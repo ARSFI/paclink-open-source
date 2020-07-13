@@ -28,7 +28,8 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>WinlinkInterop.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -96,10 +97,6 @@
       <HintPath>..\..\packages\DnsClient.1.3.2\lib\net471\DnsClient.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="SyslogLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SyslogLib 3.5\SyslogLib\bin\Release\SyslogLib.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
@@ -118,11 +115,11 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="WinlinkRegistration, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\WinlinkRegistration 3.5\bin\Release\WinlinkRegistration.dll</HintPath>
+      <HintPath>..\WinlinkRegistration\bin\Debug\WinlinkRegistration.dll</HintPath>
     </Reference>
     <Reference Include="WinlinkServiceClasses, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\WinlinkServiceClasses 3.5\WinlinkServiceClasses\bin\Release\WinlinkServiceClasses.dll</HintPath>
+      <HintPath>..\WinlinkServiceClasses\bin\Debug\WinlinkServiceClasses.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -188,6 +185,12 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SyslogLib\SyslogLib.csproj">
+      <Project>{d656718f-a47d-48fe-b7e4-c105d4d2ce15}</Project>
+      <Name>SyslogLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

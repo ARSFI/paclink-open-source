@@ -142,7 +142,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SyslogLib">
-      <HintPath>..\..\..\Winlink_Common\SyslogLib 3.5\SyslogLib\bin\Release\SyslogLib.dll</HintPath>
+      <HintPath>..\..\Libraries\SyslogLib\bin\Debug\SyslogLib.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -169,10 +169,10 @@
       <Name>System.XML</Name>
     </Reference>
     <Reference Include="WinlinkRegistration">
-      <HintPath>..\..\..\Winlink_Common\WinlinkRegistration 3.5\bin\Release\WinlinkRegistration.dll</HintPath>
+      <HintPath>..\..\Libraries\WinlinkRegistration\bin\Debug\WinlinkRegistration.dll</HintPath>
     </Reference>
     <Reference Include="WinlinkServiceClasses">
-      <HintPath>..\..\..\Winlink_Common\WinlinkServiceClasses 3.5\WinlinkServiceClasses\bin\Release\WinlinkServiceClasses.dll</HintPath>
+      <HintPath>..\..\Libraries\WinlinkServiceClasses\bin\Debug\WinlinkServiceClasses.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
