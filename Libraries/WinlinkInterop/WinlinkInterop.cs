@@ -952,24 +952,6 @@ namespace WinlinkInterop
             return;
         }
 
-        public bool ValidateRegistrationKey(string strCallsign, string strkey)
-        {
-            // 
-            // Check registration record (at the CMS) to insure that the key has not been rescinded (voided)
-            // Will also return false if no record can be found (hacked registration)
-            // Returns True if the key is registered or if we cannot access the database to check it.
-            // 
-            // If we don't have an Internet connection, assume the key is valid.
-            // 
-            if (HaveInternetConnection() == false)
-                return true;
-            // 
-            // Check the registration key.
-            // 
-            string strBaseCallsign = Globals.BaseCallsign(strCallsign);
-            return WinlinkRegistration.RegistrationHelper.IsValidRegistrationKey(strBaseCallsign, strkey);
-        }
-
         public List<WhitelistRecord> WhitelistGet(string strCallsign)
         {
             // 
