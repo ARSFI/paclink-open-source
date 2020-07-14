@@ -400,7 +400,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Libraries\WinlinkInterop\WinlinkInterop.csproj">
-      <Project>{3e0ca358-6558-035f-1ec2-200d2fb68198}</Project>
+      <Project>{b14f1570-a852-4930-b38e-81bc2c87f4c3}</Project>
       <Name>WinlinkInterop</Name>
     </ProjectReference>
   </ItemGroup>
