@@ -13,9 +13,11 @@ namespace WinlinkInterop
         {
             try
             {
-                using var stream = new MemoryStream(Encoding.Default.GetBytes(json));
-                var serializer = new DataContractJsonSerializer(typeof(T));
-                return serializer.ReadObject(stream) as T;
+                using (var stream = new MemoryStream(Encoding.Default.GetBytes(json)))
+                {
+                    var serializer = new DataContractJsonSerializer(typeof(T));
+                    return serializer.ReadObject(stream) as T;
+                }
             }
             catch
             {

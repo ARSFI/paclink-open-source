@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
@@ -1947,12 +1948,12 @@ namespace WinlinkInterop
                 try
                 {
                     if (blnAddCrLf)
-                    {
-                        My.MyProject.Computer.FileSystem.WriteAllText(strLogsDirectory + "WinlinkInterop " + DateTime.UtcNow.ToString("yyyyMMdd") + ".log", TimestampEx() + " " + strText.Trim() + Environment.NewLine, true);
+                    {                        
+                        File.AppendAllText(strLogsDirectory + "WinlinkInterop " + DateTime.UtcNow.ToString("yyyyMMdd") + ".log", TimestampEx() + " " + strText.Trim() + Environment.NewLine);
                     }
                     else
                     {
-                        My.MyProject.Computer.FileSystem.WriteAllText(strLogsDirectory + "WinlinkInterop " + DateTime.UtcNow.ToString("yyyyMMdd") + ".log", TimestampEx() + " " + strText.Trim(), true);
+                        File.AppendAllText(strLogsDirectory + "WinlinkInterop " + DateTime.UtcNow.ToString("yyyyMMdd") + ".log", TimestampEx() + " " + strText.Trim());
                     }
                 }
                 catch

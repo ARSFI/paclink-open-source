@@ -3,8 +3,6 @@ using System.IO;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace WinlinkInterop
 {
@@ -66,14 +64,14 @@ namespace WinlinkInterop
             {
                 try
                 {
-                    if (!Information.IsNothing(thrGetSFI) && thrGetSFI.IsAlive)
+                    if (thrGetSFI != null && thrGetSFI.IsAlive)
                         thrGetSFI.Abort();
                 }
                 catch
                 {
                 }
 
-                if (!Information.IsNothing(objHTTP))
+                if (objHTTP != null)
                 {
                     objHTTP.Dispose();
                     objHTTP = null;
@@ -115,7 +113,7 @@ namespace WinlinkInterop
                 // 
                 if (!blnProcessingSFI)
                 {
-                    if (!Information.IsNothing(thrGetSFI))
+                    if (thrGetSFI != null)
                     {
                         if (thrGetSFI.IsAlive)
                             thrGetSFI.Abort();
@@ -201,7 +199,7 @@ namespace WinlinkInterop
             blnGetSFISuccess = false;
             try
             {
-                if (Information.IsNothing(objHTTP))
+                if (objHTTP != null)
                 {
                     objHTTP = new HttpClient();
                 }
@@ -210,7 +208,7 @@ namespace WinlinkInterop
                 objHTTP.Timeout = new TimeSpan(0, 0, timeoutInSec / 60, timeoutInSec % 60, 0);
                 blnGetSFIDownloadComplete = false;
                 strSFIDownload = "";
-                var dttStartDownload = DateAndTime.Now;
+                var dttStartDownload = DateTime.UtcNow;
                 var httpCancelTokenSource = new CancellationTokenSource();
                 var httpCancelToken = httpCancelTokenSource.Token;
                 var httpDownloadTask = objHTTP.GetAsync("https://services.swpc.noaa.gov/text/sgas.txt", httpCancelToken);
@@ -242,7 +240,7 @@ namespace WinlinkInterop
                     }
                 }).Wait(0);
 
-                while (DateAndTime.Now.Subtract(dttStartDownload).TotalSeconds < dblMaxWaitSeconds & !blnGetSFIDownloadComplete)
+                while (DateTime.UtcNow.Subtract(dttStartDownload).TotalSeconds < dblMaxWaitSeconds & !blnGetSFIDownloadComplete)
                 {
                     Thread.Sleep(100);
                 }
@@ -310,7 +308,7 @@ namespace WinlinkInterop
             // 
             return true;
         }
-
+       
         private void objHTTP_OnEndTransfer(HttpResponseMessage msg)
         {
             // 
@@ -326,7 +324,7 @@ namespace WinlinkInterop
                         try
                         {
                             string strNewSFI = strSFIDownload.Substring(intSFIIndex + 5, 5).Trim();
-                            if (Information.IsNumeric(strNewSFI))
+                            if (strNewSFI.IsNumeric())
                             {
                                 // We got an SFI update.
                                 strSFI = strNewSFI;
@@ -363,7 +361,7 @@ namespace WinlinkInterop
             s = s.Replace(".", strDecimalSeparator);
             try
             {
-                dblRet = Conversions.ToDouble(s);
+                dblRet = Convert.ToDouble(s);
             }
             catch (Exception ex)
             {
