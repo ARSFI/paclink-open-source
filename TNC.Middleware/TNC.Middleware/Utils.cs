@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text;
+using TNC.Middleware.Properties;
 
 namespace TNC.Middleware
 {
@@ -16,17 +18,7 @@ namespace TNC.Middleware
         }
 
         /// <summary>
-        /// Converts a byte array to a text string
-        /// </summary>
-        /// <param name="buffer"></param>
-        /// <returns></returns>
-        public static string GetString(byte[] buffer)
-        {
-            return Encoding.ASCII.GetString(buffer);
-        }
-
-        /// <summary>
-        /// Converts a partial byte array to a text string
+        /// Converts all or a portion of a byte array to a text string
         /// </summary>
         /// <param name="buffer"></param>
         /// <param name="first"></param>
@@ -34,10 +26,16 @@ namespace TNC.Middleware
         /// <returns></returns>
         public static string GetString(byte[] buffer, int first = 0, int last = -1)
         {
+            if (buffer == null) throw new ArgumentException(Resources.InvalidArgumentNull, nameof(buffer));
+            if (first < 0 || first > buffer.Length - 1) throw new ArgumentException(Resources.ArgumentOutOfRange, nameof(first));
+            if (last > buffer.Length - 1) throw new ArgumentException(Resources.ArgumentOutOfRange, nameof(last));
+
+            if (first == 0 && last == -1) return Encoding.ASCII.GetString(buffer);
+
             var count = buffer.Skip(first).Count();
-            if (last > -1) count -= last - first;
+            if (last >= first) count -= last - first;
             var a = buffer.Skip(first).Take(count).ToArray();
-            return GetString(a);
+            return Encoding.ASCII.GetString(a);
         }
 
     }
