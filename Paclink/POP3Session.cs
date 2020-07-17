@@ -4,8 +4,6 @@ using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Timers;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -385,7 +383,7 @@ namespace Paclink
                             strId = objFileInfo.FullName;
                             intLastSlashPosition = strId.LastIndexOf(@"\");
                             strId = strId.Substring(intLastSlashPosition + 1);
-                            strId = Strings.Replace(strId, ".mime", "");
+                            strId = strId.Replace(".mime", "");
                             UidlResponseRet = UidlResponseRet + intCount.ToString() + " " + strId + Globals.CRLF;
                         }
                     }
@@ -407,7 +405,7 @@ namespace Paclink
                         strId = aryPendingMimeList[intIndex - 1].FullName;
                         intLastSlashPosition = strId.LastIndexOf(@"\");
                         strId = strId.Substring(intLastSlashPosition + 1);
-                        strId = Strings.Replace(strId, ".mime", "");
+                        strId = strId.Replace(".mime", "");
                         UidlResponseRet = "+OK " + intIndex.ToString() + " " + strId + Globals.CRLF;
                     }
                     else
@@ -434,7 +432,7 @@ namespace Paclink
             if (!string.IsNullOrEmpty(sParam))
             {
                 intIndex = Convert.ToInt32(sParam);
-                if (intIndex > 0 & intIndex <= Information.UBound(blnDeleteFlags) + 1)
+                if (intIndex > 0 & intIndex <= blnDeleteFlags.Length)
                 {
                     if (blnDeleteFlags[intIndex - 1] == false) // Only mark if not yet marked for deletion
                     {
@@ -454,10 +452,10 @@ namespace Paclink
             // Reset all delete flags back to undelete state...
 
             int intIndex;
-            var loopTo = Information.UBound(blnDeleteFlags) + 1;
+            var loopTo = blnDeleteFlags.Length;
             for (intIndex = 1; intIndex <= loopTo; intIndex++)
                 blnDeleteFlags[intIndex - 1] = false;
-            return "+OK maildrop has " + (1 + Information.UBound(blnDeleteFlags)).ToString() + " messages" + Globals.CRLF;
+            return "+OK maildrop has " + (blnDeleteFlags.Length).ToString() + " messages" + Globals.CRLF;
         } // ResetMessages
 
         public string DeleteMimeFiles()
@@ -480,7 +478,7 @@ namespace Paclink
                 {
                     if (blnDeleteFlags[intIndex - 1] == true)
                     {
-                        FileSystem.Kill(aryPendingMimeList[intIndex - 1].FullName);
+                        File.Delete(aryPendingMimeList[intIndex - 1].FullName);
                     }
                 }
             }
@@ -508,7 +506,7 @@ namespace Paclink
 
                 if (aryPendingMimeList is object)
                 {
-                    if (intIndex > 0 & intIndex <= 1 + Information.UBound(blnDeleteFlags))
+                    if (intIndex > 0 & intIndex <= blnDeleteFlags.Length)
                     {
                         if (blnDeleteFlags[intIndex - 1] == false) // Only retrieve messages NOT marked for deletion
                         {
@@ -518,7 +516,7 @@ namespace Paclink
                             // Decode header for display and logging.
                             var strSubject = default(string);
                             var strFrom = default(string);
-                            var strHeaderLines = strMessage.Split(Conversions.ToChar(Globals.CR));
+                            var strHeaderLines = strMessage.Split(Convert.ToChar(Globals.CR));
                             foreach (string strLine in strHeaderLines)
                             {
                                 var tmpStrLine = strLine.Replace(Globals.LF, "").Trim();
@@ -534,11 +532,11 @@ namespace Paclink
                             }
 
                             // Add byte stuffing for <CrLf . >
-                            strMessage = Strings.Replace(strMessage, Globals.CRLF + ".", Globals.CRLF + "..");
+                            strMessage = strMessage.Replace(Globals.CRLF + ".", Globals.CRLF + "..");
                             string strMessageId = aryPendingMimeList[intIndex - 1].FullName;
                             int nPosLastSlash = strMessageId.LastIndexOf(@"\");
                             strMessageId = strMessageId.Substring(nPosLastSlash + 1);
-                            strMessageId = Strings.Replace(strMessageId, ".mime", "");
+                            strMessageId = strMessageId.Replace(".mime", "");
                             Globals.queSMTPDisplay.Enqueue("G" + strMessageId + " delivered to " + strAccountName);
                             Globals.queSMTPDisplay.Enqueue("G   " + strFrom);
                             Globals.queSMTPDisplay.Enqueue("G   " + strSubject);
@@ -577,14 +575,14 @@ namespace Paclink
                         return TopResponseRet;
                     }
 
-                    if (intIndex > 0 & intIndex <= 1 + Information.UBound(blnDeleteFlags))
+                    if (intIndex > 0 & intIndex <= blnDeleteFlags.Length)
                     {
                         if (blnDeleteFlags[intIndex - 1] == false) // only retrieve messages NOT marked for deletion
                         {
                             strMime = new StreamReader(aryPendingMimeList[intIndex - 1].FullName);
                             strMessage = strMime.ReadToEnd();
                             // Add byte stuffing for <CrLf . >
-                            strMessage = Strings.Replace(strMessage, Globals.CRLF + ".", Globals.CRLF + "..");
+                            strMessage = strMessage.Replace(Globals.CRLF + ".", Globals.CRLF + "..");
                             int intEndOfHeader = 4 + strMessage.IndexOf(Globals.CRLF + Globals.CRLF);
                             string sHeader = strMessage.Substring(0, intEndOfHeader);
                             strMessage = strMessage.Substring(intEndOfHeader);
@@ -613,9 +611,9 @@ namespace Paclink
 
                 return "-ERR no such message" + Globals.CRLF;
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[8273] " + Information.Err().Description);
+                Logs.Exception("[8273] " + e.Message);
                 return "-ERR internal error" + Globals.CRLF;
             }
         } // TopResponse
