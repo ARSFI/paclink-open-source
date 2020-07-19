@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using Microsoft.VisualBasic;
 
 namespace Paclink
@@ -83,7 +84,7 @@ namespace Paclink
                 objIPDaemon.Listen(10);
                 objIPDaemon.AcceptAsync().ContinueWith(t =>
                 {
-                    OnConnected(t.Result);
+                    if (!t.IsFaulted) OnConnected(t.Result);
                 }).Wait(0);
             }
         } // Listen
@@ -112,6 +113,7 @@ namespace Paclink
 
                 objIPDaemon.Close();
                 objIPDaemon.Dispose();
+                objIPDaemon = null;
             }
             catch (Exception ex)
             {
@@ -164,7 +166,7 @@ namespace Paclink
 
             objIPDaemon.AcceptAsync().ContinueWith(t =>
             {
-                OnConnected(t.Result);
+                if (!t.IsFaulted) OnConnected(t.Result);
             }).Wait(0);
         } // OnConnected
     } // SMTPPort

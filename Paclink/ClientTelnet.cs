@@ -19,7 +19,7 @@ namespace Paclink
         private EConnection enmConnectionStatus;
         private Queue queDataBytesIn = Queue.Synchronized(new Queue());
         private bool blnNormalDisconnect;
-
+        private CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
         private int intTimeout = 0;
 
         public void Poll()
@@ -42,6 +42,7 @@ namespace Paclink
                     }
 
                     enmState = ELinkStates.LinkFailed;
+                    cancelTokenSource.Cancel(); // cancels any pending reads
                     objTCPPort.Close();
                 }
             }
@@ -113,6 +114,7 @@ namespace Paclink
 
             try
             {
+                cancelTokenSource.Cancel(); // cancels any pending reads
                 objTCPPort.Close();
             }
             catch (Exception ex)
@@ -160,11 +162,12 @@ namespace Paclink
             {
                 blnClose = true;
                 Globals.queChannelDisplay.Enqueue("G*** Closing " + stcChannel.ChannelName + " at " + Globals.TimestampEx());
-                if (objTCPPort is object)
+                if (objTCPPort != null)
                 {
                     try
                     {
                         objTCPPort.LingerState = new LingerOption(false, 0);
+                        cancelTokenSource.Cancel(); // cancels any pending reads
                         objTCPPort.Close();
                         OnDisconnected(objTCPPort);
                     }
@@ -173,6 +176,7 @@ namespace Paclink
                     }
 
                     objTCPPort.Dispose();
+                    objTCPPort = null;
                 }
 
                 if (objProtocol is object)
@@ -247,10 +251,13 @@ namespace Paclink
                         Task<int> task = null;
                         try
                         {
-                            task = objTCPPort.GetStream().ReadAsync(buffer, 0, 1024);
+                            task = objTCPPort.GetStream().ReadAsync(buffer, 0, 1024, cancelTokenSource.Token);
                             task.ContinueWith(t =>
                             {
-                                OnDataIn(buffer, t.Result);
+                                if (!t.IsFaulted)
+                                {
+                                    OnDataIn(buffer, t.Result);
+                                }
                             });
                             task.Wait(0);
                         }
@@ -272,6 +279,7 @@ namespace Paclink
                 objTCPPort.LingerState = new LingerOption(false, 0);
                 try
                 {
+                    cancelTokenSource.Cancel(); // cancels any pending reads
                     objTCPPort.Close();
                 }
                 catch
@@ -284,6 +292,7 @@ namespace Paclink
             objTCPPort.LingerState = new LingerOption(false, 0);
             try
             {
+                cancelTokenSource.Cancel(); // cancels any pending reads
                 objTCPPort.Close();
             }
             catch
@@ -291,6 +300,7 @@ namespace Paclink
             }
 
             objTCPPort.Dispose();
+            objTCPPort = null;
             if (objProtocol is object)
                 objProtocol.LinkStateChange(EConnection.Disconnected);
             return false;
@@ -344,6 +354,7 @@ namespace Paclink
         {
             try
             {
+                cancelTokenSource.Cancel(); // cancels any pending reads
                 objTCPPort.Close();
                 OnDisconnected(objTCPPort);
             }
@@ -430,11 +441,14 @@ namespace Paclink
                 Task<int> t = null;
                 try
                 {
-                    t = objTCPPort.GetStream().ReadAsync(buffer, 0, 1024);
+                    t = objTCPPort.GetStream().ReadAsync(buffer, 0, 1024, cancelTokenSource.Token);
                     t.ContinueWith(k =>
+                    {
+                        if (!k.IsFaulted)
                         {
                             OnDataIn(buffer, k.Result);
-                        });
+                        }
+                    });
                     t.Wait(0);
                 }
                 catch (Exception e)
@@ -504,6 +518,7 @@ namespace Paclink
             try
             {
                 objTCPPort.LingerState = new LingerOption(false, 0);
+                cancelTokenSource.Cancel(); // cancels any pending reads
                 objTCPPort.Close();
             }
             catch

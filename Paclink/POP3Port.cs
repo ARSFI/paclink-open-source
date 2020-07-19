@@ -111,7 +111,7 @@ namespace Paclink
                 objTCPPort.Listen(10);
                 objTCPPort.AcceptAsync().ContinueWith(t =>
                 {
-                    OnConnected(t.Result);
+                    if (!t.IsFaulted) OnConnected(t.Result);
                 }).Wait(0);
             }
         } // Listen
@@ -150,7 +150,7 @@ namespace Paclink
 
             objTCPPort.AcceptAsync().ContinueWith(t =>
             {
-                OnConnected(t.Result);
+                if (!t.IsFaulted) OnConnected(t.Result);
             }).Wait(0);
         } // OnConnected
 
