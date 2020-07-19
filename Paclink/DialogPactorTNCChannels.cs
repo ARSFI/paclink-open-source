@@ -2,8 +2,6 @@
 using System.IO;
 using System.IO.Ports;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -736,20 +734,21 @@ namespace Paclink
                 ConfirmAutoforward();
             if (Channels.IsAccount(cmbChannelName.Text))
             {
-                Interaction.MsgBox(cmbChannelName.Text + " is in use as an account name...", MsgBoxStyle.Information);
+                MessageBox.Show(cmbChannelName.Text + " is in use as an account name...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 cmbChannelName.Focus();
                 return;
             }
 
-            if (!Information.IsNumeric(txtAudioCenter.Text.Trim()))
+            int audioFreq = 0;
+            if (!int.TryParse(txtAudioCenter.Text.Trim(), out audioFreq))
             {
-                Interaction.MsgBox("Audio Tones Center must be between 1000 and 2300 Hz", MsgBoxStyle.Exclamation, "Tone Center Error");
+                MessageBox.Show("Audio Tones Center must be between 1000 and 2300 Hz", "Tone Center Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
-            if (Convert.ToInt32(txtAudioCenter.Text.Trim()) < 1000 | Convert.ToInt32(txtAudioCenter.Text.Trim()) > 2300)
+            if (audioFreq < 1000 || audioFreq > 2300)
             {
-                Interaction.MsgBox("Audio Tones Center must be between 1000 and 2300 Hz", MsgBoxStyle.Exclamation, "Tone Center Error");
+                MessageBox.Show("Audio Tones Center must be between 1000 and 2300 Hz", "Tone Center Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
@@ -757,24 +756,24 @@ namespace Paclink
             {
                 try
                 {
-                    byte byt = Convert.ToByte("&H" + txtRadioAddress.Text.ToUpper().Trim());
+                    byte byt = byte.Parse(txtRadioAddress.Text.ToUpper().Trim(), System.Globalization.NumberStyles.HexNumber);
                 }
                 catch
                 {
-                    Interaction.MsgBox("Radio Address must be between 00 and FF hex", MsgBoxStyle.Exclamation, "Radio Address Error");
+                    MessageBox.Show("Radio Address must be between 00 and FF hex", "Radio Address Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
             }
 
             if (rdoSerial.Checked & (cmbRadioPort.Text ?? "") == (cmbTNCSerialPort.Text ?? ""))
             {
-                Interaction.MsgBox("Radio Control and TNC must use different serial ports.", MsgBoxStyle.Information, "Serial Port Conflict");
+                MessageBox.Show("Radio Control and TNC must use different serial ports.", "Serial Port Conflict", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             if (Channels.IsChannel(cmbChannelName.Text))
             {
-                Interaction.MsgBox("The channel name " + cmbChannelName.Text + " is already in use...", MsgBoxStyle.Information);
+                MessageBox.Show("The channel name " + cmbChannelName.Text + " is already in use...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 cmbChannelName.Focus();
             }
             else
@@ -796,9 +795,9 @@ namespace Paclink
         {
             if (cmbChannelName.Items.Contains(cmbChannelName.Text) == false)
             {
-                Interaction.MsgBox("The pactor channel " + cmbChannelName.Text + " is not found...", MsgBoxStyle.Information);
+                MessageBox.Show("The pactor channel " + cmbChannelName.Text + " is not found...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            else if (Interaction.MsgBox("Confirm removal of pactor channel " + cmbChannelName.Text + "...", MsgBoxStyle.Question | MsgBoxStyle.YesNo) == MsgBoxResult.Yes)
+            else if (MessageBox.Show("Confirm removal of pactor channel " + cmbChannelName.Text + "...", "Remove Channel", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 Channels.RemoveChannel(cmbChannelName.Text);
                 Channels.FillChannelCollection();
@@ -818,15 +817,16 @@ namespace Paclink
         {
             if (chkAutoforwardEnabled.Checked)
                 ConfirmAutoforward();
-            if (!Information.IsNumeric(txtAudioCenter.Text.Trim()))
+            int audioFreq = 0;
+            if (!int.TryParse(txtAudioCenter.Text.Trim(), out audioFreq))
             {
-                Interaction.MsgBox("Audio Tones Center must be between 1000 and 2300 Hz", MsgBoxStyle.Exclamation, "Tone Center Error");
+                MessageBox.Show("Audio Tones Center must be between 1000 and 2300 Hz", "Tone Center Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
-            if (Convert.ToInt32(txtAudioCenter.Text.Trim()) < 1000 | Convert.ToInt32(txtAudioCenter.Text.Trim()) > 2300)
+            if (audioFreq < 1000 || audioFreq > 2300)
             {
-                Interaction.MsgBox("Audio Tones Center must be between 1000 and 2300 Hz", MsgBoxStyle.Exclamation, "Tone Center Error");
+                MessageBox.Show("Audio Tones Center must be between 1000 and 2300 Hz", "Tone Center Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
@@ -834,24 +834,24 @@ namespace Paclink
             {
                 try
                 {
-                    byte byt = Convert.ToByte("&H" + txtRadioAddress.Text.ToUpper().Trim());
+                    byte byt = byte.Parse(txtRadioAddress.Text.ToUpper().Trim(), System.Globalization.NumberStyles.HexNumber);
                 }
                 catch
                 {
-                    Interaction.MsgBox("Radio Address must be between 00 and FF hex", MsgBoxStyle.Exclamation, "Tone Center Error");
+                    MessageBox.Show("Radio Address must be between 00 and FF hex", "Tone Center Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
             }
 
             if (rdoSerial.Checked & (cmbRadioPort.Text ?? "") == (cmbTNCSerialPort.Text ?? ""))
             {
-                Interaction.MsgBox("Radio Control and TNC must use different serial ports.", MsgBoxStyle.Information, "Serial Port Conflict");
+                MessageBox.Show("Radio Control and TNC must use different serial ports.", "Serial Port Conflict", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             if (cmbChannelName.Items.Contains(cmbChannelName.Text) == false)
             {
-                Interaction.MsgBox("The pactor channel " + cmbChannelName.Text + " is not found...", MsgBoxStyle.Information);
+                MessageBox.Show("The pactor channel " + cmbChannelName.Text + " is not found...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
@@ -891,7 +891,7 @@ namespace Paclink
             }
             else
             {
-                Interaction.MsgBox("Click 'Update Channel List' to download the list of available channels");
+                MessageBox.Show("Click 'Update Channel List' to download the list of available channels");
                 return false;
             }
 
@@ -964,7 +964,8 @@ namespace Paclink
                                 var strTemp1 = line.Split(' ');
                                 foreach (string token in strTemp1)
                                 {
-                                    if (Information.IsNumeric(token.Replace("#", "")))
+                                    float num = 0.0F;
+                                    if (float.TryParse(token.Replace("#", ""), out num))
                                     {
                                         int intFrequency = Globals.KHzToHz(token.Replace("#", ""));
                                         if (intFrequency > 1800000 & intFrequency < 54000000)
@@ -1063,11 +1064,11 @@ namespace Paclink
             if (string.IsNullOrEmpty(strError))
             {
                 SetRMSList();
-                Interaction.MsgBox("The channel update completed successfully");
+                MessageBox.Show("The channel update completed successfully");
             }
             else
             {
-                Interaction.MsgBox(strError);
+                MessageBox.Show(strError);
             }
         }
 

@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Timers;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+using Org.BouncyCastle.Math.EC.Rfc7748;
 
 namespace Paclink
 {
@@ -37,7 +36,7 @@ namespace Paclink
         private int intProposed;               // Holds the number of messages actually proposed to send
         private System.Timers.Timer tmrDisconnect;               // Used to delay disconnect
         private ArrayList aryOutboundMessages;     // Holds waiting outbound messages
-        private Collection cllInboundMessageIDs = new Collection();
+        private List<Globals.Proposal> cllInboundMessageIDs = new List<Globals.Proposal>();
         private Queue queInboundData = Queue.Synchronized(new Queue()); // FIFO queue used to buffer inbound data
                                                                         // Private tmrKeepAlive As Timer                ' Keeps the Remote TCP channel alice during long downloads
 
@@ -443,8 +442,8 @@ namespace Paclink
                             var strTokens = strProposal.Split(' ');
                             intProposedCompressedSize[intIndex] = Convert.ToInt32(strTokens[4]);
                             foreach (char c in strProposal)
-                                intCheckSum += Strings.Asc(c);
-                            intCheckSum += Strings.Asc(Globals.CR);
+                                intCheckSum += Globals.Asc(c);
+                            intCheckSum += Globals.Asc(Globals.CR[0]);
                             Send(strProposal);
                         }
                         else
@@ -459,7 +458,7 @@ namespace Paclink
                 }
 
                 intCheckSum = -intCheckSum;
-                string sChecksum = "0" + Conversion.Hex(intCheckSum & 0xFF).Right(2);
+                string sChecksum = "0" + (intCheckSum & 0xFF).ToString("X").Right(2);
                 StateChange(EB2States.ReceivingB2Acceptance);
                 Send("F> " + sChecksum, true);
             }
@@ -481,11 +480,11 @@ namespace Paclink
             }
         } // B2OutboundProposal
 
-        private Collection ParseAcceptance(string strText)
+        private List<int> ParseAcceptance(string strText)
         {
             // Decodes the acceptance string from Winlink...
 
-            var cllResponse = new Collection();
+            var cllResponse = new List<int>();
             var sbdText = new StringBuilder();
             foreach (char c in strText)
             {
@@ -572,7 +571,7 @@ namespace Paclink
                 StateChange(EB2States.SendingB2Messages);
                 for (int intIndex = 0, loopTo = intCount - 1; intIndex <= loopTo; intIndex++)
                 {
-                    int intOffset = Convert.ToInt32(cllResponse[intIndex + 1]);
+                    int intOffset = Convert.ToInt32(cllResponse[intIndex]);
                     Message objMessage = (Message)aryOutboundMessages[intIndex];
                     if (intOffset >= 0)
                     {
@@ -627,17 +626,18 @@ namespace Paclink
             {
                 cllInboundProposals.Add(strText);
                 foreach (char chrText in strText)
-                    intCheckSum += Strings.Asc(chrText);
-                intCheckSum += Strings.Asc(Globals.CR);
+                    intCheckSum += Globals.Asc(chrText);
+                intCheckSum += Globals.Asc(Globals.CR[0]);
             }
             else if (strText.StartsWith("F>"))
             {
                 // Compare received and calculated check sum...
                 var strTokens = strText.Split(' ');
                 intCheckSum = -intCheckSum & 0xFF;
-                if (Conversion.Val("&H" + strTokens[1]) != intCheckSum)
+                var intVal = int.Parse(strTokens[1], System.Globalization.NumberStyles.HexNumber);
+                if (intVal != intCheckSum)
                 {
-                    Logs.Exception("[B2InboundProposal] Inbound checksum does not match (Value/Checksum): " + Conversion.Val("&H" + strTokens[1]).ToString() + "/" + intCheckSum.ToString());
+                    Logs.Exception("[B2InboundProposal] Inbound checksum does not match (Value/Checksum): " + intVal.ToString() + "/" + intCheckSum.ToString());
                     Send("[419] Protocol error - inbound checksum does not match");
                     Disconnect();
                     return;
@@ -674,9 +674,10 @@ namespace Paclink
 
                         cllInboundMessageIDs.Add(objProp);
                         intInboundMessageCount += 1;
-                        if (Information.IsNumeric(strToks[4]))
+                        int result = 0;
+                        if (Int32.TryParse(strToks[4], out result))
                         {
-                            Globals.ResetProgressBar(Convert.ToInt32(strToks[4]) - intPartialCount);
+                            Globals.ResetProgressBar(result - intPartialCount);
                         }
                     }
                 }
@@ -685,7 +686,7 @@ namespace Paclink
                 if (intInboundMessageCount > 0)
                 {
                     objMessageInbound = new Message();
-                    intInboundProposalIndex = 1;
+                    intInboundProposalIndex = 0;
                     objProp = (Globals.Proposal)cllInboundMessageIDs[intInboundProposalIndex];
                     objMessageInbound.MessageId = objProp.msgID;
                     objMessageInbound.intUncompressedSize = objProp.uncompressedSize;
@@ -871,7 +872,7 @@ namespace Paclink
             else if (intPosition < bytInProcess.Length)
             {
                 var binMore = new byte[(bytInProcess.Length - intPosition)];
-                for (int intCount = 0, loopTo = Information.UBound(binMore); intCount <= loopTo; intCount++)
+                for (int intCount = 0, loopTo = binMore.Length - 1; intCount <= loopTo; intCount++)
                 {
                     binMore[intCount] = bytInProcess[intPosition];
                     intPosition += 1;
@@ -1010,10 +1011,10 @@ namespace Paclink
 
                 return intBytesReceived;
             }
-            catch
+            catch (Exception e)
             {
                 File.Delete(Globals.SiteRootDirectory + @"Temp Inbound\" + MID + ".indata");
-                Logs.Exception("[IsPartialMessage] " + Information.Err().Description);
+                Logs.Exception("[IsPartialMessage] " + e.Message);
                 return 0;
             }
         } // IsPartialMessage

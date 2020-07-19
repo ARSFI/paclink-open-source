@@ -33,7 +33,7 @@ namespace Paclink
             // Normalizes line ends and removes excess white space from the body of
             // the message...
 
-            if (Information.IsNothing(strMessageBody))
+            if (strMessageBody == null)
                 strMessageBody = "<no message body>";
             strMessageBody = strMessageBody.Trim().Replace(Globals.LF, "");
             strMessageBody = strMessageBody.Replace(Globals.CR, Globals.CRLF) + Globals.CRLF;

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -44,12 +42,12 @@ namespace Paclink
             lock (objINIFileLock)
                 Flush(strFile);
             if (blnAck)
-                Interaction.MsgBox("INI file " + strFilePath + " backed up to " + strFile, MsgBoxStyle.Information);
+                MessageBox.Show("INI file " + strFilePath + " backed up to " + strFile, "Backup Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public bool Restore(string strFile)
         {
-            if (Interaction.MsgBox("This will replace your current Paclink settings with the new settings contained in file:" + Globals.CRLF + strFile + ". Any connect Script files (.script) will not be affected." + Globals.CRLF + "Your existing INI file will be saved to backup file: " + strFilePath + ".bak" + Globals.CRLF + "Do you wish to continue?", MsgBoxStyle.YesNo) == Constants.vbNo)
+            if (MessageBox.Show("This will replace your current Paclink settings with the new settings contained in file:" + Globals.CRLF + strFile + ". Any connect Script files (.script) will not be affected." + Globals.CRLF + "Your existing INI file will be saved to backup file: " + strFilePath + ".bak" + Globals.CRLF + "Do you wish to continue?", "Restore", MessageBoxButtons.YesNo) == DialogResult.No)
 
 
                 return false;
@@ -63,14 +61,14 @@ namespace Paclink
                 File.Delete(strFilePath);
                 File.Copy(strFile, strFilePath);
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("Exception in RestoreINI: " + Information.Err().Description);
-                Interaction.MsgBox("Error Restoring INI file. See error log for details.", MsgBoxStyle.Critical);
+                Logs.Exception("Exception in RestoreINI: " + e.Message);
+                MessageBox.Show("Error Restoring INI file. See error log for details.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
-            Interaction.MsgBox("File " + strFile + " successfully imported." + Globals.CRLF + "Paclink will now quit.  Restart to use new INI File settings.", MsgBoxStyle.Information);
+            MessageBox.Show("File " + strFile + " successfully imported." + Globals.CRLF + "Paclink will now quit.  Restart to use new INI File settings.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return true;
         } // Restore
 
@@ -178,7 +176,7 @@ namespace Paclink
                     }
                     catch (Exception ex)
                     {
-                        Logs.Exception("[INIFile.Load] " + Information.Err().Description);
+                        Logs.Exception("[INIFile.Load] " + ex.Message);
                     }
                 }
 
@@ -219,7 +217,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[INIFile.Flush] " + Information.Err().Description);
+                    Logs.Exception("[INIFile.Flush] " + ex.Message);
                 }
             }
 
@@ -460,7 +458,7 @@ namespace Paclink
             string strBackupName = strIniBackupFolder + Application.ProductName + "_" + strBackupDate + ".ini";
             try
             {
-                FileSystem.FileCopy(strSourceFile, strBackupName);
+                File.Copy(strSourceFile, strBackupName);
             }
             catch (Exception ex)
             {

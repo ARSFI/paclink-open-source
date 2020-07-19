@@ -4,8 +4,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -140,7 +138,7 @@ namespace Paclink
             {
                 if (cmbLocalIPAddress.Items.Count > 0)
                 {
-                    cmbLocalIPAddress.Text = Conversions.ToString(cmbLocalIPAddress.Items[0]);
+                    cmbLocalIPAddress.Text = Convert.ToString(cmbLocalIPAddress.Items[0]);
                     cmbLocalIPAddress.SelectedIndex = 0;
                 }
             }
@@ -149,26 +147,29 @@ namespace Paclink
         private void OK_Button_Click(object sender, EventArgs e)
         {
             // Save the profile data...
-            if (!Information.IsNumeric(txtSizeLimit.Text))
+            int sizeLimit = 0;
+            if (!int.TryParse(txtSizeLimit.Text, out sizeLimit))
             {
-                Interaction.MsgBox("Attachment limit must be between 0 and 120000. 0 blocks all attachments.", MsgBoxStyle.Exclamation, "Attachment Limit Error");
+                MessageBox.Show("Attachment limit must be between 0 and 120000. 0 blocks all attachments.", "Attachment Limit Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
-            else if (Convert.ToInt32(txtSizeLimit.Text) < 0 | Convert.ToInt32(txtSizeLimit.Text) > 120000)
+            else if (sizeLimit < 0 || sizeLimit > 120000)
             {
-                Interaction.MsgBox("Attachment limit must be between 0 and 120000. 0 blocks all attachments.", MsgBoxStyle.Exclamation, "Attachment Limit Error");
-                return;
-            }
-
-            if (!Information.IsNumeric(txtPOP3PortNumber.Text))
-            {
-                Interaction.MsgBox("POP3 port number must be between 0 and 65535.", MsgBoxStyle.Exclamation, "Port Number Error");
+                MessageBox.Show("Attachment limit must be between 0 and 120000. 0 blocks all attachments.", "Attachment Limit Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
-            if (!Information.IsNumeric(txtSMTPPortNumber.Text))
+            ushort pop3Port = 0;
+            if (!ushort.TryParse(txtPOP3PortNumber.Text, out pop3Port))
             {
-                Interaction.MsgBox("SMTP port number must be between 0 and 65535.", MsgBoxStyle.Exclamation, "Port Number Error");
+                MessageBox.Show("POP3 port number must be between 0 and 65535.", "Port Number Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            ushort smtpPort = 0;
+            if (!ushort.TryParse(txtSMTPPortNumber.Text, out smtpPort))
+            {
+                MessageBox.Show("SMTP port number must be between 0 and 65535.", "Port Number Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
@@ -183,9 +184,9 @@ namespace Paclink
             var strTokens = txtSiteCallsign.Text.Split('-');
             if (strTokens.Length == 2)
             {
-                if (Information.IsNumeric(strTokens[1]))
+                int intSSID = 0;
+                if (int.TryParse(strTokens[1], out intSSID))
                 {
-                    int intSSID = Convert.ToInt32(strTokens[1]);
                     if (intSSID >= 1 & intSSID <= 15)
                     {
                         blnValidSSID = true;
@@ -203,35 +204,35 @@ namespace Paclink
 
             if (!blnValidSSID)
             {
-                Interaction.MsgBox("A callsign without SSID or any SSID value of 1 through 15 is acceptable.", MsgBoxStyle.Information, "Incorrect SSID");
+                MessageBox.Show("A callsign without SSID or any SSID value of 1 through 15 is acceptable.", "Incorrect SSID", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 txtSiteCallsign.Focus();
                 return;
             }
 
             if (!Globals.IsValidRadioCallsign(txtSiteCallsign.Text))
             {
-                Interaction.MsgBox("A valid radio callsign is required...");
+                MessageBox.Show("A valid radio callsign is required...");
                 txtSiteCallsign.Focus();
                 return;
             }
 
             if (txtSecureLoginPassword.Text.Trim().Length < 6)
             {
-                Interaction.MsgBox("You must enter a password that is at least 6 characters long.");
+                MessageBox.Show("You must enter a password that is at least 6 characters long.");
                 txtSecureLoginPassword.Focus();
                 return;
             }
 
             if (txtPOP3Password.Text.Length < 4)
             {
-                Interaction.MsgBox("A valid POP3/SMTP password is required...");
+                MessageBox.Show("A valid POP3/SMTP password is required...");
                 txtPOP3Password.Focus();
                 return;
             }
 
             if (txtGridSquare.Text.Trim().Length < 6)
             {
-                Interaction.MsgBox("A 6 character grid square entry is required...");
+                MessageBox.Show("A 6 character grid square entry is required...");
                 txtGridSquare.Focus();
                 return;
             }
@@ -265,7 +266,12 @@ namespace Paclink
             }
             catch
             {
-                Interaction.MsgBox("Conflict on POP3 port number " + Globals.intPOP3PortNumber.ToString() + ".  Port is probably in use by another service or program. Try port number " + (Globals.intPOP3PortNumber + 1).ToString() + ".", MsgBoxStyle.Exclamation, "POP3 Port Conflict");
+                MessageBox.Show(
+                    "Conflict on POP3 port number " + Globals.intPOP3PortNumber.ToString() + 
+                    ".  Port is probably in use by another service or program. Try port number " + 
+                    (Globals.intPOP3PortNumber + 1).ToString() + ".", "POP3 Port Conflict", 
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
                 txtPOP3PortNumber.Focus();
                 return;
             }
@@ -283,7 +289,13 @@ namespace Paclink
             }
             catch
             {
-                Interaction.MsgBox("Conflict on SMTP port number " + Globals.intSMTPPortNumber.ToString() + ".  Port is probably in use by another service or program. Try port number " + (Globals.intSMTPPortNumber + 1).ToString() + ".", MsgBoxStyle.Exclamation, "SMTP Port Conflict");
+                MessageBox.Show(
+                    "Conflict on SMTP port number " + Globals.intSMTPPortNumber.ToString() +
+                    ".  Port is probably in use by another service or program. Try port number " +
+                    (Globals.intSMTPPortNumber + 1).ToString() + ".",
+                    "SMTP Port Conflict",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
                 txtSMTPPortNumber.Focus();
                 return;
             }
@@ -367,7 +379,7 @@ namespace Paclink
         private bool RemoveRadioAccount(string strCallsign)
         {
             string strAccountList = Globals.objINIFile.GetString("Properties", "Account Names", "");
-            strAccountList = Strings.Replace(strAccountList, strCallsign + "|", "");
+            strAccountList = strAccountList.Replace(strCallsign + "|", "");
             Globals.objINIFile.WriteString("Properties", "Site Callsign", "");
             Globals.objINIFile.WriteString("Properties", "Site Password", "");
             Globals.objINIFile.WriteString("Properties", "Secure Login Password", "");
@@ -383,13 +395,16 @@ namespace Paclink
                     Directory.Delete(Globals.SiteRootDirectory + @"Accounts\" + strCallsign + "_Account", true);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[Properties.RemoveRadioAccount] " + Information.Err().Description);
+                Logs.Exception("[Properties.RemoveRadioAccount] " + ex.Message);
             }
 
             // Remove callsign account from local Outlook Express...
-            if (Interaction.MsgBox("Remove account " + strCallsign + " from local Outlook Express?", MsgBoxStyle.YesNo, "Remove OE Account") == MsgBoxResult.Yes)
+            if (MessageBox.Show(
+                "Remove account " + strCallsign + " from local Outlook Express?",
+                "Remove OE Account",
+                MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 OutlookExpress.RemoveOutlookExpressAccount(strCallsign);
             }

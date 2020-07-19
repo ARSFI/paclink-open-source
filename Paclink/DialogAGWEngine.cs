@@ -7,8 +7,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Org.BouncyCastle.Crypto.Paddings;
 
 namespace Paclink
@@ -169,7 +167,7 @@ namespace Paclink
             {
                 try
                 {
-                    if (Information.IsNothing(buffer))
+                    if (buffer == null)
                         break;
                     Globals.ConcatanateByteArrays(ref bytTCPData, buffer); // Add data to buffer array
                     if (bytTCPData.Length < 36)
@@ -177,7 +175,7 @@ namespace Paclink
                     intDataLength = Globals.ComputeLengthL(bytTCPData, 28); // get and decode the data length field from the header
                     if (bytTCPData.Length < 36 + intDataLength)
                         break; // not A complete "G" frame...
-                    if (Conversions.ToString((char)bytTCPData[4]) != "G")
+                    if (((char)bytTCPData[4]).ToString() != "G")
                     {
                         bytTCPData = new byte[0];
                         return;
@@ -188,9 +186,9 @@ namespace Paclink
                     objTCPPort.Close();
                     objTCPPort = null;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("[AGWEngine, tcpOnDataIn] " + Information.Err().Description);
+                    Logs.Exception("[AGWEngine, tcpOnDataIn] " + ex.Message);
                     SetRemoteButtonStatus(true, Color.Tomato);
                 }
                 break;
@@ -237,9 +235,9 @@ namespace Paclink
                 asc.GetBytes(txtAGWPassword.Text.Trim(), 0, txtAGWPassword.Text.Trim().Length, bytTemp2, 36 + 255);
                 objTCPPort.GetStream().Write(bytTemp2, 0, bytTemp2.Length);;
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[AGWEngine, LoginAGWRemote] " + Information.Err().Description);
+                Logs.Exception("[AGWEngine, LoginAGWRemote] " + ex.Message);
                 tmrTimer10sec.Enabled = false;
                 SetRemoteButtonStatus(true, Color.Tomato);
             }
@@ -254,12 +252,12 @@ namespace Paclink
             {
                 if (!objTCPPort.Connected)
                     return;
-                bytTemp[4] = (byte)Strings.Asc("G");
+                bytTemp[4] = (byte)Globals.Asc('G');
                 objTCPPort.GetStream().Write(bytTemp, 0, bytTemp.Length);;
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[AGWEngine, RequestAGWPortInfo] " + Information.Err().Description);
+                Logs.Exception("[AGWEngine, RequestAGWPortInfo] " + ex.Message);
                 tmrTimer10sec.Enabled = false;
                 SetRemoteButtonStatus(true, Color.Tomato);
             }
@@ -346,9 +344,9 @@ namespace Paclink
                     }
                 }).Wait(0);
             }
-            catch
+            catch (Exception ex)
             {
-                Interaction.MsgBox("Could not connect...Error in AGWPE Address, Port, User or Password Port : " + Information.Err().Description);
+                MessageBox.Show("Could not connect...Error in AGWPE Address, Port, User or Password Port : " + ex.Message);
                 SetRemoteButtonStatus(true, Color.Tomato);
                 tmrTimer10sec.Enabled = false;
             }
@@ -375,7 +373,7 @@ namespace Paclink
                     txtAGWPath.Text = txtAGWPath.Text.Trim() + @"\";
                 if (!File.Exists(txtAGWPath.Text + "AGWPE.ini"))
                 {
-                    Interaction.MsgBox("AGWPE Path incorrect or AGWPE not yet configured!", MsgBoxStyle.Information, "Missing AGWPE.ini File");
+                    MessageBox.Show("AGWPE Path incorrect or AGWPE not yet configured!", "Missing AGWPE.ini File", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
             }

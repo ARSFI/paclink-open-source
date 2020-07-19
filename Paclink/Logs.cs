@@ -105,9 +105,9 @@ namespace Paclink
                         }
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Exception("[Logs.PurgeOldLogFiles] " + Information.Err().Description);
+                    Exception("[Logs.PurgeOldLogFiles] " + ex.Message);
                 }
             }
             else
@@ -173,9 +173,9 @@ namespace Paclink
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Exception("[Logs.ArchiveOldLogFiles] " + Information.Err().Description);
+                Exception("[Logs.ArchiveOldLogFiles] " + ex.Message);
             }
         } // PurgeOldLogFiles
     } // ErrorLog

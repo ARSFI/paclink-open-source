@@ -4,8 +4,6 @@ using System.IO;
 using System.Text;
 using System.Timers;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -108,13 +106,14 @@ namespace Paclink
             // Creates the SSID feature for the SID...
 
             var strTokens = Globals.SiteCallsign.Split('-');
+            int result = 0;
             if (strTokens.Length < 2)
             {
                 return "N00";
             }
-            else if (Information.IsNumeric(strTokens[1]))
+            else if (Int32.TryParse(strTokens[1], out result))
             {
-                return "N" + Convert.ToInt32(strTokens[1]).ToString("0#");
+                return "N" + result.ToString("0#");
             }
             else
             {
@@ -156,7 +155,7 @@ namespace Paclink
                 {
                     case EProtocolStates.Disconnected:
                         {
-                            if (!Information.IsNothing(objB2Protocol))
+                            if (objB2Protocol != null)
                             {
                                 objB2Protocol.Close();
                                 objB2Protocol = null;
@@ -167,7 +166,7 @@ namespace Paclink
 
                     case EProtocolStates.Connected:
                         {
-                            if (!Information.IsNothing(objB2Protocol))
+                            if (objB2Protocol != null)
                                 objB2Protocol = null;
                             GetPendingOutboundMessages();
                             break;
@@ -196,7 +195,7 @@ namespace Paclink
             // Checks the remote station's SID for critical protocol flags...
 
             var sTokens = strText.Split('-');
-            string sFeatures = sTokens[Information.UBound(sTokens)];
+            string sFeatures = sTokens[sTokens.Length - 1];
             if (sFeatures.IndexOf("I") != -1)
                 blnIFlag = true;
             else
@@ -327,7 +326,8 @@ namespace Paclink
                         else if (strCommand.StartsWith(";PQ: ")) // Check for secure login challenge phrase
                         {
                             strChallengePhrase = strCommand.Substring(4).Trim();
-                            if (!Information.IsNumeric(strChallengePhrase))
+                            uint temp = 0;
+                            if (!UInt32.TryParse(strChallengePhrase, out temp))
                             {
                                 Globals.queChannelDisplay.Enqueue("R*** Non numeric challange phrase - ending connection");
                                 Disconnect();
@@ -369,7 +369,8 @@ namespace Paclink
         private string ChallengePhrase()
         {
             // Function used to generate a random challenge phrase for secure login (not used for Client)
-            return ";PQ: " + Convert.ToInt32(VBMath.Rnd() * 100000000.0).ToString() + Globals.CR;
+            var rng = new Random();
+            return ";PQ: " + rng.Next(0, 100000000).ToString() + Globals.CR;
         } // ChallengePhrase
 
         private void SendFWFeature()

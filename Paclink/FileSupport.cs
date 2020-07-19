@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Ionic.Zip;
 using Microsoft.VisualBasic;
 
@@ -48,9 +49,9 @@ namespace Paclink
 
                 File.Delete(strFilename); // Delete support file
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[ProcessSupportFile] " + Information.Err().Description);
+                Logs.Exception("[ProcessSupportFile] " + ex.Message);
             }
         } // ProcessSupportFile
     }

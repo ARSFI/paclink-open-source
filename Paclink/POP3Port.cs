@@ -87,9 +87,9 @@ namespace Paclink
                 objTCPPort.Close();
                 objTCPPort.Dispose();
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[POP3Port.Dispose]: " + Information.Err().Description);
+                Logs.Exception("[POP3Port.Dispose]: " + ex.Message);
             }
         } // Dispose
 
@@ -122,7 +122,7 @@ namespace Paclink
             var intCount = default(int);
             for (int intIndex = 0; intIndex <= 9; intIndex++)
             {
-                if (!Information.IsNothing(objPOP3Sessions[intIndex]))
+                if (objPOP3Sessions[intIndex] != null)
                     intCount += 1;
             }
 
@@ -139,7 +139,7 @@ namespace Paclink
             {
                 for (int intIndex = 0; intIndex <= 9; intIndex++)
                 {
-                    if (Information.IsNothing(objPOP3Sessions[intIndex]))
+                    if (objPOP3Sessions[intIndex] == null)
                     {
                         objPOP3Sessions[intIndex] = new POP3Session(s);
                         objPOP3Sessions[intIndex].OnDisconnect += OnDisconnected;

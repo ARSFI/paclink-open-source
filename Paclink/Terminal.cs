@@ -279,7 +279,7 @@ namespace Paclink
                     catch
                     {
                         Text = "Simple Terminal";
-                        Interaction.MsgBox("Unable to reinitialize " + strPort);
+                        MessageBox.Show("Unable to reinitialize " + strPort);
                         return false;
                     }
                 }
@@ -302,7 +302,7 @@ namespace Paclink
                 catch
                 {
                     Text = "Simple Terminal " + strPort + " Closed";
-                    Interaction.MsgBox("Unable to open " + strPort + ". May be open by another program...", MsgBoxStyle.Information);
+                    MessageBox.Show("Unable to open " + strPort + ". May be open by another program...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return false;
                 }
 
@@ -496,9 +496,9 @@ namespace Paclink
             {
                 Process.Start(strLog);
             }
-            catch
+            catch (Exception ex)
             {
-                Interaction.MsgBox(Information.Err().Description, MsgBoxStyle.Information);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         } // mnuViewLog_Click
 

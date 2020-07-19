@@ -98,24 +98,24 @@ namespace Paclink
                 {
                     try
                     {
-                        if (!Information.IsNothing(objSMTPSessions[intIndex]))
+                        if (objSMTPSessions[intIndex] != null)
                         {
                             objSMTPSessions[intIndex].Close();
                             objSMTPSessions[intIndex] = null;
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Logs.Exception("[SMTPPort.Close] " + Information.Err().Description);
+                        Logs.Exception("[SMTPPort.Close] " + ex.Message);
                     }
                 }
 
                 objIPDaemon.Close();
                 objIPDaemon.Dispose();
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[SMTPPort.Dispose]: " + Information.Err().Description);
+                Logs.Exception("[SMTPPort.Dispose]: " + ex.Message);
             }
         } // Dispose
 
@@ -125,7 +125,7 @@ namespace Paclink
             var intCount = default(int);
             for (int intIndex = 0; intIndex <= 9; intIndex++)
             {
-                if (!Information.IsNothing(objSMTPSessions[intIndex]))
+                if (objSMTPSessions[intIndex] != null)
                     intCount += 1;
             }
 
@@ -153,7 +153,7 @@ namespace Paclink
             {
                 for (int intIndex = 0; intIndex <= 9; intIndex++)
                 {
-                    if (Information.IsNothing(objSMTPSessions[intIndex]))
+                    if (objSMTPSessions[intIndex] == null)
                     {
                         objSMTPSessions[intIndex] = new SMTPSession(s);
                         objSMTPSessions[intIndex].OnDisconnect += OnDisconnect;

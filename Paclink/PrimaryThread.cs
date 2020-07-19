@@ -71,9 +71,9 @@ namespace Paclink
                 DialogPolling.InitializePollingFlags();
                 DialogAGWEngine.InitializeAGWProperties();
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[Main.Startup C] " + Information.Err().Description);
+                Logs.Exception("[Main.Startup C] " + ex.Message);
             }
 
             try
@@ -89,9 +89,9 @@ namespace Paclink
                     // Upon successful extraction the zip file is deleted
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[Main.Startup D] " + Information.Err().Description);
+                Logs.Exception("[Main.Startup D] " + ex.Message);
             }
 
             try
@@ -103,33 +103,33 @@ namespace Paclink
                     objProperties.ShowDialog();
                     if (DialogSiteProperties.IsValid() == false)
                     {
-                        Interaction.MsgBox("Paclink must have a valid initial configuration to continue...", MsgBoxStyle.Information);
+                        MessageBox.Show("Paclink must have a valid initial configuration to continue...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         MyApplication.Forms.Main.Close();
                         return;
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[Main.Startup F] " + Information.Err().Description);
+                Logs.Exception("[Main.Startup F] " + ex.Message);
             }
 
             try
             {
                 Accounts.RefreshAccountsList();
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[Main.Startup G] " + Information.Err().Description);
+                Logs.Exception("[Main.Startup G] " + ex.Message);
             }
 
             try
             {
                 MyApplication.Forms.Main.UpdateChannelsList();
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[Main.Startup G] " + Information.Err().Description);
+                Logs.Exception("[Main.Startup G] " + ex.Message);
             }
 
             MyApplication.Forms.Main.Text = "Paclink - " + Globals.SiteCallsign;
@@ -145,7 +145,7 @@ namespace Paclink
 
             Globals.queChannelDisplay.Enqueue("G*** Paclink " + Application.ProductVersion + " ready...");
             MyApplication.Forms.Main.mnuMain.Enabled = true;
-            if (!Information.IsNothing(thrSMTP))
+            if (thrSMTP != null)
             {
                 thrSMTP.Abort();
                 thrSMTP = null;
@@ -154,7 +154,7 @@ namespace Paclink
             thrSMTP = new Thread(SMTPThread);
             thrSMTP.Name = "SMTP";
             thrSMTP.Start();
-            if (!Information.IsNothing(thrChannel))
+            if (thrChannel != null)
             {
                 thrChannel.Abort();
                 thrChannel = null;
@@ -186,7 +186,7 @@ namespace Paclink
             try
             {
                 // Clear and re establish the objSMTPPort
-                if (!Information.IsNothing(Globals.objSMTPPort))
+                if (Globals.objSMTPPort != null)
                 {
                     Globals.objSMTPPort.Close();
                     Globals.objSMTPPort = null;
@@ -197,7 +197,7 @@ namespace Paclink
                 Globals.objSMTPPort.Listen(true);
 
                 // Clear and reestablish the objPOP3Port
-                if (!Information.IsNothing(Globals.objPOP3Port))
+                if (Globals.objPOP3Port != null)
                 {
                     Globals.objPOP3Port.Close();
                     Globals.objPOP3Port = null;
@@ -207,11 +207,15 @@ namespace Paclink
                 Globals.objPOP3Port.LocalPort = Globals.intPOP3PortNumber;
                 Globals.objPOP3Port.Listen(true);
             }
-            catch
+            catch (Exception ex)
             {
-                Interaction.MsgBox(Information.Err().Description + Globals.CRLF + "There may be a SMTP/POP3 confilct due to another program/service listening on the POP3/SMTP Ports." + " Terminate that service or change POP3/SMTP ports in Paclink and your mail client." + " Check the Paclink Errors.log for details of the error.", MsgBoxStyle.Critical);
+                MessageBox.Show(
+                    ex.Message + Globals.CRLF + 
+                    "There may be a SMTP/POP3 confilct due to another program/service listening on the POP3/SMTP Ports." +
+                    " Terminate that service or change POP3/SMTP ports in Paclink and your mail client." +
+                    " Check the Paclink Errors.log for details of the error.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
-                Logs.Exception("[SMTPThread] SMTP/POP3 Port Setup: " + Information.Err().Description);
+                Logs.Exception("[SMTPThread] SMTP/POP3 Port Setup: " + ex.Message);
             }
 
             do
@@ -249,9 +253,9 @@ namespace Paclink
                         File.Delete(strWinlinkMessage);
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("[Main.PollSMTPSide A] " + Information.Err().Description);
+                    Logs.Exception("[Main.PollSMTPSide A] " + ex.Message);
                 }
                 // 
                 // Updates the message pending counts.
@@ -267,9 +271,9 @@ namespace Paclink
                     // 
                     Globals.queSMTPStatus.Enqueue("To Clients: " + Globals.intPendingForClients.ToString() + "  To Winlink: " + Globals.intPendingForWinlink.ToString());
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("[Main.PollSMTPSide B] " + Information.Err().Description);
+                    Logs.Exception("[Main.PollSMTPSide B] " + ex.Message);
                 }
             }
             while (true);
@@ -286,7 +290,7 @@ namespace Paclink
                     break;
                 if (Globals.objSelectedClient is object)
                 {
-                    if (!Information.IsNothing(Globals.objSelectedClient))
+                    if (Globals.objSelectedClient != null)
                         Globals.objSelectedClient.Poll();
                     if (!string.IsNullOrEmpty(Globals.strConnectedGridSquare) & Globals.blnEnableRadar)
                     {
@@ -384,9 +388,9 @@ namespace Paclink
                             continue;
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Logs.Exception("PrimaryThreads.ChannelThread A] " + Information.Err().Description);
+                        Logs.Exception("PrimaryThreads.ChannelThread A] " + ex.Message);
                     }
                 }
                 else if (Globals.AutomaticChannels.Count > 0 & !Globals.blnStartingChannel & Globals.blnChannelActive == false)
@@ -406,9 +410,9 @@ namespace Paclink
                             Globals.blnAutoForwarding = false;
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Logs.Exception("[PrimaryThreads.ChannelThread B] " + Information.Err().Description);
+                        Logs.Exception("[PrimaryThreads.ChannelThread B] " + ex.Message);
                         Globals.AutomaticChannels.Clear();
                     }
                 }
@@ -439,9 +443,9 @@ namespace Paclink
                         }
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("PrimaryThreads.ChannelThread C] " + Information.Err().Description);
+                    Logs.Exception("PrimaryThreads.ChannelThread C] " + ex.Message);
                 }
 
                 // Starts a new channel poll on receipt of a new message from an SMTP client...
@@ -462,9 +466,9 @@ namespace Paclink
                         }
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("PrimaryThreads.ChannelThread D] " + Information.Err().Description);
+                    Logs.Exception("PrimaryThreads.ChannelThread D] " + ex.Message);
                 }
 
                 if (!string.IsNullOrEmpty(strChannelName))
@@ -505,19 +509,19 @@ namespace Paclink
                     return;
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 Logs.Exception("[StartChannel] Channel name: " + strChannelName + " Automatic: " + blnAutomatic.ToString());
-                Logs.Exception("[StartChannel] " + Information.Err().Description);
+                Logs.Exception("[StartChannel] " + ex.Message);
             }
 
             try
             {
                 Globals.queChannelDisplay.Enqueue(Globals.CLEAR);
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[StartChannel] Clear channel display: " + Information.Err().Description);
+                Logs.Exception("[StartChannel] Clear channel display: " + ex.Message);
             }
 
             PurgeOldPartialInboundFiles(); // Clean out any partial inbound files > 24 hrs old
@@ -645,10 +649,10 @@ namespace Paclink
                         // stcSelectedChannel.StartTimestamp = Now.AddMinutes(120)
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 Logs.Exception("[StartChannel] Mode: " + Globals.stcSelectedChannel.ChannelType.ToString() + Globals.stcSelectedChannel.TNCType.ToString());
-                Logs.Exception("[StartChannel] " + Information.Err().Description);
+                Logs.Exception("[StartChannel] " + ex.Message);
             }
 
             try
@@ -701,7 +705,7 @@ namespace Paclink
                 try
                 {
                     Logs.Exception("[StartChannel] Mode: " + Globals.stcSelectedChannel.ChannelType.ToString() + " TNC: " + Globals.stcSelectedChannel.TNCType.ToString() + " State: " + Globals.objSelectedClient.State.ToString());
-                    Logs.Exception("[StartChannel] " + Information.Err().Description);
+                    Logs.Exception("[StartChannel] " + ex.Message);
                 }
                 catch
                 {
@@ -731,9 +735,9 @@ namespace Paclink
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[PurgeOldInboundFiles] " + Information.Err().Description);
+                Logs.Exception("[PurgeOldInboundFiles] " + ex.Message);
             }
         }  // PurgeOldFiles
     }

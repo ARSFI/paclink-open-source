@@ -37,9 +37,9 @@ namespace Paclink
                         File.WriteAllText(strMessagesSeenPath, strMessageIdRecord);
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("[MidsSeen.AddMessageId] " + Information.Err().Description);
+                    Logs.Exception("[MidsSeen.AddMessageId] " + ex.Message);
                 }
             }
         } // AddMessageId
@@ -64,9 +64,9 @@ namespace Paclink
                         return false;
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("[MidsSeen.IsMessageIdSeen] " + Information.Err().Description);
+                    Logs.Exception("[MidsSeen.IsMessageIdSeen] " + ex.Message);
                 }
             }
 
@@ -110,9 +110,9 @@ namespace Paclink
                         // Rewrite the Mids Seen file...
                         File.WriteAllText(strMessagesSeenPath, sbdRecords.ToString());
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Logs.Exception("[MidsSeen.PurgeMidsSeenFile] " + Information.Err().Description);
+                        Logs.Exception("[MidsSeen.PurgeMidsSeenFile] " + ex.Message);
                     }
                 }
             }

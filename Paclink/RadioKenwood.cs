@@ -2,8 +2,6 @@
 using System.IO.Ports;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -135,9 +133,9 @@ namespace Paclink
                     return objSerial.IsOpen;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[RadioKenwood.InitializeSerialPort] " + Information.Err().Description);
+                Logs.Exception("[RadioKenwood.InitializeSerialPort] " + ex.Message);
                 return false;
             }
 
@@ -156,9 +154,9 @@ namespace Paclink
                         return false;
                     strTrace = "";
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("[KenwoodRadio.SetParameters] Packet Channel:  " + Information.Err().Description);
+                    Logs.Exception("[KenwoodRadio.SetParameters] Packet Channel:  " + ex.Message);
                     return false;
                 }
             }
@@ -171,9 +169,9 @@ namespace Paclink
                         return false;
                     strTrace = "";
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("[KenwoodRadio.SetParameters] " + Information.Err().Description);
+                    Logs.Exception("[KenwoodRadio.SetParameters] " + ex.Message);
                     return false;
                 }
             }
@@ -200,9 +198,9 @@ namespace Paclink
                     objSerial = null;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[RadioKenwood.Close] " + Information.Err().Description);
+                Logs.Exception("[RadioKenwood.Close] " + ex.Message);
             }
         } // Close *
 
@@ -233,9 +231,9 @@ namespace Paclink
                                 SendCommand(strCommand);
                                 return SendCommand("MD2;");  // Set USB
                             }
-                            catch
+                            catch (Exception ex)
                             {
-                                Logs.Exception("[KenwoodRadio.SetFrequency TS-450/690] " + Information.Err().Description);
+                                Logs.Exception("[KenwoodRadio.SetFrequency TS-450/690] " + ex.Message);
                                 return false;
                             }
 
@@ -252,9 +250,9 @@ namespace Paclink
                                 SendCommand(strCommand);
                                 return SendCommand("MD2;");
                             }
-                            catch
+                            catch (Exception ex)
                             {
-                                Logs.Exception("[KenwoodRadio.SetFrequency Kenwood(generic)] " + Information.Err().Description);
+                                Logs.Exception("[KenwoodRadio.SetFrequency Kenwood(generic)] " + ex.Message);
                                 return false;
                             }
 
@@ -302,9 +300,9 @@ namespace Paclink
                                 return SendCommand("SL" + intIndex.ToString("00") + ";");
                             } // 300 Hz below Audio Center
                         }
-                        catch
+                        catch (Exception ex)
                         {
-                            Logs.Exception("[KenwoodRadio.SetFilter TS-2000] " + Information.Err().Description);
+                            Logs.Exception("[KenwoodRadio.SetFilter TS-2000] " + ex.Message);
                         }
 
                         break;
@@ -336,9 +334,9 @@ namespace Paclink
                                 return SendCommand("FL007009;");
                             } // 2.4 Khz for 8Mhs and 500 Hz for 455 Khz
                         }
-                        catch
+                        catch (Exception ex)
                         {
-                            Logs.Exception("[KenwoodRadio.SetFilter TS-450/690] " + Information.Err().Description);
+                            Logs.Exception("[KenwoodRadio.SetFilter TS-450/690] " + ex.Message);
                         }
 
                         break;
@@ -373,9 +371,9 @@ namespace Paclink
                                 return SendCommand("FW0001;");
                             } // set narrow filter
                         }
-                        catch
+                        catch (Exception ex)
                         {
-                            Logs.Exception("[KenwoodRadio.SetFilter TS-480/Other] " + Information.Err().Description);
+                            Logs.Exception("[KenwoodRadio.SetFilter TS-480/Other] " + ex.Message);
                         }
 
                         break;
@@ -406,9 +404,9 @@ namespace Paclink
                 Thread.Sleep(100);
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[RadioKenwood.SendCommand] " + Information.Err().Description);
+                Logs.Exception("[RadioKenwood.SendCommand] " + ex.Message);
                 return false;
             }
         } // SendCommand
@@ -450,9 +448,9 @@ namespace Paclink
                                 strCmd = "F" + strVFO + strFreqHz + ";";
                                 return SendCommand(strCmd);
                             }
-                            catch
+                            catch (Exception ex)
                             {
-                                Logs.Exception("[KenwoodRadio.SetFMModeFrequency TS-2000] :" + Information.Err().Description);
+                                Logs.Exception("[KenwoodRadio.SetFMModeFrequency TS-2000] :" + ex.Message);
                                 return false;
                             }
 

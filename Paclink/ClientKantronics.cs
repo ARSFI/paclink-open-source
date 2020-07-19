@@ -6,8 +6,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -92,7 +90,7 @@ namespace Paclink
                 return true;
             blnClosed = true;
             Globals.queChannelDisplay.Enqueue("G*** Closing " + Globals.stcSelectedChannel.ChannelName + " at " + Globals.TimestampEx());
-            if (!Information.IsNothing(Globals.objRadioControl)) // Shut down the radio control and free the serial port
+            if (Globals.objRadioControl != null) // Shut down the radio control and free the serial port
             {
                 Globals.objRadioControl.Close();
                 Thread.Sleep(Globals.intComCloseTime);
@@ -194,7 +192,7 @@ namespace Paclink
             enmState = ELinkStates.Initialized;
             if (Globals.stcSelectedChannel.RDOControl == "Serial") // now will handle both Packet and Pactor
             {
-                if (Information.IsNothing(Globals.objRadioControl))
+                if (Globals.objRadioControl != null)
                 {
                     if (Globals.stcSelectedChannel.RDOModel.StartsWith("Kenwood"))
                     {
@@ -229,7 +227,7 @@ namespace Paclink
 
             if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
             {
-                if (!Information.IsNothing(Globals.objRadioControl))
+                if (Globals.objRadioControl != null)
                     Globals.objRadioControl.SetParameters(ref Globals.stcSelectedChannel);
                 if (string.IsNullOrEmpty(Globals.stcSelectedChannel.TNCScript))
                 {
@@ -239,7 +237,7 @@ namespace Paclink
                 }
                 else
                 {
-                    aryConnectScriptLines = Globals.stcSelectedChannel.TNCScript.Replace(Globals.LF, "").ToUpper().Split(Conversions.ToChar(Globals.CR));
+                    aryConnectScriptLines = Globals.stcSelectedChannel.TNCScript.Replace(Globals.LF, "").ToUpper().Split(Convert.ToChar(Globals.CR));
                     blnInScript = true;
                     if (!ConnectionScript())
                     {
@@ -253,7 +251,8 @@ namespace Paclink
             else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
             {
                 // This handles manual Pactor connections or unspecified automatic channels...
-                if (!Information.IsNumeric(Globals.ExtractFreq(ref Globals.stcSelectedChannel.RDOCenterFrequency)) || string.IsNullOrEmpty(Globals.stcSelectedChannel.RemoteCallsign.Trim()) || !blnAutomatic)
+                float tmpVal = 0.0F;
+                if (!float.TryParse(Globals.ExtractFreq(ref Globals.stcSelectedChannel.RDOCenterFrequency), out tmpVal) || string.IsNullOrEmpty(Globals.stcSelectedChannel.RemoteCallsign.Trim()) || !blnAutomatic)
                 {
                     if (Globals.dlgPactorConnect is object)
                     {
@@ -287,7 +286,7 @@ namespace Paclink
                     if (!Globals.blnPactorDialogResuming)
                         Globals.stcEditedSelectedChannel = default;
                 }
-                else if (!Information.IsNothing(Globals.objRadioControl))
+                else if (Globals.objRadioControl != null)
                     Globals.objRadioControl.SetParameters(ref Globals.stcSelectedChannel);
 
                 // Make sure the TNC is in packet mode and disconnected before starting
@@ -499,7 +498,7 @@ namespace Paclink
                 }
 
                 Globals.queChannelDisplay.Enqueue("G #End Script");
-                if (!Information.IsNothing(objProtocol))
+                if (objProtocol != null)
                     objProtocol.ChannelInput(strScriptResponse);
                 return true;
             }
@@ -555,7 +554,7 @@ namespace Paclink
             // Tests for any script bailouts...
 
             var strEndText = new string[] { "DISCONNECTED", "TIMEOUT", "EXCEEDED", "FAILURE", "BUSY" };
-            for (int intIndex = 0, loopTo = Information.UBound(strEndText); intIndex <= loopTo; intIndex++)
+            for (int intIndex = 0, loopTo = (strEndText.Length - 1); intIndex <= loopTo; intIndex++)
             {
                 if (strText.ToUpper().IndexOf(strEndText[intIndex]) != -1)
                     return true;
@@ -718,7 +717,7 @@ namespace Paclink
             {
                 if (queStatusReports.Count > 0)
                 {
-                    return Conversions.ToString(queStatusReports.Dequeue());
+                    return queStatusReports.Dequeue().ToString();
                 }
                 else
                 {
@@ -898,9 +897,9 @@ namespace Paclink
                         Globals.queChannelDisplay.Enqueue("G*** Serial port " + stcChannel.TNCSerialPort + " opened");
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("[ClientKantronics.OpenSerialPortHostMode B] " + Information.Err().Description);
+                    Logs.Exception("[ClientKantronics.OpenSerialPortHostMode B] " + ex.Message);
                     return false;
                 }
 
@@ -1171,7 +1170,7 @@ namespace Paclink
                     if (blnHostMode == false)
                     {
                         // Non-host mode processing...
-                        strCommandResponse += Conversions.ToString((char)bytSingle);
+                        strCommandResponse += ((char)bytSingle).ToString();
 
                         // A double FEND indicates entry into host mode...
                         if (bytSingle == FEND & bytPrevious == FEND)
@@ -1389,15 +1388,15 @@ namespace Paclink
                                 char chrCommand = ' ';
                                 try
                                 {
-                                    chrCommand = Conversions.ToChar(queLinkCommand.Dequeue());
+                                    chrCommand = Convert.ToChar(queLinkCommand.Dequeue());
                                 }
-                                catch
+                                catch (Exception ex)
                                 {
-                                    Logs.Exception("KantronicsHostPort.PollOutgoing: " + Information.Err().Description);
+                                    Logs.Exception("KantronicsHostPort.PollOutgoing: " + ex.Message);
                                 }
 
                                 objSerial.Write(bytFEND, 0, 1);
-                                objSerial.Write(Conversions.ToString(chrCommand));
+                                objSerial.Write(chrCommand.ToString());
                                 objSerial.Write(bytFEND, 0, 1);
                             }
                             else if (!string.IsNullOrEmpty(strCommandToSend))
@@ -1437,9 +1436,9 @@ namespace Paclink
                         }
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("KantronicsHostPort.PollOutgoing: " + Information.Err().Description);
+                    Logs.Exception("KantronicsHostPort.PollOutgoing: " + ex.Message);
                 }
             }
         } // PollOutgoing
@@ -1485,12 +1484,12 @@ namespace Paclink
             // Update the available outbound buffer available...
             if (strTokens.Length >= 3)
             {
-                if (Information.IsNumeric(strTokens[strTokens.GetUpperBound(0)]))
+                int intBuffer = 0;
+                if (int.TryParse(strTokens[strTokens.GetUpperBound(0)], out intBuffer))
                 {
-                    int intBuffer = Convert.ToInt32(strTokens[strTokens.GetUpperBound(0)]);
                     if (intBufferOffset < intBuffer - 1024)
                     {
-                        intBufferOffset = Convert.ToInt32(strTokens[strTokens.GetUpperBound(0)]) - 1024;
+                        intBufferOffset = intBuffer - 1024;
                     }
 
                     intAvailableBufferOut = intBuffer - intBufferOffset;
@@ -1618,9 +1617,9 @@ namespace Paclink
                     }
                     while (true);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("[KantronicsHostPort.ConfigureTNC] " + Information.Err().Description);
+                    Logs.Exception("[KantronicsHostPort.ConfigureTNC] " + ex.Message);
                 }
 
                 HostCommand("MAXUSERS 1");
@@ -1714,7 +1713,7 @@ namespace Paclink
             // Indicate that the named channel has been configured at least once...
             if (Globals.cllFastStart.Contains(stcChannel.ChannelName) == false)
             {
-                Globals.cllFastStart.Add(stcChannel.ChannelName, stcChannel.ChannelName);
+                Globals.cllFastStart.Add(stcChannel.ChannelName);
             }
 
             return true;
@@ -1725,7 +1724,7 @@ namespace Paclink
             strCommandResponse = "";
             objSerial.Write("*");
             WaitOnNonHostCommandResponse("cmd:");
-            objSerial.Write(Conversions.ToString('\u0003'));
+            objSerial.Write(Convert.ToString('\u0003'));
             objSerial.Write(Globals.CR);
             if (WaitOnNonHostCommandResponse("cmd:") == true)
             {

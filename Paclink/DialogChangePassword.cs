@@ -66,13 +66,13 @@ namespace Paclink
             strNewPassword = txtNewPassword.Text.Trim();
             if (strNewPassword.Length < 3)
             {
-                Interaction.MsgBox("New password must be at least three characters.");
+                MessageBox.Show("New password must be at least three characters.");
                 txtNewPassword.Focus();
                 return;
             }
             else if (strNewPassword.Length > 12)
             {
-                Interaction.MsgBox("New password must be twelve letters or less long.");
+                MessageBox.Show("New password must be twelve letters or less long.");
                 txtNewPassword.Focus();
                 return;
             }

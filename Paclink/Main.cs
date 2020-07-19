@@ -356,7 +356,9 @@ namespace Paclink
             Globals.SiteDataDirectory = Globals.SiteRootDirectory + @"Data\";
             if (Globals.SiteBinDirectory.ToLower().IndexOf("bin") == -1)
             {
-                Interaction.MsgBox("Illegal Paclink directory structure...Paclink.exe " + @"Must be in the \Bin subdirectory as installed!", MsgBoxStyle.Critical, "Directory Error");
+                MessageBox.Show(
+                    "Illegal Paclink directory structure...Paclink.exe " + @"Must be in the \Bin subdirectory as installed!",
+                    "Directory Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 Environment.Exit(0);
             }
 
@@ -722,7 +724,7 @@ namespace Paclink
             dlgProperties.ShowDialog();
             if (DialogSiteProperties.IsValid() == false)
             {
-                Interaction.MsgBox("Paclink must have a valid configuration to continue...", MsgBoxStyle.Information);
+                MessageBox.Show("Paclink must have a valid configuration to continue...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Close();
             }
 
@@ -842,15 +844,15 @@ namespace Paclink
                     {
                         Process.Start(dlgViewLog.FileName);
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Interaction.MsgBox(Information.Err().Description, MsgBoxStyle.Information);
+                        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[Main.mnuView_Click] " + Information.Err().Description);
+                Logs.Exception("[Main.mnuView_Click] " + ex.Message);
             }
         } // mnuLogs_Click
 
@@ -869,15 +871,15 @@ namespace Paclink
                     {
                         Process.Start(objFileDialog.FileName);
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Interaction.MsgBox(Information.Err().Description, MsgBoxStyle.Information);
+                        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[Main.mnuDocumentation_Click] " + Information.Err().Description);
+                Logs.Exception("[Main.mnuDocumentation_Click] " + ex.Message);
             }
         } // mnuDocumentation_Click
 
@@ -888,9 +890,9 @@ namespace Paclink
             {
                 mnuPacketAGWChannels.Enabled = DialogAGWEngine.AGWLocation != 0;
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[Main.mnuFile_Click] " + Information.Err().Description);
+                Logs.Exception("[Main.mnuFile_Click] " + ex.Message);
             }
         } // mnuFile_Click
 
@@ -911,9 +913,9 @@ namespace Paclink
 
                 frmSaveFile = null;
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[Main.mnuBackup_Click] " + Information.Err().Description);
+                Logs.Exception("[Main.mnuBackup_Click] " + ex.Message);
             }
         } // mnuBackup_Click
 
@@ -933,9 +935,9 @@ namespace Paclink
                         Close();
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[Main.mnuRestoreSettings_Click] " + Information.Err().Description);
+                Logs.Exception("[Main.mnuRestoreSettings_Click] " + ex.Message);
             }
         } // mnuRestoreSettings_Click
 
@@ -952,9 +954,9 @@ namespace Paclink
             {
                 Help.ShowHelp(this, Globals.SiteRootDirectory + @"Help\Paclink.chm");
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[Main.mnuHelpContents_Click] " + Information.Err().Description);
+                Logs.Exception("[Main.mnuHelpContents_Click] " + ex.Message);
             }
         } // mnuHelpContents_Click
 

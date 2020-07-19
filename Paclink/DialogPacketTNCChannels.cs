@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO.Ports;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -165,7 +163,7 @@ namespace Paclink
             }
             else
             {
-                Interaction.MsgBox("Click 'Update Channel List' to download the list of available channels");
+                MessageBox.Show("Click 'Update Channel List' to download the list of available channels");
                 return false;
             }
 
@@ -281,7 +279,7 @@ namespace Paclink
                 rdoV24.Checked = !stcSelectedChannel.TTLLevel;
                 try
                 {
-                    txtFreqMHz.Text = Strings.Format(0.001 * double.Parse(stcSelectedChannel.RDOCenterFrequency, System.Globalization.NumberStyles.AllowDecimalPoint), "##00.000");
+                    txtFreqMHz.Text = (0.001 * double.Parse(stcSelectedChannel.RDOCenterFrequency, System.Globalization.NumberStyles.AllowDecimalPoint)).ToString("##00.000");
                 }
                 catch
                 {
@@ -336,7 +334,7 @@ namespace Paclink
             stcChannel.EnableAutoforward = true; // Packet Channels always enabled
             if (!rdoManual.Checked)
             {
-                stcChannel.RDOCenterFrequency = Strings.Format(1000 * double.Parse(txtFreqMHz.Text, System.Globalization.NumberStyles.AllowDecimalPoint), "##00000.0");
+                stcChannel.RDOCenterFrequency = (1000 * double.Parse(txtFreqMHz.Text, System.Globalization.NumberStyles.AllowDecimalPoint)).ToString("##00000.0");
             }
 
             stcChannel.RDOControlBaud = cmbRadioBaud.Text;
@@ -638,19 +636,19 @@ namespace Paclink
             cmbChannelName.Text = cmbChannelName.Text.Replace("|", "");
             if (string.IsNullOrEmpty(cmbTNCBaudRate.Text.Trim()))
             {
-                Interaction.MsgBox("Select TNC Baud rate!", MsgBoxStyle.Information, "No baud rate selected!");
+                MessageBox.Show("Select TNC Baud rate!", "No baud rate selected!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             if (string.IsNullOrEmpty(cmbOnAirBaud.Text.Trim()))
             {
-                Interaction.MsgBox("Select On Air Baud rate!", MsgBoxStyle.Information, "No baud rate selected!");
+                MessageBox.Show("Select On Air Baud rate!", "No baud rate selected!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             if (Channels.IsAccount(cmbChannelName.Text))
             {
-                Interaction.MsgBox(cmbChannelName.Text + " is in use as an account name...", MsgBoxStyle.Information);
+                MessageBox.Show(cmbChannelName.Text + " is in use as an account name...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 cmbChannelName.Focus();
                 return;
             }
@@ -660,21 +658,21 @@ namespace Paclink
                 if (string.IsNullOrEmpty(cmbRadioModel.Text.Trim()) | string.IsNullOrEmpty(cmbRadioBaud.Text.Trim()) | string.IsNullOrEmpty(cmbRadioPort.Text.Trim()))
 
                 {
-                    Interaction.MsgBox("The parameters for Radio control are not complete!", MsgBoxStyle.Information);
+                    MessageBox.Show("The parameters for Radio control are not complete!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
             }
 
             if (Channels.IsChannel(cmbChannelName.Text))
             {
-                Interaction.MsgBox("The channel name " + cmbChannelName.Text + " is already in use...", MsgBoxStyle.Information);
+                MessageBox.Show("The channel name " + cmbChannelName.Text + " is already in use...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 cmbChannelName.Focus();
             }
             else
             {
                 if (!System.IO.File.Exists(txtTNCConfigurationFile.Text))
                 {
-                    Interaction.MsgBox("Invalid TNC configuration file.", MsgBoxStyle.Information, "File Not Found");
+                    MessageBox.Show("Invalid TNC configuration file.", "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     txtTNCConfigurationFile.Focus();
                     return;
                 }
@@ -683,7 +681,7 @@ namespace Paclink
                 {
                     if (!Globals.WithinLimits(txtFreqMHz.Text, 2400, 29))
                     {
-                        Interaction.MsgBox("Frequency must be in MHz between 29.0 and 2400", MsgBoxStyle.Information, "Frequency Error");
+                        MessageBox.Show("Frequency must be in MHz between 29.0 and 2400", "Frequency Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         txtFreqMHz.Focus();
                         return;
                     }
@@ -693,7 +691,7 @@ namespace Paclink
                         if (!(cmbRadioModel.Text == "Kenwood TS-2000" & cmbTNCType.Text == "TS-2000 int" | cmbRadioModel.Text == "Kenwood TM-D700" & cmbTNCType.Text == "TM-D700 int" | cmbRadioModel.Text == "Kenwood TH-D7" & cmbTNCType.Text == "TH-D7 int"))
 
                         {
-                            Interaction.MsgBox("Radio Control and TNC must use different serial ports.", MsgBoxStyle.Information, "Serial Port Conflict");
+                            MessageBox.Show("Radio Control and TNC must use different serial ports.", "Serial Port Conflict", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             return;
                         }
                     }
@@ -717,9 +715,9 @@ namespace Paclink
         {
             if (cmbChannelName.Items.Contains(cmbChannelName.Text) == false)
             {
-                Interaction.MsgBox("The packet channel " + cmbChannelName.Text + " is not found...", MsgBoxStyle.Information);
+                MessageBox.Show("The packet channel " + cmbChannelName.Text + " is not found...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            else if (Interaction.MsgBox("Confirm removal of packet channel " + cmbChannelName.Text + "...", MsgBoxStyle.Question | MsgBoxStyle.YesNo) == MsgBoxResult.Yes)
+            else if (MessageBox.Show("Confirm removal of packet channel " + cmbChannelName.Text + "...", "Remove Channel", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 Channels.RemoveChannel(cmbChannelName.Text);
                 Channels.FillChannelCollection();
@@ -739,13 +737,13 @@ namespace Paclink
         {
             if (cmbChannelName.Items.Contains(cmbChannelName.Text) == false)
             {
-                Interaction.MsgBox("The packet channel " + cmbChannelName.Text + " is not found...", MsgBoxStyle.Information);
+                MessageBox.Show("The packet channel " + cmbChannelName.Text + " is not found...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
                 if (!System.IO.File.Exists(txtTNCConfigurationFile.Text))
                 {
-                    Interaction.MsgBox("Invalid TNC configuration file.", MsgBoxStyle.Information, "File Not Found");
+                    MessageBox.Show("Invalid TNC configuration file.", "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     txtTNCConfigurationFile.Focus();
                     return;
                 }
@@ -754,20 +752,20 @@ namespace Paclink
                 {
                     if (!Globals.WithinLimits(txtFreqMHz.Text, 2400, 29))
                     {
-                        Interaction.MsgBox("Frequency must be in MHz between 29.0 and 2400", MsgBoxStyle.Information, "Frequency Error");
+                        MessageBox.Show("Frequency must be in MHz between 29.0 and 2400", "Frequency Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         txtFreqMHz.Focus();
                         return;
                     }
 
                     if (cmbTNCType.Text == "TS-2000 int")
                     {
-                        Interaction.MsgBox("Radio Control of TS-2000 not possible when using internal TNC!", MsgBoxStyle.Information, "Control Limitation");
+                        MessageBox.Show("Radio Control of TS-2000 not possible when using internal TNC!", "Control Limitation", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         return;
                     }
 
                     if (rdoSerial.Checked & (cmbRadioPort.Text ?? "") == (cmbTNCSerialPort.Text ?? ""))
                     {
-                        Interaction.MsgBox("Radio Control and TNC must use different serial ports.", MsgBoxStyle.Information, "Serial Port Conflict");
+                        MessageBox.Show("Radio Control and TNC must use different serial ports.", "Serial Port Conflict", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         return;
                     }
                 }
@@ -878,11 +876,11 @@ namespace Paclink
             if (string.IsNullOrEmpty(strError))
             {
                 SetRMSList();
-                Interaction.MsgBox("The channel update completed successfully");
+                MessageBox.Show("The channel update completed successfully");
             }
             else
             {
-                Interaction.MsgBox(strError);
+                MessageBox.Show(strError);
             }
         }
 

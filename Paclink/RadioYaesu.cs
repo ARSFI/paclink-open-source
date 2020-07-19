@@ -4,8 +4,6 @@ using System.IO.Ports;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -134,9 +132,9 @@ namespace Paclink
                 OpenRadio(Channel.RDOModel);
                 return objSerial.IsOpen;
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[RadioYaesu.InitializeSerialPort] " + Information.Err().Description);
+                Logs.Exception("[RadioYaesu.InitializeSerialPort] " + e.Message);
                 return false;
             }
         } // InitializeSerialPort 
@@ -184,9 +182,9 @@ namespace Paclink
 
                 return true;
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[RadioYaesu.SetParameters] " + Information.Err().Description);
+                Logs.Exception("[RadioYaesu.SetParameters] " + e.Message);
                 return false;
             }
         } // SetParameters 
@@ -210,9 +208,9 @@ namespace Paclink
                     objSerial = null;
                 }
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[RadioYaesu.Close] " + Information.Err().Description);
+                Logs.Exception("[RadioYaesu.Close] " + e.Message);
             }
         } // Close 
 
@@ -313,9 +311,9 @@ namespace Paclink
                                 SendCommand("MD02;");                   // Set USB
                                 SendCommand("FA" + strFrequency + ";"); // Set frequency
                             }
-                            catch
+                            catch (Exception e)
                             {
-                                Logs.Exception("[RadioYaesu.SetFrequency FT-2000] " + Information.Err().Description);
+                                Logs.Exception("[RadioYaesu.SetFrequency FT-2000] " + e.Message);
                                 return false;
                             } // Earlier Yaesu radios...
 
@@ -542,7 +540,7 @@ namespace Paclink
             {
                 string strBuffer = "";
                 for (int intIndex = 0, loopTo = bytCommand.Length - 1; intIndex <= loopTo; intIndex++)
-                    strBuffer = strBuffer + "00" + Conversion.Hex(bytCommand[intIndex]).Right(2);
+                    strBuffer = strBuffer + "00" + bytCommand[intIndex].ToString("X").Right(2);
                 Globals.objSCSClient.SendRadioCommand("#TRX T " + strBuffer); // Use the Transfer capability of the TRX commands
             }
             else
@@ -566,7 +564,7 @@ namespace Paclink
                     // Must convert string back to ASCII (from Han's code)...
                     string strTemp = "";
                     for (int intIndex = 0, loopTo = strCommand.Length - 1; intIndex <= loopTo; intIndex++)
-                        strTemp = strTemp + ("00" + Conversion.Hex(Strings.Asc(strCommand.Substring(intIndex, 1)))).Right(2);
+                        strTemp = strTemp + ("00" + Globals.Asc(strCommand.Substring(intIndex, 1)[0]).ToString("X")).Right(2);
                     Globals.objSCSClient.SendRadioCommand("#TRX T " + strTemp); // Use the Transfer capability of the TRX commands
                 }
                 else
@@ -579,9 +577,9 @@ namespace Paclink
                 Thread.Sleep(100); // Delay for radio commands 
                 return true;
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[RadioYaesu.SendCommand] " + Information.Err().Description);
+                Logs.Exception("[RadioYaesu.SendCommand] " + e.Message);
                 Logs.Exception("[RadioYaesu.SendCommand] " + strCommand);
                 return false;
             }

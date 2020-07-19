@@ -1,6 +1,5 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
+using System.Windows.Forms;
 
 namespace Paclink
 {
@@ -16,12 +15,12 @@ namespace Paclink
             // First check all keys 1 to 100 for possible duplcate Account name
             for (int intIndex = 1; intIndex <= 100; intIndex++)
             {
-                objKey = Registry.CurrentUser.OpenSubKey(strPartialKey + Conversion.Hex(intIndex).PadLeft(8, '0'));
-                if (!Information.IsNothing(objKey))
+                objKey = Registry.CurrentUser.OpenSubKey(strPartialKey + intIndex.ToString("X").PadLeft(8, '0'));
+                if (objKey != null)
                 {
-                    if ((strAccount ?? "") == (Conversions.ToString(objKey.GetValue("Account Name", "")) ?? ""))
+                    if ((strAccount ?? "") == (objKey.GetValue("Account Name", "").ToString() ?? ""))
                     {
-                        Interaction.MsgBox("Account " + strAccount + " already exists in the local Outlook Express!", MsgBoxStyle.Exclamation);
+                        MessageBox.Show("Account " + strAccount + " already exists in the local Outlook Express!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         return;
                     }
                 }
@@ -29,10 +28,10 @@ namespace Paclink
             // no duplicats so put new account into the first empty space.
             for (int intIndex = 1; intIndex <= 100; intIndex++)
             {
-                objKey = Registry.CurrentUser.OpenSubKey(strPartialKey + Conversion.Hex(intIndex).PadLeft(8, '0'));
-                if (Information.IsNothing(objKey))
+                objKey = Registry.CurrentUser.OpenSubKey(strPartialKey + intIndex.ToString("X").PadLeft(8, '0'));
+                if (objKey == null)
                 {
-                    objKey = Registry.CurrentUser.CreateSubKey(strPartialKey + Conversion.Hex(intIndex).PadLeft(8, '0'));
+                    objKey = Registry.CurrentUser.CreateSubKey(strPartialKey + intIndex.ToString("X").PadLeft(8, '0'));
                     objKey.SetValue("Account Name", strAccount);
                     objKey.SetValue("Connection Type", 0);
                     objKey.SetValue("SMTP User Name", strAccount);
@@ -44,7 +43,7 @@ namespace Paclink
                     objKey.SetValue("POP3 Server", "Localhost");
                     objKey.SetValue("POP3 Prompt for Password", 0);
                     objKey.SetValue("POP3 Skip Account", 0);
-                    Interaction.MsgBox("Account " + strAccount + " has been added to your local Outlook Express." + Globals.CR + "Shut down and restart Outlook Express and be sure to set" + Globals.CR + " the account password in Outlook Express before using the account." + Globals.CR + "If your OE is not updated or you are using another Client" + Globals.CR + "you may add the account manually.", MsgBoxStyle.Information, "Account Added");
+                    MessageBox.Show("Account " + strAccount + " has been added to your local Outlook Express." + Globals.CR + "Shut down and restart Outlook Express and be sure to set" + Globals.CR + " the account password in Outlook Express before using the account." + Globals.CR + "If your OE is not updated or you are using another Client" + Globals.CR + "you may add the account manually.", "Account Added", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
 
 
@@ -62,7 +61,8 @@ namespace Paclink
                 var strSubKeys = objKey.GetSubKeyNames();
                 foreach (string sSubKey in strSubKeys)
                 {
-                    if (Information.IsNumeric(sSubKey))
+                    int temp = 0;
+                    if (int.TryParse(sSubKey, out temp))
                     {
                         if (KeyTest(strKey + sSubKey, strAccount))
                         {
@@ -76,7 +76,7 @@ namespace Paclink
         private static bool KeyTest(string strKey, string strAccount)
         {
             var objKey = Registry.CurrentUser.OpenSubKey(strKey);
-            if ((strAccount ?? "") == (Conversions.ToString(objKey.GetValue("Account Name", "")) ?? ""))
+            if ((strAccount ?? "") == (objKey.GetValue("Account Name", "").ToString() ?? ""))
                 return true;
             return false;
         } // KeyTest

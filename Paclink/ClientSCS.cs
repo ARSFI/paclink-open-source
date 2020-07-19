@@ -6,8 +6,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -159,12 +157,12 @@ namespace Paclink
                     objProtocol = null;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[PTCIIClient.Close] " + Information.Err().Description);
+                Logs.Exception("[PTCIIClient.Close] " + ex.Message);
             }
 
-            if (!Information.IsNothing(objHostPort))
+            if (objHostPort != null)
             {
                 objHostPort.Close();
                 Thread.Sleep(Globals.intComCloseTime);
@@ -219,9 +217,9 @@ namespace Paclink
                         enmState = ELinkStates.Initialized;
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("[PTCIIClient.Connect B] " + Information.Err().Description);
+                    Logs.Exception("[PTCIIClient.Connect B] " + ex.Message);
                 }
             }
 
@@ -231,7 +229,7 @@ namespace Paclink
                 if (Globals.stcSelectedChannel.RDOControl == "Serial" | Globals.stcSelectedChannel.RDOControl == "Via PTCII")
                 {
                     Globals.objSCSClient = this;
-                    if (Information.IsNothing(Globals.objRadioControl))
+                    if (Globals.objRadioControl == null)
                     {
                         if (Globals.stcSelectedChannel.RDOModel.StartsWith("Kenwood"))
                         {
@@ -266,9 +264,9 @@ namespace Paclink
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[PTCIIClient.Connect D] " + Information.Err().Description);
+                Logs.Exception("[PTCIIClient.Connect D] " + ex.Message);
             }
 
             try
@@ -304,9 +302,9 @@ namespace Paclink
                     SendCommand("#PSKA " + Globals.stcSelectedChannel.TNCPSKLevel.ToString(), 31);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[PTCIIClient.Connect E] " + Information.Err().Description);
+                Logs.Exception("[PTCIIClient.Connect E] " + ex.Message);
             }
 
             var strTemp = default(string);
@@ -314,9 +312,9 @@ namespace Paclink
             {
                 try
                 {
-                    if (!Information.IsNothing(Globals.objRadioControl))
+                    if (Globals.objRadioControl != null)
                         Globals.objRadioControl.SetParameters(ref Globals.stcSelectedChannel);
-                    if (!Information.IsNothing(ConnectScript) && ConnectScript.Length > 0) // TODO: needs testing
+                    if (ConnectScript != null && ConnectScript.Length > 0) // TODO: needs testing
                     {
                         if (RunScript(ref strVia, ref strTarget)) // Activates scripting, modifies sVia and sTarget
                         {
@@ -343,9 +341,9 @@ namespace Paclink
                         strTemp = "C " + Globals.stcSelectedChannel.TNCPort.ToString() + ":" + Globals.stcSelectedChannel.RemoteCallsign;
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("[PTCIIClient.Connect F] " + Information.Err().Description);
+                    Logs.Exception("[PTCIIClient.Connect F] " + ex.Message);
                 }
             }
             else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
@@ -359,7 +357,8 @@ namespace Paclink
                         strCenterFreq = strCenterFreq.Substring(0, intIndex - 1);
                     }
 
-                    if (!Information.IsNumeric(strCenterFreq) | string.IsNullOrEmpty(Globals.stcSelectedChannel.RemoteCallsign.Trim()) | !blnAutomaticConnect)
+                    float tmpVal = 0.0F;
+                    if (!float.TryParse(strCenterFreq, out tmpVal) | string.IsNullOrEmpty(Globals.stcSelectedChannel.RemoteCallsign.Trim()) | !blnAutomaticConnect)
                     {
 
                         // This handles manual pactor connections or unspecified automatic channels...
@@ -370,7 +369,7 @@ namespace Paclink
                         }
 
                         blnWaitingForManualConnect = true;
-                        if (Information.IsNothing(Globals.dlgPactorConnect))
+                        if (Globals.dlgPactorConnect == null)
                         {
                             if (!string.IsNullOrEmpty(Globals.stcEditedSelectedChannel.RemoteCallsign))
                             {
@@ -388,7 +387,7 @@ namespace Paclink
                         {
                             MyApplication.Forms.Main.Refresh();
                             blnNoIdentification = true;
-                            if (!Information.IsNothing(objProtocol))
+                            if (objProtocol != null)
                             {
                                 objProtocol.LinkStateChange(EConnection.Disconnected);
                                 objProtocol = null;
@@ -411,7 +410,7 @@ namespace Paclink
                     else
                     {
                         // Set the radio parameters for an automatic channel...
-                        if (!Information.IsNothing(Globals.objRadioControl))
+                        if (Globals.objRadioControl != null)
                             Globals.objRadioControl.SetParameters(ref Globals.stcSelectedChannel);
                         if (Globals.stcSelectedChannel.TNCBusyHold)
                         {
@@ -443,9 +442,9 @@ namespace Paclink
                         }
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("[PTCIIClient.Connect G] " + Information.Err().Description);
+                    Logs.Exception("[PTCIIClient.Connect G] " + ex.Message);
                 }
 
                 try
@@ -460,9 +459,9 @@ namespace Paclink
                     blnNoIdentification = false;
                     blnDisconnectProcessed = false;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("[PTCIIClient.Connect H] " + Information.Err().Description);
+                    Logs.Exception("[PTCIIClient.Connect H] " + ex.Message);
                 }
             }
 
@@ -476,9 +475,9 @@ namespace Paclink
                 SendCommand("%B", Globals.stcSelectedChannel.TNCPort);
                 SendCommand("M N", Globals.stcSelectedChannel.TNCPort);
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[PTCIIClient.Connect J] " + Information.Err().Description);
+                Logs.Exception("[PTCIIClient.Connect J] " + ex.Message);
             }
 
             return true;
@@ -556,9 +555,9 @@ namespace Paclink
                         }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[PTCIIClient.SendData] Port=" + Globals.stcSelectedChannel.TNCPort.ToString() + " - " + Information.Err().Description);
+                Logs.Exception("[PTCIIClient.SendData] Port=" + Globals.stcSelectedChannel.TNCPort.ToString() + " - " + ex.Message);
             }
         }  // DataToSend (Byte()) 
 
@@ -569,7 +568,7 @@ namespace Paclink
             if (stcConnectedCall.PendingDisconnect | enmState == ELinkStates.Connecting)
             {
                 ImmediateDisconnect();
-                if (!Information.IsNothing(objProtocol))
+                if (objProtocol != null)
                 {
                     objProtocol.LinkStateChange(EConnection.Disconnected);
                     objProtocol = null;
@@ -595,7 +594,7 @@ namespace Paclink
             // Tests for any script bailouts...
 
             var strEndText = new string[] { "DISCONNECTED", "TIMEOUT", "EXCEEDED", "FAILURE", "BUSY" };
-            for (int intIndex = 0, loopTo = Information.UBound(strEndText); intIndex <= loopTo; intIndex++)
+            for (int intIndex = 0, loopTo = (strEndText.Length - 1); intIndex <= loopTo; intIndex++)
             {
                 if (strText.ToUpper().IndexOf(strEndText[intIndex]) != -1)
                     return true;
@@ -652,7 +651,7 @@ namespace Paclink
             // Parse the connection script, if any, into the ConnectScript string array...
             if (!string.IsNullOrEmpty(Globals.stcSelectedChannel.TNCScript))
             {
-                ConnectScript = Globals.stcSelectedChannel.TNCScript.Replace(Globals.LF, "").Split(Conversions.ToChar(Globals.CR));
+                ConnectScript = Globals.stcSelectedChannel.TNCScript.Replace(Globals.LF, "").Split(Convert.ToChar(Globals.CR));
             }
 
             if (objHostPort.Startup())
@@ -726,7 +725,7 @@ namespace Paclink
                     return;
                 }
                 // All other timeout attempts take this path
-                if (!Information.IsNothing(objProtocol))
+                if (objProtocol != null)
                 {
                     objProtocol.LinkStateChange(EConnection.Disconnected);
                     objProtocol = null;
@@ -758,7 +757,7 @@ namespace Paclink
                     Globals.queChannelDisplay.Enqueue("R*** Connection timeout");
                     blnStandby = false; // Preset standby flag false
                     ImmediateDisconnect();
-                    if (!Information.IsNothing(objProtocol))
+                    if (objProtocol != null)
                     {
                         objProtocol.LinkStateChange(EConnection.Disconnected);
                         objProtocol = null;
@@ -820,102 +819,102 @@ namespace Paclink
                 // v4 = Number of tries on current operation
                 // v5 = Link state
                 strTokens[5] = strTokens[5].Substring(0, strTokens[5].Length - 1);
-                if (Information.IsNumeric(strTokens[5]))
+                int tmpVal = 0;
+                if (int.TryParse(strTokens[5], out tmpVal))
                 {
-                    var switchExpr = strTokens[5];
-                    switch (switchExpr)
+                    switch (tmpVal)
                     {
-                        case "0":
+                        case 0:
                             {
                                 strReport = "Packet - Disconnected";
                                 break;
                             }
 
-                        case "1":
+                        case 1:
                             {
                                 strReport = "Packet - Linking";
                                 break;
                             }
 
-                        case "2":
+                        case 2:
                             {
                                 strReport = "Packet - Frame Reject";
                                 break;
                             }
 
-                        case "3":
+                        case 3:
                             {
                                 strReport = "Packet - Disconnect Request";
                                 break;
                             }
 
-                        case "4":
+                        case 4:
                             {
                                 strReport = "Packet - Information Transfer";
                                 break;
                             }
 
-                        case "5":
+                        case 5:
                             {
                                 strReport = "Packet - Reject Frame Sent";
                                 break;
                             }
 
-                        case "6":
+                        case 6:
                             {
                                 strReport = "Packet - Waiting Acknowledgement";
                                 break;
                             }
 
-                        case "7":
+                        case 7:
                             {
                                 strReport = "Packet - Device Busy";
                                 break;
                             }
 
-                        case "8":
+                        case 8:
                             {
                                 strReport = "Packet - Remote Device Busy";
                                 break;
                             }
 
-                        case "9":
+                        case 9:
                             {
                                 strReport = "Packet - Both Devices Busy";
                                 break;
                             }
 
-                        case "10":
+                        case 10:
                             {
                                 strReport = "Packet - Waiting Acknowledgement and Device Busy";
                                 break;
                             }
 
-                        case "11":
+                        case 11:
                             {
                                 strReport = "Packet - Waiting Acknowledgement and Remote Busy";
                                 break;
                             }
 
-                        case "12":
+                        case 12:
                             {
                                 strReport = "Packet - Waiting Acknowledgement and Both Devices Busy";
                                 break;
                             }
 
-                        case "13":
+                        case 13:
                             {
                                 strReport = "Packet - Reject Frame Send and Device Busy";
                                 break;
                             }
 
-                        case "14":
+                        case 14:
                             {
                                 strReport = "Packet - Reject Frame Send and Remote Busy";
                                 break;
                             }
 
-                        case "15":
+                        case 15:
                             {
                                 strReport = "Packet - Reject Frame Send and Both Devices Busy";
                                 break;
@@ -923,8 +922,8 @@ namespace Paclink
                     }
 
                     // Update the count of pending frames in the TNC.
-                    if (Information.IsNumeric(strTokens[2]))
-                        objHostPort.intTNCFramesPending = Convert.ToInt32(strTokens[2]);
+                    if (int.TryParse(strTokens[2], out tmpVal))
+                        objHostPort.intTNCFramesPending = tmpVal;
                     return;
                 }
             }
@@ -932,9 +931,10 @@ namespace Paclink
             // Process reply from a %T request for Pactor bytes sent...
             if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC & enmState == ELinkStates.Connected)
             {
-                if (Information.IsNumeric(strData))
+                int tmpVal = 0;
+                if (int.TryParse(strData, out tmpVal))
                 {
-                    int intNewBytesSentCount = Convert.ToInt32(strData);
+                    int intNewBytesSentCount = tmpVal;
                     if (intNewBytesSentCount > 0)
                     {
                         if (intBytesSentCount > intNewBytesSentCount)
@@ -1026,9 +1026,9 @@ namespace Paclink
                                 }
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Logs.Exception("[PTCIIClient.OnPTCControl] " + Information.Err().Description);
+                        Logs.Exception("[PTCIIClient.OnPTCControl] " + ex.Message);
                         return;
                     }
 
@@ -1047,7 +1047,7 @@ namespace Paclink
                 {
                     blnDisconnectProcessed = true;
                     Globals.queChannelDisplay.Enqueue("P" + strData + "  @ " + Globals.TimestampEx());
-                    if (!Information.IsNothing(objProtocol) & Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
+                    if (objProtocol != null & Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
                     {
                         // A connection was established which created objProtocol...
                         objProtocol.LinkStateChange(EConnection.Disconnected);
@@ -1061,7 +1061,7 @@ namespace Paclink
                             enmState = ELinkStates.Disconnected;
                         }
                     }
-                    else if (!Information.IsNothing(objProtocol) & Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC & (blnAutomaticConnect | blnNormalDisconnect))
+                    else if (objProtocol != null & Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC & (blnAutomaticConnect | blnNormalDisconnect))
                     {
                         // A connection was established which created objProtocol
                         // SendIdentification()
@@ -1279,7 +1279,7 @@ namespace Paclink
                         objHostPort.blnISS = false;
                         if (stcConnectedCall.PendingDisconnect)
                         {
-                            if (!Information.IsNothing(objProtocol))
+                            if (objProtocol != null)
                             {
                                 objProtocol.LinkStateChange(EConnection.Disconnected);
                                 objProtocol = null;
@@ -1439,7 +1439,7 @@ namespace Paclink
             // Instantiate a new SCSHostPort...
             try
             {
-                if (!Information.IsNothing(objHostPort))
+                if (objHostPort != null)
                 {
                     objHostPort.Close();
                     Thread.Sleep(Globals.intComCloseTime);
@@ -1463,9 +1463,9 @@ namespace Paclink
                     return true;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[Client.OpenSerialPort] " + Information.Err().Description);
+                Logs.Exception("[Client.OpenSerialPort] " + ex.Message);
                 objHostPort = null;
                 return false;
             }
@@ -1537,7 +1537,7 @@ namespace Paclink
                         }
                     }
 
-                    if (Information.UBound(ConnectScript) == 0)
+                    if ((ConnectScript.Length - 1) == 0)
                     {
                         Globals.queChannelDisplay.Enqueue("R*** Requesting connection to " + Globals.stcSelectedChannel.RemoteCallsign + " via " + strVia + " at " + Globals.Timestamp());
 
@@ -1585,9 +1585,9 @@ namespace Paclink
                     objHostPort.Poll();
                     var dttStart = DateTime.Now;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("[PTCHostMode.SendCommand(Byte)] " + Information.Err().Description);
+                    Logs.Exception("[PTCHostMode.SendCommand(Byte)] " + ex.Message);
                 }
             }
         }  // SendCommand (Byte)
@@ -1605,9 +1605,9 @@ namespace Paclink
                     objHostPort.Poll();
                     var dttStart = DateTime.Now;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("[PTCHostMode.SendCommand(String)] " + Information.Err().Description + " Command:" + intChannel.ToString() + "/" + strCommand);
+                    Logs.Exception("[PTCHostMode.SendCommand(String)] " + ex.Message + " Command:" + intChannel.ToString() + "/" + strCommand);
                 }
             }
         }  // SendCommand (String)
@@ -1706,7 +1706,7 @@ namespace Paclink
                         }
                         else if (ConnectScript.Length > intConnectScriptPtr + 1)
                         {
-                            blnTextFound = Strings.InStr(Text.ToUpper(), ConnectScript[intConnectScriptPtr + 1]) != 0;
+                            blnTextFound = Text.ToUpper().Contains(ConnectScript[intConnectScriptPtr + 1]);
                             if (blnTextFound & intConnectScriptPtr + 2 < ConnectScript.Length)
                             {
                                 intScriptTimer = 0; // Reset the script timer
@@ -1878,9 +1878,9 @@ namespace Paclink
                 bytPendingFrame[bytPendingFrame.Length - 2] = Convert.ToByte(intCRC & 0xFF);
                 bytPendingFrame[bytPendingFrame.Length - 1] = Convert.ToByte((intCRC & 0xFF00) / 256);
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[SCSHostPort.AddCRC] " + Information.Err().Description);
+                Logs.Exception("[SCSHostPort.AddCRC] " + ex.Message);
             }
         } // AddCRC
 
@@ -1971,9 +1971,9 @@ namespace Paclink
                         objSerial = null;
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("[SCSHostPort.Close] " + Information.Err().Description);
+                    Logs.Exception("[SCSHostPort.Close] " + ex.Message);
                 }
             }
         } // Close
@@ -2058,7 +2058,7 @@ namespace Paclink
             sbdResponse.Length = 0;
             try
             {
-                objSerial.Write(Conversions.ToString(chrCommand));
+                objSerial.Write(Convert.ToString(chrCommand));
             }
             catch
             {
@@ -2734,7 +2734,7 @@ namespace Paclink
                 bytFrame[3] = 1;
                 bytFrame[4] = Convert.ToByte(strCommand.Length - 1);
                 for (int intIndex = 5, loopTo = bytFrame[4] + 5; intIndex <= loopTo; intIndex++)
-                    bytFrame[intIndex] = Convert.ToByte(Strings.Asc(strCommand[intIndex - 5]));
+                    bytFrame[intIndex] = Convert.ToByte(Globals.Asc(strCommand[intIndex - 5]));
                 queCommandOutbound.Enqueue(bytFrame);
             }
             else
@@ -3165,7 +3165,7 @@ namespace Paclink
                 // Set the TNC to host mode...
                 StartCRCExtendedHostMode();
                 if (Globals.cllFastStart.Contains(Globals.stcSelectedChannel.ChannelName) == false)
-                    Globals.cllFastStart.Add(Globals.stcSelectedChannel.ChannelName, Globals.stcSelectedChannel.ChannelName);
+                    Globals.cllFastStart.Add(Globals.stcSelectedChannel.ChannelName);
                 return true;
             }
             catch (Exception ex)

@@ -383,7 +383,7 @@ namespace Paclink
                     else
                     {
                         Array.Copy(Data, 0, Packet, 0, Packet.Length);
-                        var bytBuffer = new byte[Information.UBound(Data) - Packet.Length + 1];
+                        var bytBuffer = new byte[(Data.Length - 1) - Packet.Length + 1];
                         Array.Copy(Data, Packet.Length, bytBuffer, 0, Data.Length - Packet.Length);
                         Data = bytBuffer;
                         bytBuffer = null;
@@ -661,7 +661,7 @@ namespace Paclink
         {
             int nOriginalSize;
             nOriginalSize = Buffer.Length;
-            Array.Resize(ref Buffer, Buffer.Length + Information.UBound(Incoming) + 1);
+            Array.Resize(ref Buffer, Buffer.Length + (Incoming.Length - 1) + 1);
             Array.Copy(Incoming, 0, Buffer, nOriginalSize, Incoming.Length);
         } // AppendBuffer
 
@@ -911,21 +911,21 @@ namespace Paclink
                     strTemp = " " + ConnectScript[0].ToUpper().Trim();
                     // This strips off any leading V or Via (case insensitive)
                     // and skips over any syntax "Connect via"
-                    intPt = Strings.InStr(strTemp, " V ");
-                    if (intPt != 0)
+                    intPt = strTemp.IndexOf(" V ");
+                    if (intPt != -1)
                     {
                         Via = strTemp.Substring(intPt + 2).Trim();
                     }
                     else
                     {
-                        intPt = Strings.InStr(strTemp, " VIA ");
-                        if (intPt != 0)
+                        intPt = strTemp.IndexOf(" VIA ");
+                        if (intPt != -1)
                         {
                             Via = strTemp.Substring(intPt + 4).Trim();
                         }
                     }
 
-                    if (Information.UBound(ConnectScript) == 0)
+                    if ((ConnectScript.Length - 1) == 0)
                     {
                         // simple via connect, just a single line (not a true script)
                         intConnectScriptPtr = -1; // Set Script Pointer to Inactive sVia is updated, sTarget is unchanged
@@ -995,7 +995,7 @@ namespace Paclink
                         }
                         else if (ConnectScript.Length > intConnectScriptPtr + 1)
                         {
-                            blnTextFound = Strings.InStr(Text.ToUpper(), ConnectScript[intConnectScriptPtr + 1]) != 0;
+                            blnTextFound = Text.ToUpper().Contains(ConnectScript[intConnectScriptPtr + 1]);
                             if (blnTextFound & intConnectScriptPtr + 2 < ConnectScript.Length)
                             {
                                 intScriptTimer = 0; // Reset the script timer
@@ -1039,15 +1039,15 @@ namespace Paclink
                 objASCIIEncoding.GetBytes("D", 0, 1, bytTemp, 4);
                 objASCIIEncoding.GetBytes(Globals.SiteCallsign, 0, Globals.SiteCallsign.Length, bytTemp, 8);
                 objASCIIEncoding.GetBytes(From, 0, From.Length, bytTemp, 18);
-                Array.Copy(ComputeLengthB(Information.UBound(bytData) + 1), 0, bytTemp, 28, 4);
+                Array.Copy(ComputeLengthB((bytData.Length - 1) + 1), 0, bytTemp, 28, 4);
                 AppendBuffer(ref bytTemp, bytData);
                 try
                 {
                     objTCPPort.GetStream().Write(bytTemp, 0, bytTemp.Length);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("[ClientAGW.SequenceScript] " + Information.Err().Description);
+                    Logs.Exception("[ClientAGW.SequenceScript] " + ex.Message);
                 }
             }
 
@@ -1058,7 +1058,7 @@ namespace Paclink
         private bool EndScript(string sText)
         {
             var EndText = new string[] { "DISCONNECTED", "TIMEOUT", "EXCEEDED", "FAILURE", "BUSY" };
-            for (int i = 0, loopTo = Information.UBound(EndText); i <= loopTo; i++)
+            for (int i = 0, loopTo = (EndText.Length - 1); i <= loopTo; i++)
             {
                 if (sText.ToUpper().IndexOf(EndText[i]) != -1)
                     return true;
@@ -1073,15 +1073,15 @@ namespace Paclink
             string strTemp;
             int intPt;
             strTemp = Script.Trim().ToUpper();
-            intPt = Strings.InStr(strTemp, "C ");
-            if (intPt != 0)
+            intPt = strTemp.IndexOf("C ");
+            if (intPt != -1)
             {
                 strTemp = strTemp.Substring(intPt + 1).Trim();
             }
             else
             {
-                intPt = Strings.InStr(strTemp, "CONNECT ");
-                if (intPt != 0)
+                intPt = strTemp.IndexOf("CONNECT ");
+                if (intPt != -1)
                 {
                     strTemp = strTemp.Substring(intPt + 7).Trim();
                 }
@@ -1258,9 +1258,9 @@ namespace Paclink
                         }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[ClientAGW.ProcessReceivedFrame] Frame Type:" + strFrameType + " / " + Information.Err().Description);
+                Logs.Exception("[ClientAGW.ProcessReceivedFrame] Frame Type:" + strFrameType + " / " + ex.Message);
             }
         } // ProcessReceivedFrame 
     }

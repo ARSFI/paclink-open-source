@@ -6,8 +6,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -190,7 +188,7 @@ namespace Paclink
             // This now handles control for both Packet and Pactor
             if (Globals.stcSelectedChannel.RDOControl == "Serial")
             {
-                if (Information.IsNothing(Globals.objRadioControl))
+                if (Globals.objRadioControl == null)
                 {
                     if (Globals.stcSelectedChannel.RDOModel.StartsWith("Kenwood"))
                     {
@@ -225,7 +223,7 @@ namespace Paclink
 
             if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
             {
-                if (!Information.IsNothing(Globals.objRadioControl))
+                if (Globals.objRadioControl != null)
                     Globals.objRadioControl.SetParameters(ref Globals.stcSelectedChannel);
                 // Set TNC to packet mode...
                 objHostPort.HostCommand("PA");
@@ -243,7 +241,7 @@ namespace Paclink
                 }
                 else
                 {
-                    aryConnectScriptLines = Globals.stcSelectedChannel.TNCScript.Replace(Globals.LF, "").ToUpper().Split(Conversions.ToChar(Globals.CR));
+                    aryConnectScriptLines = Globals.stcSelectedChannel.TNCScript.Replace(Globals.LF, "").ToUpper().Split(Convert.ToChar(Globals.CR));
                     blnInScript = true;
                     if (!ConnectionScript())
                     {
@@ -266,7 +264,8 @@ namespace Paclink
                     return false;
                 }
                 // This handles manual Pactor connections or unspecified automatic channels...
-                if (!Information.IsNumeric(Globals.ExtractFreq(ref Globals.stcSelectedChannel.RDOCenterFrequency)) || string.IsNullOrEmpty(Globals.stcSelectedChannel.RemoteCallsign.Trim()) || !blnAutomatic)
+                float tmpVal = 0.0F;
+                if (!float.TryParse(Globals.ExtractFreq(ref Globals.stcSelectedChannel.RDOCenterFrequency), out tmpVal) || string.IsNullOrEmpty(Globals.stcSelectedChannel.RemoteCallsign.Trim()) || !blnAutomatic)
                 {
                     if (Globals.dlgPactorConnect is object)
                     {
@@ -286,7 +285,7 @@ namespace Paclink
                     Globals.dlgPactorConnect.ShowDialog();
                     if (Globals.dlgPactorConnect.DialogResult == DialogResult.Cancel)
                     {
-                        if (!Information.IsNothing(objProtocol))
+                        if (objProtocol != null)
                         {
                             objProtocol.LinkStateChange(EConnection.Disconnected);
                             objProtocol = null;
@@ -306,7 +305,7 @@ namespace Paclink
                     if (!Globals.blnPactorDialogResuming)
                         Globals.stcEditedSelectedChannel = default;
                 }
-                else if (!Information.IsNothing(Globals.objRadioControl))
+                else if (Globals.objRadioControl != null)
                     Globals.objRadioControl.SetParameters(ref Globals.stcSelectedChannel);
 
                 // Start a Pactor call...
@@ -511,7 +510,7 @@ namespace Paclink
                     Globals.queChannelDisplay.Enqueue("G     #Script(" + (1 + intIndex).ToString() + "):" + aryConnectScriptLines[intIndex + 1]);
                 }
 
-                if (!Information.IsNothing(objProtocol))
+                if (objProtocol != null)
                     objProtocol.ChannelInput(strScriptResponse);
                 return true;
             }
@@ -571,7 +570,7 @@ namespace Paclink
             // Tests for any script bailouts...
 
             var strEndText = new string[] { "DISCONNECTED", "TIMEOUT", "EXCEEDED", "FAILURE", "BUSY" };
-            for (int intIndex = 0, loopTo = Information.UBound(strEndText); intIndex <= loopTo; intIndex++)
+            for (int intIndex = 0, loopTo = (strEndText.Length - 1); intIndex <= loopTo; intIndex++)
             {
                 if (strText.ToUpper().IndexOf(strEndText[intIndex]) != -1)
                     return true;
@@ -710,7 +709,7 @@ namespace Paclink
             {
                 if (queStatusReports.Count > 0)
                 {
-                    return Conversions.ToString(queStatusReports.Dequeue());
+                    return Convert.ToString(queStatusReports.Dequeue());
                 }
                 else
                 {
@@ -773,10 +772,10 @@ namespace Paclink
                     Globals.queChannelDisplay.Enqueue("G*** Serial port " + Globals.stcSelectedChannel.TNCSerialPort + " opened");
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 Globals.queChannelDisplay.Enqueue("R*** Failed to open serial port on " + Globals.stcSelectedChannel.TNCSerialPort + ". Port may be in use by another application.");
-                Logs.Exception("[PortWA8DEDHost.OpenSerialPortHostMode] " + Information.Err().Description);
+                Logs.Exception("[PortWA8DEDHost.OpenSerialPortHostMode] " + ex.Message);
                 // objSerial.Dispose()
                 objSerial = null;
                 return;
@@ -1065,7 +1064,7 @@ namespace Paclink
                     // Non-host mode processing...
                     if (blnHostMode == false)
                     {
-                        strCommandResponse += Conversions.ToString((char)bytSingle);
+                        strCommandResponse += Convert.ToString((char)bytSingle);
                         continue;
                     }
 
@@ -1251,9 +1250,9 @@ namespace Paclink
                         }
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("WA8DEDHostPort.PollOutgoing: " + Information.Err().Description);
+                    Logs.Exception("WA8DEDHostPort.PollOutgoing: " + ex.Message);
                 }
             }
         } // PollOutgoing
@@ -1268,7 +1267,7 @@ namespace Paclink
             else if (strResponse.StartsWith("OPPG"))
             {
                 chrPactorState = strResponse[4];
-                if (Conversions.ToString(strResponse[5]) == "S")
+                if (Convert.ToString(strResponse[5]) == "S")
                 {
                     blnPactorSending = true;
                 }
@@ -1368,8 +1367,8 @@ namespace Paclink
 
         private void ProcessStatusReports(string strStatus)
         {
-            intPacketsOutstanding = Strings.Asc(strStatus[4]) - 0x30;
-            int intRetries = Strings.Asc(strStatus[5]) - 0x30;
+            intPacketsOutstanding = Globals.Asc(strStatus[4]) - 0x30;
+            int intRetries = Globals.Asc(strStatus[5]) - 0x30;
             string strReport = "Outstanding packets: " + intPacketsOutstanding.ToString() + "   Retrys: " + intRetries.ToString() + "   " + strStatus.Substring(7);
             Globals.queStateDisplay.Enqueue(strReport + "  " + Globals.ProgressBarStatus());
         } // ProcessPollResponse
@@ -1391,7 +1390,7 @@ namespace Paclink
             // Confirm that the TNC is alive. If not start a full configuration...
             if (blnFastStart == true)
             {
-                objSerial.Write(Conversions.ToString('\u0003'));
+                objSerial.Write(Convert.ToString('\u0003'));
                 if (WaitOnNonHostCommandResponse() == false)
                     blnFastStart = false;
             }
@@ -1491,7 +1490,7 @@ namespace Paclink
             blnClearToSend = true;
             if (Globals.cllFastStart.Contains(Globals.stcSelectedChannel.ChannelName) == false)
             {
-                Globals.cllFastStart.Add(Globals.stcSelectedChannel.ChannelName, Globals.stcSelectedChannel.ChannelName);
+                Globals.cllFastStart.Add(Globals.stcSelectedChannel.ChannelName);
             }
         } // ConfigureTNC
 
@@ -1509,7 +1508,7 @@ namespace Paclink
 
             // Test for a cmd: response...
             strCommandResponse = "";
-            objSerial.Write(Conversions.ToString('\u0003'));
+            objSerial.Write(Convert.ToString('\u0003'));
             if (WaitOnNonHostCommandResponse() == true)
             {
                 return true;
@@ -1542,7 +1541,7 @@ namespace Paclink
             }
 
             // Test again for a cmd: response...
-            objSerial.Write(Conversions.ToString('\u0003'));
+            objSerial.Write(Convert.ToString('\u0003'));
             if (WaitOnNonHostCommandResponse() == true)
             {
                 return true;

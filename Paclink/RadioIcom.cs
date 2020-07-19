@@ -3,8 +3,6 @@ using System.IO.Ports;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -118,7 +116,7 @@ namespace Paclink
             // Opens the serial port used to control the radio. Returns true if port opens...
 
             strCIVAddress = Channel.CIVAddress;
-            bytCIVAddress = Convert.ToByte("&H" + strCIVAddress);
+            bytCIVAddress = byte.Parse(strCIVAddress, System.Globalization.NumberStyles.HexNumber);
             if (Channel.RDOControl == "Via PTCII")
             {
                 blnViaPTC = true;
@@ -152,9 +150,9 @@ namespace Paclink
                 objSerial.DiscardOutBuffer();
                 return objSerial.IsOpen;
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[RadioIcom.InitializeSerialPort] " + Information.Err().Description);
+                Logs.Exception("[RadioIcom.InitializeSerialPort] " + ex.Message);
                 return false;
             }
         }   // InitializeSerialPort 
@@ -195,9 +193,9 @@ namespace Paclink
                     objSerial = null;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[RadioIcom.Close] " + Information.Err().Description);
+                Logs.Exception("[RadioIcom.Close] " + ex.Message);
             }
         } // Close 
 
@@ -316,9 +314,9 @@ namespace Paclink
 
                 SetCIVFrequency(intHertz);  // Set radio frequency
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[RadioIcom.SetFrequency] " + Information.Err().Description);
+                Logs.Exception("[RadioIcom.SetFrequency] " + ex.Message);
                 return false;
             }
 
@@ -403,8 +401,8 @@ namespace Paclink
             strBuffer = "$PICOA,90," + strCIVAddress + "," + strCommand;
             var loopTo = strBuffer.Length - 1;
             for (intIndex = 1; intIndex <= loopTo; intIndex++)
-                intCheckSum = intCheckSum ^ Strings.Asc(strBuffer.Substring(intIndex, 1));
-            strCheckSum = "*" + "0" + Conversion.Hex(intCheckSum).Right(2);
+                intCheckSum = intCheckSum ^ Globals.Asc(strBuffer.Substring(intIndex, 1)[0]);
+            strCheckSum = "*" + "0" + intCheckSum.ToString("X").Right(2);
             ComputeNMEACommandRet = strBuffer + strCheckSum + Globals.CRLF;
             return ComputeNMEACommandRet;
         } // ComputeNMEACommand
@@ -417,7 +415,7 @@ namespace Paclink
             {
                 string strBuffer = "";
                 for (int intIndex = 0, loopTo = bytCommand.Length - 1; intIndex <= loopTo; intIndex++)
-                    strBuffer = strBuffer + "00" + Conversion.Hex(bytCommand[intIndex]).Right(2);
+                    strBuffer = strBuffer + "00" + (bytCommand[intIndex]).ToString("X").Right(2);
                 Globals.objSCSClient.SendRadioCommand("#TRX T " + strBuffer); // Use the Transfer capability of the TRX commands
                 Thread.Sleep(100);   // W4PHS
             }
@@ -440,7 +438,7 @@ namespace Paclink
                 {
                     string strBuffer = "";
                     for (int intIndex = 0, loopTo = strCommand.Length - 1; intIndex <= loopTo; intIndex++)
-                        strBuffer = strBuffer + ("00" + Conversion.Hex(Strings.Asc(strCommand.Substring(intIndex, 1)))).Right(2);
+                        strBuffer = strBuffer + ("00" + Globals.Asc(strCommand.Substring(intIndex, 1)[0]).ToString("X")).Right(2);
                     Globals.objSCSClient.SendRadioCommand("#TRX T " + strBuffer); // Use the Transfer capability of the TRX commands
                     Thread.Sleep(100);   // W4PHS
                 }
@@ -454,9 +452,9 @@ namespace Paclink
                 Thread.Sleep(100);
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[RadioIcom.SendCommand] " + Information.Err().Description);
+                Logs.Exception("[RadioIcom.SendCommand] " + ex.Message);
                 return false;
             }
         } // SendCommand(String)

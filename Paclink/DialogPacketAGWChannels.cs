@@ -5,8 +5,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -229,9 +227,9 @@ namespace Paclink
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[DialogPacketAGWChannels.UpdateAGWPortInfo]: " + Information.Err().Description);
+                Logs.Exception("[DialogPacketAGWChannels.UpdateAGWPortInfo]: " + ex.Message);
             }
         } // UpdateAGWPortInfo
 
@@ -288,10 +286,10 @@ namespace Paclink
                 asc.GetBytes(DialogAGWEngine.AGWPassword, 0, DialogAGWEngine.AGWPassword.Length, bytTemp2, 36 + 255);
                 objTCPPort.GetStream().Write(bytTemp2, 0, bytTemp2.Length);;
             }
-            catch
+            catch (Exception ex)
             {
                 AddAGWPortInfo("", "Error in Remote AGW Engine Login @ host " + DialogAGWEngine.AGWHost, true);
-                Logs.Exception("[PacketAGWChannels, LoginAGWRemote] " + Information.Err().Description);
+                Logs.Exception("[PacketAGWChannels, LoginAGWRemote] " + ex.Message);
                 tmrTimer10sec.Enabled = false;
             }
         }  // LoginAGWRemote 
@@ -305,12 +303,12 @@ namespace Paclink
             {
                 if (objTCPPort == null || !objTCPPort.Connected)
                     return;
-                bytTemp[4] = (byte)Strings.Asc("G");
+                bytTemp[4] = (byte)Globals.Asc('G');
                 objTCPPort.GetStream().Write(bytTemp, 0, bytTemp.Length);;
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[AGWEngine, RequestAGWPortInfo] " + Information.Err().Description);
+                Logs.Exception("[AGWEngine, RequestAGWPortInfo] " + ex.Message);
                 tmrTimer10sec.Enabled = false;
                 AddAGWPortInfo("", "Error requesting Port Info from Remote AGW Engine @ host " + DialogAGWEngine.AGWHost, true);
             }
@@ -337,7 +335,7 @@ namespace Paclink
                     intDataLength = Globals.ComputeLengthL(bytTCPData, 28); // get and decode the data length field from the header
                     if (bytTCPData.Length < 36 + intDataLength)
                         break; // not A complete "G" frame...
-                    if (Conversions.ToString((char)bytTCPData[4]) != "G")
+                    if (Convert.ToString((char)bytTCPData[4]) != "G")
                     {
                         bytTCPData = new byte[0];
                         break;
@@ -369,9 +367,9 @@ namespace Paclink
 
                     AddAGWPortInfo("", strPort1Info, true); // update to text to port 1 and enable retry button.
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("[AGWEngine, tcpOnDataIn] " + Information.Err().Description);
+                    Logs.Exception("[AGWEngine, tcpOnDataIn] " + ex.Message);
                     AddAGWPortInfo("", "Port Info request failure with host " + DialogAGWEngine.AGWHost, true);
                 }
                 break;
@@ -465,14 +463,22 @@ namespace Paclink
             cmbChannelName.Text = cmbChannelName.Text.Replace("|", "");
             if (Channels.IsAccount(cmbChannelName.Text))
             {
-                Interaction.MsgBox(cmbChannelName.Text + " is in use as an account name...", MsgBoxStyle.Information);
+                MessageBox.Show(
+                    cmbChannelName.Text + " is in use as an account name...",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
                 cmbChannelName.Focus();
                 return;
             }
 
             if (Channels.IsChannel(cmbChannelName.Text))
             {
-                Interaction.MsgBox("The channel name " + cmbChannelName.Text + " is already in use...", MsgBoxStyle.Information);
+                MessageBox.Show(
+                    "The channel name " + cmbChannelName.Text + " is already in use...",
+                    "Error",
+                    MessageBoxButtons.OK, 
+                    MessageBoxIcon.Information);
                 cmbChannelName.Focus();
             }
             else
@@ -507,9 +513,15 @@ namespace Paclink
         {
             if (cmbChannelName.Items.Contains(cmbChannelName.Text) == false)
             {
-                Interaction.MsgBox("The packet channel " + cmbChannelName.Text + " is not found...", MsgBoxStyle.Information);
+                MessageBox.Show(
+                    "The packet channel " + cmbChannelName.Text + " is not found...",
+                    "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            else if (Interaction.MsgBox("Confirm removal of packet channel " + cmbChannelName.Text + "...", MsgBoxStyle.Question | MsgBoxStyle.YesNo) == MsgBoxResult.Yes)
+            else if (MessageBox.Show(
+                "Confirm removal of packet channel " + cmbChannelName.Text + "...", 
+                "Remove Channel",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 Channels.RemoveChannel(cmbChannelName.Text);
                 Channels.FillChannelCollection();
@@ -524,17 +536,29 @@ namespace Paclink
         {
             if (cmbChannelName.Items.Contains(cmbChannelName.Text) == false)
             {
-                Interaction.MsgBox("The AGW packet channel " + cmbChannelName.Text + " is not found...", MsgBoxStyle.Information);
+                MessageBox.Show(
+                    "The AGW packet channel " + cmbChannelName.Text + " is not found...",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
                 return;
             }
             else if (string.IsNullOrEmpty(cmbAGWPort.Text.Trim()))
             {
-                Interaction.MsgBox("AGW Port not selected!...", MsgBoxStyle.Information);
+                MessageBox.Show(
+                    "AGW Port not selected!...",
+                    "Error",
+                    MessageBoxButtons.OK, 
+                    MessageBoxIcon.Information);
                 return; // 
             }
             else if (string.IsNullOrEmpty(txtRemoteCallsign.Text.Trim()))
             {
-                Interaction.MsgBox("No remote callsign entered!...", MsgBoxStyle.Information);
+                MessageBox.Show(
+                    "No remote callsign entered!...",
+                    "Error",
+                    MessageBoxButtons.OK, 
+                    MessageBoxIcon.Information);
                 return;
             }
             else

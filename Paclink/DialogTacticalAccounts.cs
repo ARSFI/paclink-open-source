@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -56,7 +54,7 @@ namespace Paclink
             // 
             // Displays instructions for entering a tactical address...
             // 
-            Interaction.MsgBox("A tactical account name may consist of a tactical address of alpha characters" + Globals.CRLF + "ONLY or alpha characters ONLY, followed by a dash, followed by alphanumeric" + Globals.CRLF + "characters . A name may not exceed 12 characters. " + Globals.CRLF + Globals.CRLF + "Valid account name examples:  MLBSHELTER, REDCROSS-12, POLICE-9A, FLDADEEOC-1" + Globals.CRLF + "The <account name>@Winlink.org will be the E-mail address of the account user." + Globals.CRLF + Globals.CRLF + "To enter a ham or MARS radio callsign account use the Callsign Accounts dialog box.");
+            MessageBox.Show("A tactical account name may consist of a tactical address of alpha characters" + Globals.CRLF + "ONLY or alpha characters ONLY, followed by a dash, followed by alphanumeric" + Globals.CRLF + "characters . A name may not exceed 12 characters. " + Globals.CRLF + Globals.CRLF + "Valid account name examples:  MLBSHELTER, REDCROSS-12, POLICE-9A, FLDADEEOC-1" + Globals.CRLF + "The <account name>@Winlink.org will be the E-mail address of the account user." + Globals.CRLF + Globals.CRLF + "To enter a ham or MARS radio callsign account use the Callsign Accounts dialog box.");
 
 
 
@@ -92,20 +90,20 @@ namespace Paclink
             }
             else if (IsAccountNameInUseHere(cmbAccount.Text))
             {
-                Interaction.MsgBox("This account name is already in use...");
+                MessageBox.Show("This account name is already in use...");
                 cmbAccount.Focus();
                 return;
             }
 
             if (txtPassword.Text.Length < 3)
             {
-                Interaction.MsgBox("Password must be at least three characters...");
+                MessageBox.Show("Password must be at least three characters...");
                 txtPassword.Focus();
                 return;
             }
             else if (txtPassword.Text.Length > 12)
             {
-                Interaction.MsgBox("Password must be twelve characters or less long...");
+                MessageBox.Show("Password must be twelve characters or less long...");
                 txtPassword.Focus();
                 return;
             }
@@ -113,7 +111,7 @@ namespace Paclink
             btnAdd.Enabled = false;
             if (AddNewAccount())
             {
-                Interaction.MsgBox("The new account '" + sAccountName + "' has been added. ", MsgBoxStyle.Information, "Account Added");
+                MessageBox.Show("The new account '" + sAccountName + "' has been added. ", "Account Added", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             btnAdd.Enabled = true;
@@ -125,8 +123,8 @@ namespace Paclink
             // 
             // Removes a tactical account from the system...
             // 
-            string strAccount = Strings.Trim(cmbAccount.Text);
-            if (Interaction.MsgBox("Confirm removal of " + strAccount + " from the Winlink database?", MsgBoxStyle.OkCancel, "Confirm Remove") != MsgBoxResult.Cancel)
+            string strAccount = cmbAccount.Text.Trim();
+            if (MessageBox.Show("Confirm removal of " + strAccount + " from the Winlink database?", "Confirm Remove", MessageBoxButtons.OKCancel) != DialogResult.Cancel)
             {
                 Cursor = Cursors.WaitCursor;
                 // 
@@ -136,14 +134,14 @@ namespace Paclink
                 if (!string.IsNullOrEmpty(strResponse))
                 {
                     Cursor = Cursors.Default;
-                    Interaction.MsgBox("Error removing tactical account " + strAccount + ": " + strResponse, MsgBoxStyle.Exclamation);
+                    MessageBox.Show("Error removing tactical account " + strAccount + ": " + strResponse, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
                 // 
                 // Remove account from registry list.
                 // 
                 string strAccountList = Globals.objINIFile.GetString("Properties", "Account Names", "");
-                strAccountList = Strings.Replace(strAccountList, strAccount + "|", "");
+                strAccountList = strAccountList.Replace(strAccount + "|", "");
                 Globals.objINIFile.WriteString("Properties", "Account Names", strAccountList);
                 // 
                 // Remove account directory.
@@ -197,10 +195,13 @@ namespace Paclink
                 if (Globals.objWL2KInterop.ValidatePassword(strAccount, strOldPassword) == false)
                 {
                     Cursor = Cursors.Default;
-                    Interaction.MsgBox("The address/account has been previously used and the entered old password" + "does not match the password for '" + strAccount + "' in the Winlink database" + Globals.CR + Globals.CR + "To use this address/account " + "name you must have the previously assigned password.", MsgBoxStyle.Critical, "Validating Password");
-
-
-
+                    MessageBox.Show(
+                        "The address/account has been previously used and the entered old password" + 
+                        " does not match the password for '" + strAccount + "' in the Winlink database" +
+                        Globals.CR + Globals.CR + "To use this address/account " +
+                        "name you must have the previously assigned password.", "Validating Password",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Exclamation);
                     return;
                 }
                 // 
@@ -210,7 +211,7 @@ namespace Paclink
                 if (!string.IsNullOrEmpty(strReply))
                 {
                     Cursor = Cursors.Default;
-                    Interaction.MsgBox("Error while setting password: " + strReply, MsgBoxStyle.Exclamation);
+                    MessageBox.Show("Error while setting password: " + strReply, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
             }
@@ -220,7 +221,11 @@ namespace Paclink
                 // This account is not know by the system.
                 // 
                 Cursor = Cursors.Default;
-                Interaction.MsgBox("The tactical address " + strAccount + " has not been registered with the Winlink system.", MsgBoxStyle.Critical, "Checking address");
+                MessageBox.Show(
+                    "The tactical address " + strAccount + " has not been registered with the Winlink system.", 
+                    "Checking address",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
             }
             // 
             // Update the password in the .ini file.
@@ -232,7 +237,11 @@ namespace Paclink
             Accounts.RefreshAccountsList();
             FillAccountSelection();
             Cursor = Cursors.Default;
-            Interaction.MsgBox("The password for " + strAccount + " has been changed to " + strNewPassword, MsgBoxStyle.Information);
+            MessageBox.Show(
+                "The password for " + strAccount + " has been changed to " + strNewPassword, 
+                "Password Changed",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
             return;
         } // btnPassword_Click
 
@@ -273,7 +282,7 @@ namespace Paclink
             }
 
             cmbAccount.Items.Add("<Add new account>");
-            cmbAccount.Text = Conversions.ToString(cmbAccount.Items[0]);
+            cmbAccount.Text = Convert.ToString(cmbAccount.Items[0]);
             cmbAccount.Focus();
         } // FillAccountSelection
 
@@ -312,7 +321,12 @@ namespace Paclink
             // 
             // Display an account entry error message box...
             // 
-            Interaction.MsgBox("Account names must be tactical addresses at least 3 characters long," + "not longer than 12 characters, and be in a valid format. See instructions for more information...", MsgBoxStyle.Information);
+            MessageBox.Show(
+                "Account names must be tactical addresses at least 3 characters long ," +
+                "not longer than 12 characters, and be in a valid format. See instructions for more information...",
+                "Error",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
         } // EntryErrorMessage
 
         private bool IsAccountNameInUseHere(string strAccountName)
@@ -375,18 +389,32 @@ namespace Paclink
                 // 
                 if (Globals.objWL2KInterop.ValidatePassword(strTacticalAddress, strPassword) == false)
                 {
-                    Interaction.MsgBox("The address/account has been previously used and the entered password" + "does not match the password for '" + strTacticalAddress + "' in the Winlink database" + Globals.CR + Globals.CR + "To use this address/account " + "name you must have the previously assigned password.", MsgBoxStyle.Critical, "Validating Password");
-
-
-
+                    MessageBox.Show(
+                        "The address/account has been previously used and the entered password " +
+                        "does not match the password for '" + strTacticalAddress + "' in the Winlink database" +
+                        Globals.CR + Globals.CR + "To use this address/account " + 
+                        "name you must have the previously assigned password.", 
+                        "Validating Password",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Exclamation);
                     return false;
                 }
 
-                if (Interaction.MsgBox("The account name '" + strTacticalAddress + "' is already in use or otherwise " + "not available." + Globals.CRLF + "Do you want to add this account to this Paclink site anyway?", MsgBoxStyle.Question | MsgBoxStyle.YesNo, "Existing Tactical Address Found") == MsgBoxResult.Yes)
+                if (MessageBox.Show(
+                    "The account name '" + strTacticalAddress + "' is already in use or otherwise " +
+                    "not available." + Globals.CRLF + "Do you want to add this account to this Paclink site anyway?",
+                    "Existing Tactical Address Found",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question) == DialogResult.Yes)
 
                 {
-                    Interaction.MsgBox("Using the same Tactical address from different Paclink sites must be done carefully." + Globals.CR + "Once mail is retrieved by a Paclink site it is considered delivered by the WL2K system " + Globals.CR + "and will not longer be accessable to other sites.", MsgBoxStyle.Information, "Caution!");
-
+                    MessageBox.Show(
+                        "Using the same Tactical address from different Paclink sites must be done carefully." + 
+                        Globals.CR + "Once mail is retrieved by a Paclink site it is considered delivered by the WL2K system " +
+                        Globals.CR + "and will not longer be accessable to other sites.",
+                        "Caution!",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
                     return true;
                 }
             }
@@ -397,7 +425,11 @@ namespace Paclink
             if (!string.IsNullOrEmpty(strResult))
             {
                 Cursor = Cursors.Default;
-                Interaction.MsgBox("Error adding tactical account " + strTacticalAddress + ": " + strResult, MsgBoxStyle.Exclamation);
+                MessageBox.Show(
+                    "Error adding tactical account " + strTacticalAddress + ": " + strResult, 
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
                 return false;
             }
             // 
@@ -413,9 +445,9 @@ namespace Paclink
             {
                 Help.ShowHelp(this, Globals.SiteRootDirectory + @"Help\Paclink.chm", HelpNavigator.Topic, @"html\hs100.htm");
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[TacticalAccounts.btnHelp_Click] " + Information.Err().Description);
+                Logs.Exception("[TacticalAccounts.btnHelp_Click] " + ex.Message);
             }
         } // btnHelp_Click
     }

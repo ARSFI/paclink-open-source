@@ -2,8 +2,6 @@
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -76,7 +74,7 @@ namespace Paclink
             // Check call signs
             if (!Globals.IsValidRadioCallsign(cmbCallSigns.Text))
             {
-                Interaction.MsgBox(cmbCallSigns.Text + " is not a valid amateur or MARS callsign...", MsgBoxStyle.Information);
+                MessageBox.Show(cmbCallSigns.Text + " is not a valid amateur or MARS callsign...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 cmbCallSigns.Focus();
                 return;
             }
@@ -87,12 +85,16 @@ namespace Paclink
             cmbFrequencies.Text = argstrChannel;
             if (!Globals.IsValidFrequency(strCenterFreq, ref intHz))
             {
-                Interaction.MsgBox("Improper frequency syntax! Select frequency from selected RMS " + Globals.CR + "or enter a frequency 1800 - 54000 KHz.", MsgBoxStyle.Information);
+                MessageBox.Show(
+                    "Improper frequency syntax! Select frequency from selected RMS " + Globals.CR +
+                    "or enter a frequency 1800 - 54000 KHz.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
             else if (intHz < 1800000 | intHz > 54000000)
             {
-                Interaction.MsgBox("Not a valid frequency. Select frequency from selected RMS " + Globals.CR + "or enter a frequency 1800 - 54000 KHz.", MsgBoxStyle.Information);
+                MessageBox.Show(
+                    "Not a valid frequency. Select frequency from selected RMS " + Globals.CR + 
+                    "or enter a frequency 1800 - 54000 KHz.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -100,7 +102,7 @@ namespace Paclink
             {
                 if (stcChannel.TNCBusyHold)
                 {
-                    if (Interaction.MsgBox("The channel appears busy - Continue with connect?", MsgBoxStyle.YesNo, "Channel Busy") == MsgBoxResult.No)
+                    if (MessageBox.Show("The channel appears busy - Continue with connect?", "Channel Busy", MessageBoxButtons.YesNo) == DialogResult.No)
                         return;
                 }
             }
@@ -212,7 +214,7 @@ namespace Paclink
 
             Refresh();
             stcChannel.RDOCenterFrequency = cmbFrequencies.Text;
-            if (!Information.IsNothing(Globals.objRadioControl))
+            if (Globals.objRadioControl != null)
             {
                 Globals.objRadioControl.SetParameters(ref stcChannel);
             }
@@ -278,7 +280,7 @@ namespace Paclink
                 }
                 else
                 {
-                    Interaction.MsgBox("Click 'Update Channel List' to download the list of available channels");
+                    MessageBox.Show("Click 'Update Channel List' to download the list of available channels");
                     return;
                 }
 
@@ -313,24 +315,26 @@ namespace Paclink
                 /* TODO ERROR: Skipped IfDirectiveTrivia *//* TODO ERROR: Skipped DisabledTextTrivia *//* TODO ERROR: Skipped EndIfDirectiveTrivia */
                 // Set radio parameters if RadioControl class active and a frequency is assigned...
 
-                if (!Information.IsNothing(Globals.objRadioControl))
+                if (Globals.objRadioControl != null)
                 {
                     int argintFreqHz = 0;
                     if (!Globals.IsValidFrequency(Globals.StripMode(stcChannel.RDOCenterFrequency), intFreqHz: ref argintFreqHz))
                     {
-                        Interaction.MsgBox("Freq Syntax Error! Enter value in KHz.", MsgBoxStyle.Exclamation);
+                        MessageBox.Show("Freq Syntax Error! Enter value in KHz.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
                     else if (!Globals.objRadioControl.SetParameters(ref stcChannel))
                     {
-                        Interaction.MsgBox("Failure to set Radio parameters...Check exception log for details!", MsgBoxStyle.Exclamation, "Radio Control Error!");
+                        MessageBox.Show(
+                            "Failure to set Radio parameters...Check exception log for details!",
+                            "Radio Control Error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
                 }
 
                 blnLoading = false;
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[PactorConnect.PactorConnect_Load] " + Information.Err().Description);
+                Logs.Exception("[PactorConnect.PactorConnect_Load] " + ex.Message);
             }
         } // PactorConnect_Load
 
@@ -374,9 +378,10 @@ namespace Paclink
                                 var strTokens = strLine.Split(' ');
                                 foreach (string strToken in strTokens)
                                 {
-                                    if (Information.IsNumeric(strToken.Replace("#", "")))
+                                    int intFrequency = 0;
+                                    var tmpStr = strToken.Replace("#", "");
+                                    if (int.TryParse(tmpStr.Substring(0, tmpStr.IndexOf(".")), out intFrequency))
                                     {
-                                        int intFrequency = Convert.ToInt32(strToken.Substring(0, strToken.IndexOf(".")));
                                         if (intFrequency > 1800 & intFrequency < 54000) // Only select HF frequencies
                                         {
                                             strFrequencies += strToken.Trim() + ",";

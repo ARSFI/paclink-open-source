@@ -79,15 +79,15 @@ namespace Paclink
                 {
                     try
                     {
-                        if (!Information.IsNothing(objProtocol))
+                        if (objProtocol != null)
                         {
                             objProtocol.LinkStateChange(EConnection.Disconnected);
                             objProtocol = null;
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Logs.Exception("[ClientTelnet.Poll] " + Information.Err().Description);
+                        Logs.Exception("[ClientTelnet.Poll] " + ex.Message);
                     }
                 }
             }
@@ -115,9 +115,9 @@ namespace Paclink
             {
                 objTCPPort.Close();
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[TelnetClient.Abort] " + Information.Err().Description);
+                Logs.Exception("[TelnetClient.Abort] " + ex.Message);
             }
 
             enmState = ELinkStates.LinkFailed;
@@ -264,9 +264,9 @@ namespace Paclink
 
                         return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Globals.queChannelDisplay.Enqueue("R*** " + Information.Err().Description);
+                    Globals.queChannelDisplay.Enqueue("R*** " + ex.Message);
                 }
 
                 objTCPPort.LingerState = new LingerOption(false, 0);
@@ -347,9 +347,9 @@ namespace Paclink
                 objTCPPort.Close();
                 OnDisconnected(objTCPPort);
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[TelnetClient.Disconnect] " + Information.Err().Description);
+                Logs.Exception("[TelnetClient.Disconnect] " + ex.Message);
             }
         } // Disconnect
 
@@ -366,7 +366,7 @@ namespace Paclink
                     case ELinkStates.Callsign:
                         {
                             Globals.queChannelDisplay.Enqueue("X" + strLine);
-                            if (Strings.InStr(strLine, "Callsign") != 0)
+                            if (strLine.Contains("Callsign"))
                             {
                                 var objEncoder = new ASCIIEncoding();
                                 string strPactorCallsign = Globals.SiteCallsign;
@@ -396,7 +396,7 @@ namespace Paclink
                     case ELinkStates.Password:
                         {
                             Globals.queChannelDisplay.Enqueue("X" + strLine);
-                            if (Strings.InStr(strLine, "Password") != 0)
+                            if (strLine.Contains("Password"))
                             {
                                 var objEncoder = new ASCIIEncoding();
                                 var bytesToSend = Globals.GetBytes("CMSTelnet" + Globals.CR);
@@ -463,9 +463,9 @@ namespace Paclink
                     objProtocol = null;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[TelnetClient.OnDisconnected] " + Information.Err().Description);
+                Logs.Exception("[TelnetClient.OnDisconnected] " + ex.Message);
             }
 
             if (blnNormalDisconnect)

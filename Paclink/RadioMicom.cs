@@ -4,8 +4,6 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Timers;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -59,7 +57,7 @@ namespace Paclink
                         retc = MICOMRptSSBState();
                         if (retc != 2)
                         {
-                            Interaction.MsgBox("Radio must be in USB mode...", MsgBoxStyle.Critical);
+                            MessageBox.Show("Radio must be in USB mode...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             Logs.Exception("[RadioMicom.InitializeSerialPort] " + "MICOM not in USB mode");
                             return false;
                         }
@@ -85,9 +83,9 @@ namespace Paclink
                     return false;
                 }
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[RadioMicom.InitializeSerialPort] " + Information.Err().Description);
+                Logs.Exception("[RadioMicom.InitializeSerialPort] " + e.Message);
                 return false;
             }
         }   // InitializeSerialPort 
@@ -155,9 +153,9 @@ namespace Paclink
             {
                 MICOMPortClose();
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[RadioMicom.Close] " + Information.Err().Description);
+                Logs.Exception("[RadioMicom.Close] " + e.Message);
             }
         } // Close 
 
@@ -179,9 +177,9 @@ namespace Paclink
                 Logs.Exception("[RadioMicom.SetFrequency]" + " Failed");
                 return false;
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[RadioMicom.SetFrequency] " + Information.Err().Description);
+                Logs.Exception("[RadioMicom.SetFrequency] " + e.Message);
                 return false;
             }
 
@@ -402,7 +400,7 @@ namespace Paclink
             rc = Cmd2MICOM(DataLen, RadioMicom.FrmTo, OpCode, Mydata); // send command to MICOM
             if (rc != 0)
             {
-                short argNRBytes = Conversions.ToShort(SizeofACK + SizeofSSBRpt);
+                short argNRBytes = Convert.ToInt16(SizeofACK + SizeofSSBRpt);
                 rc = GetMICOMData(ref argNRBytes, ref Result);
                 if (Result[9] == OpCode - 1)
                 {
@@ -644,7 +642,7 @@ namespace Paclink
             rc = Cmd2MICOM(DataLen, RadioMicom.FrmTo, OpCode, Mydata); // send command to MICOM
             if (rc != 0)
             {
-                short argNRBytes = Conversions.ToShort(SizeofACK + SizeofFrpt);
+                short argNRBytes = Convert.ToInt16(SizeofACK + SizeofFrpt);
                 rc = GetMICOMData(ref argNRBytes, ref Result);
                 if (rc != 0)
                 {
@@ -690,7 +688,7 @@ namespace Paclink
             rc = Cmd2MICOM(DataLen, RadioMicom.FrmTo, OpCode, Mydata); // send command to MICOM
             if (rc != 0)
             {
-                short argNRBytes = Conversions.ToShort(SizeofACK + SizeofFrpt);
+                short argNRBytes = Convert.ToInt16(SizeofACK + SizeofFrpt);
                 rc = GetMICOMData(ref argNRBytes, ref Result);
                 if (rc != 0)
                 {
@@ -950,13 +948,13 @@ namespace Paclink
             short CkSumLen;
             short I;
             short Sum;
-            CkSumLen = Conversions.ToShort(DataLen + Conversions.ToShort(2));
+            CkSumLen = Convert.ToInt16(DataLen + Convert.ToInt16(2));
             Sum = 0; // initialize checksum
             var loopTo = (int)CkSumLen;
             for (I = 0; I <= loopTo; I++)
             {
-                Sum = Conversions.ToShort(Sum + msg[I]);
-                Sum = Conversions.ToShort(Sum & 0xFF); // 255
+                Sum = Convert.ToInt16(Sum + msg[I]);
+                Sum = Convert.ToInt16(Sum & 0xFF); // 255
             }
 
             ChkSumRet = Convert.ToByte(Sum & 0xFF); // 255

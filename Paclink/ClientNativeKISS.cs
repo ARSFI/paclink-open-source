@@ -5,8 +5,6 @@ using System.IO.Ports;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using TNCKissInterface;
 
 namespace Paclink
@@ -141,7 +139,7 @@ namespace Paclink
             else
             {
                 Globals.blnChannelActive = false;
-                if (!Information.IsNothing(objSerial))
+                if (objSerial != null)
                 {
                     objSerial.Close();
                     Thread.Sleep(Globals.intComCloseTime);
@@ -322,18 +320,18 @@ namespace Paclink
                         }
                         catch (Exception ex)
                         {
-                            Logs.Exception("[ClientNativeKISS.Open] " + strLine + Globals.CR + Information.Err().Description);
+                            Logs.Exception("[ClientNativeKISS.Open] " + strLine + Globals.CR + ex.Message);
                         }
                     }
                     while (true);
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[ClientNativeKISS.Open] " + Information.Err().Description);
+                    Logs.Exception("[ClientNativeKISS.Open] " + ex.Message);
                 }
             }
 
-            if (!Information.IsNothing(objSerial))
+            if (objSerial != null)
             {
                 objSerial.Close();
                 Thread.Sleep(Globals.intComCloseTime);
@@ -375,14 +373,14 @@ namespace Paclink
                     Globals.queChannelDisplay.Enqueue("G*** Serial port " + Globals.stcSelectedChannel.TNCSerialPort + " opened");
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[ClientNativeKISS.Open] " + Information.Err().Description);
+                Logs.Exception("[ClientNativeKISS.Open] " + ex.Message);
                 return false;
             }
 
             OpenRet = InitializeKISSTnc(); // initialize the TNC to KISS mode
-            if (!Information.IsNothing(objSerial))
+            if (objSerial != null)
             {
                 objSerial.Close();
                 Thread.Sleep(Globals.intComCloseTime);
@@ -516,14 +514,14 @@ namespace Paclink
                 // Parse the connection script, if any, into the ConnectScript string array...
                 if (!string.IsNullOrEmpty(Globals.stcSelectedChannel.TNCScript))
                 {
-                    ConnectScript = Globals.stcSelectedChannel.TNCScript.Replace(Globals.LF, "").Split(Conversions.ToChar(Globals.CR));
+                    ConnectScript = Globals.stcSelectedChannel.TNCScript.Replace(Globals.LF, "").Split(Convert.ToChar(Globals.CR));
                 }
 
                 return true;
             }
             catch (Exception ex)
             {
-                Logs.Exception("[ClientNativeKISS.InitializeKISSTnc] " + Information.Err().Description);
+                Logs.Exception("[ClientNativeKISS.InitializeKISSTnc] " + ex.Message);
                 return false;
             }
         }
@@ -543,7 +541,7 @@ namespace Paclink
 
                 blnClosed = true;
                 Globals.queChannelDisplay.Enqueue("G*** Closing Packet Channel " + Globals.stcSelectedChannel.ChannelName + " at " + Globals.TimestampEx());
-                if (!Information.IsNothing(Globals.objRadioControl)) // Shut down the radio control and free the serial port
+                if (Globals.objRadioControl != null) // Shut down the radio control and free the serial port
                 {
                     Globals.objRadioControl.Close();
                     Thread.Sleep(Globals.intComCloseTime);
@@ -560,26 +558,26 @@ namespace Paclink
                         break;
                 }
 
-                if (!Information.IsNothing(objCon))
+                if (objCon != null)
                 {
                     objCon.Close();
                 }
 
-                if (!Information.IsNothing(objKissDLProvider))
+                if (objKissDLProvider != null)
                 {
                     objKissDLProvider.RemoveConnection(objCon);
                     objKissDLProvider.Close();
                 }
 
-                if (blnExitKiss & !Information.IsNothing(objKissChannel))
+                if (blnExitKiss & objKissChannel != null)
                 {
                     objKissChannel.SetKissModeOff();
                     Thread.Sleep(200);
                 }
 
-                if (!Information.IsNothing(objKissChannel))
+                if (objKissChannel != null)
                     objKissChannel.Close();
-                if (!Information.IsNothing(objKissComPort))
+                if (objKissComPort != null)
                     objKissComPort.Close();
                 Globals.queStatusDisplay.Enqueue("Idle");
                 Globals.queRateDisplay.Enqueue("------");
@@ -600,7 +598,7 @@ namespace Paclink
             try
             {
                 Globals.queChannelDisplay.Enqueue("R*** Aborting channel " + Globals.stcSelectedChannel.ChannelName);
-                if (!Information.IsNothing(objCon))
+                if (objCon != null)
                 {
                     objCon.DisconnectNoWait();
                     Thread.Sleep(1000);
@@ -631,7 +629,7 @@ namespace Paclink
             {
                 if (Globals.stcSelectedChannel.RDOControl == "Serial")
                 {
-                    if (Information.IsNothing(Globals.objRadioControl))
+                    if (Globals.objRadioControl == null)
                     {
                         if (Globals.stcSelectedChannel.RDOModel.StartsWith("Kenwood"))
                         {
@@ -660,16 +658,16 @@ namespace Paclink
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[ClientNativeKiss.Connect B] " + Information.Err().Description);
+                Logs.Exception("[ClientNativeKiss.Connect B] " + ex.Message);
             }
 
             try
             {
-                if (!Information.IsNothing(Globals.objRadioControl))
+                if (Globals.objRadioControl != null)
                     Globals.objRadioControl.SetParameters(ref Globals.stcSelectedChannel);
-                if (!Information.IsNothing(ConnectScript) && ConnectScript.Length > 0)
+                if (ConnectScript != null && ConnectScript.Length > 0)
                 {
                     if (StartScript(ref strVia, ref strTarget)) // Activates scripting, modifies sVia and sTarget
                     {
@@ -734,9 +732,9 @@ namespace Paclink
 
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[ClientNativeKISS.Connect C] " + Information.Err().Description);
+                Logs.Exception("[ClientNativeKISS.Connect C] " + ex.Message);
                 enmState = ELinkStates.LinkFailed;
                 return false;
             }
@@ -767,7 +765,7 @@ namespace Paclink
                 return;
             try
             {
-                if (bytData.Length > 0 & !Information.IsNothing(objCon))
+                if (bytData.Length > 0 & objCon != null)
                 {
                     if (objCon.connectState == Connection.ConnectionState.Connected)
                     {
@@ -787,7 +785,7 @@ namespace Paclink
         {
             try
             {
-                if (!Information.IsNothing(objCon))
+                if (objCon != null)
                     objCon.DisconnectNoWait();
             }
             catch (Exception ex)
@@ -810,7 +808,7 @@ namespace Paclink
                 intTicks = 0;
             }
 
-            if (Information.IsNothing(objCon) | blnClosed)
+            if (objCon == null | blnClosed)
                 return;
             if (intTicks == 0)
             {
@@ -822,7 +820,7 @@ namespace Paclink
                     {
                         case Connection.ConnectionState.Connected:
                             {
-                                if (enmState != ELinkStates.Connected & Information.IsNothing(objProtocol))
+                                if (enmState != ELinkStates.Connected & objProtocol == null)
                                 {
                                     Globals.queChannelDisplay.Enqueue("P*** " + "CONNECTED");
                                     Globals.queRateDisplay.Enqueue(strBaudRate);
@@ -934,7 +932,7 @@ namespace Paclink
                 blnInScript = false;
                 Globals.queChannelDisplay.Enqueue(Globals.CR);
                 Globals.queChannelDisplay.Enqueue("G #End of Script File...");
-                if (!Information.IsNothing(objProtocol))
+                if (objProtocol != null)
                     objProtocol.ChannelInput(strScriptResponse);
                 return true;
             }
@@ -949,7 +947,7 @@ namespace Paclink
                 if (ConnectScript.Length == intConnectScriptPtr + 1)
                 {
                     Globals.queChannelDisplay.Enqueue("G #End Script");
-                    if (!Information.IsNothing(objProtocol))
+                    if (objProtocol != null)
                         objProtocol.ChannelInput(strScriptResponse);
                     strScriptResponse = "";
                     blnInScript = false;
@@ -958,7 +956,7 @@ namespace Paclink
                 else if (ConnectScript.Length < intConnectScriptPtr + 1)
                 {
                     Globals.queChannelDisplay.Enqueue("G #End of Script File...");
-                    if (!Information.IsNothing(objProtocol))
+                    if (objProtocol != null)
                         objProtocol.ChannelInput(strScriptResponse);
                     strScriptResponse = "";
                     blnInScript = false;
@@ -973,14 +971,14 @@ namespace Paclink
                 {
                     blnInScript = false;
                     Globals.queChannelDisplay.Enqueue("G #End of Script File...");
-                    if (!Information.IsNothing(objProtocol))
+                    if (objProtocol != null)
                         objProtocol.ChannelInput(strScriptResponse);
                     return true;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[ClientNativeKiss.SequenceScript] Err: " + Information.Err().Description);
+                Logs.Exception("[ClientNativeKiss.SequenceScript] Err: " + ex.Message);
                 Globals.queChannelDisplay.Enqueue("R*** Connection script error");
                 return false;
             }
@@ -993,7 +991,7 @@ namespace Paclink
             // Tests for any script bailouts...
 
             var strEndText = new string[] { "DISCONNECTED", "TIMEOUT", "EXCEEDED", "FAILURE", "BUSY" };
-            for (int intIndex = 0, loopTo = Information.UBound(strEndText); intIndex <= loopTo; intIndex++)
+            for (int intIndex = 0, loopTo = (strEndText.Length - 1); intIndex <= loopTo; intIndex++)
             {
                 if (strText.ToUpper().IndexOf(strEndText[intIndex]) != -1)
                     return true;
@@ -1117,9 +1115,9 @@ namespace Paclink
                 objSerial.Read(bytBuffer, 0, intBytesToRead);
                 queTNCData.Enqueue(bytBuffer);
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[ClientNativeKiss.objSerial_DataReceived] Err: " + Information.Err().Description);
+                Logs.Exception("[ClientNativeKiss.objSerial_DataReceived] Err: " + ex.Message);
             }
         }
     }

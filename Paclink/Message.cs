@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -45,8 +44,8 @@ namespace Paclink
 
         // Note: the Attachment structure is defined in Global.vb...
         private ArrayList aryAttachments = new ArrayList();   // An array of Attachment structures
-        private Collection cllToAddresses = new Collection();  // Collection of address objects
-        private Collection cllCcAddresses = new Collection();  // Collection of address objects
+        private List<WinlinkAddress> cllToAddresses = new List<WinlinkAddress>();  // Collection of address objects
+        private List<WinlinkAddress> cllCcAddresses = new List<WinlinkAddress>();  // Collection of address objects
         private string strBody = "";            // The body of the message
         private string strMime = "";            // The entire message in mime format
 
@@ -214,47 +213,47 @@ namespace Paclink
             // Decodes the mime header and fills the public properties with the 
             // result. (called by DecodeMime)...
 
-            cllToAddresses = new Collection();
-            cllCcAddresses = new Collection();
+            cllToAddresses = new List<WinlinkAddress>();
+            cllCcAddresses = new List<WinlinkAddress>();
             var strHeaderLines = Regex.Split(Header.Replace("," + Globals.CRLF + " ", ";"), Globals.CRLF);
             foreach (string strLine in strHeaderLines)
             {
                 var tmpStrLine = strLine;
                 if (tmpStrLine.StartsWith("From:"))
                 {
-                    Sender.RadioAddress = Strings.Trim(tmpStrLine.Substring(5));
+                    Sender.RadioAddress = tmpStrLine.Substring(5).Trim();
                 }
                 else if (tmpStrLine.StartsWith("Sender:"))
                 {
-                    Sender.RadioAddress = Strings.Trim(tmpStrLine.Substring(7));
+                    Sender.RadioAddress = tmpStrLine.Substring(7).Trim();
                 }
                 else if (tmpStrLine.StartsWith("To:"))
                 {
-                    tmpStrLine = Strings.Trim(tmpStrLine.Substring(3));
+                    tmpStrLine = tmpStrLine.Substring(3).Trim();
                     var strTo = tmpStrLine.Split(",;".ToCharArray());
                     foreach (string strToAddress in strTo)
                         AddAddress(strToAddress);
                 }
                 else if (tmpStrLine.StartsWith("Cc:"))
                 {
-                    tmpStrLine = Strings.Trim(tmpStrLine.Substring(3));
+                    tmpStrLine = tmpStrLine.Substring(3).Trim();
                     var strCc = tmpStrLine.Split(",;".ToCharArray());
                     foreach (string strCcAddress in strCc)
                         AddAddress(strCcAddress, true);
                 }
                 else if (tmpStrLine.StartsWith("Subject:"))
                 {
-                    Subject = Strings.Trim(tmpStrLine.Substring(8));
+                    Subject = tmpStrLine.Substring(8).Trim();
                     if (string.IsNullOrEmpty(Subject))
                         Subject = "---";
                 }
                 else if (tmpStrLine.StartsWith("Message-ID:"))
                 {
-                    MessageId = Strings.Trim(tmpStrLine.Substring(11));
+                    MessageId = tmpStrLine.Substring(11).Trim();
                 }
                 else if (tmpStrLine.StartsWith("Date:"))
                 {
-                    MessageDate = Globals.RFC822DateToDate(Strings.Trim(tmpStrLine.Substring(5)));
+                    MessageDate = Globals.RFC822DateToDate(tmpStrLine.Substring(5).Trim());
                 }
             }
 
@@ -306,12 +305,12 @@ namespace Paclink
                     // being posted to the "To" collection remove it from the "Cc" collection...
                     if (blnCcExists & !blnCc)
                     {
-                        for (int intIndex = 1, loopTo = cllCcAddresses.Count; intIndex <= loopTo; intIndex++)
+                        for (int intIndex = 0, loopTo = cllCcAddresses.Count; intIndex < loopTo; intIndex++)
                         {
                             WinlinkAddress objCcAddress = (WinlinkAddress)cllCcAddresses[intIndex];
                             if ((objAddress.RadioAddress ?? "") == (objCcAddress.RadioAddress ?? ""))
                             {
-                                cllCcAddresses.Remove(intIndex);
+                                cllCcAddresses.RemoveAt(intIndex);
                                 blnCcExists = false;
                                 break;
                             }
@@ -396,7 +395,7 @@ namespace Paclink
 
             var sbdHeader = new StringBuilder();
             int intIndex;
-            if (Information.IsDate(MessageDate))
+            if (MessageDate != null)
             {
                 sbdHeader.Append("Date: " + Globals.DateToRFC822Date(MessageDate) + Globals.CRLF);
             }
@@ -424,18 +423,18 @@ namespace Paclink
             {
                 if (cllToAddresses.Count == 1)
                 {
-                    sbdHeader.Append("To: " + ((WinlinkAddress)cllToAddresses[1]).SMTPAddress + Globals.CRLF);
+                    sbdHeader.Append("To: " + ((WinlinkAddress)cllToAddresses[0]).SMTPAddress + Globals.CRLF);
                 }
                 else
                 {
                     var loopTo = cllToAddresses.Count;
-                    for (intIndex = 1; intIndex <= loopTo; intIndex++)
+                    for (intIndex = 0; intIndex < loopTo; intIndex++)
                     {
                         if (intIndex == 1)
                         {
-                            sbdHeader.Append("To: " + ((WinlinkAddress)cllToAddresses[1]).SMTPAddress + "," + Globals.CRLF);
+                            sbdHeader.Append("To: " + ((WinlinkAddress)cllToAddresses[0]).SMTPAddress + "," + Globals.CRLF);
                         }
-                        else if (intIndex == cllToAddresses.Count)
+                        else if (intIndex == cllToAddresses.Count - 1)
                         {
                             sbdHeader.Append(" " + ((WinlinkAddress)cllToAddresses[intIndex]).SMTPAddress + Globals.CRLF);
                         }
@@ -451,18 +450,18 @@ namespace Paclink
             {
                 if (cllCcAddresses.Count == 1)
                 {
-                    sbdHeader.Append("Cc: " + ((WinlinkAddress)cllCcAddresses[1]).SMTPAddress + Globals.CRLF);
+                    sbdHeader.Append("Cc: " + ((WinlinkAddress)cllCcAddresses[0]).SMTPAddress + Globals.CRLF);
                 }
                 else
                 {
                     var loopTo1 = cllCcAddresses.Count;
-                    for (intIndex = 1; intIndex <= loopTo1; intIndex++)
+                    for (intIndex = 0; intIndex < loopTo1; intIndex++)
                     {
-                        if (intIndex == 1)
+                        if (intIndex == 0)
                         {
-                            sbdHeader.Append("Cc: " + ((WinlinkAddress)cllCcAddresses[1]).SMTPAddress + "," + Globals.CRLF);
+                            sbdHeader.Append("Cc: " + ((WinlinkAddress)cllCcAddresses[0]).SMTPAddress + "," + Globals.CRLF);
                         }
-                        else if (intIndex == cllCcAddresses.Count)
+                        else if (intIndex == cllCcAddresses.Count - 1)
                         {
                             sbdHeader.Append(" " + ((WinlinkAddress)cllCcAddresses[intIndex]).SMTPAddress + Globals.CRLF);
                         }
@@ -616,7 +615,7 @@ namespace Paclink
                     {
                         if (bytSingle != NUL)
                         {
-                            strOffset += Conversions.ToString((char)bytSingle);
+                            strOffset += ((char)bytSingle).ToString();
                         }
                         else
                         {
@@ -659,7 +658,7 @@ namespace Paclink
                         bytCompressed[intProgress] = bytSingle;
                         intB2Checksum += bytSingle;
                         intProgress += 1;
-                        if (intProgress > Information.UBound(bytCompressed))
+                        if (intProgress > bytCompressed.Length - 1)
                         {
                             intArraySize += 10000;
                             Array.Resize(ref bytCompressed, intArraySize + 1);
@@ -735,15 +734,15 @@ namespace Paclink
             // received message and separates out any file attachments. Returns True _
             // if successful, False if not...
 
-            if (Information.UBound(bytCompressed) < 10)
+            if ((bytCompressed.Length - 1) < 10)
                 return false;
             try
             {
                 var intHeader = default(int);
                 var intBody = default(int);
                 var sbdInput = new StringBuilder();
-                var cllAttachmentNames = new Collection();
-                var cllAttachmentSizes = new Collection();
+                var cllAttachmentNames = new List<string>();
+                var cllAttachmentSizes = new List<int>();
 
                 // Decode the B2 header...
                 foreach (var bytSingle in bytUncompressed)
@@ -761,12 +760,12 @@ namespace Paclink
                             else if (strHeaderLine.IndexOf("DATE:") == 0)
                             {
                                 string strDateTime = strHeaderLine.Substring(5);
-                                strDateTime = Strings.Replace(strDateTime, ".", "/");
-                                strDateTime = Strings.Replace(strDateTime, "-", "/");
+                                strDateTime = strDateTime.Replace(".", "/");
+                                strDateTime = strDateTime.Replace("-", "/");
                                 strDateTime = Globals.ReformatDate(strDateTime);
                                 try
                                 {
-                                    MessageDate = Conversions.ToDate(strDateTime);
+                                    MessageDate = DateTime.Parse(strDateTime);
                                 }
                                 catch
                                 {
@@ -775,11 +774,11 @@ namespace Paclink
                             }
                             else if (strHeaderLine.IndexOf("MID:") == 0)
                             {
-                                MessageId = Strings.Trim(strHeaderLine.Substring(4));
+                                MessageId = strHeaderLine.Substring(4).Trim();
                             }
                             else if (strHeaderLine.IndexOf("FROM:") == 0)
                             {
-                                Sender.RadioAddress = Strings.Trim(sbdInput.ToString().Substring(5));
+                                Sender.RadioAddress = sbdInput.ToString().Substring(5).Trim();
                             }
                             else if (strHeaderLine.IndexOf("TO:") == 0)
                             {
@@ -788,7 +787,7 @@ namespace Paclink
                             }
                             else if (strHeaderLine.IndexOf("CC:") == 0)
                             {
-                                cllCcAddresses.Add(new WinlinkAddress(Strings.Trim(sbdInput.ToString().Substring(3))));
+                                cllCcAddresses.Add(new WinlinkAddress(sbdInput.ToString().Substring(3).Trim()));
                             }
                             else if (strHeaderLine.IndexOf("BODY:") == 0)
                             {
@@ -796,12 +795,12 @@ namespace Paclink
                             }
                             else if (strHeaderLine.IndexOf("MBO:") == 0)
                             {
-                                Source = Strings.Trim(strHeaderLine.Substring(4));
+                                Source = strHeaderLine.Substring(4).Trim();
                             }
                             else if (strHeaderLine.IndexOf("FILE:") == 0)
                             {
                                 var strTokens = strHeaderLine.Split(' ');
-                                cllAttachmentNames.Add(Strings.Trim(sbdInput.ToString().Substring(7 + strTokens[1].Length)));
+                                cllAttachmentNames.Add((sbdInput.ToString().Substring(7 + strTokens[1].Length)).Trim());
                                 cllAttachmentSizes.Add(Convert.ToInt32(strTokens[1]));
                             }
 
@@ -827,10 +826,10 @@ namespace Paclink
                     return true;
 
                 // Parse out the attachments from the uncompressed binary array...
-                for (int intCount = 1, loopTo1 = cllAttachmentNames.Count; intCount <= loopTo1; intCount++)
+                for (int intCount = 0, loopTo1 = cllAttachmentNames.Count; intCount < loopTo1; intCount++)
                 {
                     var stcAttachment = new Attachment();
-                    stcAttachment.FileName = Conversions.ToString(cllAttachmentNames[intCount]);
+                    stcAttachment.FileName = cllAttachmentNames[intCount].ToString();
                     stcAttachment.Image = new byte[(Convert.ToInt32(cllAttachmentSizes[intCount]))];
                     intIndex += 2;
                     for (int intPosition = 0, loopTo2 = Convert.ToInt32(cllAttachmentSizes[intCount]) - 1; intPosition <= loopTo2; intPosition++)
@@ -842,9 +841,9 @@ namespace Paclink
                     aryAttachments.Add(stcAttachment);
                 }
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[Message.DecodeB2Message] " + Information.Err().Description);
+                Logs.Exception("[Message.DecodeB2Message] " + e.Message);
                 return false;
             }
 
@@ -963,11 +962,11 @@ namespace Paclink
             // Create the blocks to send...
             if (intRemainder != 0)
             {
-                intFormattedUpperBound = 6 + Subject.Length + intPackets * 2 + strOffset.Length + Information.UBound(bytCompressed) - intOffset;
+                intFormattedUpperBound = 6 + Subject.Length + intPackets * 2 + strOffset.Length + (bytCompressed.Length - 1) - intOffset;
             }
             else
             {
-                intFormattedUpperBound = 4 + Subject.Length + intPackets * 2 + strOffset.Length + Information.UBound(bytCompressed) - intOffset;
+                intFormattedUpperBound = 4 + Subject.Length + intPackets * 2 + strOffset.Length + (bytCompressed.Length - 1) - intOffset;
             }
 
             if (intOffset > 0)
@@ -979,7 +978,7 @@ namespace Paclink
             intPosition += 1;
             foreach (char c in Subject)
             {
-                bytFormatted[intPosition] = Convert.ToByte(Strings.Asc(c));
+                bytFormatted[intPosition] = Convert.ToByte(Globals.Asc(c));
                 intPosition += 1;
             }
 
@@ -987,7 +986,7 @@ namespace Paclink
             intPosition += 1;
             foreach (char c in strOffset)
             {
-                bytFormatted[intPosition] = Convert.ToByte(Strings.Asc(c));
+                bytFormatted[intPosition] = Convert.ToByte(Globals.Asc(c));
                 intPosition += 1;
             }
 
@@ -1057,7 +1056,7 @@ namespace Paclink
                         bytFormatted[intPosition] = EOT;
                         intPosition += 1;
                         bytFormatted[intPosition] = Convert.ToByte((intCheckSum & 0xFF) * -1 & 0xFF);
-                        if (intPosition == Information.UBound(bytFormatted))
+                        if (intPosition == bytFormatted.Length - 1)
                         {
                             return true;
                         }
@@ -1070,9 +1069,9 @@ namespace Paclink
                 }
                 while (true);
             }
-            catch
+            catch (Exception e)
             {
-                Logs.Exception("[RMSLiteMessage.FormatForBinaryTransmission] " + Information.Err().Description);
+                Logs.Exception("[RMSLiteMessage.FormatForBinaryTransmission] " + e.Message);
                 return false;
             }
         } // FormatForBinaryTransmission

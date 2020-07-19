@@ -11,8 +11,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using SyslogLib;
 using WinlinkServiceClasses;
 
@@ -124,7 +122,7 @@ namespace Paclink
         public static DateTime dttPostVersionRecord = DateTime.UtcNow.AddDays(-2);
 
         // Global Collections...
-        public static Collection cllFastStart = new Collection();
+        public static List<string> cllFastStart = new List<string>();
 
         // Global Objects...
         public static DialogPactorConnect dlgPactorConnect;
@@ -259,37 +257,38 @@ namespace Paclink
         {
             // Returns the strDate as a string in Winlink format (Example: 2004/08/24 07:23)...
 
-            return Conversions.ToDate(strDate).ToString("yyyy/MM/dd HH:mm");
+            return Convert.ToDateTime(strDate).ToString("yyyy/MM/dd HH:mm");
         } // FormatDate (String)
 
         public static string ReformatDate(string strSource)
         {
             // Converts a mm/dd/yyyy format to a Winlink format (Example: 2004/08/24 07:23)...
 
-            strSource = Strings.Trim(strSource);
-            if (Information.IsDate(strSource))
+            strSource = strSource.Trim();
+            DateTime tmpVal = default(DateTime);
+            if (DateTime.TryParse(strSource, out tmpVal))
             {
                 try
                 {
                     var sDate = strSource.Split('/');
-                    if (Conversions.ToLong(sDate[0]) <= 12)
+                    if (Convert.ToInt64(sDate[0]) <= 12)
                     {
                         var sTime = sDate[2].Split(' ');
-                        if (Information.UBound(sTime) == 0)
+                        if ((sTime.Length - 1) == 0)
                         {
                             Array.Resize(ref sTime, 2);
                         }
 
-                        return Strings.Trim(sTime[0] + "/" + sDate[0] + "/" + sDate[1] + " " + sTime[1]);
+                        return (sTime[0] + "/" + sDate[0] + "/" + sDate[1] + " " + sTime[1]).Trim();
                     }
                     else
                     {
                         return strSource;
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Logs.Exception("[ReformatDate] " + strSource + " " + Information.Err().Description);
+                    Logs.Exception("[ReformatDate] " + strSource + " " + ex.Message);
                     return strSource;
                 }
             }
@@ -318,11 +317,11 @@ namespace Paclink
             {
                 if (bytFrame[intIndex] < 0x20 | bytFrame[intIndex] > 0x7E)
                 {
-                    Debug.Write("[" + Conversion.Hex(bytFrame[intIndex]) + "]");
+                    Debug.Write("[" + bytFrame[intIndex].ToString("X") + "]");
                 }
                 else
                 {
-                    Debug.Write(Conversions.ToString((char)bytFrame[intIndex]));
+                    Debug.Write(Convert.ToString((char)bytFrame[intIndex]));
                 }
             }
 
@@ -336,7 +335,7 @@ namespace Paclink
 
             var bytBuffer = new byte[strText.Length];
             for (int intIndex = 0, loopTo = bytBuffer.Length - 1; intIndex <= loopTo; intIndex++)
-                bytBuffer[intIndex] = Convert.ToByte(Strings.Asc(strText.Substring(intIndex, 1)));
+                bytBuffer[intIndex] = Convert.ToByte(Globals.Asc(strText.Substring(intIndex, 1)[0]));
             return bytBuffer;
         } // GetBytes
 
@@ -402,7 +401,7 @@ namespace Paclink
 
             int intOriginalSize;
             intOriginalSize = bytOriginal.Length;
-            Array.Resize(ref bytOriginal, bytOriginal.Length + Information.UBound(bytToAdd) + 1);
+            Array.Resize(ref bytOriginal, bytOriginal.Length + (bytToAdd.Length - 1) + 1);
             Array.Copy(bytToAdd, 0, bytOriginal, intOriginalSize, bytToAdd.Length);
         } // ConcatanateByteArrays
 
@@ -424,7 +423,7 @@ namespace Paclink
         {
             // Returns a string formatted to be included in an SQL string...
 
-            return Strings.Replace(Strings.Replace(strText, @"\", @"\\"), "'", "''");
+            return strText.Replace(@"\", @"\\").Replace("'", "''");
         } // StringToSQL
 
         public static DateTime RFC822DateToDate(string sDate)
@@ -447,7 +446,7 @@ namespace Paclink
                 if (nMonth < 1)
                     return DateTime.UtcNow;
                 string sNewDate = sDateParts[3] + "/" + nMonth.ToString() + "/" + sDateParts[1] + " " + sDateParts[4];
-                DateTime dtDate = Conversions.ToDate(sNewDate);
+                DateTime dtDate = Convert.ToDateTime(sNewDate);
                 var switchExpr = sDateParts[5];
                 switch (switchExpr)
                 {
@@ -641,7 +640,11 @@ namespace Paclink
             {
                 if (strInvalidCharacters.IndexOf(chr) != -1)
                 {
-                    Interaction.MsgBox("The characters " + strInvalidCharacters + " are not allowed in file, account, or channel names...", MsgBoxStyle.Information);
+                    MessageBox.Show(
+                        "The characters " + strInvalidCharacters + " are not allowed in file, account, or channel names...",
+                        "Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
                     return false;
                 }
             }
@@ -688,11 +691,11 @@ namespace Paclink
             {
                 strChar = strCallsign.Substring(intIndex, 1);
                 // Return false if not A-Z or 0-9...
-                if (!(strChar.CompareTo(Conversions.ToString('A')) >= 0 & strChar.CompareTo(Conversions.ToString('Z')) <= 0 | strChar.CompareTo(Conversions.ToString('0')) >= 0 & strChar.CompareTo(Conversions.ToString('9')) <= 0))
+                if (!(strChar.CompareTo(Convert.ToString('A')) >= 0 & strChar.CompareTo(Convert.ToString('Z')) <= 0 | strChar.CompareTo(Convert.ToString('0')) >= 0 & strChar.CompareTo(Convert.ToString('9')) <= 0))
                     return false;
 
                 // Count the numeric digits...
-                if (strChar.CompareTo(Conversions.ToString('0')) >= 0 & strChar.CompareTo(Conversions.ToString('9')) <= 0)
+                if (strChar.CompareTo(Convert.ToString('0')) >= 0 & strChar.CompareTo(Convert.ToString('9')) <= 0)
                     intDigitFound += 1;
             }
 
@@ -750,15 +753,15 @@ namespace Paclink
                 strChar = strName.Substring(intIndex, 1);
                 if (intIndex < 3)  // Return false if not A-Z...
                 {
-                    if (!(strChar.CompareTo(Conversions.ToString('A')) >= 0 & strChar.CompareTo(Conversions.ToString('Z')) <= 0))
+                    if (!(strChar.CompareTo(Convert.ToString('A')) >= 0 & strChar.CompareTo(Convert.ToString('Z')) <= 0))
                         return false;
                 }
                 else if (intIndex == 3 | intIndex == 4) // look for two digits
                 {
-                    if (!(strChar.CompareTo(Conversions.ToString('0')) >= 0 & strChar.CompareTo(Conversions.ToString('9')) <= 0))
+                    if (!(strChar.CompareTo(Convert.ToString('0')) >= 0 & strChar.CompareTo(Convert.ToString('9')) <= 0))
                         return false;
                 }
-                else if (!(strChar.CompareTo(Conversions.ToString('A')) >= 0 & strChar.CompareTo(Conversions.ToString('Z')) <= 0)) // look for Alphas
+                else if (!(strChar.CompareTo(Convert.ToString('A')) >= 0 & strChar.CompareTo(Convert.ToString('Z')) <= 0)) // look for Alphas
                 {
                     return false;
                 }
@@ -799,9 +802,9 @@ namespace Paclink
                 objTCP.Close();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[IsWEBSiteOnLine] " + Information.Err().Description);
+                Logs.Exception("[IsWEBSiteOnLine] " + ex.Message);
                 return false;
             }
         } // IsWEBSiteOnLine
@@ -816,9 +819,9 @@ namespace Paclink
                 objTCP.Close();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[IsCMSSiteOnLine] " + Information.Err().Description);
+                Logs.Exception("[IsCMSSiteOnLine] " + ex.Message);
                 return false;
             }
         } // IsCMSSiteOnLine
@@ -847,7 +850,7 @@ namespace Paclink
 
             int intOriginalSize;
             intOriginalSize = bytOriginal.Length;
-            Array.Resize(ref bytOriginal, bytOriginal.Length + Information.UBound(bytToAdd) + 1);
+            Array.Resize(ref bytOriginal, bytOriginal.Length + (bytToAdd.Length - 1) + 1);
             Array.Copy(bytToAdd, 0, bytOriginal, intOriginalSize, bytToAdd.Length);
         } // AppendBuffer
 
@@ -870,9 +873,9 @@ namespace Paclink
         public static bool WithinLimits(string TestValue, double HighLimit, double LowLimit)
         {
             // Simple function to test a string value to numeric limits
-            if (!Information.IsNumeric(TestValue))
+            double dblTestValue = 0.0;
+            if (!double.TryParse(TestValue, out dblTestValue))
                 return false;
-            double dblTestValue = double.Parse(TestValue, NumberStyles.AllowDecimalPoint);
             if (dblTestValue > HighLimit)
                 return false;
             if (dblTestValue < LowLimit)
@@ -894,7 +897,7 @@ namespace Paclink
             {
                 // MsgBox("No network or local IP interface found on this computer..." & vbCrLf & _
                 // "You many need to correct this problem and restart the program" & vbCrLf & _
-                // "for features requiring local or remote IP connections to work.", MsgBoxStyle.Critical)
+                // "for features requiring local or remote IP connections to work.", MessageBoxIcon.Critical)
                 return;
             }
 
@@ -980,12 +983,13 @@ namespace Paclink
             try
             {
                 var strTokens = strKHz.Split('.');
-                if (Information.IsNumeric(strTokens[0]))
+                int tmpVal = 0;
+                if (int.TryParse(strTokens[0], out tmpVal))
                 {
-                    intFrequency = Convert.ToInt32(strTokens[0]) * 1000;
+                    intFrequency = tmpVal * 1000;
                 }
 
-                if (strTokens.Length > 1 && Information.IsNumeric(strTokens[1]))
+                if (strTokens.Length > 1 && int.TryParse(strTokens[1].Trim(), out tmpVal))
                 {
                     string strHertz = strTokens[1].Trim();
                     var switchExpr = strHertz.Length;
@@ -1386,7 +1390,7 @@ namespace Paclink
                 return "";
             }
 
-            strFreq = Strings.Format(0.001 * double.Parse(strFreqTokens[0], NumberStyles.AllowDecimalPoint), "##00.000");
+            strFreq = (0.001 * double.Parse(strFreqTokens[0], NumberStyles.AllowDecimalPoint)).ToString("##00.000");
             if (strFreqTokens.Length < 3)
             {
                 return strFreq;
@@ -1583,7 +1587,7 @@ namespace Paclink
             // 
             // Extract the frequency from a full channel description such as 1234.000 (P1,P2,P3)
             // 
-            var strFreqArray = Strings.Split(strChannel.Trim(), " ");
+            var strFreqArray = strChannel.Trim().Split(' ');
             string strCenterFreq = strFreqArray[0].Trim();
             return strCenterFreq;
         }
@@ -1847,6 +1851,26 @@ namespace Paclink
             }
 
             return strVersion;
+        }
+
+        public static int Asc(char c)
+        {
+            int converted = c;
+            if (converted >= 0x80)
+            {
+                byte[] buffer = new byte[2];
+                // if the resulting conversion is 1 byte in length, just use the value
+                if (System.Text.Encoding.Default.GetBytes(new char[] { c }, 0, 1, buffer, 0) == 1)
+                {
+                    converted = buffer[0];
+                }
+                else
+                {
+                    // byte swap bytes 1 and 2;
+                    converted = buffer[0] << 16 | buffer[1];
+                }
+            }
+            return converted;
         }
     } // Globals
 }

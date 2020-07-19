@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.IO;
 using System.Text;
+using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using MimeKit;
 
@@ -56,9 +58,9 @@ namespace Paclink
                 Attachment objAttachment = (Attachment)aryAttachments[nIndex - 1];
                 AttachmentFileNameRet = objAttachment.FileName;
             }
-            catch
+            catch (Exception ex)
             {
-                Interaction.MsgBox("[5003] " + Information.Err().ToString());
+                MessageBox.Show("[5003] " + ex.Message);
                 AttachmentFileNameRet = "";
             }
 
@@ -73,9 +75,9 @@ namespace Paclink
                 Attachment objAttachment = (Attachment)aryAttachments[nIndex - 1];
                 AttachmentImageRet = objAttachment.Image;
             }
-            catch
+            catch (Exception ex)
             {
-                Interaction.MsgBox("[5004] " + Information.Err().ToString());
+                MessageBox.Show("[5004] " + ex.Message);
                 return null;
             }
 

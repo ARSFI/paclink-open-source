@@ -22,9 +22,9 @@ namespace Paclink
                     File.Delete(Globals.SiteRootDirectory + @"Temp Inbound\" + MID + ".indata");
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[PartialSession.StartNewPartial] " + Information.Err().Description);
+                Logs.Exception("[PartialSession.StartNewPartial] " + ex.Message);
             }
         } // StartNewFile
 
@@ -66,9 +66,9 @@ namespace Paclink
 
                 bytData = new byte[0];
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[PartialSessions, WritePartialToFile] Error: " + Information.Err().Description);
+                Logs.Exception("[PartialSessions, WritePartialToFile] Error: " + ex.Message);
             }
         } // WritePartialToFile
 
@@ -161,9 +161,9 @@ namespace Paclink
                     return intSumcheck;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Logs.Exception("[StripHeaderFromPartial] " + Information.Err().Description);
+                Logs.Exception("[StripHeaderFromPartial] " + ex.Message);
                 return 0;
             }
         } // StripHeaderFromPartial

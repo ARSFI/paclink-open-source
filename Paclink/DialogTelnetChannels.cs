@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Paclink
 {
@@ -112,21 +110,21 @@ namespace Paclink
 
             if (string.IsNullOrEmpty(cmbChannelName.Text))
             {
-                Interaction.MsgBox("A channel name is required...", MsgBoxStyle.Information);
+                MessageBox.Show("A channel name is required...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 cmbChannelName.Focus();
                 return;
             }
 
             if (Channels.IsAccount(cmbChannelName.Text))
             {
-                Interaction.MsgBox(cmbChannelName.Text + " is in use as an account name...", MsgBoxStyle.Information);
+                MessageBox.Show(cmbChannelName.Text + " is in use as an account name...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 cmbChannelName.Focus();
                 return;
             }
 
             if (Channels.IsChannel(cmbChannelName.Text))
             {
-                Interaction.MsgBox("The channel name " + cmbChannelName.Text + " is already in use...", MsgBoxStyle.Information);
+                MessageBox.Show("The channel name " + cmbChannelName.Text + " is already in use...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 cmbChannelName.Focus();
             }
             else
@@ -154,9 +152,11 @@ namespace Paclink
         {
             if (cmbChannelName.Items.Contains(cmbChannelName.Text) == false)
             {
-                Interaction.MsgBox("The telnet channel " + cmbChannelName.Text + " is not found...", MsgBoxStyle.Information);
+                MessageBox.Show("The telnet channel " + cmbChannelName.Text + " is not found...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            else if (Interaction.MsgBox("Confirm removal of telnet channel " + cmbChannelName.Text + "...", MsgBoxStyle.Question | MsgBoxStyle.YesNo) == MsgBoxResult.Yes)
+            else if (MessageBox.Show(
+                "Confirm removal of telnet channel " + cmbChannelName.Text + "...", "Remove Channel",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 Channels.RemoveChannel(cmbChannelName.Text);
                 Channels.FillChannelCollection();
@@ -170,7 +170,8 @@ namespace Paclink
         {
             if (cmbChannelName.Items.Contains(cmbChannelName.Text) == false)
             {
-                Interaction.MsgBox("The telnet channel " + cmbChannelName.Text + " is not found...", MsgBoxStyle.Information);
+                MessageBox.Show("The telnet channel " + cmbChannelName.Text + " is not found...",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
