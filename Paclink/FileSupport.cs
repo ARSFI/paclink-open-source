@@ -1,12 +1,14 @@
 ﻿using System;
 using System.IO;
 using Ionic.Zip;
-using Microsoft.VisualBasic;
+using NLog;
 
 namespace Paclink
 {
     public class FileSupport
     {
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+
         public void ProcessSupportFile(string strFilename)
         {
             try
@@ -26,7 +28,7 @@ namespace Paclink
 
                             {
                                 ze.Extract(Globals.SiteRootDirectory + @"Documentation\", ExtractExistingFileAction.OverwriteSilently);
-                                Globals.queChannelDisplay.Enqueue("R  *** File: " + strDecompressedName + " extracted to " + Globals.SiteRootDirectory + "Documenation");
+                                Globals.queChannelDisplay.Enqueue("R  *** File: " + strDecompressedName + " extracted to " + Globals.SiteRootDirectory + "Documentation");
                             }
                             else if (strDecompressedName.EndsWith(".chm"))
                             {
@@ -51,7 +53,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[ProcessSupportFile] " + ex.Message);
+                _log.Error("[ProcessSupportFile] " + ex.Message);
             }
         } // ProcessSupportFile
     }

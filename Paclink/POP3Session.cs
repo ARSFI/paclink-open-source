@@ -4,11 +4,14 @@ using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Timers;
+using NLog;
 
 namespace Paclink
 {
     public class POP3Session
     {
+        private readonly Logger Log = LogManager.GetCurrentClassLogger();
+
         public delegate void DisconnectHandler(POP3Session conn);
         public event DisconnectHandler OnDisconnect;
 
@@ -613,7 +616,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[8273] " + e.Message);
+                Log.Error("[8273] " + e.Message);
                 return "-ERR internal error" + Globals.CRLF;
             }
         } // TopResponse

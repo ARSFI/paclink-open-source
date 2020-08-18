@@ -4,12 +4,14 @@ using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
+using NLog;
 
 namespace Paclink
 {
     public partial class Main
     {
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+
         public Main()
         {
             InitializeComponent();
@@ -96,7 +98,7 @@ namespace Paclink
             if ((strText ?? "") == Globals.CLEAR)
             {
                 ChannelDisplay.Clear();
-                File.WriteAllText(Globals.SiteRootDirectory + @"Logs\Channel Events " + DateTime.UtcNow.ToString("yyyyMMdd") + ".log", Globals.CRLF);
+                File.WriteAllText(Globals.SiteRootDirectory + @"Log\Channel Events " + DateTime.UtcNow.ToString("yyyyMMdd") + ".log", Globals.CRLF);
                 return;
             }
             else if (string.IsNullOrEmpty(strText))
@@ -127,29 +129,29 @@ namespace Paclink
                 case var @case when @case == Color.Red:
                 case var case1 when case1 == Color.Green:
                     {
-                        Logs.ChannelEvents(strText);
+                        _log.Debug(strText);
                         break;
                     }
 
                 case var case2 when case2 == Color.Purple:
                     {
-                        Logs.ChannelEvents(strText);
+                        _log.Debug(strText);
                         break;
                     }
 
                 case var case3 when case3 == Color.Black:
                     {
-                        Logs.ChannelEvents("> " + strText);
+                        _log.Debug("> " + strText);
                         break;
                     }
 
                 case var case4 when case4 == Color.Blue:
                     {
-                        Logs.ChannelEvents("< " + strText);
+                        _log.Debug("< " + strText);
                         break;
                     }
             }
-        } // ChannelDisplayWrite
+        } 
 
         private void ChannelSelection(object s, EventArgs e)
         {
@@ -250,9 +252,9 @@ namespace Paclink
                 Directory.CreateDirectory(Globals.SiteRootDirectory + "Data");
             }
 
-            if (Directory.Exists(Globals.SiteRootDirectory + "Logs") == false)
+            if (Directory.Exists(Globals.SiteRootDirectory + "Log") == false)
             {
-                Directory.CreateDirectory(Globals.SiteRootDirectory + "Logs");
+                Directory.CreateDirectory(Globals.SiteRootDirectory + "Log");
             }
 
             if (Directory.Exists(Globals.SiteRootDirectory + "Documentation") == false)
@@ -298,7 +300,6 @@ namespace Paclink
             // If objWL2KServers IsNot Nothing Then objWL2KServers.Close()
             if (Globals.objWL2KInterop is object)
                 Globals.objWL2KInterop.Close();
-            Globals.CloseSysLog(5);
             Globals.objPrimaryThread = null;
             // objWL2KServers = Nothing
         } // MainClosed
@@ -509,10 +510,12 @@ namespace Paclink
                 Globals.queStateDisplay.Enqueue("");
                 Globals.objPrimaryThread.StartChannel(strChannelSelection, false);
             }
-        } // StartChannelEvent
+        }
+
         // 
         // The main timer tick has occurred.
         //
+        static int intHour = 99;
         private bool blnMainStarted = false;
         private DateTime dttCMSCheck = DateTime.MinValue;
         private void tmrMain_Tick(object sender, EventArgs e)
@@ -522,7 +525,7 @@ namespace Paclink
                 dttCMSCheck = DateTime.Now;
             }
 
-            int intHour = 99;
+            
             if (Globals.blnAutoupdateRestart)
             {
                 Globals.blnAutoupdateRestart = false;
@@ -549,7 +552,6 @@ namespace Paclink
             {
                 // We just entered a new hour.
                 intHour = DateTime.Now.Hour;
-                Logs.PurgeOldLogFiles();
                 Globals.objINIFile.CheckBackupIni();
                 // See if it's time to post a version record
                 if (DateTime.UtcNow.Subtract(Globals.dttPostVersionRecord).TotalHours >= 24)
@@ -634,8 +636,9 @@ namespace Paclink
 
                 lblUptime.Text = Globals.GetUptime();
             }
-            catch
+            catch(Exception ex)
             {
+                _log.Error(ex.Message);
             }
         } // tmrDisplay
 
@@ -678,7 +681,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("Main.UpdateChannelsList A] " + e.Message);
+                _log.Error("Main.UpdateChannelsList A] " + e.Message);
             }
 
             try
@@ -692,7 +695,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("Main.UpdateChannelsList B] " + e.Message);
+                _log.Error("Main.UpdateChannelsList B] " + e.Message);
             }
         } // UpdateChannelsList
 
@@ -707,7 +710,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[Main.mnuProperties_Click A] " + ex.Message);
+                _log.Error("[Main.mnuProperties_Click A] " + ex.Message);
             }
 
             try
@@ -717,7 +720,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[Main.mnuProperties_Click B] " + ex.Message);
+                _log.Error("[Main.mnuProperties_Click B] " + ex.Message);
             }
 
             var dlgProperties = new DialogSiteProperties();
@@ -835,7 +838,7 @@ namespace Paclink
                 var dlgViewLog = new OpenFileDialog();
                 dlgViewLog.Multiselect = true;
                 dlgViewLog.Title = "Select a Log File to View...";
-                dlgViewLog.InitialDirectory = Globals.SiteRootDirectory + @"Logs\";
+                dlgViewLog.InitialDirectory = Globals.SiteRootDirectory + @"Log\";
                 dlgViewLog.Filter = "Log File(.log)|*.log";
                 dlgViewLog.RestoreDirectory = true;
                 if (dlgViewLog.ShowDialog() == DialogResult.OK)
@@ -852,7 +855,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[Main.mnuView_Click] " + ex.Message);
+                _log.Error("[Main.mnuView_Click] " + ex.Message);
             }
         } // mnuLogs_Click
 
@@ -879,7 +882,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[Main.mnuDocumentation_Click] " + ex.Message);
+                _log.Error("[Main.mnuDocumentation_Click] " + ex.Message);
             }
         } // mnuDocumentation_Click
 
@@ -892,7 +895,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[Main.mnuFile_Click] " + ex.Message);
+                _log.Error("[Main.mnuFile_Click] " + ex.Message);
             }
         } // mnuFile_Click
 
@@ -915,7 +918,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[Main.mnuBackup_Click] " + ex.Message);
+                _log.Error("[Main.mnuBackup_Click] " + ex.Message);
             }
         } // mnuBackup_Click
 
@@ -937,7 +940,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[Main.mnuRestoreSettings_Click] " + ex.Message);
+                _log.Error("[Main.mnuRestoreSettings_Click] " + ex.Message);
             }
         } // mnuRestoreSettings_Click
 
@@ -956,7 +959,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[Main.mnuHelpContents_Click] " + ex.Message);
+                _log.Error("[Main.mnuHelpContents_Click] " + ex.Message);
             }
         } // mnuHelpContents_Click
 

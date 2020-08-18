@@ -7,12 +7,15 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NLog;
 using Org.BouncyCastle.Crypto.Paddings;
 
 namespace Paclink
 {
     public partial class DialogAGWEngine
     {
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+
         public DialogAGWEngine()
         {
             InitializeComponent();
@@ -188,7 +191,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[AGWEngine, tcpOnDataIn] " + ex.Message);
+                    _log.Error("[AGWEngine, tcpOnDataIn] " + ex.Message);
                     SetRemoteButtonStatus(true, Color.Tomato);
                 }
                 break;
@@ -237,7 +240,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[AGWEngine, LoginAGWRemote] " + ex.Message);
+                _log.Error("[AGWEngine, LoginAGWRemote] " + ex.Message);
                 tmrTimer10sec.Enabled = false;
                 SetRemoteButtonStatus(true, Color.Tomato);
             }
@@ -257,7 +260,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[AGWEngine, RequestAGWPortInfo] " + ex.Message);
+                _log.Error("[AGWEngine, RequestAGWPortInfo] " + ex.Message);
                 tmrTimer10sec.Enabled = false;
                 SetRemoteButtonStatus(true, Color.Tomato);
             }
@@ -267,7 +270,7 @@ namespace Paclink
         {
             tmrTimer10sec.Enabled = false;
             SetRemoteButtonStatus(true, Color.Tomato);
-            Logs.Exception("[AGWEngine]10 sec timeout on remote AGWPE port info Request to " + txtAGWHost.Text);
+            _log.Error("[AGWEngine]10 sec timeout on remote AGWPE port info Request to " + txtAGWHost.Text);
             try
             {
                 objTCPPort.Close();

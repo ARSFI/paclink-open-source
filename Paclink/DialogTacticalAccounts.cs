@@ -1,11 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using NLog;
 
 namespace Paclink
 {
     public partial class DialogTacticalAccounts
     {
+        private readonly Logger Log = LogManager.GetCurrentClassLogger();
+
         public DialogTacticalAccounts()
         {
             InitializeComponent();
@@ -447,7 +450,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[TacticalAccounts.btnHelp_Click] " + ex.Message);
+                Log.Error("[TacticalAccounts.btnHelp_Click] " + ex.Message);
             }
         } // btnHelp_Click
     }

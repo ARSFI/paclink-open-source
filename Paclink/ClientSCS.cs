@@ -6,12 +6,14 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using NLog;
 
 namespace Paclink
 {
     public class ClientSCS : IClient
     {
         // This Class handles all PTC II TNCs (PTCII, IIe, IIex, IIpro, IIusb, DR-7800) for both Packet and Pactor connections
+        private readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         private struct ConnectedCall
         {
@@ -159,7 +161,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[PTCIIClient.Close] " + ex.Message);
+                Log.Error("[PTCIIClient.Close] " + ex.Message);
             }
 
             if (objHostPort != null)
@@ -219,7 +221,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[PTCIIClient.Connect B] " + ex.Message);
+                    Log.Error("[PTCIIClient.Connect B] " + ex.Message);
                 }
             }
 
@@ -258,7 +260,7 @@ namespace Paclink
                         {
                             blnNoIdentification = true;
                             Globals.queChannelDisplay.Enqueue("R*** Failure initializing Radio Control");
-                            Logs.Exception("[PTCIIClient.Connect C] Failure initializing Radio Control");
+                            Log.Error("[PTCIIClient.Connect C] Failure initializing Radio Control");
                             return false;
                         }
                     }
@@ -266,7 +268,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[PTCIIClient.Connect D] " + ex.Message);
+                Log.Error("[PTCIIClient.Connect D] " + ex.Message);
             }
 
             try
@@ -304,7 +306,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[PTCIIClient.Connect E] " + ex.Message);
+                Log.Error("[PTCIIClient.Connect E] " + ex.Message);
             }
 
             var strTemp = default(string);
@@ -343,7 +345,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[PTCIIClient.Connect F] " + ex.Message);
+                    Log.Error("[PTCIIClient.Connect F] " + ex.Message);
                 }
             }
             else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
@@ -444,7 +446,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[PTCIIClient.Connect G] " + ex.Message);
+                    Log.Error("[PTCIIClient.Connect G] " + ex.Message);
                 }
 
                 try
@@ -461,7 +463,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[PTCIIClient.Connect H] " + ex.Message);
+                    Log.Error("[PTCIIClient.Connect H] " + ex.Message);
                 }
             }
 
@@ -477,7 +479,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[PTCIIClient.Connect J] " + ex.Message);
+                Log.Error("[PTCIIClient.Connect J] " + ex.Message);
             }
 
             return true;
@@ -557,7 +559,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[PTCIIClient.SendData] Port=" + Globals.stcSelectedChannel.TNCPort.ToString() + " - " + ex.Message);
+                Log.Error("[PTCIIClient.SendData] Port=" + Globals.stcSelectedChannel.TNCPort.ToString() + " - " + ex.Message);
             }
         }  // DataToSend (Byte()) 
 
@@ -1028,7 +1030,7 @@ namespace Paclink
                     }
                     catch (Exception ex)
                     {
-                        Logs.Exception("[PTCIIClient.OnPTCControl] " + ex.Message);
+                        Log.Error("[PTCIIClient.OnPTCControl] " + ex.Message);
                         return;
                     }
 
@@ -1150,7 +1152,7 @@ namespace Paclink
         private void OnPTCError(string strText)
         {
             Globals.queChannelDisplay.Enqueue("P*** " + strText);
-            Logs.Exception("[PTCIIClient.OnPTCError] " + strText);
+            Log.Error("[PTCIIClient.OnPTCError] " + strText);
         } // OnPTCError
 
         private bool blnConnected = false;
@@ -1465,7 +1467,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[Client.OpenSerialPort] " + ex.Message);
+                Log.Error("[Client.OpenSerialPort] " + ex.Message);
                 objHostPort = null;
                 return false;
             }
@@ -1587,7 +1589,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[PTCHostMode.SendCommand(Byte)] " + ex.Message);
+                    Log.Error("[PTCHostMode.SendCommand(Byte)] " + ex.Message);
                 }
             }
         }  // SendCommand (Byte)
@@ -1607,7 +1609,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[PTCHostMode.SendCommand(String)] " + ex.Message + " Command:" + intChannel.ToString() + "/" + strCommand);
+                    Log.Error("[PTCHostMode.SendCommand(String)] " + ex.Message + " Command:" + intChannel.ToString() + "/" + strCommand);
                 }
             }
         }  // SendCommand (String)
@@ -1763,6 +1765,8 @@ namespace Paclink
 
     public class SCSHostPort
     {
+        private readonly Logger Log = LogManager.GetCurrentClassLogger();
+
         public enum HostModeState
         {
             HostModeClosed,
@@ -1880,7 +1884,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[SCSHostPort.AddCRC] " + ex.Message);
+                Log.Error("[SCSHostPort.AddCRC] " + ex.Message);
             }
         } // AddCRC
 
@@ -1973,7 +1977,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[SCSHostPort.Close] " + ex.Message);
+                    Log.Error("[SCSHostPort.Close] " + ex.Message);
                 }
             }
         } // Close
@@ -2145,7 +2149,7 @@ namespace Paclink
                 intBytesRead = objSerial.Read(bytInputBuffer, 0, intBytesToRead);
                 if (intBytesRead != intBytesToRead)
                 {
-                    Logs.Exception("[SCSHostPort.DataReceivedEvent] Bytes read does not match bytes to read");
+                    Log.Error("[SCSHostPort.DataReceivedEvent] Bytes read does not match bytes to read");
                 }
 
                 ProcessDataReceived(bytInputBuffer);
@@ -2298,7 +2302,7 @@ namespace Paclink
             }
             else
             {
-                Logs.Exception("[SCSHostPort.SendDataPacket] Not in host mode! State=" + enmHostState.ToString());
+                Log.Error("[SCSHostPort.SendDataPacket] Not in host mode! State=" + enmHostState.ToString());
             }
         } // SendDataPacket 
 
@@ -2717,7 +2721,7 @@ namespace Paclink
             }
             else
             {
-                Logs.Exception("[SCSHostPort.SendHostPacket] Not in Host mode! State=" + enmHostState.ToString());
+                Log.Error("[SCSHostPort.SendHostPacket] Not in Host mode! State=" + enmHostState.ToString());
             }
         } // SendHostPacket (Byte())
 
@@ -2739,7 +2743,7 @@ namespace Paclink
             }
             else
             {
-                Logs.Exception("[SCSHostPort.SendHostPacket] Not in host mode - State=" + enmHostState.ToString() + " Command: " + strCommand);
+                Log.Error("[SCSHostPort.SendHostPacket] Not in host mode - State=" + enmHostState.ToString() + " Command: " + strCommand);
             }
         } // SendHostPacket (String)
 
@@ -2965,7 +2969,7 @@ namespace Paclink
                             if (IsTNCCommandResponse() == false)
                             {
                                 Globals.queChannelDisplay.Enqueue("R*** Could not recover the " + Globals.stcSelectedChannel.TNCType + " ... Try power recycle.");
-                                Logs.Exception("[SCSHstPort.Startup] Could not recover the " + Globals.stcSelectedChannel.TNCType);
+                                Log.Error("[SCSHstPort.Startup] Could not recover the " + Globals.stcSelectedChannel.TNCType);
                                 return false;
                             }
                         }
@@ -3020,7 +3024,7 @@ namespace Paclink
                     if (!blnCmdSeen)
                     {
                         Globals.queChannelDisplay.Enqueue("R*** Could not recover the TNC from Emulation mode 2");
-                        Logs.Exception("[SCSHstPort.Startup] Could not recover the " + Globals.stcSelectedChannel.TNCType + " from Emulation mode 2");
+                        Log.Error("[SCSHstPort.Startup] Could not recover the " + Globals.stcSelectedChannel.TNCType + " from Emulation mode 2");
                         return false;
                     }
                 }
@@ -3056,7 +3060,7 @@ namespace Paclink
                 // Attempt to recover the TNC if no "cmd:" has been seen...
                 if (!blnCmdSeen)
                 {
-                    Logs.Exception("[SCSHostPort.Startup] No valid response from " + Globals.stcSelectedChannel.TNCType + " after RESET command");
+                    Log.Error("[SCSHostPort.Startup] No valid response from " + Globals.stcSelectedChannel.TNCType + " after RESET command");
                     for (int intIndex = 1; intIndex <= 256; intIndex++)
                     {
                         try
@@ -3083,7 +3087,7 @@ namespace Paclink
                         while (true);
                     }
 
-                    Logs.Exception("[SCSHostPort.Startup] " + Globals.stcSelectedChannel.TNCType + " Host Sync: " + blnHostSync.ToString());
+                    Log.Error("[SCSHostPort.Startup] " + Globals.stcSelectedChannel.TNCType + " Host Sync: " + blnHostSync.ToString());
                     try
                     {
                         sbdResponse.Length = 0;
@@ -3170,7 +3174,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[SCSHostPort.Startup] " + ex.Message);
+                Log.Error("[SCSHostPort.Startup] " + ex.Message);
                 NewState(HostModeState.PTCFault);
                 Globals.queChannelDisplay.Enqueue("R*** Error during " + Globals.stcSelectedChannel.TNCType + " startup... See error log");
                 return false;

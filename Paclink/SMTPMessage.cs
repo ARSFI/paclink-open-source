@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using NLog;
 
 namespace Paclink
 {
@@ -10,6 +11,8 @@ namespace Paclink
     // Class to process an inbound messages from the STMP side...
     internal class SMTPMessage : IMessage
     {
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+
         private const string strBlockedExtensions = "exe pif scr ";
         internal bool IsAccepted = false;
         internal string ErrorDescription = "Unknown mime decode failure";
@@ -105,7 +108,7 @@ namespace Paclink
             }
             else
             {
-                Logs.Exception("[SMTPMessage.SaveMessage] " + MessageId + " empty mime");
+                _log.Error("[SMTPMessage.SaveMessage] " + MessageId + " empty mime");
                 ErrorDescription = "Failure to encode mime format";
                 return false;
             }
@@ -152,7 +155,7 @@ namespace Paclink
                     }
                     catch (Exception e)
                     {
-                        Logs.Exception("[SMTPMessage.LocalDelivery] " + e.Message);
+                        _log.Error("[SMTPMessage.LocalDelivery] " + e.Message);
                     }
                 }
             }
@@ -169,7 +172,7 @@ namespace Paclink
                     }
                     catch (Exception e)
                     {
-                        Logs.Exception("[SMTPMessage.LocalDelivery] " + e.Message);
+                        _log.Error("[SMTPMessage.LocalDelivery] " + e.Message);
                     }
                 }
             }
@@ -613,7 +616,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[2837] " + strDate + " " + e.Message);
+                _log.Error("[2837] " + strDate + " " + e.Message);
                 return DateTime.UtcNow;
             }
         } // RFC822DateToDate

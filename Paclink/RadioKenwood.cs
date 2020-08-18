@@ -2,11 +2,14 @@
 using System.IO.Ports;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using NLog;
 
 namespace Paclink
 {
     public class RadioKenwood : IRadio
     {
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+
         public RadioKenwood()
         {
 
@@ -55,7 +58,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[RadioKenwood.SetDtrControl] : " + ex.ToString());
+                _log.Error("[RadioKenwood.SetDtrControl] : " + ex.ToString());
                 return false;
             }
         }
@@ -69,7 +72,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[RadioDenwood.SetRtsControl] : " + ex.ToString());
+                _log.Error("[RadioDenwood.SetRtsControl] : " + ex.ToString());
                 return false;
             }
         }
@@ -135,7 +138,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[RadioKenwood.InitializeSerialPort] " + ex.Message);
+                _log.Error("[RadioKenwood.InitializeSerialPort] " + ex.Message);
                 return false;
             }
 
@@ -156,7 +159,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[KenwoodRadio.SetParameters] Packet Channel:  " + ex.Message);
+                    _log.Error("[KenwoodRadio.SetParameters] Packet Channel:  " + ex.Message);
                     return false;
                 }
             }
@@ -171,7 +174,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[KenwoodRadio.SetParameters] " + ex.Message);
+                    _log.Error("[KenwoodRadio.SetParameters] " + ex.Message);
                     return false;
                 }
             }
@@ -200,7 +203,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[RadioKenwood.Close] " + ex.Message);
+                _log.Error("[RadioKenwood.Close] " + ex.Message);
             }
         } // Close *
 
@@ -233,7 +236,7 @@ namespace Paclink
                             }
                             catch (Exception ex)
                             {
-                                Logs.Exception("[KenwoodRadio.SetFrequency TS-450/690] " + ex.Message);
+                                _log.Error("[KenwoodRadio.SetFrequency TS-450/690] " + ex.Message);
                                 return false;
                             }
 
@@ -252,7 +255,7 @@ namespace Paclink
                             }
                             catch (Exception ex)
                             {
-                                Logs.Exception("[KenwoodRadio.SetFrequency Kenwood(generic)] " + ex.Message);
+                                _log.Error("[KenwoodRadio.SetFrequency Kenwood(generic)] " + ex.Message);
                                 return false;
                             }
 
@@ -302,7 +305,7 @@ namespace Paclink
                         }
                         catch (Exception ex)
                         {
-                            Logs.Exception("[KenwoodRadio.SetFilter TS-2000] " + ex.Message);
+                            _log.Error("[KenwoodRadio.SetFilter TS-2000] " + ex.Message);
                         }
 
                         break;
@@ -317,7 +320,7 @@ namespace Paclink
                             strRadioReply = "";
                             // While strRadioReply.IndexOf("FL") = -1
                             // If dttTimeout.AddSeconds(3) < Now Then
-                            // Logs.Exception("[RadioKenwood.SetFilter] No reply to FL; command from " & strRadioType)
+                            // Log.Error("[RadioKenwood.SetFilter] No reply to FL; command from " & strRadioType)
                             // Return False
                             // End If
                             // SendCommand("FL;")
@@ -336,7 +339,7 @@ namespace Paclink
                         }
                         catch (Exception ex)
                         {
-                            Logs.Exception("[KenwoodRadio.SetFilter TS-450/690] " + ex.Message);
+                            _log.Error("[KenwoodRadio.SetFilter TS-450/690] " + ex.Message);
                         }
 
                         break;
@@ -353,7 +356,7 @@ namespace Paclink
                             strRadioReply = "";
                             // While strRadioReply.IndexOf("FW") = -1
                             // If dttTimeout.AddSeconds(3) < Now Then
-                            // Logs.Exception("[RadioKenwood.SetFilter] No reply to FW; command from " & strRadioType)
+                            // Log.Error("[RadioKenwood.SetFilter] No reply to FW; command from " & strRadioType)
                             // Return False
                             // End If
                             // SendCommand("FW;")
@@ -373,7 +376,7 @@ namespace Paclink
                         }
                         catch (Exception ex)
                         {
-                            Logs.Exception("[KenwoodRadio.SetFilter TS-480/Other] " + ex.Message);
+                            _log.Error("[KenwoodRadio.SetFilter TS-480/Other] " + ex.Message);
                         }
 
                         break;
@@ -406,7 +409,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[RadioKenwood.SendCommand] " + ex.Message);
+                _log.Error("[RadioKenwood.SendCommand] " + ex.Message);
                 return false;
             }
         } // SendCommand
@@ -450,7 +453,7 @@ namespace Paclink
                             }
                             catch (Exception ex)
                             {
-                                Logs.Exception("[KenwoodRadio.SetFMModeFrequency TS-2000] :" + ex.Message);
+                                _log.Error("[KenwoodRadio.SetFMModeFrequency TS-2000] :" + ex.Message);
                                 return false;
                             }
 

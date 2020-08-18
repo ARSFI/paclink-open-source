@@ -11,13 +11,15 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using SyslogLib;
+using NLog;
 using WinlinkServiceClasses;
 
 namespace Paclink
 {
     static class Globals
     {
+        private static readonly Logger _log = LogManager.GetCurrentClassLogger();
+
         public const string LF = "\n";
         public const string CR = "\r";
         public const string CRLF = CR + LF;
@@ -139,7 +141,6 @@ namespace Paclink
         public static DateTime objUpTime = DateTime.UtcNow;
         public static WinlinkInterop.WinlinkInterop objWL2KInterop = new WinlinkInterop.WinlinkInterop("");
         public static Main objMain;
-        private static SyslogLib.Syslog objWinlinkSyslog = null;
         public static Thread thrUpdate = null;
 
         // Enumerations
@@ -288,7 +289,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[ReformatDate] " + strSource + " " + ex.Message);
+                    _log.Error("[ReformatDate] " + strSource + " " + ex.Message);
                     return strSource;
                 }
             }
@@ -804,7 +805,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[IsWEBSiteOnLine] " + ex.Message);
+                _log.Error("[IsWEBSiteOnLine] " + ex.Message);
                 return false;
             }
         } // IsWEBSiteOnLine
@@ -821,7 +822,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[IsCMSSiteOnLine] " + ex.Message);
+                _log.Error("[IsCMSSiteOnLine] " + ex.Message);
                 return false;
             }
         } // IsCMSSiteOnLine
@@ -1777,62 +1778,6 @@ namespace Paclink
             }
 
             return dttDate;
-        }
-
-        public static void WriteSysLog(string strText, SyslogSeverity enmLogLevel = SyslogSeverity.Warning)
-        {
-            // 
-            // Write an entry to the central Winlink logging system.  Do not return until the event has been written.
-            // 
-            // See if logging is enabled.
-            // 
-            if (blnSendDiagnosticInfo == false | blnEnableLogging == false)
-                return;
-            // 
-            // Write the entry.
-            // 
-            if (objWinlinkSyslog == null)
-            {
-                objWinlinkSyslog = new SyslogLib.Syslog();
-            }
-
-            objWinlinkSyslog.WriteLogEntry(SiteCallsign, "Paclink", Application.ProductVersion, strText, enmLogLevel);
-            // 
-            // Finished
-            // 
-            return;
-        }
-
-        public static void QueueSysLog(string strText, SyslogSeverity enmLogLevel = SyslogSeverity.Warning)
-        {
-            // 
-            // Queue an entry to be written to the central Winlink logging system.  Do not wait for the write to finish.
-            // 
-            // See if logging is enabled.
-            // 
-            if (blnSendDiagnosticInfo == false | blnEnableLogging == false)
-                return;
-            // 
-            // Queue the entry.
-            // 
-            WriteSysLog(strText, enmLogLevel);
-            // 
-            // Finished
-            // 
-            return;
-        }
-
-        public static void CloseSysLog(double dblMaxWaitSeconds = 5)
-        {
-            // 
-            // Close the logging system.
-            // 
-            if (objWinlinkSyslog is object)
-            {
-                objWinlinkSyslog = null;
-            }
-
-            return;
         }
 
         public static string GetWindowsVersion()

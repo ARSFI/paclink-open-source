@@ -4,12 +4,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Timers;
+using NLog;
 using Org.BouncyCastle.Math.EC.Rfc7748;
 
 namespace Paclink
 {
     public class ProtocolB2
     {
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+
         public enum EB2States
         {
             WaitingForNewCommand,
@@ -308,7 +311,7 @@ namespace Paclink
                         else
                         {
                             Send("[442] - Command: \"" + strCommand + "\"  not recognized - disconnecting");
-                            Logs.Exception("B2Protocol [442] Command:\"" + strCommand + "\"  not recognized");
+                            _log.Error("B2Protocol [442] Command:\"" + strCommand + "\"  not recognized");
                             Disconnect();
                         }
 
@@ -372,7 +375,7 @@ namespace Paclink
                         else
                         {
                             Send("[442] - Command: \"" + strCommand + "\"  not recognized - disconnecting");
-                            Logs.Exception("B2Protocol [442] Command:\"" + strCommand + "\"  not recognized");
+                            _log.Error("B2Protocol [442] Command:\"" + strCommand + "\"  not recognized");
                             Disconnect();
                         }
 
@@ -387,7 +390,7 @@ namespace Paclink
 
                 case EB2States.ReceivingB2Messages:
                     {
-                        Logs.Exception("B2Protocol [449] State ReceivingB2Messages, Command: " + strCommand);
+                        _log.Error("B2Protocol [449] State ReceivingB2Messages, Command: " + strCommand);
                         Send("[449] Protocol error - disconnecting");
                         Disconnect();
                         break;
@@ -602,7 +605,7 @@ namespace Paclink
             }
             else
             {
-                Logs.Exception("[B2Acceptance] Response Count/intCount: " + cllResponse.Count.ToString() + "/" + intCount.ToString());
+                _log.Error("[B2Acceptance] Response Count/intCount: " + cllResponse.Count.ToString() + "/" + intCount.ToString());
                 Globals.queChannelDisplay.Enqueue("R*** [418] Protocol error - response to proposals does not match. Expect " + intCount.ToString() + "  Got " + cllResponse.Count.ToString());
                 Disconnect();
             }
@@ -637,7 +640,7 @@ namespace Paclink
                 var intVal = int.Parse(strTokens[1], System.Globalization.NumberStyles.HexNumber);
                 if (intVal != intCheckSum)
                 {
-                    Logs.Exception("[B2InboundProposal] Inbound checksum does not match (Value/Checksum): " + intVal.ToString() + "/" + intCheckSum.ToString());
+                    _log.Error("[B2InboundProposal] Inbound checksum does not match (Value/Checksum): " + intVal.ToString() + "/" + intCheckSum.ToString());
                     Send("[419] Protocol error - inbound checksum does not match");
                     Disconnect();
                     return;
@@ -714,7 +717,7 @@ namespace Paclink
             }
             else
             {
-                Logs.Exception("[B2InboundProposal] Protocol Error: " + strText);
+                _log.Error("[B2InboundProposal] Protocol Error: " + strText);
                 Globals.queChannelDisplay.Enqueue("R*** [413] Protocol error - Disconnecting");
                 Disconnect();
             }
@@ -770,7 +773,7 @@ namespace Paclink
                     objPartialSession.PurgeCurrentPartial(); // no longer needed as message now complete
                     if (objMessageInbound.Decompress(true) == false)
                     {
-                        Logs.Exception("B2Protocol [423] Unable to decompress Inbound Message ");
+                        _log.Error("B2Protocol [423] Unable to decompress Inbound Message ");
                         // objInitialProtocol.objClient.Break() ' Break for Pactor, has no affect on other channels TODO: verify placement
                         Send("[423] Protocol Error - Unable to decompress received binary compressed message...");
                         Disconnect();
@@ -781,7 +784,7 @@ namespace Paclink
 
                     if (objMessageInbound.DecodeB2Message() == false)
                     {
-                        Logs.Exception("B2Protocol [424] Unable to decode received binary compressed message...");
+                        _log.Error("B2Protocol [424] Unable to decode received binary compressed message...");
                         // objInitialProtocol.objClient.Break() ' Break for Pactor, has no affect on other channels TODO: verify placement
                         Send("[424] Protocol Error - Unable to decode received binary compressed message...");
                         Disconnect();
@@ -824,7 +827,7 @@ namespace Paclink
                 else if (intResult < 0)
                 {
                     objPartialSession.PurgeCurrentPartial(); // If error delete current partial to avoid potential loop.
-                    Logs.Exception("[B2MessageInbound] Protocol Error Problem receiving B2 message...nResult: " + intResult.ToString());
+                    _log.Error("[B2MessageInbound] Protocol Error Problem receiving B2 message...nResult: " + intResult.ToString());
                     // objInitialProtocol.objClient.Break() ' Break for Pactor, has no affect on other channels TODO: verify placement
                     Send("[425/" + intResult.ToString() + "] Protocol Error - Problem receiving B2 message...");
                     Disconnect();
@@ -991,20 +994,20 @@ namespace Paclink
                         if (intBytesReceived < 250 | intBytesReceived % 250 != 0)
                         {
                             // Problem with partial... 
-                            Logs.Exception("IsPartialMessage: Computed Bytes received is not modulo 250, Partial MID: " + MID + " Purged!");
+                            _log.Error("IsPartialMessage: Computed Bytes received is not modulo 250, Partial MID: " + MID + " Purged!");
                             File.Delete(Globals.SiteRootDirectory + @"Temp Inbound\" + MID + ".indata");
                             intBytesReceived = 0;
                         }
                         else if (intBytesReceived >= Convert.ToInt32(Length))
                         {
-                            Logs.Exception("IsPartialMessage: Partial Length exceeded proposed length, Partial MID: " + MID + " Purged!");
+                            _log.Error("IsPartialMessage: Partial Length exceeded proposed length, Partial MID: " + MID + " Purged!");
                             File.Delete(Globals.SiteRootDirectory + @"Temp Inbound\" + MID + ".indata");
                             intBytesReceived = 0;
                         }
                     }
                     else
                     {
-                        Logs.Exception("IsPartialMessage: Partial Files size < 255, Partial MID: " + MID + " Purged!");
+                        _log.Error("IsPartialMessage: Partial Files size < 255, Partial MID: " + MID + " Purged!");
                         File.Delete(Globals.SiteRootDirectory + @"Temp Inbound\" + MID + ".indata");
                     }
                 }
@@ -1014,7 +1017,7 @@ namespace Paclink
             catch (Exception e)
             {
                 File.Delete(Globals.SiteRootDirectory + @"Temp Inbound\" + MID + ".indata");
-                Logs.Exception("[IsPartialMessage] " + e.Message);
+                _log.Error("[IsPartialMessage] " + e.Message);
                 return 0;
             }
         } // IsPartialMessage

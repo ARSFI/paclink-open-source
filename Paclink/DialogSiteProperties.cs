@@ -4,11 +4,14 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using NLog;
 
 namespace Paclink
 {
     public partial class DialogSiteProperties
     {
+        private readonly Logger Log = LogManager.GetCurrentClassLogger();
+
         public DialogSiteProperties()
         {
             InitializeComponent();
@@ -397,7 +400,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[Properties.RemoveRadioAccount] " + ex.Message);
+                Log.Error("[Properties.RemoveRadioAccount] " + ex.Message);
             }
 
             // Remove callsign account from local Outlook Express...

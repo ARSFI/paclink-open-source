@@ -4,11 +4,14 @@ using System.IO.Ports;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
+using NLog;
 
 namespace Paclink
 {
     public class RadioYaesu : IRadio
     {
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+
         public RadioYaesu()
         {
 
@@ -56,7 +59,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[RadioYaesu.SetDtrControl] : " + ex.ToString());
+                _log.Error("[RadioYaesu.SetDtrControl] : " + ex.ToString());
                 return false;
             }
         }
@@ -70,7 +73,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[RadioYaesu.SetRtsControl] : " + ex.ToString());
+                _log.Error("[RadioYaesu.SetRtsControl] : " + ex.ToString());
                 return false;
             }
         }
@@ -134,7 +137,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[RadioYaesu.InitializeSerialPort] " + e.Message);
+                _log.Error("[RadioYaesu.InitializeSerialPort] " + e.Message);
                 return false;
             }
         } // InitializeSerialPort 
@@ -184,7 +187,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[RadioYaesu.SetParameters] " + e.Message);
+                _log.Error("[RadioYaesu.SetParameters] " + e.Message);
                 return false;
             }
         } // SetParameters 
@@ -210,7 +213,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[RadioYaesu.Close] " + e.Message);
+                _log.Error("[RadioYaesu.Close] " + e.Message);
             }
         } // Close 
 
@@ -313,7 +316,7 @@ namespace Paclink
                             }
                             catch (Exception e)
                             {
-                                Logs.Exception("[RadioYaesu.SetFrequency FT-2000] " + e.Message);
+                                _log.Error("[RadioYaesu.SetFrequency FT-2000] " + e.Message);
                                 return false;
                             } // Earlier Yaesu radios...
 
@@ -579,8 +582,8 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[RadioYaesu.SendCommand] " + e.Message);
-                Logs.Exception("[RadioYaesu.SendCommand] " + strCommand);
+                _log.Error("[RadioYaesu.SendCommand] " + e.Message);
+                _log.Error("[RadioYaesu.SendCommand] " + strCommand);
                 return false;
             }
         } // SendCommand (String)

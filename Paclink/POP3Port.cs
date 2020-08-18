@@ -3,11 +3,14 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using Microsoft.VisualBasic;
+using NLog;
 
 namespace Paclink
 {
     public class POP3Port
     {
+        private readonly Logger Log = LogManager.GetCurrentClassLogger();
+
         public string LocalHost = "127.0.0.1";
         public int LocalPort = 110;
         private Socket _objTCPPort;
@@ -89,7 +92,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[POP3Port.Dispose]: " + ex.Message);
+                Log.Error("[POP3Port.Dispose]: " + ex.Message);
             }
         } // Dispose
 

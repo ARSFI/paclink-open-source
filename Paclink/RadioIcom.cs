@@ -3,11 +3,14 @@ using System.IO.Ports;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
+using NLog;
 
 namespace Paclink
 {
     public class RadioIcom : IRadio
     {
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+
         public RadioIcom()
         {
 
@@ -60,7 +63,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[RadioIcom.SetDtrControl] : " + ex.ToString());
+                _log.Error("[RadioIcom.SetDtrControl] : " + ex.ToString());
                 return false;
             }
         }
@@ -74,7 +77,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[RadioIcom.SetRtsControl] : " + ex.ToString());
+                _log.Error("[RadioIcom.SetRtsControl] : " + ex.ToString());
                 return false;
             }
         }
@@ -106,7 +109,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[RadioIcom.SetPTT] : " + ex.ToString());
+                _log.Error("[RadioIcom.SetPTT] : " + ex.ToString());
                 return false;
             }
         }
@@ -152,7 +155,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[RadioIcom.InitializeSerialPort] " + ex.Message);
+                _log.Error("[RadioIcom.InitializeSerialPort] " + ex.Message);
                 return false;
             }
         }   // InitializeSerialPort 
@@ -195,7 +198,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[RadioIcom.Close] " + ex.Message);
+                _log.Error("[RadioIcom.Close] " + ex.Message);
             }
         } // Close 
 
@@ -316,7 +319,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[RadioIcom.SetFrequency] " + ex.Message);
+                _log.Error("[RadioIcom.SetFrequency] " + ex.Message);
                 return false;
             }
 
@@ -454,7 +457,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[RadioIcom.SendCommand] " + ex.Message);
+                _log.Error("[RadioIcom.SendCommand] " + ex.Message);
                 return false;
             }
         } // SendCommand(String)

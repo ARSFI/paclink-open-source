@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using Microsoft.VisualBasic;
+using NLog;
 
 namespace Paclink
 {
@@ -11,6 +12,8 @@ namespace Paclink
     // Creates a listening port for inbound SMTP connections...
     public class SMTPPort
     {
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+
         public string LocalHost = "127.0.0.1";
         public int LocalPort = 25;
         private Socket _daemonSocket;
@@ -107,7 +110,7 @@ namespace Paclink
                     }
                     catch (Exception ex)
                     {
-                        Logs.Exception("[SMTPPort.Close] " + ex.Message);
+                        _log.Error("[SMTPPort.Close] " + ex.Message);
                     }
                 }
 
@@ -117,7 +120,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[SMTPPort.Dispose]: " + ex.Message);
+                _log.Error("[SMTPPort.Dispose]: " + ex.Message);
             }
         } // Dispose
 

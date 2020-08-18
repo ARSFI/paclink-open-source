@@ -6,12 +6,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
+using NLog;
 
 namespace Paclink
 {
     public class ClientTelnet : IClient
     {
+        private readonly Logger Log = LogManager.GetCurrentClassLogger();
+
         private TcpClient objTCPPort;
         private ProtocolInitial objProtocol;
         private TChannelProperties stcChannel;
@@ -88,7 +90,7 @@ namespace Paclink
                     }
                     catch (Exception ex)
                     {
-                        Logs.Exception("[ClientTelnet.Poll] " + ex.Message);
+                        Log.Error("[ClientTelnet.Poll] " + ex.Message);
                     }
                 }
             }
@@ -119,7 +121,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[TelnetClient.Abort] " + ex.Message);
+                Log.Error("[TelnetClient.Abort] " + ex.Message);
             }
 
             enmState = ELinkStates.LinkFailed;
@@ -360,7 +362,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[TelnetClient.Disconnect] " + ex.Message);
+                Log.Error("[TelnetClient.Disconnect] " + ex.Message);
             }
         } // Disconnect
 
@@ -479,7 +481,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[TelnetClient.OnDisconnected] " + ex.Message);
+                Log.Error("[TelnetClient.OnDisconnected] " + ex.Message);
             }
 
             if (blnNormalDisconnect)

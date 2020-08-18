@@ -10,11 +10,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NLog;
 
 namespace Paclink
 {
     public class ClientAGW : IClient
     {
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+
         public ClientAGW()
         {
             Globals.blnChannelActive = true;
@@ -217,7 +220,7 @@ namespace Paclink
                 }
                 catch (Exception e)
                 {
-                    Logs.Exception("[ClientAGW.Poll] " + e.Message);
+                    _log.Error("[ClientAGW.Poll] " + e.Message);
                 }
             }
         }
@@ -343,7 +346,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[ClientAGW.Initialize] " + e.Message);
+                _log.Error("[ClientAGW.Initialize] " + e.Message);
                 return false;
             }
         }  // Initialize
@@ -363,7 +366,7 @@ namespace Paclink
                 return;
             if (Data.Length == 0)
             {
-                Logs.Exception("[Client.DataToSend] Data is empty array");
+                _log.Error("[Client.DataToSend] Data is empty array");
                 return;
             }
 
@@ -407,7 +410,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[ClientAGW.DataToSend] " + e.Message);
+                _log.Error("[ClientAGW.DataToSend] " + e.Message);
             }
         } // DataToSend
 
@@ -446,7 +449,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[ClientAGW.NormalDisconnect] " + e.Message);
+                _log.Error("[ClientAGW.NormalDisconnect] " + e.Message);
             }
         } // NormalDisconnect
 
@@ -484,7 +487,7 @@ namespace Paclink
             for (n = 0; n <= 3; n++)
                 length = length + (int)(Buffer[n + Index] * Math.Pow(256, n));
             if (length > 1000)
-                Logs.Exception("[ComputeLengthL] Length: " + length.ToString());
+                _log.Error("[ComputeLengthL] Length: " + length.ToString());
             ComputeLengthLRet = length;
             return ComputeLengthLRet;
         }  // ComputeLengthL
@@ -525,7 +528,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[AGWRegisterCallsign] " + e.Message);
+                _log.Error("[AGWRegisterCallsign] " + e.Message);
             }
         } // AGWRegiserCallsign
 
@@ -543,7 +546,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[AGWUnRegisterCallsign] " + e.Message);
+                _log.Error("[AGWUnRegisterCallsign] " + e.Message);
             }
         } // AGWUnRegisterCallsign
 
@@ -614,7 +617,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[ClientAGW.DirtyDisconnect] " + e.Message);
+                _log.Error("[ClientAGW.DirtyDisconnect] " + e.Message);
                 return false;
             }
         }  // DirtyDisconnect
@@ -681,7 +684,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[AGWRequestFramesOutstanding] " + e.Message);
+                _log.Error("[AGWRequestFramesOutstanding] " + e.Message);
             }
         } // AGWRequestFramesOutstanding
 
@@ -819,7 +822,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[ClientAGW.objTCPPort_OnReadyToSend] " + e.Message);
+                _log.Error("[ClientAGW.objTCPPort_OnReadyToSend] " + e.Message);
             }
         }
 
@@ -873,7 +876,7 @@ namespace Paclink
                 }
                 catch (Exception e)
                 {
-                    Logs.Exception("[ClientAGW.Connect] " + e.Message);
+                    _log.Error("[ClientAGW.Connect] " + e.Message);
                     return false;
                 }
             }
@@ -1047,7 +1050,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[ClientAGW.SequenceScript] " + ex.Message);
+                    _log.Error("[ClientAGW.SequenceScript] " + ex.Message);
                 }
             }
 
@@ -1260,7 +1263,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[ClientAGW.ProcessReceivedFrame] Frame Type:" + strFrameType + " / " + ex.Message);
+                _log.Error("[ClientAGW.ProcessReceivedFrame] Frame Type:" + strFrameType + " / " + ex.Message);
             }
         } // ProcessReceivedFrame 
     }

@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using NLog;
 
 namespace Paclink
 {
@@ -13,6 +14,8 @@ namespace Paclink
     // This class handles all Kantronics TNCs for both Packet and Pactor connections...
     public class ClientKantronics : IClient
     {
+        private readonly Logger Log = LogManager.GetCurrentClassLogger();
+
         public ClientKantronics()
         {
             this.RetryConnect += ClientKantronics_RetryConnect;
@@ -219,7 +222,7 @@ namespace Paclink
                     if (!Globals.objRadioControl.InitializeSerialPort(ref Globals.stcSelectedChannel))
                     {
                         Globals.queChannelDisplay.Enqueue("R*** Failure initializing Radio Control");
-                        Logs.Exception("[KantronicsClient.Connect] Failure initializing Radio Control");
+                        Log.Error("[KantronicsClient.Connect] Failure initializing Radio Control");
                         return false;
                     }
                 }
@@ -618,6 +621,8 @@ namespace Paclink
     // This class implements the Kantronics host mode protocol...
     public class KantronicsHostPort
     {
+        private readonly Logger Log = LogManager.GetCurrentClassLogger();
+
         public Queue DataBlockIn = Queue.Synchronized(new Queue());
         private const byte Command = 0x43;
         private const byte Data = 0x44;
@@ -882,14 +887,14 @@ namespace Paclink
                     catch
                     {
                         Globals.queChannelDisplay.Enqueue("R*** Failed to open serial port on " + stcChannel.TNCSerialPort + ". Port may be in use by another application.");
-                        Logs.Exception("[KantronicsHostPort.Open] Failed to open serial port on " + stcChannel.TNCSerialPort);
+                        Log.Error("[KantronicsHostPort.Open] Failed to open serial port on " + stcChannel.TNCSerialPort);
                         return false;
                     }
 
                     if (objSerial.IsOpen == false)
                     {
                         Globals.queChannelDisplay.Enqueue("R*** Failed to open serial port on " + stcChannel.TNCSerialPort + ". Port may be in use by another application.");
-                        Logs.Exception("[PortKantronicsHost.New A] Failed to open serial port on " + stcChannel.TNCSerialPort);
+                        Log.Error("[PortKantronicsHost.New A] Failed to open serial port on " + stcChannel.TNCSerialPort);
                         return false;
                     }
                     else
@@ -899,7 +904,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[ClientKantronics.OpenSerialPortHostMode B] " + ex.Message);
+                    Log.Error("[ClientKantronics.OpenSerialPortHostMode B] " + ex.Message);
                     return false;
                 }
 
@@ -1128,7 +1133,7 @@ namespace Paclink
             intBytesRead = objSerial.Read(bytInputBuffer, 0, intBytesToRead);
             if (intBytesRead != intBytesToRead)
             {
-                Logs.Exception("[HostPortKantronics.DataReceivedEvent] Bytes read does not match bytes to read");
+                Log.Error("[HostPortKantronics.DataReceivedEvent] Bytes read does not match bytes to read");
             }
 
             quePortInput.Enqueue(bytInputBuffer);
@@ -1392,7 +1397,7 @@ namespace Paclink
                                 }
                                 catch (Exception ex)
                                 {
-                                    Logs.Exception("KantronicsHostPort.PollOutgoing: " + ex.Message);
+                                    Log.Error("KantronicsHostPort.PollOutgoing: " + ex.Message);
                                 }
 
                                 objSerial.Write(bytFEND, 0, 1);
@@ -1438,7 +1443,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("KantronicsHostPort.PollOutgoing: " + ex.Message);
+                    Log.Error("KantronicsHostPort.PollOutgoing: " + ex.Message);
                 }
             }
         } // PollOutgoing
@@ -1544,7 +1549,7 @@ namespace Paclink
                 if (!RecoverTNC())
                 {
                     Globals.queChannelDisplay.Enqueue("R*** Could not find or recover the " + stcChannel.TNCType);
-                    Logs.Exception("[PortKantronicsHost.New C] Could not find or recover the TNC");
+                    Log.Error("[PortKantronicsHost.New C] Could not find or recover the TNC");
                     return false;
                 }
             }
@@ -1557,7 +1562,7 @@ namespace Paclink
             if (!WaitOnNonHostCommandResponse("cmd:"))
             {
                 Globals.queChannelDisplay.Enqueue("R*** INTFACE HOST command failed");
-                Logs.Exception("[PortKantronicsHost.New D] INTFACE HOST command failed");
+                Log.Error("[PortKantronicsHost.New D] INTFACE HOST command failed");
                 return false;
             }
 
@@ -1568,7 +1573,7 @@ namespace Paclink
             if (!WaitOnHostMode())
             {
                 Globals.queChannelDisplay.Enqueue("R*** RESET command failed");
-                Logs.Exception("[PortKantronicsHost.New B] RESET command failed");
+                Log.Error("[PortKantronicsHost.New B] RESET command failed");
                 return false;
             }
 
@@ -1606,7 +1611,7 @@ namespace Paclink
                             strCommandToSend = "";
                             Thread.Sleep(100);
                             // If WaitOnHostCommandResponse(strTokens(0).ToUpper) = "" Then
-                            // Logs.Exception("[PortKantronicsHost.ConfigureTNC] '" & strCommand(0) & "' failed")
+                            // Log.Error("[PortKantronicsHost.ConfigureTNC] '" & strCommand(0) & "' failed")
                             // End If
                         }
 
@@ -1619,7 +1624,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[KantronicsHostPort.ConfigureTNC] " + ex.Message);
+                    Log.Error("[KantronicsHostPort.ConfigureTNC] " + ex.Message);
                 }
 
                 HostCommand("MAXUSERS 1");

@@ -5,11 +5,14 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NLog;
 
 namespace Paclink
 {
     public partial class DialogPacketAGWChannels
     {
+        private readonly Logger Log = LogManager.GetCurrentClassLogger();
+
         public DialogPacketAGWChannels()
         {
             InitializeComponent();
@@ -229,7 +232,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[DialogPacketAGWChannels.UpdateAGWPortInfo]: " + ex.Message);
+                Log.Error("[DialogPacketAGWChannels.UpdateAGWPortInfo]: " + ex.Message);
             }
         } // UpdateAGWPortInfo
 
@@ -289,7 +292,7 @@ namespace Paclink
             catch (Exception ex)
             {
                 AddAGWPortInfo("", "Error in Remote AGW Engine Login @ host " + DialogAGWEngine.AGWHost, true);
-                Logs.Exception("[PacketAGWChannels, LoginAGWRemote] " + ex.Message);
+                Log.Error("[PacketAGWChannels, LoginAGWRemote] " + ex.Message);
                 tmrTimer10sec.Enabled = false;
             }
         }  // LoginAGWRemote 
@@ -308,7 +311,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[AGWEngine, RequestAGWPortInfo] " + ex.Message);
+                Log.Error("[AGWEngine, RequestAGWPortInfo] " + ex.Message);
                 tmrTimer10sec.Enabled = false;
                 AddAGWPortInfo("", "Error requesting Port Info from Remote AGW Engine @ host " + DialogAGWEngine.AGWHost, true);
             }
@@ -369,7 +372,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[AGWEngine, tcpOnDataIn] " + ex.Message);
+                    Log.Error("[AGWEngine, tcpOnDataIn] " + ex.Message);
                     AddAGWPortInfo("", "Port Info request failure with host " + DialogAGWEngine.AGWHost, true);
                 }
                 break;
@@ -423,7 +426,7 @@ namespace Paclink
         private void tmrTimer10sec_Tick(object sender, EventArgs e)
         {
             tmrTimer10sec.Enabled = false;
-            Logs.Exception("[PacketAGWChannels]  10 sec timeout on remote AGWPE port info Request to " + DialogAGWEngine.AGWHost);
+            Log.Error("[PacketAGWChannels]  10 sec timeout on remote AGWPE port info Request to " + DialogAGWEngine.AGWHost);
             AddAGWPortInfo("", "Timeout on port info request to remote computer AGW Engine @ host " + DialogAGWEngine.AGWHost, true);
             try
             {

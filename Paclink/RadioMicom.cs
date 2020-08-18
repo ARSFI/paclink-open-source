@@ -4,11 +4,13 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Timers;
 using System.Windows.Forms;
+using NLog;
 
 namespace Paclink
 {
     public class RadioMicom : IRadio
     {
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
         // Strings
         private string strIcomAddress;
@@ -43,11 +45,11 @@ namespace Paclink
                     {
                         if (Timer2Popped == true)
                         {
-                            Logs.Exception("[RadioMicom.InitializeSerialPort] " + "Radio response timeout. Check radio power and connection");
+                            _log.Error("[RadioMicom.InitializeSerialPort] " + "Radio response timeout. Check radio power and connection");
                         }
                         else
                         {
-                            Logs.Exception("[RadioMicom.InitializeSerialPort] " + "MICOM Set MOde Command failed");
+                            _log.Error("[RadioMicom.InitializeSerialPort] " + "MICOM Set MOde Command failed");
                         }
 
                         return false;
@@ -58,7 +60,7 @@ namespace Paclink
                         if (retc != 2)
                         {
                             MessageBox.Show("Radio must be in USB mode...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            Logs.Exception("[RadioMicom.InitializeSerialPort] " + "MICOM not in USB mode");
+                            _log.Error("[RadioMicom.InitializeSerialPort] " + "MICOM not in USB mode");
                             return false;
                         }
                         else
@@ -67,7 +69,7 @@ namespace Paclink
                             retc = MICOMSetClarifier(ref argClarifierState);
                             if (retc == 0)
                             {
-                                Logs.Exception("[RadioMicom.InitializeSerialPort] " + "Set Clarifier off failed");
+                                _log.Error("[RadioMicom.InitializeSerialPort] " + "Set Clarifier off failed");
                                 return false;
                             }
                             else
@@ -79,13 +81,13 @@ namespace Paclink
                 }
                 else
                 {
-                    Logs.Exception("[RadioMicom.InitializeSerialPort] " + "Serial port open failed: " + stcTNC.RDOControlPort);
+                    _log.Error("[RadioMicom.InitializeSerialPort] " + "Serial port open failed: " + stcTNC.RDOControlPort);
                     return false;
                 }
             }
             catch (Exception e)
             {
-                Logs.Exception("[RadioMicom.InitializeSerialPort] " + e.Message);
+                _log.Error("[RadioMicom.InitializeSerialPort] " + e.Message);
                 return false;
             }
         }   // InitializeSerialPort 
@@ -99,7 +101,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[RadioMicom.SetDtrControl] : " + ex.ToString());
+                _log.Error("[RadioMicom.SetDtrControl] : " + ex.ToString());
                 return false;
             }
         }
@@ -113,7 +115,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[RadioMicom.SetRtsControl] : " + ex.ToString());
+                _log.Error("[RadioMicom.SetRtsControl] : " + ex.ToString());
                 return false;
             }
         }
@@ -155,7 +157,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[RadioMicom.Close] " + e.Message);
+                _log.Error("[RadioMicom.Close] " + e.Message);
             }
         } // Close 
 
@@ -174,12 +176,12 @@ namespace Paclink
                     }
                 }
 
-                Logs.Exception("[RadioMicom.SetFrequency]" + " Failed");
+                _log.Error("[RadioMicom.SetFrequency]" + " Failed");
                 return false;
             }
             catch (Exception e)
             {
-                Logs.Exception("[RadioMicom.SetFrequency] " + e.Message);
+                _log.Error("[RadioMicom.SetFrequency] " + e.Message);
                 return false;
             }
 

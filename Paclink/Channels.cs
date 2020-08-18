@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using NLog;
 using WinlinkServiceClasses;
 
 namespace Paclink
@@ -88,6 +89,8 @@ namespace Paclink
 
     class Channels
     {
+        private static readonly Logger _log = LogManager.GetCurrentClassLogger();
+
         // 
         // This class consists of only shared variables and methods for 
         // saving, updating, recalling, and deleting channel declarations.
@@ -432,7 +435,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[Channels.SaveScript] " + e.Message);
+                _log.Error("[Channels.SaveScript] " + e.Message);
             }
         } // SaveScript
 
@@ -455,7 +458,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[Channels.GetScript] " + e.Message);
+                _log.Error("[Channels.GetScript] " + e.Message);
             }
 
             return null;

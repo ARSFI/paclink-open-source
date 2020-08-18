@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using NLog;
 
 namespace Paclink
 {
@@ -13,6 +14,7 @@ namespace Paclink
     // This class handles Timewave (PK) TNCs for both Packet and Pactor connections...
     public class ClientTimewave : IClient
     {
+        private readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         // Structures and enumerations
         private ELinkStates enmState = ELinkStates.Undefined;
@@ -215,7 +217,7 @@ namespace Paclink
                     if (!Globals.objRadioControl.InitializeSerialPort(ref Globals.stcSelectedChannel))
                     {
                         Globals.queChannelDisplay.Enqueue("R*** Failure initializing Radio Control");
-                        Logs.Exception("[KantronicsClient.Connect] Failure initializing Radio Control");
+                        Log.Error("[KantronicsClient.Connect] Failure initializing Radio Control");
                         return false;
                     }
                 }
@@ -626,6 +628,8 @@ namespace Paclink
     // This class implements the WA8DED host mode protocol...
     internal class WA8DEDHostPort
     {
+        private readonly Logger Log = LogManager.GetCurrentClassLogger();
+
         private const byte Command = 0x4F;
         private const byte DataOut = 0x20;
         private const byte DataIn = 0x30;
@@ -762,7 +766,7 @@ namespace Paclink
                 if (objSerial.IsOpen == false)
                 {
                     Globals.queChannelDisplay.Enqueue("R*** Failed to open serial port on " + Globals.stcSelectedChannel.TNCSerialPort + ". Port may be in use by another application.");
-                    Logs.Exception("[PortWA8DEDHost.New] Failed to open serial port on " + Globals.stcSelectedChannel.TNCSerialPort);
+                    Log.Error("[PortWA8DEDHost.New] Failed to open serial port on " + Globals.stcSelectedChannel.TNCSerialPort);
                     // objSerial.Dispose()
                     objSerial = null;
                     return;
@@ -775,7 +779,7 @@ namespace Paclink
             catch (Exception ex)
             {
                 Globals.queChannelDisplay.Enqueue("R*** Failed to open serial port on " + Globals.stcSelectedChannel.TNCSerialPort + ". Port may be in use by another application.");
-                Logs.Exception("[PortWA8DEDHost.OpenSerialPortHostMode] " + ex.Message);
+                Log.Error("[PortWA8DEDHost.OpenSerialPortHostMode] " + ex.Message);
                 // objSerial.Dispose()
                 objSerial = null;
                 return;
@@ -1032,7 +1036,7 @@ namespace Paclink
                 intBytesRead = objSerial.Read(bytInputBuffer, 0, intBytesToRead);
                 if (intBytesRead != intBytesToRead)
                 {
-                    Logs.Exception("[HostWA8DEDHost.DataReceivedEvent] Bytes read does not match bytes to read");
+                    Log.Error("[HostWA8DEDHost.DataReceivedEvent] Bytes read does not match bytes to read");
                 }
 
                 quePortInput.Enqueue(bytInputBuffer);
@@ -1252,7 +1256,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("WA8DEDHostPort.PollOutgoing: " + ex.Message);
+                    Log.Error("WA8DEDHostPort.PollOutgoing: " + ex.Message);
                 }
             }
         } // PollOutgoing
@@ -1427,7 +1431,7 @@ namespace Paclink
                         strCommandResponse = "";
                         if (WaitOnNonHostCommandResponse() == false)
                         {
-                            Logs.Exception("[PortWA8DEDHost.ConfigureTNC] '" + strCommand[0] + "' failed");
+                            Log.Error("[PortWA8DEDHost.ConfigureTNC] '" + strCommand[0] + "' failed");
                         }
                     }
                 }
@@ -1470,7 +1474,7 @@ namespace Paclink
             {
                 if (blnAbort == false)
                     Globals.queChannelDisplay.Enqueue("R*** TNC failed to enter host mode");
-                Logs.Exception(Globals.stcSelectedChannel.TNCType + "Failed to enter host mode. Response to HO cmd: " + strHCR);
+                Log.Error(Globals.stcSelectedChannel.TNCType + "Failed to enter host mode. Response to HO cmd: " + strHCR);
                 return;
             }
 

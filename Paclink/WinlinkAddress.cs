@@ -2,11 +2,14 @@
 // Class to hold a message address type...
 
 using System;
+using NLog;
 
 namespace Paclink
 {
     public class WinlinkAddress
     {
+        private static readonly Logger _log = LogManager.GetCurrentClassLogger();
+
         private string strSMTPAddress;
         private string strRadioAddress;
 
@@ -250,7 +253,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[7754] " + strLine + " " + e.Message);
+                _log.Error("[7754] " + strLine + " " + e.Message);
                 return "";
             }
         } // ParseAddress

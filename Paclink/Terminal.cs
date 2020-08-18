@@ -84,7 +84,7 @@ namespace Paclink
             if (!blnStarted)
             {
                 blnStarted = true;
-                strLog = Globals.SiteRootDirectory + @"Logs\Simple Terminal.Log";
+                strLog = Globals.SiteRootDirectory + @"Log\Simple Terminal.Log";
                 LoadSavedProperties();
                 if (!string.IsNullOrEmpty(strPort))
                 {

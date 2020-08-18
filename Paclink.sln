@@ -6,7 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paclink", "Paclink\Paclink.csproj", "{17605A58-990F-004D-063D-2BF61B29BCEC}"
 	ProjectSection(ProjectDependencies) = postProject
 		{AE3BD75E-C5B0-4D81-BD98-F0673B3A796F} = {AE3BD75E-C5B0-4D81-BD98-F0673B3A796F}
-		{D656718F-A47D-48FE-B7E4-C105D4D2CE15} = {D656718F-A47D-48FE-B7E4-C105D4D2CE15}
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{10CAA29E-E49D-4539-87F3-6346E05733A0}"
@@ -56,13 +55,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TNCKissInterface", "..\TNCK
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMS Link Test", "Utilities\RMS Link Test\RMS Link Test.csproj", "{E15F96F3-B2EB-047A-3FF3-827D82B8B863}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyslogLib", "Libraries\SyslogLib\SyslogLib.csproj", "{D656718F-A47D-48FE-B7E4-C105D4D2CE15}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinlinkServiceClasses", "Libraries\WinlinkServiceClasses\WinlinkServiceClasses.csproj", "{AE3BD75E-C5B0-4D81-BD98-F0673B3A796F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinlinkInterop", "Libraries\WinlinkInterop\WinlinkInterop.csproj", "{B14F1570-A852-4930-B38E-81BC2C87F4C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TNC.Middleware", "TNC.Middleware\TNC.Middleware\TNC.Middleware.csproj", "{1D04B22F-4D76-4C48-9991-2FAB81F5BDD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TNC.Middleware", "TNC.Middleware\TNC.Middleware\TNC.Middleware.csproj", "{1D04B22F-4D76-4C48-9991-2FAB81F5BDD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -96,14 +93,6 @@ Global
 		{E15F96F3-B2EB-047A-3FF3-827D82B8B863}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E15F96F3-B2EB-047A-3FF3-827D82B8B863}.Release|x86.ActiveCfg = Release|x86
 		{E15F96F3-B2EB-047A-3FF3-827D82B8B863}.Release|x86.Build.0 = Release|x86
-		{D656718F-A47D-48FE-B7E4-C105D4D2CE15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D656718F-A47D-48FE-B7E4-C105D4D2CE15}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D656718F-A47D-48FE-B7E4-C105D4D2CE15}.Debug|x86.ActiveCfg = Debug|x86
-		{D656718F-A47D-48FE-B7E4-C105D4D2CE15}.Debug|x86.Build.0 = Debug|x86
-		{D656718F-A47D-48FE-B7E4-C105D4D2CE15}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D656718F-A47D-48FE-B7E4-C105D4D2CE15}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D656718F-A47D-48FE-B7E4-C105D4D2CE15}.Release|x86.ActiveCfg = Release|x86
-		{D656718F-A47D-48FE-B7E4-C105D4D2CE15}.Release|x86.Build.0 = Release|x86
 		{AE3BD75E-C5B0-4D81-BD98-F0673B3A796F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AE3BD75E-C5B0-4D81-BD98-F0673B3A796F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE3BD75E-C5B0-4D81-BD98-F0673B3A796F}.Debug|x86.ActiveCfg = Debug|x86

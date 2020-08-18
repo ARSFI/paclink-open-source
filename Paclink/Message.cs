@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using NLog;
 
 namespace Paclink
 {
@@ -11,6 +12,8 @@ namespace Paclink
     // Class to hold and process a Winlink message on the channel side...
     internal class Message : IMessage, IComparable
     {
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+
         private enum EB2DecodeState
         {
             Inactive,
@@ -182,7 +185,7 @@ namespace Paclink
             }
             else
             {
-                Logs.Exception("[Message.SaveMessage] " + MessageId + " empty mime");
+                _log.Error("[Message.SaveMessage] " + MessageId + " empty mime");
                 ErrorDescription = "Failure to encode mime format";
                 return false;
             }
@@ -843,7 +846,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[Message.DecodeB2Message] " + e.Message);
+                _log.Error("[Message.DecodeB2Message] " + e.Message);
                 return false;
             }
 
@@ -1062,7 +1065,7 @@ namespace Paclink
                         }
                         else
                         {
-                            Logs.Exception("[RMSLiteMessage.FormatForBinaryTransmission] IntPackets = " + intPackets.ToString());
+                            _log.Error("[RMSLiteMessage.FormatForBinaryTransmission] IntPackets = " + intPackets.ToString());
                             return false;
                         }
                     }
@@ -1071,7 +1074,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[RMSLiteMessage.FormatForBinaryTransmission] " + e.Message);
+                _log.Error("[RMSLiteMessage.FormatForBinaryTransmission] " + e.Message);
                 return false;
             }
         } // FormatForBinaryTransmission

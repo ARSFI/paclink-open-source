@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using NLog;
 
 namespace Paclink
 {
     public class INIFile
     {
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+
         // 
         // Native .net class to manipulate .ini files
         // 
@@ -63,7 +66,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("Exception in RestoreINI: " + e.Message);
+                _log.Error("Error in RestoreINI: " + e.Message);
                 MessageBox.Show("Error Restoring INI file. See error log for details.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
@@ -176,7 +179,7 @@ namespace Paclink
                     }
                     catch (Exception ex)
                     {
-                        Logs.Exception("[INIFile.Load] " + ex.Message);
+                        _log.Error("[INIFile.Load] " + ex.Message);
                     }
                 }
 
@@ -217,7 +220,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[INIFile.Flush] " + ex.Message);
+                    _log.Error("[INIFile.Flush] " + ex.Message);
                 }
             }
 
@@ -462,7 +465,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                // Exception("[BackupIniFile] " & Err.Description)
+                // Error("[BackupIniFile] " & Err.Description)
             }
             // 
             // Finished

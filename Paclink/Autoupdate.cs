@@ -47,7 +47,7 @@ namespace Paclink
         private string strAppProductName = Application.ProductName;
         private string strAppProductVersion = Application.ProductVersion;
         private string strAutoupdatePath = Path.Combine(Globals.SiteRootDirectory, @"Autoupdate\");
-        private string strLogsDirectory = Globals.SiteRootDirectory + @"Logs\";
+        private string strLogsDirectory = Globals.SiteRootDirectory + @"Log\";
         private Enumerations.CMSInfo objCmsInfo;
         private AutoupdateProgress objAutoupdateProgress = null;
 
@@ -798,7 +798,7 @@ namespace Paclink
             // 
             try
             {
-                // Dim strLogPath As String = strExecutionDirectory & "\Logs"
+                // Dim strLogPath As String = strExecutionDirectory & "\Log"
                 string strLogPath = strLogsDirectory;
                 strLogPath += @"\" + strAppProductName + " Autoupdate";
                 strLogPath += " " + DateTime.UtcNow.ToString("yyyyMMdd") + ".log";

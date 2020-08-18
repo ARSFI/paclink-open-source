@@ -1,11 +1,14 @@
 ﻿using System;
 using System.IO;
 using Microsoft.VisualBasic;
+using NLog;
 
 namespace Paclink
 {
     public class PartialSession
     {
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+
         public bool blnFirstRcvdBlk;
         public bool blnRemoveHdr8;
         private string strMID;
@@ -24,7 +27,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[PartialSession.StartNewPartial] " + ex.Message);
+                _log.Error("[PartialSession.StartNewPartial] " + ex.Message);
             }
         } // StartNewFile
 
@@ -44,7 +47,7 @@ namespace Paclink
                 string strFilename = Globals.SiteRootDirectory + @"Temp Inbound\" + strMID + ".indata";
                 if (strFilename.Length > 200)
                 {
-                    Logs.Exception("[PartialSessions, WritePartialToFile] Filename too large: " + strFilename);
+                    _log.Error("[PartialSessions, WritePartialToFile] Filename too large: " + strFilename);
                     return;
                 }
 
@@ -68,7 +71,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[PartialSessions, WritePartialToFile] Error: " + ex.Message);
+                _log.Error("[PartialSessions, WritePartialToFile] Error: " + ex.Message);
             }
         } // WritePartialToFile
 
@@ -163,7 +166,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[StripHeaderFromPartial] " + ex.Message);
+                _log.Error("[StripHeaderFromPartial] " + ex.Message);
                 return 0;
             }
         } // StripHeaderFromPartial

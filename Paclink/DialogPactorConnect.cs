@@ -2,11 +2,14 @@
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using NLog;
 
 namespace Paclink
 {
     public partial class DialogPactorConnect
     {
+        private readonly Logger Log = LogManager.GetCurrentClassLogger();
+
         public DialogPactorConnect()
         {
             InitializeComponent();
@@ -334,7 +337,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[PactorConnect.PactorConnect_Load] " + ex.Message);
+                Log.Error("[PactorConnect.PactorConnect_Load] " + ex.Message);
             }
         } // PactorConnect_Load
 

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using NLog;
 
 namespace Paclink
 {
     public partial class Bearing
     {
+        private  readonly Logger _log = LogManager.GetCurrentClassLogger();
+
         public Bearing()
         {
             InitializeComponent();
@@ -119,8 +122,8 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[Radar.DrawRangeBearing] " + e.Message);
+                _log.Error("[Radar.DrawRangeBearing] " + e.Message);
             }
-        } // Radar.DrawRangeBearing
+        } 
     }
 }

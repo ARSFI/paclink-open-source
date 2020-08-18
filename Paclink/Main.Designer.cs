@@ -377,8 +377,8 @@ namespace Paclink
             // 
             _mnuLogs.Name = "_mnuLogs";
             _mnuLogs.Size = new Size(47, 20);
-            _mnuLogs.Text = "Logs ";
-            _mnuLogs.ToolTipText = "Manage and View Logs";
+            _mnuLogs.Text = "Log ";
+            _mnuLogs.ToolTipText = "Manage and View Log";
             // 
             // mnuHelp
             // 

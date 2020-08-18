@@ -5,12 +5,14 @@ using System.IO.Ports;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
+using NLog;
 using TNCKissInterface;
 
 namespace Paclink
 {
     public class ClientNativeKISS : IClient
     {
+        private readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         // Enumerations
         private ELinkStates enmState = ELinkStates.Undefined;
@@ -320,14 +322,14 @@ namespace Paclink
                         }
                         catch (Exception ex)
                         {
-                            Logs.Exception("[ClientNativeKISS.Open] " + strLine + Globals.CR + ex.Message);
+                            Log.Error("[ClientNativeKISS.Open] " + strLine + Globals.CR + ex.Message);
                         }
                     }
                     while (true);
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[ClientNativeKISS.Open] " + ex.Message);
+                    Log.Error("[ClientNativeKISS.Open] " + ex.Message);
                 }
             }
 
@@ -358,14 +360,14 @@ namespace Paclink
                 catch
                 {
                     Globals.queChannelDisplay.Enqueue("R*** Failed to open serial port on " + Globals.stcSelectedChannel.TNCSerialPort + ". Port may be in use by another application.");
-                    Logs.Exception("[ClinetNativeKISS.Open] Failed to open serial port on " + Globals.stcSelectedChannel.TNCSerialPort);
+                    Log.Error("[ClinetNativeKISS.Open] Failed to open serial port on " + Globals.stcSelectedChannel.TNCSerialPort);
                     return false;
                 }
 
                 if (objSerial.IsOpen == false)
                 {
                     Globals.queChannelDisplay.Enqueue("R*** Failed to open serial port on " + Globals.stcSelectedChannel.TNCSerialPort + ". Port may be in use by another application.");
-                    Logs.Exception("[ClientNativeKISS.Open] Failed to open serial port on " + Globals.stcSelectedChannel.TNCSerialPort);
+                    Log.Error("[ClientNativeKISS.Open] Failed to open serial port on " + Globals.stcSelectedChannel.TNCSerialPort);
                     return false;
                 }
                 else
@@ -375,7 +377,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[ClientNativeKISS.Open] " + ex.Message);
+                Log.Error("[ClientNativeKISS.Open] " + ex.Message);
                 return false;
             }
 
@@ -390,7 +392,7 @@ namespace Paclink
 
             if (OpenRet == false)
             {
-                Logs.Exception("[ClientNativeKiss.Open] Failed to Initialize KISS TNC");
+                Log.Error("[ClientNativeKiss.Open] Failed to Initialize KISS TNC");
                 enmState = ELinkStates.LinkFailed;
                 return false;
             }
@@ -420,17 +422,17 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[ClientNativeKiss.Open] Call to DLL Error: " + ex.ToString());
+                    Log.Error("[ClientNativeKiss.Open] Call to DLL Error: " + ex.ToString());
                     return false;
                 }
             }
             // Extended logging added for debugging
-            if (File.Exists(Globals.SiteRootDirectory + @"Logs\NativeKISSax25PktLog.log"))
+            if (File.Exists(Globals.SiteRootDirectory + @"Log\NativeKISSax25PktLog.log"))
             {
-                File.Delete(Globals.SiteRootDirectory + @"Logs\NativeKISSax25PktLog.log");
+                File.Delete(Globals.SiteRootDirectory + @"Log\NativeKISSax25PktLog.log");
             }
 
-            Support.pktLogFile = Globals.SiteRootDirectory + @"Logs\NativeKISSax25PktLog.log";
+            Support.pktLogFile = Globals.SiteRootDirectory + @"Log\NativeKISSax25PktLog.log";
             objKissChannel.packetMonitorEnable = TNCChannel.PacketMonitorType.LogFile;
             return OpenRet;
         } // Open
@@ -521,7 +523,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[ClientNativeKISS.InitializeKISSTnc] " + ex.Message);
+                Log.Error("[ClientNativeKISS.InitializeKISSTnc] " + ex.Message);
                 return false;
             }
         }
@@ -587,7 +589,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[ClientNativeKISS.Close]: " + ex.ToString());
+                Log.Error("[ClientNativeKISS.Close]: " + ex.ToString());
             }
 
             return default;
@@ -608,7 +610,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[ClientNativeKISS.Abort] : " + ex.ToString());
+                Log.Error("[ClientNativeKISS.Abort] : " + ex.ToString());
             }
 
             enmState = ELinkStates.LinkFailed;
@@ -652,7 +654,7 @@ namespace Paclink
                         if (!Globals.objRadioControl.InitializeSerialPort(ref Globals.stcSelectedChannel))
                         {
                             Globals.queChannelDisplay.Enqueue("R*** Failure initializing Radio Control");
-                            Logs.Exception("[ClientNativeKISS.Connect A] Failure initializing Radio Control");
+                            Log.Error("[ClientNativeKISS.Connect A] Failure initializing Radio Control");
                             return false;
                         }
                     }
@@ -660,7 +662,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[ClientNativeKiss.Connect B] " + ex.Message);
+                Log.Error("[ClientNativeKiss.Connect B] " + ex.Message);
             }
 
             try
@@ -734,7 +736,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[ClientNativeKISS.Connect C] " + ex.Message);
+                Log.Error("[ClientNativeKISS.Connect C] " + ex.Message);
                 enmState = ELinkStates.LinkFailed;
                 return false;
             }
@@ -777,7 +779,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[ClientNativeKISS.DataToSend(Byte())]: " + ex.ToString());
+                Log.Error("[ClientNativeKISS.DataToSend(Byte())]: " + ex.ToString());
             }
         } // DataToSend (bytes) 
 
@@ -790,7 +792,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[ClientNativeKISS.Disconnect] :  " + ex.ToString());
+                Log.Error("[ClientNativeKISS.Disconnect] :  " + ex.ToString());
             }
         } // Disconnect 
 
@@ -919,7 +921,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[ClientNativeKISS.Poll] : " + ex.ToString());
+                    Log.Error("[ClientNativeKISS.Poll] : " + ex.ToString());
                 }
             }
         } // Poll 
@@ -978,7 +980,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[ClientNativeKiss.SequenceScript] Err: " + ex.Message);
+                Log.Error("[ClientNativeKiss.SequenceScript] Err: " + ex.Message);
                 Globals.queChannelDisplay.Enqueue("R*** Connection script error");
                 return false;
             }
@@ -1117,7 +1119,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Logs.Exception("[ClientNativeKiss.objSerial_DataReceived] Err: " + ex.Message);
+                Log.Error("[ClientNativeKiss.objSerial_DataReceived] Err: " + ex.Message);
             }
         }
     }

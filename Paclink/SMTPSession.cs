@@ -3,11 +3,14 @@ using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Timers;
+using NLog;
 
 namespace Paclink
 {
     public class SMTPSession
     {
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+        
         public delegate void DisconnectHandler(SMTPSession conn);
         public event DisconnectHandler OnDisconnect;
 
@@ -115,7 +118,7 @@ namespace Paclink
             string strResponse = Protocol(strText);
             if (!string.IsNullOrEmpty(strResponse))
             {
-                Logs.SMTPEvent("Out to " + connection.RemoteEndPoint.ToString() + ": " + strText);
+                _log.Info("Out to " + connection.RemoteEndPoint.ToString() + ": " + strText);
                 connection.Send(Globals.GetBytes(strResponse));
                 if (strResponse.StartsWith("221 "))
                     Close();
@@ -168,7 +171,7 @@ namespace Paclink
                 {
                     // The SMTPSession has just been initialized.
                     // Acknowledge with Reply 220 with echo local IP Address...
-                    Logs.SMTPEvent("In from " + connection.RemoteEndPoint.ToString() + ": " + "(New connection started)");
+                    _log.Info("In from " + connection.RemoteEndPoint + ": " + "(New connection started)");
                     strCommandBuffer = ""; // Clear the command buffer
                     return Reply220; // Local IP address service ready
                 }
@@ -189,7 +192,7 @@ namespace Paclink
             }
 
             // Process the command...
-            Logs.SMTPEvent("In from " + connection.RemoteEndPoint.ToString() + ": " + strCommand);
+            _log.Info("In from " + connection.RemoteEndPoint + ": " + strCommand);
             var switchExpr = SMTPState;
             switch (switchExpr)
             {
@@ -765,7 +768,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[3203] " + e.Message);
+                _log.Error("[3203] " + e.Message);
                 Base64DecodeRet = "";
             }
 
@@ -783,7 +786,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[3201] " + e.Message);
+                _log.Error("[3201] " + e.Message);
                 Base64EncodeRet = "";
             }
 
@@ -806,7 +809,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                Logs.Exception("[3202] " + e.Message);
+                _log.Error("[3202] " + e.Message);
             }
 
             if (intCount > 1)

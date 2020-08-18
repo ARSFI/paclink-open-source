@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using Microsoft.VisualBasic;
+using NLog;
 
 namespace Paclink
 {
@@ -10,6 +11,8 @@ namespace Paclink
     // 'Shared'. This class does not require instantiation...
     public class MidsSeen
     {
+        private static readonly Logger _log = LogManager.GetCurrentClassLogger();
+
         private static object objMidsSeenLock = new object();
 
         public static void AddMessageId(string strMessageId)
@@ -39,7 +42,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[MidsSeen.AddMessageId] " + ex.Message);
+                    _log.Error("[MidsSeen.AddMessageId] " + ex.Message);
                 }
             }
         } // AddMessageId
@@ -66,7 +69,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Logs.Exception("[MidsSeen.IsMessageIdSeen] " + ex.Message);
+                    _log.Error("[MidsSeen.IsMessageIdSeen] " + ex.Message);
                 }
             }
 
@@ -112,7 +115,7 @@ namespace Paclink
                     }
                     catch (Exception ex)
                     {
-                        Logs.Exception("[MidsSeen.PurgeMidsSeenFile] " + ex.Message);
+                        _log.Error("[MidsSeen.PurgeMidsSeenFile] " + ex.Message);
                     }
                 }
             }
