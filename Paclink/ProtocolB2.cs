@@ -5,7 +5,6 @@ using System.IO;
 using System.Text;
 using System.Timers;
 using NLog;
-using Org.BouncyCastle.Math.EC.Rfc7748;
 
 namespace Paclink
 {
