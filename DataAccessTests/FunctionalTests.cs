@@ -13,7 +13,7 @@ namespace DataAccessTests
         [TestInitialize]
         public void Init()
         {
-            _db = new Database();
+            _db = new SQLiteDatabase();
             _properties=new Properties(_db);
         }
 

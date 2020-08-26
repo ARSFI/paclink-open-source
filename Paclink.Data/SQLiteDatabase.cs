@@ -8,7 +8,7 @@ using NLog;
 
 namespace Paclink.Data
 {
-    public class Database : IDatabase
+    public class SQLiteDatabase : IDatabase
     {
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
         private const string DatabaseName = "paclink.db";
@@ -17,7 +17,7 @@ namespace Paclink.Data
 
         public const string SchemaVersionProperty = "Schema Version";
 
-        public Database()
+        public SQLiteDatabase()
         {
             try
             {
