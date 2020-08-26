@@ -3,22 +3,28 @@ using NLog;
 
 namespace Paclink.Data
 {
-    public static class Properties
+    public class Properties
     {
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+        private readonly IDatabase _database;
 
-        public static void DeleteProperty(string propertyName)
+        public Properties(IDatabase db)
+        {
+            _database = db;
+        }
+        
+        public void DeleteProperty(string propertyName)
         {
             var sql = $"DELETE IGNORE FROM Properties WHERE Property='{propertyName}'";
-            DatabaseUtils.NonQuery(sql);
+            _database.NonQuery(sql);
         }
 
-        public static string GetProperty(string propertyName, string defaultValue)
+        public string GetProperty(string propertyName, string defaultValue)
         {
             try
             {
                 var sql = $"SELECT Value FROM Properties WHERE Property='{propertyName}'";
-                string result = DatabaseUtils.GetSingleValue(sql);
+                string result = _database.GetSingleValue(sql);
 
                 //  Return result if no default specified
                 if (string.IsNullOrWhiteSpace(defaultValue))
@@ -38,26 +44,26 @@ namespace Paclink.Data
             }
             catch (Exception ex)
             {
-                Log.Error(ex);
+                _log.Error(ex);
                 return defaultValue;
             }
         }
 
-        public static bool GetProperty(string propertyName, bool defaultValue)
+        public bool GetProperty(string propertyName, bool defaultValue)
         {
             return Convert.ToBoolean(GetProperty(propertyName, defaultValue.ToString()));
         }
 
-        public static int GetProperty(string propertyName, int defaultValue)
+        public int GetProperty(string propertyName, int defaultValue)
         {
             return Convert.ToInt32(GetProperty(propertyName, defaultValue.ToString()));
         }
 
-        public static void SaveProperty(string propertyName, string value)
+        public void SaveProperty(string propertyName, string value)
         {
             //var ts = DateTime.UtcNow.ToString("O"); //ISO8601 format
             var sql = $"REPLACE INTO Properties (Timestamp,Property,Value) VALUES (datetime('now'),'{propertyName}','{value}')";
-            DatabaseUtils.NonQuery(sql);
+            _database.NonQuery(sql);
         }
 
     }

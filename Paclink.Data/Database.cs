@@ -8,16 +8,16 @@ using NLog;
 
 namespace Paclink.Data
 {
-    public static class DatabaseUtils
+    public class Database : IDatabase
     {
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+        private readonly Logger _log = LogManager.GetCurrentClassLogger();
         private const string DatabaseName = "paclink.db";
-        private static readonly Version DatabaseVersion = new Version("1.0.0");
-        private static readonly string ConnectionString;
+        private readonly Version _databaseVersion = new Version("1.0.0");
+        private readonly string _connectionString;
 
         public const string SchemaVersionProperty = "Schema Version";
 
-        static DatabaseUtils()
+        public Database()
         {
             try
             {
@@ -30,21 +30,21 @@ namespace Paclink.Data
 
                 //update connection string
                 var filepath = Path.Combine(path, DatabaseName);
-                ConnectionString = $"URI=file:{filepath}";
-                Log.Trace($"Database connection string: {ConnectionString}");
+                _connectionString = $"URI=file:{filepath}";
+                _log.Trace($"Database connection string: {_connectionString}");
             }
             catch (Exception ex)
             {
-                Log.Error(ex, ex.Message);
+                _log.Error(ex, ex.Message);
                 throw;
             }
         }
 
-        public static void CreateDatabase()
+        public void CreateDatabase()
         {
             try
             {
-                using var connection = new SQLiteConnection(ConnectionString);
+                using var connection = new SQLiteConnection(_connectionString);
                 connection.Open();
 
                 var sql = "CREATE TABLE IF NOT EXISTS Properties (Timestamp TEXT, Property TEXT NOT NULL, Value TEXT, PRIMARY KEY(Property))";
@@ -55,8 +55,9 @@ namespace Paclink.Data
                 cmd.ExecuteNonQuery();
 
                 //add db version property
-                Properties.SaveProperty(SchemaVersionProperty, DatabaseVersion.ToString());
-                Log.Trace($"Database version: {DatabaseVersion}");
+                cmd.CommandText = $"REPLACE INTO Properties (Timestamp,Property,Value) VALUES (datetime('now'),'{SchemaVersionProperty}','{_databaseVersion}')";
+                cmd.ExecuteNonQuery();
+                _log.Trace($"Database version: {_databaseVersion}");
 
                 //:TODO
                 //throw new NotImplementedException();
@@ -64,115 +65,109 @@ namespace Paclink.Data
             }
             catch (Exception ex)
             {
-                Log.Error(ex, ex.Message);
+                _log.Error(ex, ex.Message);
                 throw;
             }
         }
 
-        public static DataSet FillDataSet(string sql, string tableName)
+        public DataSet FillDataSet(string sql, string tableName)
         {
             try
             {
-                using var connection = new SQLiteConnection(ConnectionString);
+                using var connection = new SQLiteConnection(_connectionString);
                 connection.Open();
 
                 using SQLiteDataAdapter adapter = new SQLiteDataAdapter(sql, connection);
                 DataSet ds = new DataSet();
                 var count = adapter.Fill(ds, tableName);
-                Log.Trace($"Loaded {count} rows from table: {tableName} using query: {sql}");
+                _log.Trace($"Loaded {count} rows from table: {tableName} using query: {sql}");
                 return ds;
             }
             catch (Exception ex)
             {
-                Log.Error(ex, ex.Message);
+                _log.Error(ex, ex.Message);
                 throw;
             }
         }
 
-        public static Version GetSchemaVersion()
-        {
-            var v = Properties.GetProperty(SchemaVersionProperty, DatabaseVersion.ToString());
-            return new Version(v);
-        }
-
-        public static string GetSingleValue(string sql)
+        public string GetSingleValue(string sql)
         {
             try
             {
-                using var connection = new SQLiteConnection(ConnectionString);
+                using var connection = new SQLiteConnection(_connectionString);
                 connection.Open();
                 using var cmd = new SQLiteCommand(sql, connection);
                 using SQLiteDataReader reader = cmd.ExecuteReader();
                 reader.Read();
                 var value = reader.GetString(0);
-                Log.Trace($"Retrieved string value '{value}' using query: {sql}");
+                _log.Trace($"Retrieved string value '{value}' using query: {sql}");
                 return value;
             }
             catch (Exception ex)
             {
-                Log.Error(ex, ex.Message);
+                _log.Error(ex, ex.Message);
                 return string.Empty;
             }
         }
 
-        public static DateTime GetSingleValueDateTime(string sql)
+        public DateTime GetSingleValueDateTime(string sql)
         {
             try
             {
-                using var connection = new SQLiteConnection(ConnectionString);
+                using var connection = new SQLiteConnection(_connectionString);
                 connection.Open();
                 using var cmd = new SQLiteCommand(sql, connection);
                 using SQLiteDataReader reader = cmd.ExecuteReader();
                 reader.Read();
                 var value = reader.GetDateTime(0);
-                Log.Trace($"Retrieved DateTime value '{value}' using query: {sql}");
+                _log.Trace($"Retrieved DateTime value '{value}' using query: {sql}");
                 return value;
             }
             catch (Exception ex)
             {
-                Log.Error(ex, ex.Message);
+                _log.Error(ex, ex.Message);
                 return DateTime.MinValue;
             }
         }
 
-        public static long GetSingleValueLong(string sql)
+        public long GetSingleValueLong(string sql)
         {
             try
             {
-                using var connection = new SQLiteConnection(ConnectionString);
+                using var connection = new SQLiteConnection(_connectionString);
                 connection.Open();
                 using var cmd = new SQLiteCommand(sql, connection);
                 using SQLiteDataReader reader = cmd.ExecuteReader();
                 reader.Read();
                 var value = reader.GetInt64(0);
-                Log.Trace($"Retrieved long value '{value}' using query: {sql}");
+                _log.Trace($"Retrieved long value '{value}' using query: {sql}");
                 return value;
             }
             catch (Exception ex)
             {
-                Log.Error(ex, ex.Message);
+                _log.Error(ex, ex.Message);
                 return long.MinValue;
             }
         }
 
-        public static void MigrateDatabase(string schemaChanges, Version newVersion)
+        public void MigrateDatabase(string schemaChanges, Version newVersion)
         {
             throw new NotImplementedException();
         }
 
-        public static void NonQuery(string sql)
+        public void NonQuery(string sql)
         {
             try
             {
-                using var connection = new SQLiteConnection(ConnectionString);
+                using var connection = new SQLiteConnection(_connectionString);
                 connection.Open();
                 using var cmd = new SQLiteCommand(sql, connection);
                 var count = cmd.ExecuteNonQuery();
-                Log.Trace($"{count} records were impacted running script: {sql}");
+                _log.Trace($"{count} records were impacted running script: {sql}");
             }
             catch (Exception ex)
             {
-                Log.Error(ex, ex.Message);
+                _log.Error(ex, ex.Message);
             }
         }
 

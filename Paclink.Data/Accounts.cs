@@ -2,14 +2,14 @@
 
 namespace Paclink.Data
 {
-    public static class DataAccess
+    public static class Accounts
     {
         public static void AddCallsignAccount(string callsign)
         {
             throw new NotImplementedException();
         }
 
-        public static void SaveMimeMessage(string message)
+        public static void SaveMimeMessage(string account, string message)
         {
             throw new NotImplementedException();
         }
@@ -19,7 +19,7 @@ namespace Paclink.Data
             throw new NotImplementedException();
         }
 
-        public static string GetMimeMessage()
+        public static string GetMimeMessage(string messageId)
         {
             throw new NotImplementedException();
         }
