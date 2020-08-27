@@ -8,13 +8,13 @@ namespace DataAccessTests
     public class FunctionalTests
     {
         private IDatabase _db;
-        private Properties _properties;
+        private IProperties _properties;
 
         [TestInitialize]
         public void Init()
         {
             _db = new SQLiteDatabase();
-            _properties=new Properties(_db);
+            _properties = new Properties(_db);
         }
 
         [TestMethod]
@@ -23,7 +23,6 @@ namespace DataAccessTests
             _db.CreateDatabase();
         }
 
-        
         [TestMethod]
         public void ExistsQueryTest()
         {

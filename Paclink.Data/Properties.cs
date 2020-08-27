@@ -3,7 +3,7 @@ using NLog;
 
 namespace Paclink.Data
 {
-    public class Properties
+    public class Properties : IProperties
     {
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
         private readonly IDatabase _database;
