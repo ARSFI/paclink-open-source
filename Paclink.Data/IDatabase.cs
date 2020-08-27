@@ -6,6 +6,7 @@ namespace Paclink.Data
     public interface IDatabase
     {
         public void CreateDatabase();
+        public bool ExistsQuery(string sql);
         public DataSet FillDataSet(string sql, string tableName);
         public string GetSingleValue(string sql);
         public DateTime GetSingleValueDateTime(string sql);

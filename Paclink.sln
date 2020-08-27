@@ -53,8 +53,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TNCKissInterface", "..\TNCKissInterface\TNCKissInterface\TNCKissInterface.csproj", "{A63067BC-6BFC-430F-801F-F6F289311E90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RMS Link Test", "Utilities\RMS Link Test\RMS Link Test.csproj", "{E15F96F3-B2EB-047A-3FF3-827D82B8B863}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinlinkServiceClasses", "Libraries\WinlinkServiceClasses\WinlinkServiceClasses.csproj", "{AE3BD75E-C5B0-4D81-BD98-F0673B3A796F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinlinkInterop", "Libraries\WinlinkInterop\WinlinkInterop.csproj", "{B14F1570-A852-4930-B38E-81BC2C87F4C3}"
@@ -63,9 +61,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TNC.Middleware", "TNC.Middl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".tests", ".tests", "{B8229C6C-34E7-40A4-8833-1509F3BF8F95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessTests", "DataAccessTests\DataAccessTests.csproj", "{FAB7B3C7-B5A8-4208-8ABC-6081A16EDA7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessTests", "DataAccessTests\DataAccessTests.csproj", "{FAB7B3C7-B5A8-4208-8ABC-6081A16EDA7E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paclink.Data", "Paclink.Data\Paclink.Data.csproj", "{2812E63C-BA22-4B61-AE4F-751361D2BF9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paclink.Data", "Paclink.Data\Paclink.Data.csproj", "{2812E63C-BA22-4B61-AE4F-751361D2BF9C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,14 +89,6 @@ Global
 		{A63067BC-6BFC-430F-801F-F6F289311E90}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A63067BC-6BFC-430F-801F-F6F289311E90}.Release|x86.ActiveCfg = Release|x86
 		{A63067BC-6BFC-430F-801F-F6F289311E90}.Release|x86.Build.0 = Release|x86
-		{E15F96F3-B2EB-047A-3FF3-827D82B8B863}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E15F96F3-B2EB-047A-3FF3-827D82B8B863}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E15F96F3-B2EB-047A-3FF3-827D82B8B863}.Debug|x86.ActiveCfg = Debug|x86
-		{E15F96F3-B2EB-047A-3FF3-827D82B8B863}.Debug|x86.Build.0 = Debug|x86
-		{E15F96F3-B2EB-047A-3FF3-827D82B8B863}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E15F96F3-B2EB-047A-3FF3-827D82B8B863}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E15F96F3-B2EB-047A-3FF3-827D82B8B863}.Release|x86.ActiveCfg = Release|x86
-		{E15F96F3-B2EB-047A-3FF3-827D82B8B863}.Release|x86.Build.0 = Release|x86
 		{AE3BD75E-C5B0-4D81-BD98-F0673B3A796F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AE3BD75E-C5B0-4D81-BD98-F0673B3A796F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE3BD75E-C5B0-4D81-BD98-F0673B3A796F}.Debug|x86.ActiveCfg = Debug|x86

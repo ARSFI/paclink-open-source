@@ -23,6 +23,14 @@ namespace DataAccessTests
             _db.CreateDatabase();
         }
 
+        
+        [TestMethod]
+        public void ExistsQueryTest()
+        {
+            var exists = _db.ExistsQuery("SELECT * FROM Properties LIMIT 1");
+            Console.WriteLine($"Record exists: {exists}");
+        }
+
         [TestMethod]
         public void FillDataSetTest()
         {

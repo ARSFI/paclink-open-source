@@ -70,6 +70,27 @@ namespace Paclink.Data
             }
         }
 
+        public bool ExistsQuery(string sql)
+        {
+            try
+            {
+                using var connection = new SQLiteConnection(_connectionString);
+                connection.Open();
+
+                using var cmd = new SQLiteCommand(sql, connection);
+                using SQLiteDataReader reader = cmd.ExecuteReader();
+                reader.Read();
+                bool result = reader.HasRows;
+                _log.Trace($"Query: {sql} Returned one or more rows: {result}");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex, ex.Message);
+                throw;
+            }
+        }
+
         public DataSet FillDataSet(string sql, string tableName)
         {
             try
