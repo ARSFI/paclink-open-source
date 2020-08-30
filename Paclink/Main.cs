@@ -330,6 +330,14 @@ namespace Paclink
         private void MainLoad(object s, EventArgs e)
         {
             Debug.Listeners.Add(new TextWriterTraceListener(Console.Out));
+
+            // Get/create SQLite DB.
+            // TBD
+            //using (var db = DatabaseFactory.Get())
+            //{
+            //
+            //}
+           
             Cursor = Cursors.WaitCursor;
             Globals.strProductName = Application.ProductName;
             Globals.strProductVersion = Application.ProductVersion;
