@@ -79,23 +79,6 @@ namespace Paclink
 
             try
             {
-                // Process any downloaded support files in file called PaclinkSupport.zip and unzips them to
-                // either the Documentation or Data directories depending on extension.
-                if (File.Exists(Globals.SiteBinDirectory + "PaclinkSupport.zip"))
-                {
-                    Globals.queChannelDisplay.Enqueue("G*** Processing downloaded support file PaclinkSupport.zip...");
-                    var objSupport = new FileSupport();
-                    objSupport.ProcessSupportFile(Globals.SiteBinDirectory + "PaclinkSupport.zip");
-                    // Upon successful extraction the zip file is deleted
-                }
-            }
-            catch (Exception ex)
-            {
-                _log.Error("[Main.Startup D] " + ex.Message);
-            }
-
-            try
-            {
                 // Open the properties dialog box if no initial configuration has been set...
                 if (DialogSiteProperties.IsValid() == false)
                 {
