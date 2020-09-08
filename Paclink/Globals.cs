@@ -58,11 +58,8 @@ namespace Paclink
         public static string SiteRootDirectory = "";
         public static string strConnectedCallsign = ""; // Callsign of the connected station
         public static string strConnectedGridSquare = ""; // Grid square of connected station.
-        public static string strDBPassword = "JY18VE72959W";
-        public static string strDBUserId = "Paclink";
         public static string strLocalIPAddress = "Default";
         public static string[] strLocalIPAddresses;
-        public static string[] strOnLineCMSAddresses = new string[0]; // initialize to empty
         public static string strProductName;
         public static string strProductVersion;
         public static string strRMSRelayIPPath;
@@ -70,15 +67,11 @@ namespace Paclink
         public static string strMARSServiceCode = "MARS211576";
         public static string strHamServiceCode = "PUBLIC";
         public static string strNewAUVersion;
-        public static string strWebServiceAccessCode = "O$79^D20SL";
-        public static string strAutoupdateStatus = "";
 
         // Global Booleans...
-        public static bool blnArchiveLogs;
         public static bool blnAutoForwarding;
         public static bool blnAutoupdateTest;
         public static bool blnAutoupdateForce = false;
-        public static bool blnInhibitAutoupdate = false;
         public static bool blnAutoupdateRestart;
         public static bool blnChannelActive;
         public static bool blnEnableRadar;
@@ -86,18 +79,15 @@ namespace Paclink
         public static bool blnFQSeen;
         public static bool blnLAN;
         public static bool blnManualAbort;
-        public static bool blnManualUpdate;
         public static bool blnPactorDialogClosing;
         public static bool blnPactorDialogResume = true;
         public static bool blnPactorDialogResuming;
         public static bool blnWINMORDialogClosing;
         public static bool blnWINMORDialogResume = true;
-        public static bool blnWINMORDialogResuming;
         public static int intPendingForClients;
         public static int intPendingForWinlink;
         public static bool blnProgramClosing;
         public static bool blnUpdateComplete;
-        public static bool blnServerPollComplete;
         public static bool blnStartingChannel;
         public static bool blnStartMinimized;
         public static bool blnUseExternalDNS;
@@ -106,13 +96,10 @@ namespace Paclink
         public static bool blnAbortAU;
         public static bool blnEnablAutoforward = false;
         public static bool blnForceHFRouting = false;
-        public static bool blnEnableLogging = true;           // Enable writes to central Winlink logging system
-        public static bool blnSendDiagnosticInfo = true;      // Permit diagnostic info to be sent to WDT
         public static bool blnCMSAvailable = true;
 
         // Global Integers...
         public static int intAutoforwardChannelIndex = 999999;
-        public static int intCMSIndex = -1;
         public static int intPOP3PortNumber;
         public static int intSMTPPortNumber;
         private static int intProgressBarNumerator;
@@ -140,7 +127,6 @@ namespace Paclink
         public static DateTime objUpTime = DateTime.UtcNow;
         public static WinlinkInterop.WinlinkInterop objWL2KInterop = new WinlinkInterop.WinlinkInterop("");
         public static Main objMain;
-        public static Thread thrUpdate = null;
 
         // Enumerations
         public static ProtocolB2.EB2States enmEB2States;
