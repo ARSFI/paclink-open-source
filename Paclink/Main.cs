@@ -285,16 +285,10 @@ namespace Paclink
             // Report what version of Paclink is running.
             // 
             Globals.PostVersionRecord();
-            // 
-            // Start a thread to check the availability of a program update...
-            // 
-            Globals.objAutoupdate = new Autoupdate();
         } // Initialze
 
         private void MainClosed(object sender, FormClosedEventArgs e)
         {
-            if (Globals.objAutoupdate is object)
-                Globals.objAutoupdate.Close();
             if (Globals.objPrimaryThread is object)
                 Globals.objPrimaryThread.Close();
             // If objWL2KServers IsNot Nothing Then objWL2KServers.Close()
