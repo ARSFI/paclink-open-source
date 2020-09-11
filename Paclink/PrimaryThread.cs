@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows.Forms;
 using NLog;
@@ -130,7 +131,8 @@ namespace Paclink
             MyApplication.Forms.Main.mnuMain.Enabled = true;
             if (thrSMTP != null)
             {
-                thrSMTP.Abort();
+                _abortSMTPThread = true;
+                thrSMTP.Join();
                 thrSMTP = null;
             }
 
@@ -139,7 +141,8 @@ namespace Paclink
             thrSMTP.Start();
             if (thrChannel != null)
             {
-                thrChannel.Abort();
+                _abortChannelThread = true;
+                thrChannel.Join();
                 thrChannel = null;
             }
 
@@ -150,16 +153,25 @@ namespace Paclink
 
         public void Close()
         {
-            thrBearing?.Abort();
-            thrSMTP?.Abort();
-            thrChannel?.Abort();
+            thrBearing?.Join();
+
+            _abortSMTPThread = true;
+            thrSMTP?.Join();
+
+            _abortChannelThread = true;
+            thrChannel?.Join();
+
             Globals.objPOP3Port?.Close();
             Globals.objSMTPPort?.Close();
         }
 
         private int _intDay = 99;
+        private bool _abortSMTPThread;
+
         private void SMTPThread()
         {
+            _abortSMTPThread = false;
+
             // Open SMTP/POP3 ports...
             try
             {
@@ -254,12 +266,16 @@ namespace Paclink
                     _log.Error("[Main.PollSMTPSide B] " + ex.Message);
                 }
             }
-            while (true);
+            while (!_abortSMTPThread);
         } // SMTPThread
 
         private int _intMinutes;
+        private bool _abortChannelThread;
+
         private void ChannelThread()
         {
+            _abortChannelThread = false;
+
             string strChannelName = "";
             do
             {
@@ -455,7 +471,7 @@ namespace Paclink
                     strChannelName = "";
                 }
             }
-            while (true);
+            while (!_abortChannelThread);
         } // ChannelThread
 
         private void BearingThread()
