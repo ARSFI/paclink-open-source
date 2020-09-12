@@ -25,4 +25,10 @@
     <ProjectReference Include="..\TNC.Middleware\TNC.Middleware\TNC.Middleware.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
