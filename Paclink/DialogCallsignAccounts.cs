@@ -194,7 +194,7 @@ namespace Paclink
         {
             cmbAccount.Items.Clear();
             cmbAccount.Sorted = true;
-            foreach (Accounts.TAccount UserAccount in Accounts.AccountsList.Values)
+            foreach (Accounts.AccountRecord UserAccount in Accounts.AccountsList.Values)
             {
                 if (Globals.IsValidRadioCallsign(UserAccount.Name))
                 {

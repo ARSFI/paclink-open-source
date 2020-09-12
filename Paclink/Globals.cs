@@ -924,32 +924,13 @@ namespace Paclink
             dttPostVersionRecord = DateTime.UtcNow;
             var thrPostVersion = new Thread(PostVersionRecordThread);
             thrPostVersion.Start(blnReportClosing);
-            return;
         }
 
         public static void PostVersionRecordThread(object objReportClosing)
         {
-            // 
-            // This routine runs as a thread to report our version information.
-            // 
-            bool blnReportClosing = Convert.ToBoolean(objReportClosing);
-            string strOptions;
-            if (blnReportClosing)
-            {
-                strOptions = "*C";
-            }
-            else if (UseRMSRelay())
-            {
-                strOptions = "*R";
-            }
-            else
-            {
-                strOptions = "*N";
-            }
-
             try
             {
-                objWL2KInterop.PostVersionRecord(SiteCallsign, Application.ProductName, Application.ProductVersion, strOptions);
+                objWL2KInterop.PostVersionRecord(SiteCallsign, Application.ProductName, Application.ProductVersion);
             }
             catch
             {
