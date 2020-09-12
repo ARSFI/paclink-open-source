@@ -32,7 +32,7 @@ namespace Paclink
                 Globals.queChannelDisplay.Enqueue("R*** No CMS site found - continuing...");
             }
 
-            int intIndex = Globals.objINIFile.GetInteger("Properties", "Default Local IP Address Index", 0);
+            int intIndex = Globals.Settings.Get("Properties", "Default Local IP Address Index", 0);
             if (intIndex < 0)
                 intIndex = 0;
             if (Globals.strLocalIPAddresses.Length - 1 >= intIndex)
@@ -40,13 +40,13 @@ namespace Paclink
                 Globals.strLocalIPAddress = Globals.strLocalIPAddresses[intIndex];
             }
 
-            Globals.SiteCallsign = Globals.objINIFile.GetString("Properties", "Site Callsign", "");
-            Globals.SiteGridSquare = Globals.objINIFile.GetString("Properties", "Grid Square", "");
-            Globals.intSMTPPortNumber = Globals.objINIFile.GetInteger("Properties", "SMTP Port Number", 25);
-            Globals.intPOP3PortNumber = Globals.objINIFile.GetInteger("Properties", "POP3 Port Number", 110);
-            Globals.blnLAN = Globals.objINIFile.GetBoolean("Properties", "LAN Connection", true);
-            Globals.blnEnableRadar = Globals.objINIFile.GetBoolean("Properties", "Enable Radar", false);
-            Globals.strServiceCodes = Globals.objINIFile.GetString("Properties", "ServiceCodes", "");
+            Globals.SiteCallsign = Globals.Settings.Get("Properties", "Site Callsign", "");
+            Globals.SiteGridSquare = Globals.Settings.Get("Properties", "Grid Square", "");
+            Globals.intSMTPPortNumber = Globals.Settings.Get("Properties", "SMTP Port Number", 25);
+            Globals.intPOP3PortNumber = Globals.Settings.Get("Properties", "POP3 Port Number", 110);
+            Globals.blnLAN = Globals.Settings.Get("Properties", "LAN Connection", true);
+            Globals.blnEnableRadar = Globals.Settings.Get("Properties", "Enable Radar", false);
+            Globals.strServiceCodes = Globals.Settings.Get("Properties", "ServiceCodes", "");
             if (string.IsNullOrEmpty(Globals.strServiceCodes))
             {
                 if (Globals.IsMARSCallsign(Globals.SiteCallsign))
@@ -58,15 +58,15 @@ namespace Paclink
                     Globals.strServiceCodes = Globals.strHamServiceCode;
                 }
 
-                Globals.objINIFile.WriteString("Properties", "ServiceCodes", Globals.strServiceCodes);
+                Globals.Settings.Save("Properties", "ServiceCodes", Globals.strServiceCodes);
             }
             // Tell WinlinkInterop what our callsign is.
             Globals.objWL2KInterop?.SetCallsign(Globals.SiteCallsign);
-            string strSitePassword = Globals.objINIFile.GetString("Properties", "Site Password", "");
-            Globals.POP3Password = Globals.objINIFile.GetString("Properties", "EMail Password", strSitePassword);
-            Globals.objINIFile.WriteString("Properties", "EMail Password", Globals.POP3Password);
-            Globals.objINIFile.WriteString("Properties", "Site Password", "");
-            Globals.SecureLoginPassword = Globals.objINIFile.GetString("Properties", "Secure Login Password", "");
+            string strSitePassword = Globals.Settings.Get("Properties", "Site Password", "");
+            Globals.POP3Password = Globals.Settings.Get("Properties", "EMail Password", strSitePassword);
+            Globals.Settings.Save("Properties", "EMail Password", Globals.POP3Password);
+            Globals.Settings.Save("Properties", "Site Password", "");
+            Globals.SecureLoginPassword = Globals.Settings.Get("Properties", "Secure Login Password", "");
             Channels.FillChannelCollection();
             try
             {

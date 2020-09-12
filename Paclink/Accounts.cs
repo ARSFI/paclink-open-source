@@ -12,8 +12,6 @@ namespace Paclink
             public string MimePathIn;         // The directory of the MIME files for messages from this user
             public string MimePathOut;        // The directory of the MIME files for messages to this user
             public int AttachmentLimit;   // The attachment limit in bytes 0 = no attachments
-            public int SpamThreshold;     // The SPAM threshold in the WL2K data base
-            public bool UseWhitelist;      // Flag set to use whitelist for spam control
             public bool WhitelistNotice;   // Flag set to send notification on whitelist block
             public string AlternateAddress;   // an alternate (non winlink address for fowarding)
             public string Prefix;             // Optional callsign prefix for ID
@@ -28,7 +26,7 @@ namespace Paclink
             // Clear user list...
             AccountsList = null;
             AccountsList = new Dictionary<string, TAccount>();
-            AccountsString = Globals.objINIFile.GetString("Properties", "Account Names", "");
+            AccountsString = Globals.Settings.Get("Properties", "Account Names", "");
             string strAccountsListNoDupes = ""; // Added to purge ini file of any duplicate accounts
             if (!string.IsNullOrEmpty(AccountsString))
             {
@@ -41,14 +39,12 @@ namespace Paclink
                     {
                         TAccount NewAccount;
                         NewAccount.Name = strEachAccount;
-                        NewAccount.Password = Globals.objINIFile.GetString(strEachAccount, "EMail Password", "");
-                        NewAccount.AlternateAddress = Globals.objINIFile.GetString(strEachAccount, "Alternate Address", "");
-                        NewAccount.AttachmentLimit = Globals.objINIFile.GetInteger(strEachAccount, "Size Limit", 120000);
-                        NewAccount.Prefix = Globals.objINIFile.GetString(strEachAccount, "Prefix", "");
-                        NewAccount.SpamThreshold = Globals.objINIFile.GetInteger(strEachAccount, "SPAM Threshold", 4);
-                        NewAccount.Suffix = Globals.objINIFile.GetString(strEachAccount, "Suffix", "");
-                        NewAccount.UseWhitelist = Globals.objINIFile.GetBoolean(strEachAccount, "Use Whitelist", true);
-                        NewAccount.WhitelistNotice = Globals.objINIFile.GetBoolean(strEachAccount, "Whitelist Notice", false);
+                        NewAccount.Password = Globals.Settings.Get(strEachAccount, "EMail Password", "");
+                        NewAccount.AlternateAddress = Globals.Settings.Get(strEachAccount, "Alternate Address", "");
+                        NewAccount.AttachmentLimit = Globals.Settings.Get(strEachAccount, "Size Limit", 120000);
+                        NewAccount.Prefix = Globals.Settings.Get(strEachAccount, "Prefix", "");
+                        NewAccount.Suffix = Globals.Settings.Get(strEachAccount, "Suffix", "");
+                        NewAccount.WhitelistNotice = Globals.Settings.Get(strEachAccount, "Whitelist Notice", false);
                         NewAccount.MimePathIn = Globals.SiteRootDirectory + @"To Winlink\";
                         NewAccount.MimePathOut = Globals.SiteRootDirectory + @"Accounts\" + strEachAccount + @"_Account\";
                         try
@@ -66,7 +62,7 @@ namespace Paclink
                 if ((strAccountsListNoDupes ?? "") != (AccountsString ?? ""))
                 {
                     // There were duplicates in the list so clean up the ini file
-                    Globals.objINIFile.WriteString("Properties", "Account Names", strAccountsListNoDupes);
+                    Globals.Settings.Save("Properties", "Account Names", strAccountsListNoDupes);
                 }
             }
         }

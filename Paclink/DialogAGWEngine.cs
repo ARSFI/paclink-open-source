@@ -112,12 +112,12 @@ namespace Paclink
 
         public static void InitializeAGWProperties()
         {
-            AGWLocation = Globals.objINIFile.GetInteger(Application.ProductName, "AGW Location", 0);
-            AGWPath = Globals.objINIFile.GetString(Application.ProductName, "AGW Path", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"AGWsoft\Packet Engine Pro\"));
-            AGWHost = Globals.objINIFile.GetString(Application.ProductName, "AGW Host", "Localhost");
-            AGWTCPPort = Globals.objINIFile.GetInteger(Application.ProductName, "AGW Port", 8000);
-            AGWUserId = Globals.objINIFile.GetString(Application.ProductName, "AGW User Id", "");
-            AGWPassword = Globals.objINIFile.GetString(Application.ProductName, "AGW Password", "");
+            AGWLocation = Globals.Settings.Get(Application.ProductName, "AGW Location", 0);
+            AGWPath = Globals.Settings.Get(Application.ProductName, "AGW Path", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"AGWsoft\Packet Engine Pro\"));
+            AGWHost = Globals.Settings.Get(Application.ProductName, "AGW Host", "Localhost");
+            AGWTCPPort = Globals.Settings.Get(Application.ProductName, "AGW Port", 8000);
+            AGWUserId = Globals.Settings.Get(Application.ProductName, "AGW User Id", "");
+            AGWPassword = Globals.Settings.Get(Application.ProductName, "AGW Password", "");
         } // InitializeAGWProperties
 
         private void rdoNotUsed_CheckedChanged(object sender, EventArgs e)
@@ -385,12 +385,12 @@ namespace Paclink
             AGWTCPPort = Convert.ToInt32(txtAGWPort.Text);
             AGWUserId = txtAGWUserId.Text;
             AGWPassword = txtAGWPassword.Text;
-            Globals.objINIFile.WriteInteger(Application.ProductName, "AGW Location", AGWLocation);
-            Globals.objINIFile.WriteInteger(Application.ProductName, "AGW Port", AGWTCPPort);
-            Globals.objINIFile.WriteString(Application.ProductName, "AGW Path", AGWPath);
-            Globals.objINIFile.WriteString(Application.ProductName, "AGW Host", AGWHost);
-            Globals.objINIFile.WriteString(Application.ProductName, "AGW User Id", AGWUserId);
-            Globals.objINIFile.WriteString(Application.ProductName, "AGW Password", AGWPassword);
+            Globals.Settings.Save(Application.ProductName, "AGW Location", AGWLocation);
+            Globals.Settings.Save(Application.ProductName, "AGW Port", AGWTCPPort);
+            Globals.Settings.Save(Application.ProductName, "AGW Path", AGWPath);
+            Globals.Settings.Save(Application.ProductName, "AGW Host", AGWHost);
+            Globals.Settings.Save(Application.ProductName, "AGW User Id", AGWUserId);
+            Globals.Settings.Save(Application.ProductName, "AGW Password", AGWPassword);
             Close();
         } // btnUpdate_Click
 

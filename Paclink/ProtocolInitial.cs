@@ -380,12 +380,12 @@ namespace Paclink
             string strFW = ";FW: " + Globals.SiteCallsign;
             try
             {
-                var strAccountNames = Globals.objINIFile.GetString("Properties", "Account Names", "").Split('|');
+                var strAccountNames = Globals.Settings.Get("Properties", "Account Names", "").Split('|');
                 foreach (string strAccount in strAccountNames)
                 {
                     if ((strAccount ?? "") != (Globals.SiteCallsign ?? ""))
                     {
-                        string strPassword = Globals.objINIFile.GetString(strAccount, "EMail Password", "");
+                        string strPassword = Globals.Settings.Get(strAccount, "EMail Password", "");
                         strFW += " " + MakeFWentry(strChallengePhrase, strAccount, strPassword);
                     }
                 }

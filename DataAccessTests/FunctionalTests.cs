@@ -13,7 +13,7 @@ namespace DataAccessTests
         [TestInitialize]
         public void Init()
         {
-            _db = new SQLiteDatabase();
+            _db = DatabaseFactory.Get();
             _properties = new Properties(_db);
         }
 
@@ -40,21 +40,21 @@ namespace DataAccessTests
         [TestMethod]
         public void GetPropertyTest()
         {
-            var p = _properties.GetProperty("Schema Version", "");
+            var p = _properties.Get("System", "Schema Version", "");
             Console.WriteLine($"Property value: {p}");
         }
 
         [TestMethod]
         public void GetPropertyBoolTest()
         {
-            var p = _properties.GetProperty("Some Bool Prop", false);
+            var p = _properties.Get("", "Some Bool Prop", false);
             Console.WriteLine($"Property value: {p}");
         }
 
         [TestMethod]
         public void GetPropertyIntTest()
         {
-            var p = _properties.GetProperty("Some Other Prop", 0);
+            var p = _properties.Get("", "Some Other Prop", 0);
             Console.WriteLine($"Property value: {p}");
         }
 
@@ -77,6 +77,13 @@ namespace DataAccessTests
         {
             var count = _db.GetSingleValueLong("SELECT COUNT(*) FROM Properties");
             Console.WriteLine($"Properties table has {count} rows");
+        }
+
+        [TestMethod]
+        public void ToIniFileFormatTest()
+        {
+            var s = _properties.ToIniFileFormat();
+            Console.WriteLine(s);
         }
 
     }

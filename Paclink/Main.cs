@@ -309,11 +309,11 @@ namespace Paclink
 
             if (WindowState == FormWindowState.Normal)
             {
-                Globals.objINIFile.WriteInteger(Application.ProductName, "Width", Width);
-                Globals.objINIFile.WriteInteger(Application.ProductName, "Height", Height);
-                Globals.objINIFile.WriteInteger(Application.ProductName, "Top", Top);
-                Globals.objINIFile.WriteInteger(Application.ProductName, "Left", Left);
-                Globals.objINIFile.WriteInteger(Application.ProductName, "Splitter", pnlSplitter.SplitterDistance);
+                Globals.Settings.Save(Application.ProductName, "Width", Width);
+                Globals.Settings.Save(Application.ProductName, "Height", Height);
+                Globals.Settings.Save(Application.ProductName, "Top", Top);
+                Globals.Settings.Save(Application.ProductName, "Left", Left);
+                Globals.Settings.Save(Application.ProductName, "Splitter", pnlSplitter.SplitterDistance);
             }
 
             Globals.blnProgramClosing = true;
@@ -364,25 +364,24 @@ namespace Paclink
             }
 
             lblProgramVersion.Text = "Version: " + Globals.strProductVersion;
-            Globals.objINIFile = new INIFile();
-            Globals.objINIFile.WriteString("Main", "Program Version", Application.ProductVersion);
-            Globals.blnAutoupdateTest = Globals.objINIFile.GetBoolean("Main", "Test Autoupdate", false);
-            Globals.blnAutoupdateForce = Globals.objINIFile.GetBoolean("Main", "Force Autoupdate", false);
-            Globals.blnUseRMSRelay = Globals.objINIFile.GetBoolean("Properties", "Use RMS Relay", false);
-            Globals.strRMSRelayIPPath = Globals.objINIFile.GetString("Properties", "Local IP Path", "");
-            Globals.intRMSRelayPort = Globals.objINIFile.GetInteger("Properties", "RMS Relay Port", 8772);
-            Globals.blnUseExternalDNS = Globals.objINIFile.GetBoolean("Properties", "Use External DNS", false);
-            Globals.blnForceHFRouting = Globals.objINIFile.GetBoolean("Properties", "Force radio-only", false);
-            Globals.blnEnablAutoforward = Globals.objINIFile.GetBoolean("Properties", "Enable Autoforward", false);
-            Globals.blnPactorDialogResume = Globals.objINIFile.GetBoolean("Properties", "Pactor Dialog Resume", true);
+            Globals.Settings.Save("Main", "Program Version", Application.ProductVersion);
+            Globals.blnAutoupdateTest = Globals.Settings.Get("Main", "Test Autoupdate", false);
+            Globals.blnAutoupdateForce = Globals.Settings.Get("Main", "Force Autoupdate", false);
+            Globals.blnUseRMSRelay = Globals.Settings.Get("Properties", "Use RMS Relay", false);
+            Globals.strRMSRelayIPPath = Globals.Settings.Get("Properties", "Local IP Path", "");
+            Globals.intRMSRelayPort = Globals.Settings.Get("Properties", "RMS Relay Port", 8772);
+            Globals.blnUseExternalDNS = Globals.Settings.Get("Properties", "Use External DNS", false);
+            Globals.blnForceHFRouting = Globals.Settings.Get("Properties", "Force radio-only", false);
+            Globals.blnEnablAutoforward = Globals.Settings.Get("Properties", "Enable Autoforward", false);
+            Globals.blnPactorDialogResume = Globals.Settings.Get("Properties", "Pactor Dialog Resume", true);
             Globals.objWL2KInterop.SetWebServiceKey("CC5E139204DA41A3B544A5F2CEB21051");
             // objWL2KInterop.UseAWS(True)
 
-            Top = Globals.objINIFile.GetInteger(Application.ProductName, "Top", 40);
-            Left = Globals.objINIFile.GetInteger(Application.ProductName, "Left", 40);
-            Width = Globals.objINIFile.GetInteger(Application.ProductName, "Width", 500);
-            Height = Globals.objINIFile.GetInteger(Application.ProductName, "Height", 300);
-            pnlSplitter.SplitterDistance = Globals.objINIFile.GetInteger(Application.ProductName, "Splitter", 370);
+            Top = Globals.Settings.Get(Application.ProductName, "Top", 40);
+            Left = Globals.Settings.Get(Application.ProductName, "Left", 40);
+            Width = Globals.Settings.Get(Application.ProductName, "Width", 500);
+            Height = Globals.Settings.Get(Application.ProductName, "Height", 300);
+            pnlSplitter.SplitterDistance = Globals.Settings.Get(Application.ProductName, "Splitter", 370);
             lblMessageDisplay.Enabled = true;
             lblMessageDisplay.BackColor = ChannelDisplay.BackColor;
             // mnuAbort.Enabled = False
@@ -409,10 +408,10 @@ namespace Paclink
             // Check to see if the program is in some sort of restart loop.  If it is, display a message and wait for operator response.
             // 
             bool blnLooping = false;
-            string strRestart = Globals.objINIFile.GetString("Main", "Daily starts", "");
+            string strRestart = Globals.Settings.Get("Main", "Daily starts", "");
             if (string.IsNullOrEmpty(strRestart))
             {
-                Globals.objINIFile.WriteString("Main", "Daily starts", Globals.FormatNetTime() + "|" + "1");
+                Globals.Settings.Save("Main", "Daily starts", Globals.FormatNetTime() + "|" + "1");
             }
             else
             {
@@ -430,12 +429,12 @@ namespace Paclink
                             MessageBox.Show("Paclink has been started " + intStartupCount.ToString() + " times today." + Globals.CRLF + Globals.CRLF + "Confirm that you want to restart it again.");
                         }
                         // Increment the count
-                        Globals.objINIFile.WriteString("Main", "Daily starts", strTok[0] + "|" + (intStartupCount + 1).ToString());
+                        Globals.Settings.Save("Main", "Daily starts", strTok[0] + "|" + (intStartupCount + 1).ToString());
                     }
                     else
                     {
                         // More than 12 hours since start of interval. Reset the date and count.
-                        Globals.objINIFile.WriteString("Main", "Daily starts", Globals.FormatNetTime() + "|" + "1");
+                        Globals.Settings.Save("Main", "Daily starts", Globals.FormatNetTime() + "|" + "1");
                     }
                 }
             }
@@ -552,7 +551,8 @@ namespace Paclink
             {
                 // We just entered a new hour.
                 intHour = DateTime.Now.Hour;
-                Globals.objINIFile.CheckBackupIni();
+                //TODO: Establish backup process
+                //Globals.objINIFile.CheckBackupIni();
                 // See if it's time to post a version record
                 if (DateTime.UtcNow.Subtract(Globals.dttPostVersionRecord).TotalHours >= 24)
                 {
@@ -911,7 +911,8 @@ namespace Paclink
                 frmSaveFile.ShowDialog();
                 if (!string.IsNullOrEmpty(frmSaveFile.FileName))
                 {
-                    Globals.objINIFile.Backup(frmSaveFile.FileName, true);
+                    //TODO: backup database somewhere else
+                    //Globals.objINIFile.Backup(frmSaveFile.FileName, true);
                 }
 
                 frmSaveFile = null;
@@ -926,17 +927,18 @@ namespace Paclink
         {
             try
             {
-                var frmOpenFile = new OpenFileDialog();
-                frmOpenFile.AddExtension = true;
-                frmOpenFile.InitialDirectory = Globals.SiteRootDirectory + @"Data\";
-                frmOpenFile.Filter = "INI files (*.ini) (*.ini.bak)|*.ini;*.ini.bak";
-                frmOpenFile.FilterIndex = 1;
-                frmOpenFile.ShowDialog();
-                if (!string.IsNullOrEmpty(frmOpenFile.FileName))
-                {
-                    if (Globals.objINIFile.Restore(frmOpenFile.FileName))
-                        Close();
-                }
+                //TODO: Restore database
+                //var frmOpenFile = new OpenFileDialog();
+                //frmOpenFile.AddExtension = true;
+                //frmOpenFile.InitialDirectory = Globals.SiteRootDirectory + @"Data\";
+                //frmOpenFile.Filter = "INI files (*.ini) (*.ini.bak)|*.ini;*.ini.bak";
+                //frmOpenFile.FilterIndex = 1;
+                //frmOpenFile.ShowDialog();
+                //if (!string.IsNullOrEmpty(frmOpenFile.FileName))
+                //{
+                //    if (Globals.objINIFile.Restore(frmOpenFile.FileName))
+                //        Close();
+                //}
             }
             catch (Exception ex)
             {

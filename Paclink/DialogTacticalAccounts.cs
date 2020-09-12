@@ -49,7 +49,7 @@ namespace Paclink
 
         private void cmbAccount_TextChanged(object sender, EventArgs e)
         {
-            txtPassword.Text = Globals.objINIFile.GetString(cmbAccount.Text, "EMail Password", "");
+            txtPassword.Text = Globals.Settings.Get(cmbAccount.Text, "EMail Password", "");
         } // cmbAccount_TextChanged
 
         private void btnInstructions_Click(object sender, EventArgs e)
@@ -143,9 +143,9 @@ namespace Paclink
                 // 
                 // Remove account from registry list.
                 // 
-                string strAccountList = Globals.objINIFile.GetString("Properties", "Account Names", "");
+                string strAccountList = Globals.Settings.Get("Properties", "Account Names", "");
                 strAccountList = strAccountList.Replace(strAccount + "|", "");
-                Globals.objINIFile.WriteString("Properties", "Account Names", strAccountList);
+                Globals.Settings.Save("Properties", "Account Names", strAccountList);
                 // 
                 // Remove account directory.
                 // 
@@ -154,7 +154,7 @@ namespace Paclink
                     Directory.Delete(Globals.SiteRootDirectory + @"Accounts\" + strAccount + "_Account", true);
                 }
 
-                Globals.objINIFile.DeleteSection(strAccount);
+                Globals.Settings.DeleteGroup(strAccount);
                 // 
                 // Remove account from Outlook Express.
                 // 
@@ -233,7 +233,7 @@ namespace Paclink
             // 
             // Update the password in the .ini file.
             // 
-            Globals.objINIFile.WriteString(strAccount, "EMail Password", strNewPassword);
+            Globals.Settings.Save(strAccount, "EMail Password", strNewPassword);
             // 
             // Finished
             // 
@@ -355,10 +355,10 @@ namespace Paclink
                 Directory.CreateDirectory(Globals.SiteRootDirectory + @"Accounts\" + cmbAccount.Text + "_Account");
 
                 // Add the account name to the properties file...
-                string strAccountList = Globals.objINIFile.GetString("Properties", "Account Names", "");
+                string strAccountList = Globals.Settings.Get("Properties", "Account Names", "");
                 strAccountList = strAccountList + cmbAccount.Text + "|";
-                Globals.objINIFile.WriteString("Properties", "Account Names", strAccountList);
-                Globals.objINIFile.WriteString(cmbAccount.Text, "EMail Password", txtPassword.Text);
+                Globals.Settings.Save("Properties", "Account Names", strAccountList);
+                Globals.Settings.Save(cmbAccount.Text, "EMail Password", txtPassword.Text);
                 blnReturn = true;
             }
             else

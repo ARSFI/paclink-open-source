@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using NLog;
+using Paclink.Data;
 using WinlinkServiceClasses;
 
 namespace Paclink
@@ -19,6 +20,9 @@ namespace Paclink
     static class Globals
     {
         private static readonly Logger _log = LogManager.GetCurrentClassLogger();
+
+        public static IDatabase Database = DatabaseFactory.Get();
+        public static IProperties Settings = new Properties(Database);
 
         public const string LF = "\n";
         public const string CR = "\r";
@@ -118,7 +122,6 @@ namespace Paclink
         public static Bearing frmBearing;
         public static POP3Port objPOP3Port;
         public static PrimaryThread objPrimaryThread;
-        public static INIFile objINIFile; // PropertiesFile
         public static IRadio objRadioControl;
         public static IClient objSCSClient;
         public static IClient objSelectedClient;
@@ -843,7 +846,7 @@ namespace Paclink
         public static void UpdateAccountDirectories()
         {
             // Remove and account directories that are no longer used...
-            string strDirectoryNames = objINIFile.GetString("Properties", "Account Names", "");
+            string strDirectoryNames = Settings.Get("Properties", "Account Names", "");
             var strDirectories = Directory.GetDirectories(SiteRootDirectory + "Accounts");
             foreach (string strDirectory in strDirectories)
             {
@@ -898,7 +901,7 @@ namespace Paclink
             }
             strLocalIPAddresses = tempIPList.ToArray();
 
-            int intIndex = objINIFile.GetInteger("Properties", "Default Local IP Address Index", 0);
+            int intIndex = Settings.Get("Properties", "Default Local IP Address Index", 0);
             if (intIndex < 0)
                 intIndex = 0;
             try

@@ -102,7 +102,7 @@ namespace Paclink
             // 
             // Return true if the channel name is found in the registry list of channels.
             // 
-            string strChannelNames = Globals.objINIFile.GetString("Properties", "Channel Names", "");
+            string strChannelNames = Globals.Settings.Get("Properties", "Channel Names", "");
             if (string.IsNullOrEmpty(strChannelNames))
                 return false;
             if (strChannelNames.IndexOf(strChannelName + "|") != -1)
@@ -116,7 +116,7 @@ namespace Paclink
             // 
             // Return true if the account name is found in the registry list of channels.
             // 
-            string strAccountNames = Globals.objINIFile.GetString("Properties", "Account Names", "");
+            string strAccountNames = Globals.Settings.Get("Properties", "Account Names", "");
             if (string.IsNullOrEmpty(strAccountNames))
                 return false;
             if (strAccountName.IndexOf(strAccountName + "|") != -1)
@@ -132,126 +132,126 @@ namespace Paclink
             // all of the defined channels.
             // 
             Entries = new Dictionary<string, TChannelProperties>();
-            string strChannelNames = Globals.objINIFile.GetString("Properties", "Channel Names", "");
+            string strChannelNames = Globals.Settings.Get("Properties", "Channel Names", "");
             var strChannelList = strChannelNames.Split('|');
             foreach (var strName in strChannelList)
             {
                 if (!string.IsNullOrEmpty(strName))
                 {
                     var stcChannel = default(TChannelProperties);
-                    stcChannel.ChannelType = (EChannelModes)Enum.Parse(typeof(EChannelModes), Globals.objINIFile.GetString(strName, "Channel Type", "0"));
-                    stcChannel.ChannelName = Globals.objINIFile.GetString(strName, "Channel Name", "");
-                    stcChannel.Priority = Globals.objINIFile.GetInteger(strName, "Priority", 5);
-                    stcChannel.RemoteCallsign = Globals.objINIFile.GetString(strName, "Remote Callsign", "");
+                    stcChannel.ChannelType = (EChannelModes)Enum.Parse(typeof(EChannelModes), Globals.Settings.Get(strName, "Channel Type", "0"));
+                    stcChannel.ChannelName = Globals.Settings.Get(strName, "Channel Name", "");
+                    stcChannel.Priority = Globals.Settings.Get(strName, "Priority", 5);
+                    stcChannel.RemoteCallsign = Globals.Settings.Get(strName, "Remote Callsign", "");
                     // .FrequenciesScanned = objINIFile.GetInteger(strName, "Frequencies Scanned", 5)
-                    stcChannel.Enabled = Globals.objINIFile.GetBoolean(strName, "Enabled", false);
+                    stcChannel.Enabled = Globals.Settings.Get(strName, "Enabled", false);
                     var switchExpr = stcChannel.ChannelType;
                     switch (switchExpr)
                     {
                         case EChannelModes.Telnet:
                             {
                                 // Telnet only properties...
-                                stcChannel.EnableAutoforward = Globals.objINIFile.GetBoolean(strName, "Enable Autoforward", true);
+                                stcChannel.EnableAutoforward = Globals.Settings.Get(strName, "Enable Autoforward", true);
                                 break;
                             }
                         // .LocalIPAddressIndex = objINIFile.GetInteger(strName, "LocalIP Address Index", 0")
                         case EChannelModes.PacketAGW:
                             {
                                 // Packet AGC only properties...
-                                stcChannel.AGWPort = Globals.objINIFile.GetString(strName, "AGW Port", "");
-                                stcChannel.AGWTimeout = Globals.objINIFile.GetInteger(strName, "AGW Timeout", 4);
-                                stcChannel.AGWPacketLength = Globals.objINIFile.GetInteger(strName, "AGW Packet Length", 128);
-                                stcChannel.AGWMaxFrames = Globals.objINIFile.GetInteger(strName, "AGW Max Frames", 2);
-                                stcChannel.AGWScriptTimeout = Globals.objINIFile.GetInteger(strName, "AGW Script Timeout", 60);
-                                stcChannel.AGWAllowInbound = Globals.objINIFile.GetBoolean(strName, "AGW Allow Inbound", false);
+                                stcChannel.AGWPort = Globals.Settings.Get(strName, "AGW Port", "");
+                                stcChannel.AGWTimeout = Globals.Settings.Get(strName, "AGW Timeout", 4);
+                                stcChannel.AGWPacketLength = Globals.Settings.Get(strName, "AGW Packet Length", 128);
+                                stcChannel.AGWMaxFrames = Globals.Settings.Get(strName, "AGW Max Frames", 2);
+                                stcChannel.AGWScriptTimeout = Globals.Settings.Get(strName, "AGW Script Timeout", 60);
+                                stcChannel.AGWAllowInbound = Globals.Settings.Get(strName, "AGW Allow Inbound", false);
                                 stcChannel.AGWScript = GetScript(stcChannel.ChannelName);
-                                stcChannel.EnableAutoforward = Globals.objINIFile.GetBoolean(strName, "Enable Autoforward", true);
+                                stcChannel.EnableAutoforward = Globals.Settings.Get(strName, "Enable Autoforward", true);
                                 break;
                             }
 
                         case EChannelModes.PacketTNC:
                             {
                                 // Packet TNC only properties...
-                                stcChannel.TNCType = Globals.objINIFile.GetString(strName, "TNC Type", "");
-                                stcChannel.TNCPort = Globals.objINIFile.GetInteger(strName, "TNC Port", 1);
-                                stcChannel.TNCTimeout = Math.Max(10, Globals.objINIFile.GetInteger(strName, "TNC Timeout", 10));
-                                stcChannel.TNCSerialPort = Globals.objINIFile.GetString(strName, "TNC Serial Port", "");
-                                stcChannel.TNCBaudRate = Globals.objINIFile.GetString(strName, "TNC Baud Rate", "9600");
-                                stcChannel.TNCConfigurationFile = Globals.objINIFile.GetString(strName, "TNC Configuration File", "");
-                                stcChannel.TNCConfigureOnFirstUseOnly = Globals.objINIFile.GetBoolean(strName, "TNC Configuration On First Use Only", false);
+                                stcChannel.TNCType = Globals.Settings.Get(strName, "TNC Type", "");
+                                stcChannel.TNCPort = Globals.Settings.Get(strName, "TNC Port", 1);
+                                stcChannel.TNCTimeout = Math.Max(10, Globals.Settings.Get(strName, "TNC Timeout", 10));
+                                stcChannel.TNCSerialPort = Globals.Settings.Get(strName, "TNC Serial Port", "");
+                                stcChannel.TNCBaudRate = Globals.Settings.Get(strName, "TNC Baud Rate", "9600");
+                                stcChannel.TNCConfigurationFile = Globals.Settings.Get(strName, "TNC Configuration File", "");
+                                stcChannel.TNCConfigureOnFirstUseOnly = Globals.Settings.Get(strName, "TNC Configuration On First Use Only", false);
                                 stcChannel.TNCScript = GetScript(stcChannel.ChannelName);
-                                stcChannel.TNCScriptTimeout = Globals.objINIFile.GetInteger(strName, "TNC Script Timeout", 60);
+                                stcChannel.TNCScriptTimeout = Globals.Settings.Get(strName, "TNC Script Timeout", 60);
                                 // .TNCAllowInbound = (objPropertiesFile.GetBoolean(strName, "TNC Allow Inbound", False)
-                                stcChannel.EnableAutoforward = Globals.objINIFile.GetBoolean(strName, "Enable Autoforward", true);
-                                stcChannel.RDOControl = Globals.objINIFile.GetString(strName, "Radio Control", "Manual");
-                                stcChannel.RDOControlPort = Globals.objINIFile.GetString(strName, "Radio Control Port", "");
-                                stcChannel.RDOControlBaud = Globals.objINIFile.GetString(strName, "Radio Control Baud", "4800");
-                                stcChannel.RDOModel = Globals.objINIFile.GetString(strName, "Radio Model", "");
+                                stcChannel.EnableAutoforward = Globals.Settings.Get(strName, "Enable Autoforward", true);
+                                stcChannel.RDOControl = Globals.Settings.Get(strName, "Radio Control", "Manual");
+                                stcChannel.RDOControlPort = Globals.Settings.Get(strName, "Radio Control Port", "");
+                                stcChannel.RDOControlBaud = Globals.Settings.Get(strName, "Radio Control Baud", "4800");
+                                stcChannel.RDOModel = Globals.Settings.Get(strName, "Radio Model", "");
                                 if (stcChannel.RDOModel == "Icom (other C-IV)")
                                     stcChannel.RDOModel = "Icom (other CI-V)";
-                                stcChannel.RDOCenterFrequency = Globals.objINIFile.GetString(strName, "Center Frequency", "");
-                                stcChannel.CIVAddress = Globals.objINIFile.GetString(strName, "CIV Address", "04");
-                                stcChannel.TTLLevel = Globals.objINIFile.GetBoolean(strName, "PTC II TTL Level", false);
-                                stcChannel.NMEA = Globals.objINIFile.GetBoolean(strName, "Use NMEA Commands", false);
-                                stcChannel.TNCOnAirBaud = Globals.objINIFile.GetInteger(strName, "TNC On-Air Baud", 1200);
+                                stcChannel.RDOCenterFrequency = Globals.Settings.Get(strName, "Center Frequency", "");
+                                stcChannel.CIVAddress = Globals.Settings.Get(strName, "CIV Address", "04");
+                                stcChannel.TTLLevel = Globals.Settings.Get(strName, "PTC II TTL Level", false);
+                                stcChannel.NMEA = Globals.Settings.Get(strName, "Use NMEA Commands", false);
+                                stcChannel.TNCOnAirBaud = Globals.Settings.Get(strName, "TNC On-Air Baud", 1200);
                                 break;
                             }
 
                         case EChannelModes.PactorTNC:
                             {
                                 // Pactor TNC only properties...
-                                stcChannel.TNCType = Globals.objINIFile.GetString(strName, "TNC Type", "");
-                                stcChannel.TNCPort = Globals.objINIFile.GetInteger(strName, "TNC Port", 1);
-                                stcChannel.TNCTimeout = Globals.objINIFile.GetInteger(strName, "TNC Timeout", 4);
-                                stcChannel.TNCSerialPort = Globals.objINIFile.GetString(strName, "TNC Serial Port", "");
-                                stcChannel.TNCBaudRate = Globals.objINIFile.GetString(strName, "TNC Baud Rate", "9600");
-                                stcChannel.TNCConfigurationFile = Globals.objINIFile.GetString(strName, "TNC Configuration File", "");
-                                stcChannel.TNCConfigureOnFirstUseOnly = Globals.objINIFile.GetBoolean(strName, "TNC Configuration On First Use Only", false);
+                                stcChannel.TNCType = Globals.Settings.Get(strName, "TNC Type", "");
+                                stcChannel.TNCPort = Globals.Settings.Get(strName, "TNC Port", 1);
+                                stcChannel.TNCTimeout = Globals.Settings.Get(strName, "TNC Timeout", 4);
+                                stcChannel.TNCSerialPort = Globals.Settings.Get(strName, "TNC Serial Port", "");
+                                stcChannel.TNCBaudRate = Globals.Settings.Get(strName, "TNC Baud Rate", "9600");
+                                stcChannel.TNCConfigurationFile = Globals.Settings.Get(strName, "TNC Configuration File", "");
+                                stcChannel.TNCConfigureOnFirstUseOnly = Globals.Settings.Get(strName, "TNC Configuration On First Use Only", false);
                                 // .TNCAllowInbound = objPropertiesFile.GetBoolean(strName, "TNC Allow Inbound", False)
-                                stcChannel.TNCBusyHold = Globals.objINIFile.GetBoolean(strName, "TNC Busy Hold", true);
-                                stcChannel.EnableAutoforward = Globals.objINIFile.GetBoolean(strName, "Enable Autoforward", false);
-                                stcChannel.RDOControl = Globals.objINIFile.GetString(strName, "Radio Control", "Manual");
-                                stcChannel.RDOControlPort = Globals.objINIFile.GetString(strName, "Radio Control Port", "");
-                                stcChannel.RDOControlBaud = Globals.objINIFile.GetString(strName, "Radio Control Baud", "4800");
-                                stcChannel.RDOModel = Globals.objINIFile.GetString(strName, "Radio Model", "");
+                                stcChannel.TNCBusyHold = Globals.Settings.Get(strName, "TNC Busy Hold", true);
+                                stcChannel.EnableAutoforward = Globals.Settings.Get(strName, "Enable Autoforward", false);
+                                stcChannel.RDOControl = Globals.Settings.Get(strName, "Radio Control", "Manual");
+                                stcChannel.RDOControlPort = Globals.Settings.Get(strName, "Radio Control Port", "");
+                                stcChannel.RDOControlBaud = Globals.Settings.Get(strName, "Radio Control Baud", "4800");
+                                stcChannel.RDOModel = Globals.Settings.Get(strName, "Radio Model", "");
                                 if (stcChannel.RDOModel == "Icom (other C-IV)")
                                     stcChannel.RDOModel = "Icom (other CI-V)";
-                                stcChannel.RDOCenterFrequency = Globals.objINIFile.GetString(strName, "Center Frequency", "");
+                                stcChannel.RDOCenterFrequency = Globals.Settings.Get(strName, "Center Frequency", "");
                                 // .MBOType = objPropertiesFile.GetString(strName, "MBO Type", "Public")
-                                stcChannel.AudioToneCenter = Globals.objINIFile.GetString(strName, "Audio Tone Center", "1500");
-                                stcChannel.CIVAddress = Globals.objINIFile.GetString(strName, "CIV Address", "04");
-                                stcChannel.NarrowFilter = Globals.objINIFile.GetBoolean(strName, "Narrow Filter", false);
-                                stcChannel.TNCPSKLevel = Globals.objINIFile.GetInteger(strName, "TNC PSK Level", 100);
-                                stcChannel.TNCFSKLevel = Globals.objINIFile.GetInteger(strName, "TNC FSK Level", 100);
-                                stcChannel.PactorId = Globals.objINIFile.GetBoolean(strName, "Pactor 1 ID", true);
-                                stcChannel.TTLLevel = Globals.objINIFile.GetBoolean(strName, "PTC II TTL Level", false);
-                                stcChannel.NMEA = Globals.objINIFile.GetBoolean(strName, "Use NMEA Commands", false);
+                                stcChannel.AudioToneCenter = Globals.Settings.Get(strName, "Audio Tone Center", "1500");
+                                stcChannel.CIVAddress = Globals.Settings.Get(strName, "CIV Address", "04");
+                                stcChannel.NarrowFilter = Globals.Settings.Get(strName, "Narrow Filter", false);
+                                stcChannel.TNCPSKLevel = Globals.Settings.Get(strName, "TNC PSK Level", 100);
+                                stcChannel.TNCFSKLevel = Globals.Settings.Get(strName, "TNC FSK Level", 100);
+                                stcChannel.PactorId = Globals.Settings.Get(strName, "Pactor 1 ID", true);
+                                stcChannel.TTLLevel = Globals.Settings.Get(strName, "PTC II TTL Level", false);
+                                stcChannel.NMEA = Globals.Settings.Get(strName, "Use NMEA Commands", false);
                                 break;
                             }
 
                         case EChannelModes.Winmor:
                             {
-                                stcChannel.TNCBusyHold = Globals.objINIFile.GetBoolean(strName, "TNC Busy Hold", true);
-                                stcChannel.EnableAutoforward = Globals.objINIFile.GetBoolean(strName, "Enable Autoforward", false);
-                                stcChannel.RDOControl = Globals.objINIFile.GetString(strName, "Radio Control", "Manual");
-                                stcChannel.RDOControlPort = Globals.objINIFile.GetString(strName, "Radio Control Port", "");
-                                stcChannel.RDOControlBaud = Globals.objINIFile.GetString(strName, "Radio Control Baud", "4800");
-                                stcChannel.RDOModel = Globals.objINIFile.GetString(strName, "Radio Model", "");
+                                stcChannel.TNCBusyHold = Globals.Settings.Get(strName, "TNC Busy Hold", true);
+                                stcChannel.EnableAutoforward = Globals.Settings.Get(strName, "Enable Autoforward", false);
+                                stcChannel.RDOControl = Globals.Settings.Get(strName, "Radio Control", "Manual");
+                                stcChannel.RDOControlPort = Globals.Settings.Get(strName, "Radio Control Port", "");
+                                stcChannel.RDOControlBaud = Globals.Settings.Get(strName, "Radio Control Baud", "4800");
+                                stcChannel.RDOModel = Globals.Settings.Get(strName, "Radio Model", "");
                                 if (stcChannel.RDOModel == "Icom (other C-IV)")
                                     stcChannel.RDOModel = "Icom (other CI-V)";
-                                stcChannel.RDOCenterFrequency = Globals.objINIFile.GetString(strName, "Center Frequency", "");
-                                stcChannel.AudioToneCenter = Globals.objINIFile.GetString(strName, "Audio Tone Center", "1500");
-                                stcChannel.CIVAddress = Globals.objINIFile.GetString(strName, "CIV Address", "04");
-                                stcChannel.NarrowFilter = Globals.objINIFile.GetBoolean(strName, "Narrow Filter", false);
-                                stcChannel.NMEA = Globals.objINIFile.GetBoolean(strName, "Use NMEA Commands", false);
-                                stcChannel.WMBandwidth = Globals.objINIFile.GetInteger(strName, "WINMOR BW", 500);
-                                stcChannel.WMCaptureDevice = Globals.objINIFile.GetString(strName, "WM CaptureDevice", "");
-                                stcChannel.WMPlaybackDevice = Globals.objINIFile.GetString(strName, "WM PlaybackDevice", "");
-                                stcChannel.WMPTTControl = Globals.objINIFile.GetString(strName, "WM PTT Control", "VOX");
-                                stcChannel.WMSerialCtrlSignals = Globals.objINIFile.GetString(strName, "WM Serial Ctrl Signals", "");
-                                stcChannel.WMXmitLevel = Globals.objINIFile.GetInteger(strName, "WM Xmit Level", 100);
-                                stcChannel.WMcwID = Globals.objINIFile.GetBoolean(strName, "WM CW ID", true);
-                                stcChannel.WMDebugLog = Globals.objINIFile.GetBoolean(strName, "WM DebugLog", true);
+                                stcChannel.RDOCenterFrequency = Globals.Settings.Get(strName, "Center Frequency", "");
+                                stcChannel.AudioToneCenter = Globals.Settings.Get(strName, "Audio Tone Center", "1500");
+                                stcChannel.CIVAddress = Globals.Settings.Get(strName, "CIV Address", "04");
+                                stcChannel.NarrowFilter = Globals.Settings.Get(strName, "Narrow Filter", false);
+                                stcChannel.NMEA = Globals.Settings.Get(strName, "Use NMEA Commands", false);
+                                stcChannel.WMBandwidth = Globals.Settings.Get(strName, "WINMOR BW", 500);
+                                stcChannel.WMCaptureDevice = Globals.Settings.Get(strName, "WM CaptureDevice", "");
+                                stcChannel.WMPlaybackDevice = Globals.Settings.Get(strName, "WM PlaybackDevice", "");
+                                stcChannel.WMPTTControl = Globals.Settings.Get(strName, "WM PTT Control", "VOX");
+                                stcChannel.WMSerialCtrlSignals = Globals.Settings.Get(strName, "WM Serial Ctrl Signals", "");
+                                stcChannel.WMXmitLevel = Globals.Settings.Get(strName, "WM Xmit Level", 100);
+                                stcChannel.WMcwID = Globals.Settings.Get(strName, "WM CW ID", true);
+                                stcChannel.WMDebugLog = Globals.Settings.Get(strName, "WM DebugLog", true);
                                 break;
                             }
                     }
@@ -263,10 +263,10 @@ namespace Paclink
                     else
                     {
                         // If a duplicate entry is discovered in Channel Names then remove it...
-                        string strChannelString = Globals.objINIFile.GetString("Properties", "Channel Names", "");
+                        string strChannelString = Globals.Settings.Get("Properties", "Channel Names", "");
                         strChannelString = strChannelString.Replace(stcChannel.ChannelName + "|", "");
                         strChannelString += stcChannel.ChannelName + "|";
-                        Globals.objINIFile.WriteString("Properties", "Channel Names", strChannelString);
+                        Globals.Settings.Save("Properties", "Channel Names", strChannelString);
                     }
                 }
             }
@@ -282,9 +282,9 @@ namespace Paclink
             {
                 if (!IsChannel(strName))
                 {
-                    string strChannelNames = Globals.objINIFile.GetString("Properties", "Channel Names", "");
+                    string strChannelNames = Globals.Settings.Get("Properties", "Channel Names", "");
                     strChannelNames = strChannelNames + strName + "|";
-                    Globals.objINIFile.WriteString("Properties", "Channel Names", strChannelNames);
+                    Globals.Settings.Save("Properties", "Channel Names", strChannelNames);
                 }
 
                 UpdateProperties(ref stcChannel);
@@ -296,11 +296,11 @@ namespace Paclink
             // 
             // Removes the properties for the channel named in strChannelName from the registry.
             // 
-            string strChannelNames = Globals.objINIFile.GetString("Properties", "Channel Names", "");
+            string strChannelNames = Globals.Settings.Get("Properties", "Channel Names", "");
             while (strChannelNames.IndexOf(strChannelName + "|") != -1) // Added to remove any duplicates
                 strChannelNames = strChannelNames.Replace(strChannelName + "|", "");
-            Globals.objINIFile.WriteString("Properties", "Channel Names", strChannelNames);
-            Globals.objINIFile.DeleteSection(strChannelName);
+            Globals.Settings.Save("Properties", "Channel Names", strChannelNames);
+            Globals.Settings.DeleteGroup(strChannelName);
         } // RemoveChannel
 
         public static void UpdateChannel(ref TChannelProperties stcChannel)
@@ -319,102 +319,102 @@ namespace Paclink
             // Updates the registry as required for the properties carried in strChannel.
             // 
             string strName = stcChannel.ChannelName;
-            Globals.objINIFile.WriteString(strName, "Channel Type", stcChannel.ChannelType.ToString());
-            Globals.objINIFile.WriteString(strName, "Channel Name", stcChannel.ChannelName);
-            Globals.objINIFile.WriteInteger(strName, "Priority", stcChannel.Priority);
-            Globals.objINIFile.WriteString(strName, "Remote Callsign", stcChannel.RemoteCallsign);
+            Globals.Settings.Save(strName, "Channel Type", stcChannel.ChannelType.ToString());
+            Globals.Settings.Save(strName, "Channel Name", stcChannel.ChannelName);
+            Globals.Settings.Save(strName, "Priority", stcChannel.Priority);
+            Globals.Settings.Save(strName, "Remote Callsign", stcChannel.RemoteCallsign);
             // objPropertiesFile.WriteInteger(strName, "Frequencies Scanned", .FrequenciesScanned)
-            Globals.objINIFile.WriteBoolean(strName, "Enabled", stcChannel.Enabled);
+            Globals.Settings.Save(strName, "Enabled", stcChannel.Enabled);
             if (stcChannel.ChannelType == EChannelModes.Telnet)
             {
                 // Telnet only properties...
-                Globals.objINIFile.WriteBoolean(strName, "Enable Autoforward", stcChannel.EnableAutoforward);
+                Globals.Settings.Save(strName, "Enable Autoforward", stcChannel.EnableAutoforward);
             }
             // objPropertiesFile.WriteString(strName, "LocalIP Address Index", .LocalIPAddressIndex.ToString)
             else if (stcChannel.ChannelType == EChannelModes.PacketAGW)
             {
                 // Packet AGW only properties...
-                Globals.objINIFile.WriteString(strName, "AGW Port", stcChannel.AGWPort);
-                Globals.objINIFile.WriteInteger(strName, "AGW Timeout", stcChannel.AGWTimeout);
-                Globals.objINIFile.WriteInteger(strName, "AGW Packet Length", stcChannel.AGWPacketLength);
-                Globals.objINIFile.WriteInteger(strName, "AGW Max Frames", stcChannel.AGWMaxFrames);
-                Globals.objINIFile.WriteInteger(strName, "AGW Script Timeout", stcChannel.AGWScriptTimeout);
-                Globals.objINIFile.WriteBoolean(strName, "AGW Allow Inbound", stcChannel.AGWAllowInbound);
-                Globals.objINIFile.WriteBoolean(strName, "Enable Autoforward", stcChannel.EnableAutoforward);
+                Globals.Settings.Save(strName, "AGW Port", stcChannel.AGWPort);
+                Globals.Settings.Save(strName, "AGW Timeout", stcChannel.AGWTimeout);
+                Globals.Settings.Save(strName, "AGW Packet Length", stcChannel.AGWPacketLength);
+                Globals.Settings.Save(strName, "AGW Max Frames", stcChannel.AGWMaxFrames);
+                Globals.Settings.Save(strName, "AGW Script Timeout", stcChannel.AGWScriptTimeout);
+                Globals.Settings.Save(strName, "AGW Allow Inbound", stcChannel.AGWAllowInbound);
+                Globals.Settings.Save(strName, "Enable Autoforward", stcChannel.EnableAutoforward);
                 SaveScript(strName, stcChannel.AGWScript);
             }
             else if (stcChannel.ChannelType == EChannelModes.PacketTNC)
             {
                 // Packet TNC only properties...
-                Globals.objINIFile.WriteString(strName, "TNC Type", stcChannel.TNCType);
-                Globals.objINIFile.WriteInteger(strName, "TNC Port", stcChannel.TNCPort);
-                Globals.objINIFile.WriteInteger(strName, "TNC Timeout", stcChannel.TNCTimeout);
-                Globals.objINIFile.WriteString(strName, "TNC Serial Port", stcChannel.TNCSerialPort);
-                Globals.objINIFile.WriteString(strName, "TNC Baud Rate", stcChannel.TNCBaudRate);
-                Globals.objINIFile.WriteString(strName, "TNC Configuration File", stcChannel.TNCConfigurationFile);
-                Globals.objINIFile.WriteBoolean(strName, "TNC Configuration On First Use Only", stcChannel.TNCConfigureOnFirstUseOnly);
-                Globals.objINIFile.WriteInteger(strName, "TNC Script Timeout", stcChannel.TNCScriptTimeout);
+                Globals.Settings.Save(strName, "TNC Type", stcChannel.TNCType);
+                Globals.Settings.Save(strName, "TNC Port", stcChannel.TNCPort);
+                Globals.Settings.Save(strName, "TNC Timeout", stcChannel.TNCTimeout);
+                Globals.Settings.Save(strName, "TNC Serial Port", stcChannel.TNCSerialPort);
+                Globals.Settings.Save(strName, "TNC Baud Rate", stcChannel.TNCBaudRate);
+                Globals.Settings.Save(strName, "TNC Configuration File", stcChannel.TNCConfigurationFile);
+                Globals.Settings.Save(strName, "TNC Configuration On First Use Only", stcChannel.TNCConfigureOnFirstUseOnly);
+                Globals.Settings.Save(strName, "TNC Script Timeout", stcChannel.TNCScriptTimeout);
                 // objPropertiesFile.WriteBoolean(strName, "TNC Allow Inbound", .TNCAllowInbound)
-                Globals.objINIFile.WriteBoolean(strName, "Enable Autoforward", stcChannel.EnableAutoforward);
-                Globals.objINIFile.WriteString(strName, "Radio Control", stcChannel.RDOControl);
-                Globals.objINIFile.WriteString(strName, "Radio Control Port", stcChannel.RDOControlPort);
-                Globals.objINIFile.WriteString(strName, "Radio Control Baud", stcChannel.RDOControlBaud);
-                Globals.objINIFile.WriteString(strName, "Radio Model", stcChannel.RDOModel);
-                Globals.objINIFile.WriteString(strName, "Center Frequency", stcChannel.RDOCenterFrequency);
-                Globals.objINIFile.WriteString(strName, "Audio Tone Center", stcChannel.AudioToneCenter);
-                Globals.objINIFile.WriteString(strName, "CIV Address", stcChannel.CIVAddress);
-                Globals.objINIFile.WriteBoolean(strName, "PTC II TTL Level", stcChannel.TTLLevel);
-                Globals.objINIFile.WriteBoolean(strName, "Use NMEA Commands", stcChannel.NMEA);
-                Globals.objINIFile.WriteInteger(strName, "TNC On-Air Baud", stcChannel.TNCOnAirBaud);
+                Globals.Settings.Save(strName, "Enable Autoforward", stcChannel.EnableAutoforward);
+                Globals.Settings.Save(strName, "Radio Control", stcChannel.RDOControl);
+                Globals.Settings.Save(strName, "Radio Control Port", stcChannel.RDOControlPort);
+                Globals.Settings.Save(strName, "Radio Control Baud", stcChannel.RDOControlBaud);
+                Globals.Settings.Save(strName, "Radio Model", stcChannel.RDOModel);
+                Globals.Settings.Save(strName, "Center Frequency", stcChannel.RDOCenterFrequency);
+                Globals.Settings.Save(strName, "Audio Tone Center", stcChannel.AudioToneCenter);
+                Globals.Settings.Save(strName, "CIV Address", stcChannel.CIVAddress);
+                Globals.Settings.Save(strName, "PTC II TTL Level", stcChannel.TTLLevel);
+                Globals.Settings.Save(strName, "Use NMEA Commands", stcChannel.NMEA);
+                Globals.Settings.Save(strName, "TNC On-Air Baud", stcChannel.TNCOnAirBaud);
                 SaveScript(strName, stcChannel.TNCScript);
             }
             else if (stcChannel.ChannelType == EChannelModes.PactorTNC)
             {
                 // Pactor TNC only properties...
-                Globals.objINIFile.WriteString(strName, "TNC Type", stcChannel.TNCType);
-                Globals.objINIFile.WriteInteger(strName, "TNC Port", stcChannel.TNCPort);
-                Globals.objINIFile.WriteInteger(strName, "TNC Timeout", stcChannel.TNCTimeout);
-                Globals.objINIFile.WriteString(strName, "TNC Serial Port", stcChannel.TNCSerialPort);
-                Globals.objINIFile.WriteString(strName, "TNC Baud Rate", stcChannel.TNCBaudRate);
-                Globals.objINIFile.WriteString(strName, "TNC Configuration File", stcChannel.TNCConfigurationFile);
-                Globals.objINIFile.WriteBoolean(strName, "TNC Configuration On First Use Only", stcChannel.TNCConfigureOnFirstUseOnly);
-                Globals.objINIFile.WriteBoolean(strName, "TNC Busy Hold", stcChannel.TNCBusyHold);
-                Globals.objINIFile.WriteBoolean(strName, "Enable Autoforward", stcChannel.EnableAutoforward);
-                Globals.objINIFile.WriteString(strName, "Radio Control", stcChannel.RDOControl);
-                Globals.objINIFile.WriteString(strName, "Radio Control Port", stcChannel.RDOControlPort);
-                Globals.objINIFile.WriteString(strName, "Radio Control Baud", stcChannel.RDOControlBaud);
-                Globals.objINIFile.WriteString(strName, "Radio Model", stcChannel.RDOModel);
-                Globals.objINIFile.WriteString(strName, "Center Frequency", stcChannel.RDOCenterFrequency);
-                Globals.objINIFile.WriteString(strName, "Audio Tone Center", stcChannel.AudioToneCenter);
-                Globals.objINIFile.WriteString(strName, "CIV Address", stcChannel.CIVAddress);
-                Globals.objINIFile.WriteBoolean(strName, "Narrow Filter", stcChannel.NarrowFilter);
-                Globals.objINIFile.WriteInteger(strName, "TNC PSK Level", stcChannel.TNCPSKLevel);
-                Globals.objINIFile.WriteInteger(strName, "TNC FSK Level", stcChannel.TNCFSKLevel);
-                Globals.objINIFile.WriteBoolean(strName, "Pactor 1 ID", stcChannel.PactorId);
-                Globals.objINIFile.WriteBoolean(strName, "PTC II TTL Level", stcChannel.TTLLevel);
-                Globals.objINIFile.WriteBoolean(strName, "Use NMEA Commands", stcChannel.NMEA);
+                Globals.Settings.Save(strName, "TNC Type", stcChannel.TNCType);
+                Globals.Settings.Save(strName, "TNC Port", stcChannel.TNCPort);
+                Globals.Settings.Save(strName, "TNC Timeout", stcChannel.TNCTimeout);
+                Globals.Settings.Save(strName, "TNC Serial Port", stcChannel.TNCSerialPort);
+                Globals.Settings.Save(strName, "TNC Baud Rate", stcChannel.TNCBaudRate);
+                Globals.Settings.Save(strName, "TNC Configuration File", stcChannel.TNCConfigurationFile);
+                Globals.Settings.Save(strName, "TNC Configuration On First Use Only", stcChannel.TNCConfigureOnFirstUseOnly);
+                Globals.Settings.Save(strName, "TNC Busy Hold", stcChannel.TNCBusyHold);
+                Globals.Settings.Save(strName, "Enable Autoforward", stcChannel.EnableAutoforward);
+                Globals.Settings.Save(strName, "Radio Control", stcChannel.RDOControl);
+                Globals.Settings.Save(strName, "Radio Control Port", stcChannel.RDOControlPort);
+                Globals.Settings.Save(strName, "Radio Control Baud", stcChannel.RDOControlBaud);
+                Globals.Settings.Save(strName, "Radio Model", stcChannel.RDOModel);
+                Globals.Settings.Save(strName, "Center Frequency", stcChannel.RDOCenterFrequency);
+                Globals.Settings.Save(strName, "Audio Tone Center", stcChannel.AudioToneCenter);
+                Globals.Settings.Save(strName, "CIV Address", stcChannel.CIVAddress);
+                Globals.Settings.Save(strName, "Narrow Filter", stcChannel.NarrowFilter);
+                Globals.Settings.Save(strName, "TNC PSK Level", stcChannel.TNCPSKLevel);
+                Globals.Settings.Save(strName, "TNC FSK Level", stcChannel.TNCFSKLevel);
+                Globals.Settings.Save(strName, "Pactor 1 ID", stcChannel.PactorId);
+                Globals.Settings.Save(strName, "PTC II TTL Level", stcChannel.TTLLevel);
+                Globals.Settings.Save(strName, "Use NMEA Commands", stcChannel.NMEA);
             }
             else if (stcChannel.ChannelType == EChannelModes.Winmor)
             {
-                Globals.objINIFile.WriteBoolean(strName, "TNC Busy Hold", stcChannel.TNCBusyHold);
-                Globals.objINIFile.WriteBoolean(strName, "Enable Autoforward", stcChannel.EnableAutoforward);
-                Globals.objINIFile.WriteString(strName, "Radio Control", stcChannel.RDOControl);
-                Globals.objINIFile.WriteString(strName, "Radio Control Port", stcChannel.RDOControlPort);
-                Globals.objINIFile.WriteString(strName, "Radio Control Baud", stcChannel.RDOControlBaud);
-                Globals.objINIFile.WriteString(strName, "Radio Model", stcChannel.RDOModel);
-                Globals.objINIFile.WriteString(strName, "Center Frequency", stcChannel.RDOCenterFrequency);
-                Globals.objINIFile.WriteString(strName, "Audio Tone Center", stcChannel.AudioToneCenter);
-                Globals.objINIFile.WriteString(strName, "CIV Address", stcChannel.CIVAddress);
-                Globals.objINIFile.WriteBoolean(strName, "Narrow Filter", stcChannel.NarrowFilter);
-                Globals.objINIFile.WriteBoolean(strName, "Use NMEA Commands", stcChannel.NMEA);
-                Globals.objINIFile.WriteInteger(strName, "WINMOR BW", stcChannel.WMBandwidth);
-                Globals.objINIFile.WriteString(strName, "WM CaptureDevice", stcChannel.WMCaptureDevice);
-                Globals.objINIFile.WriteString(strName, "WM PlaybackDevice", stcChannel.WMPlaybackDevice);
-                Globals.objINIFile.WriteString(strName, "WM PTT Control", stcChannel.WMPTTControl);
-                Globals.objINIFile.WriteString(strName, "WM Serial Ctrl Signals", stcChannel.WMSerialCtrlSignals);
-                Globals.objINIFile.WriteInteger(strName, "WM Xmit Level", stcChannel.WMXmitLevel);
-                Globals.objINIFile.WriteBoolean(strName, "WM CW ID", stcChannel.WMcwID);
-                Globals.objINIFile.WriteBoolean(strName, "WM DebugLog", stcChannel.WMDebugLog);
+                Globals.Settings.Save(strName, "TNC Busy Hold", stcChannel.TNCBusyHold);
+                Globals.Settings.Save(strName, "Enable Autoforward", stcChannel.EnableAutoforward);
+                Globals.Settings.Save(strName, "Radio Control", stcChannel.RDOControl);
+                Globals.Settings.Save(strName, "Radio Control Port", stcChannel.RDOControlPort);
+                Globals.Settings.Save(strName, "Radio Control Baud", stcChannel.RDOControlBaud);
+                Globals.Settings.Save(strName, "Radio Model", stcChannel.RDOModel);
+                Globals.Settings.Save(strName, "Center Frequency", stcChannel.RDOCenterFrequency);
+                Globals.Settings.Save(strName, "Audio Tone Center", stcChannel.AudioToneCenter);
+                Globals.Settings.Save(strName, "CIV Address", stcChannel.CIVAddress);
+                Globals.Settings.Save(strName, "Narrow Filter", stcChannel.NarrowFilter);
+                Globals.Settings.Save(strName, "Use NMEA Commands", stcChannel.NMEA);
+                Globals.Settings.Save(strName, "WINMOR BW", stcChannel.WMBandwidth);
+                Globals.Settings.Save(strName, "WM CaptureDevice", stcChannel.WMCaptureDevice);
+                Globals.Settings.Save(strName, "WM PlaybackDevice", stcChannel.WMPlaybackDevice);
+                Globals.Settings.Save(strName, "WM PTT Control", stcChannel.WMPTTControl);
+                Globals.Settings.Save(strName, "WM Serial Ctrl Signals", stcChannel.WMSerialCtrlSignals);
+                Globals.Settings.Save(strName, "WM Xmit Level", stcChannel.WMXmitLevel);
+                Globals.Settings.Save(strName, "WM CW ID", stcChannel.WMcwID);
+                Globals.Settings.Save(strName, "WM DebugLog", stcChannel.WMDebugLog);
             }
         } // UpdateProperties
 

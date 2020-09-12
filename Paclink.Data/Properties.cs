@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using System.Text;
 using NLog;
 
 namespace Paclink.Data
@@ -12,18 +14,24 @@ namespace Paclink.Data
         {
             _database = db;
         }
-        
-        public void DeleteProperty(string propertyName)
+
+        public void DeleteGroup(string group)
         {
-            var sql = $"DELETE IGNORE FROM Properties WHERE Property='{propertyName}'";
+            var sql = $"DELETE IGNORE FROM `Properties` WHERE `Group`='{group}'";
             _database.NonQuery(sql);
         }
 
-        public string GetProperty(string propertyName, string defaultValue)
+        public void Delete(string group, string name)
+        {
+            var sql = $"DELETE IGNORE FROM `Properties` WHERE `Group`='{group}' AND `Property`='{name}'";
+            _database.NonQuery(sql);
+        }
+
+        public string Get(string group, string name, string defaultValue)
         {
             try
             {
-                var sql = $"SELECT Value FROM Properties WHERE Property='{propertyName}'";
+                var sql = $"SELECT `Value` FROM `Properties` WHERE `Group`='{group}' AND `Property`='{name}'";
                 string result = _database.GetSingleValue(sql);
 
                 //  Return result if no default specified
@@ -39,7 +47,7 @@ namespace Paclink.Data
                 }
 
                 //add the default value (if property not found)
-                SaveProperty(propertyName, defaultValue);
+                Save(group, name, defaultValue);
                 return defaultValue;
             }
             catch (Exception ex)
@@ -49,22 +57,54 @@ namespace Paclink.Data
             }
         }
 
-        public bool GetProperty(string propertyName, bool defaultValue)
+        public bool Get(string group, string name, bool defaultValue)
         {
-            return Convert.ToBoolean(GetProperty(propertyName, defaultValue.ToString()));
+            return Convert.ToBoolean(Get(group, name, Convert.ToString(defaultValue)));
         }
 
-        public int GetProperty(string propertyName, int defaultValue)
+        public int Get(string group, string name, int defaultValue)
         {
-            return Convert.ToInt32(GetProperty(propertyName, defaultValue.ToString()));
+            return Convert.ToInt32(Get(group, name, Convert.ToString(defaultValue)));
         }
 
-        public void SaveProperty(string propertyName, string value)
+        public void Save(string group, string name, string value)
         {
             //var ts = DateTime.UtcNow.ToString("O"); //ISO8601 format
-            var sql = $"REPLACE INTO Properties (Timestamp,Property,Value) VALUES (datetime('now'),'{propertyName}','{value}')";
+            var sql = $"REPLACE INTO `Properties` (`Timestamp`,`Group`,`Property`,`Value`) VALUES (datetime('now'),'{group}','{name}','{value}')";
             _database.NonQuery(sql);
         }
 
+        public void Save(string group, string name, int value)
+        {
+            Save(group, name, Convert.ToString(value));
+        }
+
+        public void Save(string group, string name, bool value)
+        {
+            Save(group, name, Convert.ToString(value));
+        }
+
+        public string ToIniFileFormat()
+        {
+            var sb = new StringBuilder();
+            //get all properties
+            var ds = _database.FillDataSet("SELECT * FROM `Properties` ORDER BY `Group`,`Property`", "Properties");
+            var previousSection = "no-previous-section";
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                var section = Convert.ToString(row["Group"]);
+                if (!string.IsNullOrWhiteSpace(section) && !section.Equals(previousSection, StringComparison.OrdinalIgnoreCase))
+                {
+                    //add a section tag
+                    sb.AppendLine($"[{section}]");
+                    previousSection = section;
+                }
+                //get property and value
+                var property = Convert.ToString(row["Property"]);
+                var value = Convert.ToString(row["Value"]);
+                sb.AppendLine($"{property}={value}");
+            }
+            return sb.ToString();
+        }
     }
 }

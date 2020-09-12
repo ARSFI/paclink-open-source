@@ -28,16 +28,16 @@ namespace Paclink
         {
             if (WindowState == FormWindowState.Normal)
             {
-                Globals.objINIFile.WriteInteger("Bearing", "Top", Top);
-                Globals.objINIFile.WriteInteger("Bearing", "Left", Left);
+                Globals.Settings.Save("Bearing", "Top", Top);
+                Globals.Settings.Save("Bearing", "Left", Left);
             }
         }
 
         private void Bearing_Load(object sender, EventArgs e)
         {
             objRangeBearing.ComputeRangeAndBearing(Globals.SiteGridSquare, Globals.strConnectedGridSquare, ref dblRange, ref dblBearing);
-            Top = Globals.objINIFile.GetInteger("Bearing", "Top", 100);
-            Left = Globals.objINIFile.GetInteger("Bearing", "Left", 100);
+            Top = Globals.Settings.Get("Bearing", "Top", 100);
+            Left = Globals.Settings.Get("Bearing", "Left", 100);
             tmrShow.Start();
         }
 

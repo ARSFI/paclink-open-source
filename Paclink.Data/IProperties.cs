@@ -2,10 +2,19 @@
 {
     public interface IProperties
     {
-         void DeleteProperty(string propertyName);
-         string GetProperty(string propertyName, string defaultValue);
-         bool GetProperty(string propertyName, bool defaultValue);
-         int GetProperty(string propertyName, int defaultValue);
-         void SaveProperty(string propertyName, string value);
+        void Delete(string group, string name);
+        void DeleteGroup(string group);
+        string Get(string group, string name, string defaultValue);
+        bool Get(string group, string name, bool defaultValue);
+        int Get(string group, string name, int defaultValue);
+        void Save(string group, string name, string value);
+        void Save(string group, string name, int value);
+        void Save(string group, string name, bool value);
+
+        //default/optional interface member
+        string ToIniFileFormat()
+        {
+            return "";
+        }
     }
 }

@@ -27,7 +27,7 @@ namespace Paclink
         {
             ClearEntries();
             FillChannelList();
-            cmbChannelName.Text = Globals.objINIFile.GetString("Properties", "Last Telnet Channel", "");
+            cmbChannelName.Text = Globals.Settings.Get("Properties", "Last Telnet Channel", "");
         } // TelnetChannels_Load
 
         private void cmbChannelName_SelectedIndexChanged(object sender, EventArgs e)
@@ -143,7 +143,7 @@ namespace Paclink
                 Channels.FillChannelCollection();
                 FillChannelList();
                 ClearEntries();
-                Globals.objINIFile.WriteString("Properties", "Last Telnet Channel", cmbChannelName.Text);
+                Globals.Settings.Save("Properties", "Last Telnet Channel", cmbChannelName.Text);
                 Close();
             }
         } // btnAdd_Click
@@ -161,7 +161,7 @@ namespace Paclink
                 Channels.RemoveChannel(cmbChannelName.Text);
                 Channels.FillChannelCollection();
                 FillChannelList();
-                Globals.objINIFile.WriteString("Properties", "Last Telnet Channel", "");
+                Globals.Settings.Save("Properties", "Last Telnet Channel", "");
                 Close();
             }
         } // btnRemove_Click
@@ -188,14 +188,14 @@ namespace Paclink
 
                 Channels.UpdateChannel(ref stcUpdateChannel);
                 Channels.FillChannelCollection();
-                Globals.objINIFile.WriteString("Properties", "Last Telnet Channel", cmbChannelName.Text);
+                Globals.Settings.Save("Properties", "Last Telnet Channel", cmbChannelName.Text);
                 Close();
             }
         } // btnUpdate_Click
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            Globals.objINIFile.WriteString("Properties", "Last Telnet Channel", cmbChannelName.Text);
+            Globals.Settings.Save("Properties", "Last Telnet Channel", cmbChannelName.Text);
             Close();
         } // btnClose_Click
 

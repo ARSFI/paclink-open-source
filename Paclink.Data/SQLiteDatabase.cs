@@ -32,6 +32,9 @@ namespace Paclink.Data
                 var filepath = Path.Combine(path, DatabaseName);
                 _connectionString = $"URI=file:{filepath}";
                 _log.Trace($"Database connection string: {_connectionString}");
+
+                //create the database if it does not already exist
+                CreateDatabase();
             }
             catch (Exception ex)
             {
@@ -47,15 +50,15 @@ namespace Paclink.Data
                 using var connection = new SQLiteConnection(_connectionString);
                 connection.Open();
 
-                var sql = "CREATE TABLE IF NOT EXISTS Properties (Timestamp TEXT, Property TEXT NOT NULL, Value TEXT, PRIMARY KEY(Property))";
+                var sql = "CREATE TABLE IF NOT EXISTS Properties (Timestamp TEXT,`Group` TEXT DEFAULT '',`Property` TEXT NOT NULL,`Value` TEXT DEFAULT '',PRIMARY KEY(`Group`,`Property`))";
                 using var cmd = new SQLiteCommand(sql, connection);
                 cmd.ExecuteNonQuery();
 
-                cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Accounts(Callsign STRING PRIMARY KEY, Password STRING, Tactical BOOLEAN)";
+                cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Accounts(`Callsign` STRING PRIMARY KEY, `Password` STRING, `Tactical` BOOLEAN)";
                 cmd.ExecuteNonQuery();
 
                 //add db version property
-                cmd.CommandText = $"REPLACE INTO Properties (Timestamp,Property,Value) VALUES (datetime('now'),'{SchemaVersionProperty}','{_databaseVersion}')";
+                cmd.CommandText = $"REPLACE INTO Properties (`Timestamp`,`Group`,`Property`,`Value`) VALUES (datetime('now'),'System','{SchemaVersionProperty}','{_databaseVersion}')";
                 cmd.ExecuteNonQuery();
                 _log.Trace($"Database version: {_databaseVersion}");
 

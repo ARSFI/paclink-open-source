@@ -78,7 +78,7 @@ namespace Paclink
             InitializeControls();
             ClearEntries();
             FillChannelList();
-            cmbChannelName.Text = Globals.objINIFile.GetString("Properties", "Last Pactor Channel", "");
+            cmbChannelName.Text = Globals.Settings.Get("Properties", "Last Pactor Channel", "");
         } // PactorTNCChannels_Load
 
         private void InitializeControls()
@@ -783,7 +783,7 @@ namespace Paclink
                 Channels.AddChannel(ref stcNewChannel);
                 Channels.FillChannelCollection();
                 FillChannelList();
-                Globals.objINIFile.WriteString("Properties", "Last Pactor Channel", cmbChannelName.Text);
+                Globals.Settings.Save("Properties", "Last Pactor Channel", cmbChannelName.Text);
                 btnAdd.Enabled = false;
                 btnRemove.Enabled = true;
                 btnUpdate.Enabled = true;
@@ -802,7 +802,7 @@ namespace Paclink
                 Channels.RemoveChannel(cmbChannelName.Text);
                 Channels.FillChannelCollection();
                 FillChannelList();
-                Globals.objINIFile.WriteString("Properties", "Last Pactor Channel", "");
+                Globals.Settings.Save("Properties", "Last Pactor Channel", "");
                 if (Globals.cllFastStart.Contains(cmbChannelName.Text))
                 {
                     Globals.cllFastStart.Remove(cmbChannelName.Text);
@@ -864,14 +864,14 @@ namespace Paclink
                 // Clear channel name from the fast start list...
                 if (Globals.cllFastStart.Contains(cmbChannelName.Text))
                     Globals.cllFastStart.Remove(cmbChannelName.Text);
-                Globals.objINIFile.WriteString("Properties", "Last Pactor Channel", cmbChannelName.Text);
+                Globals.Settings.Save("Properties", "Last Pactor Channel", cmbChannelName.Text);
                 // Me.Close()
             }
         } // btnUpdate_Click
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            Globals.objINIFile.WriteString("Properties", "Last Pactor Channel", cmbChannelName.Text);
+            Globals.Settings.Save("Properties", "Last Pactor Channel", cmbChannelName.Text);
             Close();
         } // btnClose_Click
 

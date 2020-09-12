@@ -10,6 +10,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using WinlinkServiceClasses;
 
+//TODO: Replace with WinlinkWebServices project
+
 namespace WinlinkInterop
 {
     public class WinlinkInterop

@@ -73,7 +73,7 @@ namespace Paclink
             InitializeControls();
             ClearEntries();
             FillChannelList();
-            cmbChannelName.Text = Globals.objINIFile.GetString("Properties", "Last Packet TNC Channel", "");
+            cmbChannelName.Text = Globals.Settings.Get("Properties", "Last Packet TNC Channel", "");
             if (!string.IsNullOrEmpty(cmbChannelName.Text) & cmbChannelName.Text != "<Enter a new channel>")
             {
                 if (Channels.Entries.ContainsKey(cmbChannelName.Text))
@@ -702,7 +702,7 @@ namespace Paclink
                 Channels.AddChannel(ref stcNewChannel);
                 Channels.FillChannelCollection();
                 FillChannelList();
-                Globals.objINIFile.WriteString("Properties", "Last Packet TNC Channel", cmbChannelName.Text);
+                Globals.Settings.Save("Properties", "Last Packet TNC Channel", cmbChannelName.Text);
             }
 
             btnAdd.Enabled = false;
@@ -727,7 +727,7 @@ namespace Paclink
                     Globals.cllFastStart.Remove(cmbChannelName.Text);
                 }
 
-                Globals.objINIFile.WriteString("Properties", "Last Packet TNC Channel", "");
+                Globals.Settings.Save("Properties", "Last Packet TNC Channel", "");
                 ClearEntries();
                 // Me.Close()
             }
@@ -779,14 +779,14 @@ namespace Paclink
                 // Clear channel name from the fast start list...
                 if (Globals.cllFastStart.Contains(cmbChannelName.Text))
                     Globals.cllFastStart.Remove(cmbChannelName.Text);
-                Globals.objINIFile.WriteString("Properties", "Last Packet TNC Channel", cmbChannelName.Text);
+                Globals.Settings.Save("Properties", "Last Packet TNC Channel", cmbChannelName.Text);
                 // Me.Close()
             }
         } // btnUpdate_Click
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            Globals.objINIFile.WriteString("Properties", "Last Packet TNC Channel", cmbChannelName.Text);
+            Globals.Settings.Save("Properties", "Last Packet TNC Channel", cmbChannelName.Text);
             Close();
         } // btnClose_Click
 

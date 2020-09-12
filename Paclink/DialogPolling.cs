@@ -24,9 +24,9 @@ namespace Paclink
 
         public static void InitializePollingFlags()
         {
-            AutoPoll = Globals.objINIFile.GetBoolean(Application.ProductName, "Auto Poll", false);
-            PollOnReceivedMessage = Globals.objINIFile.GetBoolean(Application.ProductName, "Poll on Received Message", false);
-            AutoPollInterval = Globals.objINIFile.GetInteger(Application.ProductName, "Auto Poll Interval", 60);
+            AutoPoll = Globals.Settings.Get(Application.ProductName, "Auto Poll", false);
+            PollOnReceivedMessage = Globals.Settings.Get(Application.ProductName, "Poll on Received Message", false);
+            AutoPollInterval = Globals.Settings.Get(Application.ProductName, "Auto Poll Interval", 60);
             MinutesRemaining = AutoPollInterval;
         } // InitializePolling
 
@@ -73,9 +73,9 @@ namespace Paclink
             }
 
             PollOnReceivedMessage = chkAutoSend.Checked;
-            Globals.objINIFile.WriteBoolean(Application.ProductName, "Auto Poll", AutoPoll);
-            Globals.objINIFile.WriteBoolean(Application.ProductName, "Poll on Received Message", PollOnReceivedMessage);
-            Globals.objINIFile.WriteInteger(Application.ProductName, "Auto Poll Interval", AutoPollInterval);
+            Globals.Settings.Save(Application.ProductName, "Auto Poll", AutoPoll);
+            Globals.Settings.Save(Application.ProductName, "Poll on Received Message", PollOnReceivedMessage);
+            Globals.Settings.Save(Application.ProductName, "Auto Poll Interval", AutoPollInterval);
             MinutesRemaining = AutoPollInterval;
             Close();
         } // btnUpdate_Click

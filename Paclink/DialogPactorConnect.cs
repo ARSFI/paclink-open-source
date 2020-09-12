@@ -148,7 +148,7 @@ namespace Paclink
         private void chkResumeDialog_CheckedChanged(object sender, EventArgs e)
         {
             Globals.blnPactorDialogResume = chkResumeDialog.Checked;
-            Globals.objINIFile.WriteBoolean("Properties", "Pactor Dialog Resume", Globals.blnPactorDialogResume);
+            Globals.Settings.Save("Properties", "Pactor Dialog Resume", Globals.blnPactorDialogResume);
         } // chkResumeDialog_CheckedChanged
 
         private void cmbCallSigns_SelectedIndexChanged(object sender, EventArgs e)
@@ -259,8 +259,8 @@ namespace Paclink
 
         private void DialogPactorConnect_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Globals.objINIFile.WriteInteger("Pactor Control", "Top", Top);
-            Globals.objINIFile.WriteInteger("Pactor Control", "Left", Left);
+            Globals.Settings.Save("Pactor Control", "Top", Top);
+            Globals.Settings.Save("Pactor Control", "Left", Left);
         } // DialogPactorConnect_FormClosing
 
         private void PactorConnect_Load(object sender, EventArgs e)
@@ -269,8 +269,8 @@ namespace Paclink
             var aryResults = new string[0];
             int intIndex;
             string strFreqList;
-            Top = Globals.objINIFile.GetInteger("Pactor Control", "Top", 100);
-            Left = Globals.objINIFile.GetInteger("Pactor Control", "Left", 100);
+            Top = Globals.Settings.Get("Pactor Control", "Top", 100);
+            Left = Globals.Settings.Get("Pactor Control", "Left", 100);
             try
             {
                 BringToFront();

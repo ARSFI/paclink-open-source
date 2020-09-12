@@ -118,9 +118,9 @@ namespace Paclink
             chkEnableRadar.Checked = Globals.blnEnableRadar;
             chkForceHFRouting.Checked = Globals.blnForceHFRouting;
             chkAutoupdateTest.Checked = Globals.blnAutoupdateTest;
-            txtPrefix.Text = Globals.objINIFile.GetString("Properties", "Prefix", "");
-            txtSuffix.Text = Globals.objINIFile.GetString("Properties", "Suffix", "");
-            txtSizeLimit.Text = Globals.objINIFile.GetString("Properties", "Size Limit", "120000");
+            txtPrefix.Text = Globals.Settings.Get("Properties", "Prefix", "");
+            txtSuffix.Text = Globals.Settings.Get("Properties", "Suffix", "");
+            txtSizeLimit.Text = Globals.Settings.Get("Properties", "Size Limit", "120000");
             txtSecureLoginPassword.Enabled = true;
             if (txtSecureLoginPassword.Enabled == false)
                 txtSecureLoginPassword.Text = "";
@@ -135,7 +135,7 @@ namespace Paclink
 
             try
             {
-                cmbLocalIPAddress.SelectedIndex = Globals.objINIFile.GetInteger("Properties", "Default Local IP Address Index", 0);
+                cmbLocalIPAddress.SelectedIndex = Globals.Settings.Get("Properties", "Default Local IP Address Index", 0);
             }
             catch
             {
@@ -307,27 +307,27 @@ namespace Paclink
                 objTestPort = null;
             }
 
-            Globals.objINIFile.WriteString("Properties", "Program Directory", Globals.SiteBinDirectory);
-            Globals.objINIFile.WriteString("Properties", "Site Callsign", Globals.SiteCallsign);
-            Globals.objINIFile.WriteString("Properties", "Site Password", "");
-            Globals.objINIFile.WriteString("Properties", "Secure Login Password", Globals.SecureLoginPassword);
-            Globals.objINIFile.WriteString("Properties", "EMail Password", Globals.POP3Password);
-            Globals.objINIFile.WriteString("Properties", "ServiceCodes", Globals.strServiceCodes);
-            Globals.objINIFile.WriteString("Properties", "Grid Square", Globals.SiteGridSquare);
-            Globals.objINIFile.WriteInteger("Properties", "SMTP Port Number", Globals.intSMTPPortNumber);
-            Globals.objINIFile.WriteInteger("Properties", "POP3 Port Number", Globals.intPOP3PortNumber);
-            Globals.objINIFile.WriteBoolean("Properties", "LAN Connection", Globals.blnLAN);
-            Globals.objINIFile.WriteBoolean("Properties", "Enable Radar", Globals.blnEnableRadar);
-            Globals.objINIFile.WriteString("Properties", "Prefix", txtPrefix.Text.Trim());
-            Globals.objINIFile.WriteString("Properties", "Suffix", txtSuffix.Text.Trim());
-            Globals.objINIFile.WriteString("Properties", "Size Limit", txtSizeLimit.Text.Trim());
-            Globals.objINIFile.WriteInteger("Properties", "Default Local IP Address Index", cmbLocalIPAddress.SelectedIndex);
-            Globals.objINIFile.WriteBoolean("Properties", "Use RMS Relay", Globals.blnUseRMSRelay);
-            Globals.objINIFile.WriteString("Properties", "Local IP Path", Globals.strRMSRelayIPPath);
-            Globals.objINIFile.WriteInteger("Properties", "RMS Relay Port", Globals.intRMSRelayPort);
-            Globals.objINIFile.WriteBoolean("Properties", "Force radio-only", Globals.blnForceHFRouting);
-            Globals.objINIFile.WriteBoolean(Application.ProductName, "Start Minimized", Globals.blnStartMinimized);
-            Globals.objINIFile.WriteBoolean("Main", "Test Autoupdate", Globals.blnAutoupdateTest);
+            Globals.Settings.Save("Properties", "Program Directory", Globals.SiteBinDirectory);
+            Globals.Settings.Save("Properties", "Site Callsign", Globals.SiteCallsign);
+            Globals.Settings.Save("Properties", "Site Password", "");
+            Globals.Settings.Save("Properties", "Secure Login Password", Globals.SecureLoginPassword);
+            Globals.Settings.Save("Properties", "EMail Password", Globals.POP3Password);
+            Globals.Settings.Save("Properties", "ServiceCodes", Globals.strServiceCodes);
+            Globals.Settings.Save("Properties", "Grid Square", Globals.SiteGridSquare);
+            Globals.Settings.Save("Properties", "SMTP Port Number", Globals.intSMTPPortNumber);
+            Globals.Settings.Save("Properties", "POP3 Port Number", Globals.intPOP3PortNumber);
+            Globals.Settings.Save("Properties", "LAN Connection", Globals.blnLAN);
+            Globals.Settings.Save("Properties", "Enable Radar", Globals.blnEnableRadar);
+            Globals.Settings.Save("Properties", "Prefix", txtPrefix.Text.Trim());
+            Globals.Settings.Save("Properties", "Suffix", txtSuffix.Text.Trim());
+            Globals.Settings.Save("Properties", "Size Limit", txtSizeLimit.Text.Trim());
+            Globals.Settings.Save("Properties", "Default Local IP Address Index", cmbLocalIPAddress.SelectedIndex);
+            Globals.Settings.Save("Properties", "Use RMS Relay", Globals.blnUseRMSRelay);
+            Globals.Settings.Save("Properties", "Local IP Path", Globals.strRMSRelayIPPath);
+            Globals.Settings.Save("Properties", "RMS Relay Port", Globals.intRMSRelayPort);
+            Globals.Settings.Save("Properties", "Force radio-only", Globals.blnForceHFRouting);
+            Globals.Settings.Save(Application.ProductName, "Start Minimized", Globals.blnStartMinimized);
+            Globals.Settings.Save("Main", "Test Autoupdate", Globals.blnAutoupdateTest);
             try
             {
                 Globals.strLocalIPAddress = Globals.strLocalIPAddresses[cmbLocalIPAddress.SelectedIndex];
@@ -347,7 +347,6 @@ namespace Paclink
             AddRadioAccount(Globals.SiteCallsign, Globals.SecureLoginPassword);
             MyApplication.Forms.Main.Text = "Paclink - " + Globals.SiteCallsign;
             Globals.UpdateAccountDirectories();
-            Globals.objINIFile.Flush();
             DialogResult = DialogResult.OK;
             Cursor = Cursors.Default;
             Close();
@@ -365,13 +364,13 @@ namespace Paclink
         {
             // Create a new callsign account directory...
             Directory.CreateDirectory(Globals.SiteRootDirectory + @"Accounts\" + strCallsign + "_Account");
-            string strAccountList = Globals.objINIFile.GetString("Properties", "Account Names", "");
+            string strAccountList = Globals.Settings.Get("Properties", "Account Names", "");
             strAccountList = strAccountList + strCallsign + "|";
-            Globals.objINIFile.WriteString("Properties", "Site Callsign", strCallsign);
-            Globals.objINIFile.WriteString("Properties", "Site Password", "");
-            Globals.objINIFile.WriteString("Properties", "Secure Login Password", Globals.SecureLoginPassword);
-            Globals.objINIFile.WriteString("Properties", "Account Names", strAccountList);
-            Globals.objINIFile.WriteString(strCallsign, "EMail Password", Globals.POP3Password);
+            Globals.Settings.Save("Properties", "Site Callsign", strCallsign);
+            Globals.Settings.Save("Properties", "Site Password", "");
+            Globals.Settings.Save("Properties", "Secure Login Password", Globals.SecureLoginPassword);
+            Globals.Settings.Save("Properties", "Account Names", strAccountList);
+            Globals.Settings.Save(strCallsign, "EMail Password", Globals.POP3Password);
             Accounts.RefreshAccountsList();
 
             // Add new callsign account to the local Outlook Express...
@@ -381,14 +380,14 @@ namespace Paclink
 
         private bool RemoveRadioAccount(string strCallsign)
         {
-            string strAccountList = Globals.objINIFile.GetString("Properties", "Account Names", "");
+            string strAccountList = Globals.Settings.Get("Properties", "Account Names", "");
             strAccountList = strAccountList.Replace(strCallsign + "|", "");
-            Globals.objINIFile.WriteString("Properties", "Site Callsign", "");
-            Globals.objINIFile.WriteString("Properties", "Site Password", "");
-            Globals.objINIFile.WriteString("Properties", "Secure Login Password", "");
-            Globals.objINIFile.WriteString("Properties", "EMail Password", "");
-            Globals.objINIFile.WriteString("Properties", "Account Names", strAccountList);
-            Globals.objINIFile.DeleteSection(strCallsign);
+            Globals.Settings.Save("Properties", "Site Callsign", "");
+            Globals.Settings.Save("Properties", "Site Password", "");
+            Globals.Settings.Save("Properties", "Secure Login Password", "");
+            Globals.Settings.Save("Properties", "EMail Password", "");
+            Globals.Settings.Save("Properties", "Account Names", strAccountList);
+            Globals.Settings.DeleteGroup(strCallsign);
 
             // Remove callsign account directory...
             try
@@ -424,7 +423,7 @@ namespace Paclink
         {
             if (rdoUseRMSRelay.Checked)
             {
-                txtRMSRelayIPPath.Text = Globals.objINIFile.GetString("Properties", "Local IP Path", "localhost");
+                txtRMSRelayIPPath.Text = Globals.Settings.Get("Properties", "Local IP Path", "localhost");
                 txtRMSRelayPort.Text = Globals.intRMSRelayPort.ToString();
                 txtRMSRelayIPPath.Enabled = true;
                 txtRMSRelayPort.Enabled = true;
@@ -445,7 +444,7 @@ namespace Paclink
             }
             else
             {
-                txtRMSRelayIPPath.Text = Globals.objINIFile.GetString("Properties", "Local IP Path", "localhost");
+                txtRMSRelayIPPath.Text = Globals.Settings.Get("Properties", "Local IP Path", "localhost");
                 txtRMSRelayPort.Text = Globals.intRMSRelayPort.ToString();
                 txtRMSRelayIPPath.Enabled = true;
                 txtRMSRelayPort.Enabled = true;

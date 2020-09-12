@@ -31,7 +31,7 @@ namespace Paclink
 
         private void cmbAccount_TextChanged(object sender, EventArgs e)
         {
-            txtPassword.Text = Globals.objINIFile.GetString(cmbAccount.Text, "EMail Password", "");
+            txtPassword.Text = Globals.Settings.Get(cmbAccount.Text, "EMail Password", "");
             strOldPassword = txtPassword.Text;
         } // cmbAccount_TextChanged
 
@@ -152,12 +152,12 @@ namespace Paclink
                 "Confirm Remove",
                 MessageBoxButtons.YesNoCancel) == DialogResult.Cancel)
                 return;
-            string strAccountList = Globals.objINIFile.GetString("Properties", "Account Names", "");
+            string strAccountList = Globals.Settings.Get("Properties", "Account Names", "");
             while (strAccountList.IndexOf(strAccount + "|") != -1) // This added to delete multiples if they exist
                 strAccountList = strAccountList.Replace(strAccount + "|", "");
-            Globals.objINIFile.WriteString("Properties", "Account Names", strAccountList);
+            Globals.Settings.Save("Properties", "Account Names", strAccountList);
             Directory.Delete(Globals.SiteRootDirectory + @"Accounts\" + strAccount + "_Account", true);
-            Globals.objINIFile.DeleteSection(strAccount);
+            Globals.Settings.DeleteGroup(strAccount);
             OutlookExpress.RemoveOutlookExpressAccount(strAccount);
             Accounts.RefreshAccountsList();
             FillAccountSelection();
@@ -183,7 +183,7 @@ namespace Paclink
             if (strCallsign != "<Add new account>" && string.Compare(txtPassword.Text.Trim(), strOldPassword, false) != 0)
             {
                 // Update the password for this callsign.
-                Globals.objINIFile.WriteString(strCallsign, "EMail Password", txtPassword.Text.Trim());
+                Globals.Settings.Save(strCallsign, "EMail Password", txtPassword.Text.Trim());
             }
 
             Globals.UpdateAccountDirectories();
@@ -256,7 +256,7 @@ namespace Paclink
 
         public static bool IsChannel(string strChannelName)
         {
-            string strChannelNames = Globals.objINIFile.GetString("Properties", "Channel Names", "");
+            string strChannelNames = Globals.Settings.Get("Properties", "Channel Names", "");
             if (strChannelNames.IndexOf(strChannelName + "|") != -1)
                 return true;
             else
@@ -275,13 +275,13 @@ namespace Paclink
             // Make a new sub-directory for this account.
             // 
             Directory.CreateDirectory(Globals.SiteRootDirectory + @"Accounts\" + cmbAccount.Text + "_Account");
-            string strAccountList = Globals.objINIFile.GetString("Properties", "Account Names", "");
+            string strAccountList = Globals.Settings.Get("Properties", "Account Names", "");
             // 
             // Add the account name to the registry list.
             // 
             strAccountList = strAccountList + cmbAccount.Text + "|";
-            Globals.objINIFile.WriteString("Properties", "Account Names", strAccountList);
-            Globals.objINIFile.WriteString(cmbAccount.Text, "EMail Password", txtPassword.Text.Trim());
+            Globals.Settings.Save("Properties", "Account Names", strAccountList);
+            Globals.Settings.Save(cmbAccount.Text, "EMail Password", txtPassword.Text.Trim());
             strOldPassword = txtPassword.Text;
             blnReturn = true;
             // 
