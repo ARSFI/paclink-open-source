@@ -123,6 +123,7 @@ namespace Paclink.Data
                 using var cmd = new SQLiteCommand(sql, connection);
                 using SQLiteDataReader reader = cmd.ExecuteReader();
                 reader.Read();
+                if (!reader.HasRows) return string.Empty;
                 var value = reader.GetString(0);
                 _log.Trace($"Retrieved string value '{value}' using query: {sql}");
                 return value;
@@ -143,6 +144,7 @@ namespace Paclink.Data
                 using var cmd = new SQLiteCommand(sql, connection);
                 using SQLiteDataReader reader = cmd.ExecuteReader();
                 reader.Read();
+                if (!reader.HasRows) return DateTime.MinValue;
                 var value = reader.GetDateTime(0);
                 _log.Trace($"Retrieved DateTime value '{value}' using query: {sql}");
                 return value;
@@ -163,6 +165,7 @@ namespace Paclink.Data
                 using var cmd = new SQLiteCommand(sql, connection);
                 using SQLiteDataReader reader = cmd.ExecuteReader();
                 reader.Read();
+                if (!reader.HasRows) return long.MinValue;
                 var value = reader.GetInt64(0);
                 _log.Trace($"Retrieved long value '{value}' using query: {sql}");
                 return value;
