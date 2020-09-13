@@ -11,7 +11,10 @@ namespace Paclink.Data
         public string GetSingleValue(string sql);
         public DateTime GetSingleValueDateTime(string sql);
         public long GetSingleValueLong(string sql);
-        public void MigrateDatabase(string schemaChanges, Version newVersion);
+        public void MigrateDatabase(string schemaChanges, Version newVersion)
+        {
+            //Implement when a new version of the database is released
+        }
         public void NonQuery(string sql);
     }
 }

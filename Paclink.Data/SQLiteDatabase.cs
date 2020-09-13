@@ -121,12 +121,11 @@ namespace Paclink.Data
                 using var connection = new SQLiteConnection(_connectionString);
                 connection.Open();
                 using var cmd = new SQLiteCommand(sql, connection);
-                using SQLiteDataReader reader = cmd.ExecuteReader();
-                reader.Read();
-                if (!reader.HasRows) return string.Empty;
-                var value = reader.GetString(0);
-                _log.Trace($"Retrieved string value '{value}' using query: {sql}");
-                return value;
+                var value = cmd.ExecuteScalar();
+                if (value == null) return string.Empty;
+                var stringValue = Convert.ToString(value);
+                _log.Trace($"Retrieved string value '{stringValue}' using query: {sql}");
+                return stringValue;
             }
             catch (Exception ex)
             {
@@ -177,11 +176,6 @@ namespace Paclink.Data
             }
         }
 
-        public void MigrateDatabase(string schemaChanges, Version newVersion)
-        {
-            throw new NotImplementedException();
-        }
-
         public void NonQuery(string sql)
         {
             try
@@ -190,7 +184,7 @@ namespace Paclink.Data
                 connection.Open();
                 using var cmd = new SQLiteCommand(sql, connection);
                 var count = cmd.ExecuteNonQuery();
-                _log.Trace($"{count} records were impacted running script: {sql}");
+                _log.Trace($"{count} records were inserted/updated running script: {sql}");
             }
             catch (Exception ex)
             {
