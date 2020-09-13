@@ -17,13 +17,13 @@ namespace Paclink.Data
 
         public void DeleteGroup(string group)
         {
-            var sql = $"DELETE IGNORE FROM `Properties` WHERE `Group`='{group}'";
+            var sql = $"DELETE FROM `Properties` WHERE `Group`='{group}'";
             _database.NonQuery(sql);
         }
 
         public void Delete(string group, string name)
         {
-            var sql = $"DELETE IGNORE FROM `Properties` WHERE `Group`='{group}' AND `Property`='{name}'";
+            var sql = $"DELETE FROM `Properties` WHERE `Group`='{group}' AND `Property`='{name}'";
             _database.NonQuery(sql);
         }
 
