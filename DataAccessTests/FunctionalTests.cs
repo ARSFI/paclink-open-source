@@ -11,10 +11,18 @@ namespace DataAccessTests
         private IProperties _properties;
 
         [TestInitialize]
-        public void Init()
+        public void TestInitialize()
         {
             _db = DatabaseFactory.Get();
             _properties = new Properties(_db);
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            //_properties.DeleteGroup("");
+            _properties.Delete("", "Some Bool Prop");
+            _properties.Delete("", "Some Other Prop");
         }
 
         [TestMethod]
