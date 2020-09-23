@@ -13,14 +13,12 @@ namespace Paclink
     {
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
-        private const string strBlockedExtensions = "exe pif scr ";
-        internal bool IsAccepted = false;
+        internal bool IsAccepted;
         internal string ErrorDescription = "Unknown mime decode failure";
 
         // These variables are the basic properties of this class...
         internal string MessageId = "";
         internal DateTime MessageDate;
-        internal DateTime ExpirationDate;
         internal WinlinkAddress Sender = new WinlinkAddress("");    // The Sender's address
         internal WinlinkAddress ReplyTo = new WinlinkAddress("");
         internal string Subject = "";          // The message subject
@@ -48,35 +46,8 @@ namespace Paclink
 
         public void AddAttachment(Attachment objAttachment)
         {
-            string strExtension = GetFileExtension(objAttachment.FileName);
-            if ("EXE SCR VBS COM".IndexOf(strExtension) != -1) // basic safety filtering of risky types
-            {
-                Attachment objReplacement;
-                objReplacement.FileName = Globals.GetNewRandomMid() + ".txt";
-                var objEncoder = new ASCIIEncoding();
-                objReplacement.Image = Globals.GetBytes("The attachment '" + objAttachment.FileName + "' has been " + "removed from this message. The file type ." + strExtension + " is blocked.");
-                aryAttachments.Add(objReplacement);
-            }
-            else
-            {
-                aryAttachments.Add(objAttachment);
-            }
-        } // AddAttachment
-
-        internal bool AnyBcc(string strRecipients)
-        {
-            var Recipients = strRecipients.Split(';');
-            foreach (string recipient in Recipients)
-            {
-                // Strip the <> brackets (required for some email clients like Thunderbird) 
-                string tmpRecipient = recipient.Replace("<", "");
-                tmpRecipient = tmpRecipient.Replace(">", "").Trim();
-                if (Header.IndexOf(tmpRecipient) == -1)
-                    return true; // Not found in header implies Bcc
-            }
-
-            return false;
-        } // AnyBcc
+            aryAttachments.Add(objAttachment);
+        }
 
         internal bool SaveMessageToWinlink()
         {
@@ -86,17 +57,16 @@ namespace Paclink
             if (!string.IsNullOrEmpty(Mime))
             {
                 string strMessageFilePath = Globals.SiteRootDirectory + @"To Winlink\" + MessageId + ".mime";
+                Directory.CreateDirectory(Path.GetDirectoryName(strMessageFilePath));
                 File.WriteAllText(strMessageFilePath, Mime);
                 MidsSeen.AddMessageId(MessageId);
                 LocalDelivery();
                 return true;
             }
-            else
-            {
-                ErrorDescription = "Failure to encode mime format";
-                return false;
-            }
-        } // SaveMessage
+
+            ErrorDescription = "Failure to encode mime format";
+            return false;
+        }
 
         internal bool SaveMessageToAccounts()
         {
@@ -106,13 +76,11 @@ namespace Paclink
                 LocalDelivery();
                 return true;
             }
-            else
-            {
-                _log.Error("[SMTPMessage.SaveMessage] " + MessageId + " empty mime");
-                ErrorDescription = "Failure to encode mime format";
-                return false;
-            }
-        } // SaveMessageToAccount
+
+            _log.Error("[SMTPMessage.SaveMessage] " + MessageId + " empty mime");
+            ErrorDescription = "Failure to encode mime format";
+            return false;
+        }
 
         public string Mime
         {
@@ -138,19 +106,18 @@ namespace Paclink
             {
                 strBody = value;
             }
-        } // Body
+        }
 
         private void LocalDelivery()
         {
-            string strTemp = "";
             foreach (WinlinkAddress objAddress in cllToAddresses)
             {
-                strTemp = objAddress.RadioAddress;
                 if (Accounts.AccountsString.IndexOf(objAddress.RadioAddress) != -1)
                 {
                     string strMessageFilePath = Globals.SiteRootDirectory + @"Accounts\" + objAddress.RadioAddress + @"_Account\" + MessageId + ".mime";
                     try
                     {
+                        Directory.CreateDirectory(Path.GetDirectoryName(strMessageFilePath));
                         File.WriteAllText(strMessageFilePath, Mime);
                     }
                     catch (Exception e)
@@ -162,12 +129,12 @@ namespace Paclink
 
             foreach (WinlinkAddress objAddress in cllCcAddresses)
             {
-                strTemp = objAddress.RadioAddress;
                 if (Accounts.AccountsString.IndexOf(objAddress.RadioAddress) != -1)
                 {
                     string strMessageFilePath = Globals.SiteRootDirectory + @"Accounts\" + objAddress.RadioAddress + @"_Account\" + MessageId + ".mime";
                     try
                     {
+                        Directory.CreateDirectory(Path.GetDirectoryName(strMessageFilePath));
                         File.WriteAllText(strMessageFilePath, Mime);
                     }
                     catch (Exception e)
@@ -176,7 +143,7 @@ namespace Paclink
                     }
                 }
             }
-        } // LocalDelivery
+        }
 
         private bool DecodeMime()
         {
@@ -197,11 +164,9 @@ namespace Paclink
                     aryAttachments.Add(stcAttachment);
                 return true;
             }
-            else
-            {
-                return false;
-            }
-        } // DecodeMime
+
+            return false;
+        }
 
         private bool DecodeHeader()
         {
@@ -270,13 +235,7 @@ namespace Paclink
             if (MessageId.Length < 4 | MessageId.Length > 12)
                 MessageId = Globals.GetNewRandomMid();
             return blnValidSender;
-        } // DecodeHeader
-
-        private string GetFileExtension(string strFileName)
-        {
-            var strTokens = strFileName.Split('.');
-            return strTokens[strTokens.Length - 1].ToUpper();
-        } // GetFileExtension
+        }
 
         private void AddAddress(string strAddress, bool blnCc = false)
         {
@@ -317,7 +276,7 @@ namespace Paclink
                     {
                         for (int intIndex = 1, loopTo = cllCcAddresses.Count; intIndex <= loopTo; intIndex++)
                         {
-                            WinlinkAddress objCcAddress = (WinlinkAddress)cllCcAddresses[intIndex];
+                            WinlinkAddress objCcAddress = cllCcAddresses[intIndex];
                             if ((objAddress.RadioAddress ?? "") == (objCcAddress.RadioAddress ?? ""))
                             {
                                 cllCcAddresses.RemoveAt(intIndex);
@@ -338,15 +297,9 @@ namespace Paclink
                         cllCcAddresses.Add(objAddress);
                 }
             }
-        } // AddAddress
+        } 
 
-        private ArrayList GetAttachments
-        {
-            get
-            {
-                return aryAttachments;
-            }
-        } // GetAttachments
+        private ArrayList GetAttachments => aryAttachments;
 
         private bool EncodeMime()
         {
@@ -360,14 +313,12 @@ namespace Paclink
             objMimeEncoder.Attachments = GetAttachments;
             if (objMimeEncoder.EncodeMime())
             {
-                Mime = string.Copy(objMimeEncoder.Mime);
+                Mime = objMimeEncoder.Mime;
                 return true;
             }
-            else
-            {
-                return false;
-            }
-        } // EncodeMime
+
+            return false;
+        } 
 
         private bool ExtractHeader()
         {
@@ -404,7 +355,7 @@ namespace Paclink
                 }
             }
             while (true);
-        } // ExtractHeader
+        } 
 
         private void EncodeHeader()
         {
@@ -412,15 +363,8 @@ namespace Paclink
 
             var sbdHeader = new StringBuilder();
             int intIndex;
-            if (MessageDate != null)
-            {
-                sbdHeader.Append("Date: " + DateToRFC822Date(MessageDate) + Globals.CRLF);
-            }
-            else
-            {
-                sbdHeader.Append("Date: " + DateToRFC822Date(DateTime.UtcNow) + Globals.CRLF);
-            }
-
+            sbdHeader.Append("Date: " + DateToRFC822Date(MessageDate) + Globals.CRLF);
+            
             if (!string.IsNullOrEmpty(Sender.SMTPAddress))
             {
                 sbdHeader.Append("From: " + Sender.SMTPAddress + Globals.CRLF);
@@ -440,7 +384,7 @@ namespace Paclink
             {
                 if (cllToAddresses.Count == 1)
                 {
-                    sbdHeader.Append("To: " + ((WinlinkAddress)cllToAddresses[0]).SMTPAddress + Globals.CRLF);
+                    sbdHeader.Append("To: " + cllToAddresses[0].SMTPAddress + Globals.CRLF);
                 }
                 else
                 {
@@ -449,15 +393,15 @@ namespace Paclink
                     {
                         if (intIndex == 0)
                         {
-                            sbdHeader.Append("To: " + ((WinlinkAddress)cllToAddresses[0]).SMTPAddress + "," + Globals.CRLF);
+                            sbdHeader.Append("To: " + cllToAddresses[0].SMTPAddress + "," + Globals.CRLF);
                         }
                         else if (intIndex == cllToAddresses.Count - 1)
                         {
-                            sbdHeader.Append(" " + ((WinlinkAddress)cllToAddresses[intIndex]).SMTPAddress + Globals.CRLF);
+                            sbdHeader.Append(" " + cllToAddresses[intIndex].SMTPAddress + Globals.CRLF);
                         }
                         else
                         {
-                            sbdHeader.Append(" " + ((WinlinkAddress)cllToAddresses[intIndex]).SMTPAddress + "," + Globals.CRLF);
+                            sbdHeader.Append(" " + cllToAddresses[intIndex].SMTPAddress + "," + Globals.CRLF);
                         }
                     }
                 }
@@ -467,7 +411,7 @@ namespace Paclink
             {
                 if (cllCcAddresses.Count == 1)
                 {
-                    sbdHeader.Append("Cc: " + ((WinlinkAddress)cllCcAddresses[0]).SMTPAddress + Globals.CRLF);
+                    sbdHeader.Append("Cc: " + cllCcAddresses[0].SMTPAddress + Globals.CRLF);
                 }
                 else
                 {
@@ -476,15 +420,15 @@ namespace Paclink
                     {
                         if (intIndex == 0)
                         {
-                            sbdHeader.Append("Cc: " + ((WinlinkAddress)cllCcAddresses[0]).SMTPAddress + "," + Globals.CRLF);
+                            sbdHeader.Append("Cc: " + cllCcAddresses[0].SMTPAddress + "," + Globals.CRLF);
                         }
                         else if (intIndex == cllCcAddresses.Count - 1)
                         {
-                            sbdHeader.Append(" " + ((WinlinkAddress)cllCcAddresses[intIndex]).SMTPAddress + Globals.CRLF);
+                            sbdHeader.Append(" " + cllCcAddresses[intIndex].SMTPAddress + Globals.CRLF);
                         }
                         else
                         {
-                            sbdHeader.Append(" " + ((WinlinkAddress)cllCcAddresses[intIndex]).SMTPAddress + "," + Globals.CRLF);
+                            sbdHeader.Append(" " + cllCcAddresses[intIndex].SMTPAddress + "," + Globals.CRLF);
                         }
                     }
                 }
@@ -499,7 +443,7 @@ namespace Paclink
 
             sbdHeader.Append("MIME-Version: 1.0" + Globals.CRLF);
             Header = sbdHeader.ToString();
-        } // EncodeHeader
+        } 
 
         private DateTime RFC822DateToDate(string strDate)
         {
@@ -624,7 +568,7 @@ namespace Paclink
         private string DateToRFC822Date(DateTime dtUTCDate)
         {
             // This function converts a Date type to a standard RFC 822 date string. The date
-            // arguement must be in UTC...
+            // argument must be in UTC...
 
             string sDays = "SunMonTueWedThuFriSat";
             string sMonths = "JanFebMarAprMayJunJulAugSepOctNovDec";
@@ -634,35 +578,6 @@ namespace Paclink
             sMonth = " " + sMonths.Substring(3 * (dtUTCDate.Month - 1), 3) + " ";
             return sDay + dtUTCDate.ToString("dd") + sMonth + dtUTCDate.ToString("yyyy") + " " + dtUTCDate.ToString("HH:mm:ss") + " -0000";
         } // DateToRFC822Date
-
-        private string FormatMessageBody(string strSender, string strBody)
-        {
-            // Remove excessive blank lines from inbound message body...
-
-            // Remove excess blank lines...
-            bool blnBlankLine = true;
-            var objBodyStream = new StringReader(strBody);
-            var sbdBody = new StringBuilder();
-            do
-            {
-                string strLine = objBodyStream.ReadLine();
-                if (strLine == null)
-                    break;
-                if (!string.IsNullOrEmpty(strLine.Trim()))
-                    blnBlankLine = false;
-                if (!blnBlankLine)
-                    sbdBody.Append(strLine + Globals.CRLF);
-                if (string.IsNullOrEmpty(strLine.Trim()))
-                {
-                    blnBlankLine = true;
-                }
-            }
-            while (true);
-            strBody = sbdBody.ToString().Trim();
-            if (string.IsNullOrEmpty(strBody))
-                strBody = "<no message body>" + Globals.CRLF;
-            return strBody;
-        } // FormatMessageBody
 
         public bool IsAnyRecipientMARS()
         {
@@ -683,6 +598,7 @@ namespace Paclink
             }
 
             return false;
-        } // IsAnyRecipientMARS
-    } // PaclinkMessage
+        } 
+
+    } 
 }

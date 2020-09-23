@@ -31,8 +31,6 @@ namespace Paclink
         private const byte SOH = 1;
         private const byte STX = 2;
         private const byte EOT = 4;
-        private const string strBlockedExtensions = "exe pif scr ";
-        internal bool IsAccepted = false;
         internal string ErrorDescription = "Unknown mime decode failure";
 
         // These variables are the basic properties of this class...
@@ -99,10 +97,8 @@ namespace Paclink
                 File.WriteAllText(strFilePath, Mime);
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         } // SaveToFile
 
         internal void DeleteFile(string strFilePath)
@@ -162,7 +158,6 @@ namespace Paclink
             {
                 Attachment objReplacement;
                 objReplacement.FileName = Globals.GetNewRandomMid() + ".txt";
-                var objEncoder = new ASCIIEncoding();
                 objReplacement.Image = Globals.GetBytes("The attachment '" + objAttachment.FileName + "' has been " + "removed from this message. The file type ." + strExtension + " is blocked.");
                 aryAttachments.Add(objReplacement);
             }
@@ -183,12 +178,10 @@ namespace Paclink
                 File.WriteAllText(strMessageFilePath, Mime);
                 return true;
             }
-            else
-            {
-                _log.Error("[Message.SaveMessage] " + MessageId + " empty mime");
-                ErrorDescription = "Failure to encode mime format";
-                return false;
-            }
+
+            _log.Error("[Message.SaveMessage] " + MessageId + " empty mime");
+            ErrorDescription = "Failure to encode mime format";
+            return false;
         } // SaveMessage
 
         private bool DecodeMime()
@@ -205,10 +198,8 @@ namespace Paclink
                     aryAttachments.Add(stcAttachment);
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         } // DecodeMime
 
         private bool DecodeHeader()
@@ -310,7 +301,7 @@ namespace Paclink
                     {
                         for (int intIndex = 0, loopTo = cllCcAddresses.Count; intIndex < loopTo; intIndex++)
                         {
-                            WinlinkAddress objCcAddress = (WinlinkAddress)cllCcAddresses[intIndex];
+                            WinlinkAddress objCcAddress = cllCcAddresses[intIndex];
                             if ((objAddress.RadioAddress ?? "") == (objCcAddress.RadioAddress ?? ""))
                             {
                                 cllCcAddresses.RemoveAt(intIndex);
@@ -361,36 +352,12 @@ namespace Paclink
             objMimeEncoder.Attachments = GetAttachments;
             if (objMimeEncoder.EncodeMime())
             {
-                Mime = string.Copy(objMimeEncoder.Mime);
+                Mime = objMimeEncoder.Mime;
                 return true;
             }
-            else
-            {
-                return false;
-            }
-        } // EncodeMime
 
-        private bool ExtractHeader()
-        {
-            var objStringReader = new StringReader(Mime);
-            var sbdHeader = new StringBuilder();
-            string strLine;
-            do
-            {
-                strLine = objStringReader.ReadLine();
-                if (strLine == null)
-                    return false;
-                if (string.IsNullOrEmpty(strLine))
-                {
-                    Header = sbdHeader.ToString();
-                    return true;
-                }
-
-                sbdHeader.Append(strLine + Globals.CRLF);
-            }
-            while (true);
             return false;
-        } // ExtractHeader
+        }
 
         private void EncodeHeader()
         {
@@ -398,14 +365,8 @@ namespace Paclink
 
             var sbdHeader = new StringBuilder();
             int intIndex;
-            if (MessageDate != null)
-            {
-                sbdHeader.Append("Date: " + Globals.DateToRFC822Date(MessageDate) + Globals.CRLF);
-            }
-            else
-            {
-                sbdHeader.Append("Date: " + Globals.DateToRFC822Date(DateTime.UtcNow) + Globals.CRLF);
-            }
+            sbdHeader.Append("Date: " + Globals.DateToRFC822Date(MessageDate) + Globals.CRLF);
+
 
             if (!string.IsNullOrEmpty(Sender.SMTPAddress))
             {
@@ -426,7 +387,7 @@ namespace Paclink
             {
                 if (cllToAddresses.Count == 1)
                 {
-                    sbdHeader.Append("To: " + ((WinlinkAddress)cllToAddresses[0]).SMTPAddress + Globals.CRLF);
+                    sbdHeader.Append("To: " + cllToAddresses[0].SMTPAddress + Globals.CRLF);
                 }
                 else
                 {
@@ -435,15 +396,15 @@ namespace Paclink
                     {
                         if (intIndex == 1)
                         {
-                            sbdHeader.Append("To: " + ((WinlinkAddress)cllToAddresses[0]).SMTPAddress + "," + Globals.CRLF);
+                            sbdHeader.Append("To: " + cllToAddresses[0].SMTPAddress + "," + Globals.CRLF);
                         }
                         else if (intIndex == cllToAddresses.Count - 1)
                         {
-                            sbdHeader.Append(" " + ((WinlinkAddress)cllToAddresses[intIndex]).SMTPAddress + Globals.CRLF);
+                            sbdHeader.Append(" " + cllToAddresses[intIndex].SMTPAddress + Globals.CRLF);
                         }
                         else
                         {
-                            sbdHeader.Append(" " + ((WinlinkAddress)cllToAddresses[intIndex]).SMTPAddress + "," + Globals.CRLF);
+                            sbdHeader.Append(" " + cllToAddresses[intIndex].SMTPAddress + "," + Globals.CRLF);
                         }
                     }
                 }
@@ -453,7 +414,7 @@ namespace Paclink
             {
                 if (cllCcAddresses.Count == 1)
                 {
-                    sbdHeader.Append("Cc: " + ((WinlinkAddress)cllCcAddresses[0]).SMTPAddress + Globals.CRLF);
+                    sbdHeader.Append("Cc: " + cllCcAddresses[0].SMTPAddress + Globals.CRLF);
                 }
                 else
                 {
@@ -462,15 +423,15 @@ namespace Paclink
                     {
                         if (intIndex == 0)
                         {
-                            sbdHeader.Append("Cc: " + ((WinlinkAddress)cllCcAddresses[0]).SMTPAddress + "," + Globals.CRLF);
+                            sbdHeader.Append("Cc: " + cllCcAddresses[0].SMTPAddress + "," + Globals.CRLF);
                         }
                         else if (intIndex == cllCcAddresses.Count - 1)
                         {
-                            sbdHeader.Append(" " + ((WinlinkAddress)cllCcAddresses[intIndex]).SMTPAddress + Globals.CRLF);
+                            sbdHeader.Append(" " + cllCcAddresses[intIndex].SMTPAddress + Globals.CRLF);
                         }
                         else
                         {
-                            sbdHeader.Append(" " + ((WinlinkAddress)cllCcAddresses[intIndex]).SMTPAddress + "," + Globals.CRLF);
+                            sbdHeader.Append(" " + cllCcAddresses[intIndex].SMTPAddress + "," + Globals.CRLF);
                         }
                     }
                 }
@@ -487,56 +448,24 @@ namespace Paclink
             Header = sbdHeader.ToString();
         } // EncodeHeader
 
-        private string FormatMessageBody(string strSender, string strBody)
-        {
-            // Remove excessive blank lines from inbound message body...
-
-            // Remove excess blank lines...
-            bool blnBlankLine = true;
-            var objBodyStream = new StringReader(strBody);
-            var sbdBody = new StringBuilder();
-            do
-            {
-                string strLine = objBodyStream.ReadLine();
-                if (strLine == null)
-                    break;
-                if (!string.IsNullOrEmpty(strLine.Trim()))
-                    blnBlankLine = false;
-                if (!blnBlankLine)
-                    sbdBody.Append(strLine + Globals.CRLF);
-                if (string.IsNullOrEmpty(strLine.Trim()))
-                {
-                    blnBlankLine = true;
-                }
-            }
-            while (true);
-            strBody = sbdBody.ToString().Trim();
-            if (string.IsNullOrEmpty(strBody))
-                strBody = "<no message body>" + Globals.CRLF;
-            return strBody;
-        } // FormatMessageBody
-
         internal bool Decompress(bool blnCRC)
         {
-            var objCompression = new Compression();
             try
             {
                 if (Compression.Decode(bytCompressed, ref bytUncompressed, blnCRC, intUncompressedSize) > 0)
                 {
                     return true;
                 }
-
                 return false;
             }
             catch
             {
                 return false;
             }
-        } // Decompress
+        }
 
         internal bool Compress(bool blnCRC)
         {
-            var objCompression = new Compression();
             try
             {
                 if (Compression.Encode(bytUncompressed, ref bytCompressed, blnCRC) > 0)
@@ -550,7 +479,7 @@ namespace Paclink
             {
                 return false;
             }
-        } // Compress
+        }
 
         // This function receives a binary byte stream (byte at a time) from a B2 channel
         // and decompresses and decodes the B2 message. Return values:
@@ -560,9 +489,9 @@ namespace Paclink
         // -1 = Received data stream not a correct format
         // -2 = Check sum failure - failed to assemble correct binary image
         private StringBuilder sbdSubject = new StringBuilder();
-        private string strOffset = null;
-        private int intHeaderSize = 0;
-        private int intBlockSize = 0;
+        private string strOffset;
+        private int intHeaderSize;
+        private int intBlockSize;
         private int intArraySize = 100000;
         internal int BinaryInput(byte bytSingle)    // String version of the message subject
                                                     // String version of Offset to include in the header
@@ -673,12 +602,8 @@ namespace Paclink
                             enmState = EB2DecodeState.GetStartOfBlock;
                             return 2;
                         }
-                        else
-                        {
-                            return 0;
-                        }
 
-                        break;
+                        return 0;
                     }
 
                 case EB2DecodeState.GetChecksum:
@@ -689,12 +614,8 @@ namespace Paclink
                         {
                             return 1;
                         }
-                        else
-                        {
-                            return -2;
-                        }
 
-                        break;
+                        return -2;
                     }
             }
 
@@ -708,9 +629,9 @@ namespace Paclink
             // Returns an empty string if unable to prepare the message for B2 transmission...
             if (MessageId.Length != 0)
             {
-                if (PackB2Message() == true)
+                if (PackB2Message())
                 {
-                    return "FC EM " + MessageId + " " + bytUncompressed.Length.ToString() + " " + bytCompressed.Length.ToString() + " 0";
+                    return "FC EM " + MessageId + " " + bytUncompressed.Length + " " + bytCompressed.Length + " 0";
                 }
             }
 
@@ -720,15 +641,13 @@ namespace Paclink
         internal byte[] B2Output(int intOffset)
         {
             // Returns a byte array containing the message in B2-protocol transmission format...
-            if (FormatForBinaryTransmission(intOffset) == true)
+            if (FormatForBinaryTransmission(intOffset))
             {
                 return bytFormatted;
             }
-            else
-            {
-                var bytBuffer = new byte[0];
-                return bytBuffer;
-            }
+
+            var bytBuffer = new byte[0];
+            return bytBuffer;
         } // B2Output
 
         public bool DecodeB2Message()
@@ -760,7 +679,8 @@ namespace Paclink
                             {
                                 break;
                             }
-                            else if (strHeaderLine.IndexOf("DATE:") == 0)
+
+                            if (strHeaderLine.IndexOf("DATE:") == 0)
                             {
                                 string strDateTime = strHeaderLine.Substring(5);
                                 strDateTime = strDateTime.Replace(".", "/");
@@ -832,7 +752,7 @@ namespace Paclink
                 for (int intCount = 0, loopTo1 = cllAttachmentNames.Count; intCount < loopTo1; intCount++)
                 {
                     var stcAttachment = new Attachment();
-                    stcAttachment.FileName = cllAttachmentNames[intCount].ToString();
+                    stcAttachment.FileName = cllAttachmentNames[intCount];
                     stcAttachment.Image = new byte[(Convert.ToInt32(cllAttachmentSizes[intCount]))];
                     intIndex += 2;
                     for (int intPosition = 0, loopTo2 = Convert.ToInt32(cllAttachmentSizes[intCount]) - 1; intPosition <= loopTo2; intPosition++)
@@ -877,18 +797,17 @@ namespace Paclink
                 sbdMessage.Append("Mbo: " + Globals.SiteCallsign + Globals.CRLF);
 
                 // Add the message body size to the header...
-                sbdMessage.Append("Body: " + Body.Length.ToString() + Globals.CRLF);
+                sbdMessage.Append("Body: " + Body.Length + Globals.CRLF);
 
                 // Add the attachment sizes and names to the header...
                 foreach (Attachment stcAttachment in aryAttachments)
-                    sbdMessage.Append("File: " + stcAttachment.Image.Length.ToString() + " " + stcAttachment.FileName + Globals.CRLF);
+                    sbdMessage.Append("File: " + stcAttachment.Image.Length + " " + stcAttachment.FileName + Globals.CRLF);
 
                 // Add the message body...
                 sbdMessage.Append(Globals.CRLF + Body);
 
                 // Convert header and body to a binary image...
                 bytUncompressed = new byte[1];
-                var objEncoder = new ASCIIEncoding();
                 bytUncompressed = Globals.GetBytes(sbdMessage.ToString());
 
                 // Add the attachments to the binary image...
@@ -932,10 +851,8 @@ namespace Paclink
                 {
                     return true;
                 }
-                else
-                {
-                    return false;
-                }
+
+                return false;
             }
             catch
             {
@@ -1063,11 +980,9 @@ namespace Paclink
                         {
                             return true;
                         }
-                        else
-                        {
-                            _log.Error("[RMSLiteMessage.FormatForBinaryTransmission] IntPackets = " + intPackets.ToString());
-                            return false;
-                        }
+
+                        _log.Error("[RMSLiteMessage.FormatForBinaryTransmission] IntPackets = " + intPackets);
+                        return false;
                     }
                 }
                 while (true);

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using NLog;
@@ -52,45 +53,15 @@ namespace Paclink
             _mnuLogs.Name = "mnuLogs";
             _mnuHelp.Name = "mnuHelp";
             _mnuHelpContents.Name = "mnuHelpContents";
-            _mnuDocumentation.Name = "mnuDocumentation";
-            _ToolStripSeparator6.Name = "ToolStripSeparator6";
             _mnuSimpleTerminal.Name = "mnuSimpleTerminal";
-            _ToolStripSeparator5.Name = "ToolStripSeparator5";
-            _mnuAbout.Name = "mnuAbout";
             _mnuMinutesRemaining.Name = "mnuMinutesRemaining";
-            _mnuNoCMS.Name = "mnuNoCMS";
             _mnuTest.Name = "mnuTest";
+
+            _log.Info("Starting Paclink");
         }
-        // Public Properties...
-        public string strStateText;
 
-        // Synclocks...
-        private object objSMTPSynclock = new object();
-        private object objChannelSynclock = new object();
-        private object objStateSynclock = new object();
-        private object objProgressSynclock = new object();
-        private object objRateSynclock = new object();
-
-        // Strings...
-        private string strFormText;
-        private string strSMTPText;
-        private string strSMTPColor;
-        private string strSMTPStatus;
-        private string strChannelText;
-        private string strChannelColor;
-        private string strChannelStatus;
         private string strChannelSelection;
-        private string strRateText;
-
-        // Integers...
-        private int intProgress;
-
-        // Booleans...
-        private bool blnMenuEnabled;
-        private bool blnStateTextEnabled;
         private bool blnStartAutoconnect;
-
-        // Timers
         private System.Timers.Timer tmrStartChannel;
 
         private void ChannelDisplayWrite(string strText)
@@ -98,7 +69,6 @@ namespace Paclink
             if ((strText ?? "") == Globals.CLEAR)
             {
                 ChannelDisplay.Clear();
-                File.WriteAllText(Globals.SiteRootDirectory + @"Log\Channel Events " + DateTime.UtcNow.ToString("yyyyMMdd") + ".log", Globals.CRLF);
                 return;
             }
             else if (string.IsNullOrEmpty(strText))
@@ -151,7 +121,7 @@ namespace Paclink
                         break;
                     }
             }
-        } 
+        }
 
         private void ChannelSelection(object s, EventArgs e)
         {
@@ -218,24 +188,6 @@ namespace Paclink
 
             Refresh();
 
-            // Give the WL2KServers class time to locate at least one CMS server...
-            // If objWL2KServers Is Nothing Then objWL2KServers = New WL2KServers
-            if (!Globals.UseRMSRelay())
-            {
-                var intLoopCounter = default(int);
-                do
-                {
-                    intLoopCounter += 1;
-                    if (intLoopCounter > 45)
-                        break;
-                    if (Globals.IsCMSavailable("Paclink:Main.Initialize"))
-                        break;
-                    Thread.Sleep(1000);
-                }
-                while (true);
-            }
-            // objWL2KServers.GetCMSHost()
-
             // Create any required subdirectories...
             if (Directory.Exists(Globals.SiteRootDirectory + "Accounts") == false)
             {
@@ -285,51 +237,32 @@ namespace Paclink
             // Report what version of Paclink is running.
             // 
             Globals.PostVersionRecord();
-        } // Initialze
+        }
 
         private void MainClosed(object sender, FormClosedEventArgs e)
         {
-            if (Globals.objPrimaryThread is object)
-                Globals.objPrimaryThread.Close();
-            // If objWL2KServers IsNot Nothing Then objWL2KServers.Close()
-            if (Globals.objWL2KInterop is object)
-                Globals.objWL2KInterop.Close();
+            Globals.objPrimaryThread?.Close();
             Globals.objPrimaryThread = null;
-            // objWL2KServers = Nothing
-        } // MainClosed
+            Globals.objWL2KInterop?.Close();
+            Globals.objWL2KInterop = null;
+        }
 
         private void MainClosing(object s, FormClosingEventArgs e)
         {
-            if (Globals.objSelectedClient is object)
+            if (Globals.objSelectedClient != null)
             {
                 Globals.blnManualAbort = true;
                 Globals.objSelectedClient.Abort();
                 Globals.objSelectedClient = null;
             }
 
-            if (WindowState == FormWindowState.Normal)
-            {
-                Globals.Settings.Save(Application.ProductName, "Width", Width);
-                Globals.Settings.Save(Application.ProductName, "Height", Height);
-                Globals.Settings.Save(Application.ProductName, "Top", Top);
-                Globals.Settings.Save(Application.ProductName, "Left", Left);
-                Globals.Settings.Save(Application.ProductName, "Splitter", pnlSplitter.SplitterDistance);
-            }
-
             Globals.blnProgramClosing = true;
             Globals.PostVersionRecord(true);
             Thread.Sleep(1000);
-        } // MainClosing
+        }
 
         private void MainLoad(object s, EventArgs e)
         {
-            // Get/create SQLite DB.
-            // TBD
-            //using (var db = DatabaseFactory.Get())
-            //{
-            //
-            //}
-           
             Cursor = Cursors.WaitCursor;
             Globals.strProductName = Application.ProductName;
             Globals.strProductVersion = Application.ProductVersion;
@@ -342,8 +275,6 @@ namespace Paclink
                 {
                     Globals.SiteRootDirectory = Globals.SiteBinDirectory.Substring(0, intDirPtr);
                 }
-
-                mnuTest.Visible = false;
             }
             else
             {
@@ -351,7 +282,6 @@ namespace Paclink
                 string strProgramFiles = Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
                 Globals.SiteRootDirectory = Path.Combine(strProgramFiles, @"Paclink\");
                 Globals.SiteBinDirectory = Globals.SiteRootDirectory + @"Bin\";
-                mnuTest.Visible = false;
             }
 
             Globals.SiteDataDirectory = Globals.SiteRootDirectory + @"Data\";
@@ -365,8 +295,6 @@ namespace Paclink
 
             lblProgramVersion.Text = "Version: " + Globals.strProductVersion;
             Globals.Settings.Save("Main", "Program Version", Application.ProductVersion);
-            Globals.blnAutoupdateTest = Globals.Settings.Get("Main", "Test Autoupdate", false);
-            Globals.blnAutoupdateForce = Globals.Settings.Get("Main", "Force Autoupdate", false);
             Globals.blnUseRMSRelay = Globals.Settings.Get("Properties", "Use RMS Relay", false);
             Globals.strRMSRelayIPPath = Globals.Settings.Get("Properties", "Local IP Path", "");
             Globals.intRMSRelayPort = Globals.Settings.Get("Properties", "RMS Relay Port", 8772);
@@ -375,16 +303,9 @@ namespace Paclink
             Globals.blnEnablAutoforward = Globals.Settings.Get("Properties", "Enable Autoforward", false);
             Globals.blnPactorDialogResume = Globals.Settings.Get("Properties", "Pactor Dialog Resume", true);
             Globals.objWL2KInterop.SetWebServiceKey("CC5E139204DA41A3B544A5F2CEB21051");
-            // objWL2KInterop.UseAWS(True)
 
-            Top = Globals.Settings.Get(Application.ProductName, "Top", 40);
-            Left = Globals.Settings.Get(Application.ProductName, "Left", 40);
-            Width = Globals.Settings.Get(Application.ProductName, "Width", 500);
-            Height = Globals.Settings.Get(Application.ProductName, "Height", 300);
-            pnlSplitter.SplitterDistance = Globals.Settings.Get(Application.ProductName, "Splitter", 370);
             lblMessageDisplay.Enabled = true;
             lblMessageDisplay.BackColor = ChannelDisplay.BackColor;
-            // mnuAbort.Enabled = False
             barChannelProgress.Enabled = false;
             mnuMinutesRemaining.Visible = false;
             Show();
@@ -394,62 +315,9 @@ namespace Paclink
             Globals.MainMenu = mnuMain;
             Globals.MainMenuConnect = mnuConnect;
             Globals.MainMenuAbort = mnuAbort;
-            // 
-            // Make sure we're not in a restart loop.
-            // 
-            CheckRestartLoop();
             Globals.InitializeLocalIPAddresses();
             tmrMain.Start();
         } // MainLoad
-
-        private bool CheckRestartLoop()
-        {
-            // 
-            // Check to see if the program is in some sort of restart loop.  If it is, display a message and wait for operator response.
-            // 
-            bool blnLooping = false;
-            string strRestart = Globals.Settings.Get("Main", "Daily starts", "");
-            if (string.IsNullOrEmpty(strRestart))
-            {
-                Globals.Settings.Save("Main", "Daily starts", Globals.FormatNetTime() + "|" + "1");
-            }
-            else
-            {
-                var strTok = strRestart.Split('|');
-                if (strTok.Length == 2)
-                {
-                    var dttDate = Globals.ParseNetworkDate(strTok[0]);
-                    double dblHours = (DateTime.UtcNow - dttDate).TotalHours;
-                    if (dblHours < 12)
-                    {
-                        int intStartupCount = Convert.ToInt32(strTok[1]);
-                        if (intStartupCount >= 50)
-                        {
-                            blnLooping = true;
-                            MessageBox.Show("Paclink has been started " + intStartupCount.ToString() + " times today." + Globals.CRLF + Globals.CRLF + "Confirm that you want to restart it again.");
-                        }
-                        // Increment the count
-                        Globals.Settings.Save("Main", "Daily starts", strTok[0] + "|" + (intStartupCount + 1).ToString());
-                    }
-                    else
-                    {
-                        // More than 12 hours since start of interval. Reset the date and count.
-                        Globals.Settings.Save("Main", "Daily starts", Globals.FormatNetTime() + "|" + "1");
-                    }
-                }
-            }
-
-            return blnLooping;
-        }
-
-        private void MainResize(object sender, EventArgs e)
-        {
-            int intWidth = (ClientSize.Width - 40) / 4;
-            lblChannelStatus.Width = intWidth;
-            ChannelRate.Width = intWidth;
-            barChannelProgress.Width = intWidth;
-            lblSMTPStatus.Width = intWidth;
-        } // MainResize
 
         private void SMTPDisplayWrite(string strText)
         {
@@ -504,7 +372,7 @@ namespace Paclink
                     Globals.blnAutoForwarding = true;
                 }
             }
-            else if (Globals.objPrimaryThread is object)
+            else if (Globals.objPrimaryThread != null)
             {
                 Globals.queStateDisplay.Enqueue("");
                 Globals.objPrimaryThread.StartChannel(strChannelSelection, false);
@@ -522,14 +390,6 @@ namespace Paclink
             if (dttCMSCheck == DateTime.MinValue)
             {
                 dttCMSCheck = DateTime.Now;
-            }
-
-            
-            if (Globals.blnAutoupdateRestart)
-            {
-                Globals.blnAutoupdateRestart = false;
-                ChannelDisplayWrite("G*** Restarting Paclink after autoupdate...");
-                Application.Restart();
             }
 
             tmrMain.Enabled = false;
@@ -562,18 +422,7 @@ namespace Paclink
                 }
             }
 
-            if (Globals.IsCMSavailable("Paclink:Main.tmrMain_Tick"))
-            {
-                Globals.blnCMSAvailable = true;
-                mnuNoCMS.Visible = false;
-            }
-            else
-            {
-                Globals.blnCMSAvailable = false;
-                mnuNoCMS.Visible = true;
-            }
-
-            if (DialogPolling.AutoPoll & Globals.blnCMSAvailable)
+            if (DialogPolling.AutoPoll)
             {
                 mnuMinutesRemaining.Visible = true;
                 int intInterval = DialogPolling.MinutesRemaining;
@@ -636,7 +485,7 @@ namespace Paclink
 
                 lblUptime.Text = Globals.GetUptime();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _log.Error(ex.Message);
             }
@@ -669,7 +518,7 @@ namespace Paclink
                                 mnuConnectTo.DropDownItems.Add(mnuItem);
                                 if (stcChannel.EnableAutoforward)
                                 {
-                                    if (stcChannel.ChannelName is object && !string.IsNullOrEmpty(stcChannel.ChannelName))
+                                    if (stcChannel.ChannelName != null && !string.IsNullOrEmpty(stcChannel.ChannelName))
                                     {
                                         Globals.AutomaticChannels.Add(stcChannel.ChannelName);
                                     }
@@ -705,7 +554,7 @@ namespace Paclink
             // Temporarily close SMTP/POP3 ports...
             try
             {
-                if (Globals.objSMTPPort is object)
+                if (Globals.objSMTPPort != null)
                     Globals.objSMTPPort.Listen(false);
             }
             catch (Exception ex)
@@ -715,7 +564,7 @@ namespace Paclink
 
             try
             {
-                if (Globals.objPOP3Port is object)
+                if (Globals.objPOP3Port != null)
                     Globals.objPOP3Port.Listen(false);
             }
             catch (Exception ex)
@@ -820,7 +669,7 @@ namespace Paclink
         private void mnuAbort_Click(object sender, EventArgs e)
         {
             mnuAbort.Enabled = false;
-            if (Globals.objSelectedClient is object)
+            if (Globals.objSelectedClient != null)
             {
                 Globals.blnManualAbort = true;
                 Globals.objSelectedClient.Abort();
@@ -828,8 +677,40 @@ namespace Paclink
             }
 
             ChannelDisplayWrite("G*** Restarting Paclink after Abort clicked...");
-            Application.Restart();
+            //TODO: Application.Restart(); -- this may not be necessary
+            Restart();
         } // mnuAbort_Click
+
+        //work-around for .net core not (currently) supporting Application.Restart()
+        //from https://github.com/dotnet/winforms/issues/2769
+        private void Restart()
+        {
+            string[] arguments = Environment.GetCommandLineArgs();
+            Debug.Assert(arguments != null && arguments.Length > 0);
+            StringBuilder sb = new StringBuilder((arguments.Length - 1) * 16);
+            for (int argumentIndex = 1; argumentIndex < arguments.Length - 1; argumentIndex++)
+            {
+                sb.Append('"');
+                sb.Append(arguments[argumentIndex]);
+                sb.Append("\" ");
+            }
+            if (arguments.Length > 1)
+            {
+                sb.Append('"');
+                sb.Append(arguments[^1]);
+                sb.Append('"');
+            }
+            ProcessStartInfo currentStartInfo = new ProcessStartInfo
+            {
+                FileName = Path.ChangeExtension(Application.ExecutablePath, "exe")
+            };
+            if (sb.Length > 0)
+            {
+                currentStartInfo.Arguments = sb.ToString();
+            }
+            Application.Exit();
+            Process.Start(currentStartInfo);
+        }
 
         private void mnuLogs_Click(object sender, EventArgs e)
         {
@@ -838,7 +719,7 @@ namespace Paclink
                 var dlgViewLog = new OpenFileDialog();
                 dlgViewLog.Multiselect = true;
                 dlgViewLog.Title = "Select a Log File to View...";
-                dlgViewLog.InitialDirectory = Globals.SiteRootDirectory + @"Log\";
+                dlgViewLog.InitialDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Paclink\Logs");
                 dlgViewLog.Filter = "Log File(.log)|*.log";
                 dlgViewLog.RestoreDirectory = true;
                 if (dlgViewLog.ShowDialog() == DialogResult.OK)
@@ -859,45 +740,11 @@ namespace Paclink
             }
         } // mnuLogs_Click
 
-        private void mnuDocumentation_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                var objFileDialog = new OpenFileDialog();
-                objFileDialog.Title = "Select a Document to View...";
-                objFileDialog.InitialDirectory = Globals.SiteRootDirectory + @"Documentation\";
-                objFileDialog.Filter = "Document Files (*.txt; *.rtf)|*.txt;*.rtf";
-                objFileDialog.RestoreDirectory = true;
-                if (objFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        Process.Start(objFileDialog.FileName);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _log.Error("[Main.mnuDocumentation_Click] " + ex.Message);
-            }
-        } // mnuDocumentation_Click
-
         private void mnuFile_Click(object sender, EventArgs e)
         {
             // Only enable AGWChannel Menu if AGW is used (AGWLocation <> 0)...
-            try
-            {
-                mnuPacketAGWChannels.Enabled = DialogAGWEngine.AGWLocation != 0;
-            }
-            catch (Exception ex)
-            {
-                _log.Error("[Main.mnuFile_Click] " + ex.Message);
-            }
-        } // mnuFile_Click
+            mnuPacketAGWChannels.Enabled = DialogAGWEngine.AGWLocation != 0;
+        }
 
         private void mnuBackup_Click(object sender, EventArgs e)
         {
@@ -914,8 +761,6 @@ namespace Paclink
                     //TODO: backup database somewhere else
                     //Globals.objINIFile.Backup(frmSaveFile.FileName, true);
                 }
-
-                frmSaveFile = null;
             }
             catch (Exception ex)
             {
@@ -973,12 +818,6 @@ namespace Paclink
             Globals.objTerminal = null;
         } // mnuSimpleTerminal_Click
 
-        private void mnuAbout_Click(object sender, EventArgs e)
-        {
-            var dlgAbout = new DialogAbout();
-            dlgAbout.ShowDialog();
-        } // mnuAbout_Click
-
         private void mnuNoCMS_Click(object sender, EventArgs e)
         {
             return;
@@ -989,16 +828,5 @@ namespace Paclink
             GC.Collect();
         } // mnuTest
 
-        // Private Sub mnuUpdate_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuUpdate.Click
-        // If objWL2KServers.IsAutoupdateServerAvailable = False Then
-        // queChannelDisplay.Enqueue("R*** Update database is not available...")
-        // Return
-        // End If
-        // queChannelDisplay.Enqueue("G*** Verifying update availability on Winlink FTP server...")
-        // mnuUpdate.Enabled = False
-        // blnManualUpdate = True
-        // objAutoupdate.StartAutoupdateThread()
-        // End Sub ' mnuUpdate_Click
-        /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
     } // Main
 }

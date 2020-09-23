@@ -36,7 +36,6 @@ namespace Paclink
             _OK_Button.Name = "OK_Button";
             _Cancel_Button.Name = "Cancel_Button";
             _Label8.Name = "Label8";
-            _chkAddToOutlookExpress.Name = "chkAddToOutlookExpress";
             _cmbLocalIPAddress.Name = "cmbLocalIPAddress";
             _chkEnableRadar.Name = "chkEnableRadar";
             _txtPOP3Password.Name = "txtPOP3Password";
@@ -54,7 +53,6 @@ namespace Paclink
             _txtServiceCodes.Name = "txtServiceCodes";
             _chkForceHFRouting.Name = "chkForceHFRouting";
             _Label13.Name = "Label13";
-            _chkAutoupdateTest.Name = "chkAutoupdateTest";
             _Label14.Name = "Label14";
         }
 
@@ -117,7 +115,6 @@ namespace Paclink
             chkLANAccessable.Checked = Globals.blnLAN;
             chkEnableRadar.Checked = Globals.blnEnableRadar;
             chkForceHFRouting.Checked = Globals.blnForceHFRouting;
-            chkAutoupdateTest.Checked = Globals.blnAutoupdateTest;
             txtPrefix.Text = Globals.Settings.Get("Properties", "Prefix", "");
             txtSuffix.Text = Globals.Settings.Get("Properties", "Suffix", "");
             txtSizeLimit.Text = Globals.Settings.Get("Properties", "Size Limit", "120000");
@@ -129,7 +126,7 @@ namespace Paclink
             cmbLocalIPAddress.Items.Clear();
             foreach (string strAddress in Globals.strLocalIPAddresses)
             {
-                if (strAddress is object)
+                if (strAddress != null)
                     cmbLocalIPAddress.Items.Add(strAddress);
             }
 
@@ -253,7 +250,6 @@ namespace Paclink
             Globals.strRMSRelayIPPath = txtRMSRelayIPPath.Text;
             Globals.intRMSRelayPort = Convert.ToInt32(txtRMSRelayPort.Text);
             Globals.blnForceHFRouting = chkForceHFRouting.Checked;
-            Globals.blnAutoupdateTest = chkAutoupdateTest.Checked;
 
             // Tell WinlinkInterop what our callsign is.
             if (Globals.objWL2KInterop is object)
@@ -327,7 +323,6 @@ namespace Paclink
             Globals.Settings.Save("Properties", "RMS Relay Port", Globals.intRMSRelayPort);
             Globals.Settings.Save("Properties", "Force radio-only", Globals.blnForceHFRouting);
             Globals.Settings.Save(Application.ProductName, "Start Minimized", Globals.blnStartMinimized);
-            Globals.Settings.Save("Main", "Test Autoupdate", Globals.blnAutoupdateTest);
             try
             {
                 Globals.strLocalIPAddress = Globals.strLocalIPAddresses[cmbLocalIPAddress.SelectedIndex];
@@ -372,10 +367,6 @@ namespace Paclink
             Globals.Settings.Save("Properties", "Account Names", strAccountList);
             Globals.Settings.Save(strCallsign, "EMail Password", Globals.POP3Password);
             Accounts.RefreshAccountsList();
-
-            // Add new callsign account to the local Outlook Express...
-            if (chkAddToOutlookExpress.Checked)
-                OutlookExpress.AddOutlookExpressAccount(strCallsign);
         } // AddRadioAccount
 
         private bool RemoveRadioAccount(string strCallsign)
@@ -400,15 +391,6 @@ namespace Paclink
             catch (Exception ex)
             {
                 Log.Error("[Properties.RemoveRadioAccount] " + ex.Message);
-            }
-
-            // Remove callsign account from local Outlook Express...
-            if (MessageBox.Show(
-                "Remove account " + strCallsign + " from local Outlook Express?",
-                "Remove OE Account",
-                MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                OutlookExpress.RemoveOutlookExpressAccount(strCallsign);
             }
 
             return default;

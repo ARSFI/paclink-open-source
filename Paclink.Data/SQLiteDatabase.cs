@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.IO;
 using NLog;
 
@@ -50,11 +51,17 @@ namespace Paclink.Data
                 using var connection = new SQLiteConnection(_connectionString);
                 connection.Open();
 
-                var sql = "CREATE TABLE IF NOT EXISTS Properties (Timestamp TEXT,`Group` TEXT DEFAULT '',`Property` TEXT NOT NULL,`Value` TEXT DEFAULT '',PRIMARY KEY(`Group`,`Property`))";
+                var sql = "CREATE TABLE IF NOT EXISTS Properties (`Timestamp` TEXT,`Group` TEXT DEFAULT '',`Property` TEXT NOT NULL,`Value` TEXT DEFAULT '',PRIMARY KEY(`Group`,`Property`))";
                 using var cmd = new SQLiteCommand(sql, connection);
                 cmd.ExecuteNonQuery();
 
                 cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Accounts(`Callsign` STRING PRIMARY KEY, `Password` STRING, `Tactical` BOOLEAN)";
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Messages(`Timestamp` TEXT, `MessageId` STRING PRIMARY KEY, `Message` STRING, `Processed` BOOLEAN)";
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = @"CREATE TABLE IF NOT EXISTS MessageAddresses(`Timestamp` TEXT, `MessageId` STRING, `Address` STRING)";
                 cmd.ExecuteNonQuery();
 
                 //add db version property
@@ -75,6 +82,7 @@ namespace Paclink.Data
 
         public bool ExistsQuery(string sql)
         {
+            Debug.Assert(!string.IsNullOrEmpty(sql));
             try
             {
                 using var connection = new SQLiteConnection(_connectionString);
@@ -96,6 +104,8 @@ namespace Paclink.Data
 
         public DataSet FillDataSet(string sql, string tableName)
         {
+            Debug.Assert(!string.IsNullOrEmpty(sql));
+            Debug.Assert(!string.IsNullOrEmpty(tableName));
             try
             {
                 using var connection = new SQLiteConnection(_connectionString);
@@ -116,6 +126,7 @@ namespace Paclink.Data
 
         public string GetSingleValue(string sql)
         {
+            Debug.Assert(!string.IsNullOrEmpty(sql));
             try
             {
                 using var connection = new SQLiteConnection(_connectionString);
@@ -136,6 +147,7 @@ namespace Paclink.Data
 
         public DateTime GetSingleValueDateTime(string sql)
         {
+            Debug.Assert(!string.IsNullOrEmpty(sql));
             try
             {
                 using var connection = new SQLiteConnection(_connectionString);
@@ -157,6 +169,7 @@ namespace Paclink.Data
 
         public long GetSingleValueLong(string sql)
         {
+            Debug.Assert(!string.IsNullOrEmpty(sql));
             try
             {
                 using var connection = new SQLiteConnection(_connectionString);
@@ -178,6 +191,7 @@ namespace Paclink.Data
 
         public void NonQuery(string sql)
         {
+            Debug.Assert(!string.IsNullOrEmpty(sql));
             try
             {
                 using var connection = new SQLiteConnection(_connectionString);

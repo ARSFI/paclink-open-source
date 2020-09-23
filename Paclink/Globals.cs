@@ -74,9 +74,6 @@ namespace Paclink
 
         // Global Booleans...
         public static bool blnAutoForwarding;
-        public static bool blnAutoupdateTest;
-        public static bool blnAutoupdateForce = false;
-        public static bool blnAutoupdateRestart;
         public static bool blnChannelActive;
         public static bool blnEnableRadar;
         public static bool blnEndBearingDisplay;
@@ -100,7 +97,6 @@ namespace Paclink
         public static bool blnAbortAU;
         public static bool blnEnablAutoforward = false;
         public static bool blnForceHFRouting = false;
-        public static bool blnCMSAvailable = true;
 
         // Global Integers...
         public static int intAutoforwardChannelIndex = 999999;
@@ -1568,15 +1564,6 @@ namespace Paclink
             // Return True if we should connect to RMS Relay rather than connecting directly to a CMS.
             // 
             return blnUseRMSRelay;
-        }
-
-        public static bool IsCMSavailable(string strCaller = "Paclink:CMSavailable")
-        {
-            // 
-            // Return True if we can find a CMS that's available or if we are connecting to RMS Relay.
-            // 
-            return true;
-            /* TODO ERROR: Skipped IfDirectiveTrivia *//* TODO ERROR: Skipped DisabledTextTrivia *//* TODO ERROR: Skipped EndIfDirectiveTrivia */
         }
 
         private static List<GatewayStatusRecord> lstGateways = null;

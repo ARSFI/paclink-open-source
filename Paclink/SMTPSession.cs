@@ -465,14 +465,6 @@ namespace Paclink
                             // This is the end of data...
 
                             var objPaclinkMessage = new SMTPMessage(sbdInboundMessage.ToString(), true);
-                            if (objPaclinkMessage.AnyBcc(strRecipients))
-                            {
-                                Globals.queSMTPDisplay.Enqueue("B" + objPaclinkMessage.MessageId + " from " + strAccountName + " rejected due to Bcc");
-                                Globals.queSMTPDisplay.Enqueue("BSubject: " + objPaclinkMessage.Subject);
-                                SMTPState = SessionState.Failure;
-                                return "554 " + "Winlink does not accept Bcc recipients" + Globals.CRLF;
-                            }
-
                             if (objPaclinkMessage.IsAccepted)
                             {
                                 // Added by RM Feb 25, 2008 check for compressed size

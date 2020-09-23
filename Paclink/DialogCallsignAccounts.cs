@@ -14,7 +14,6 @@ namespace Paclink
             _cmbAccount.Name = "cmbAccount";
             _Label2.Name = "Label2";
             _Label1.Name = "Label1";
-            _btnOutlookExpress.Name = "btnOutlookExpress";
             _btnRemove.Name = "btnRemove";
             _btnAdd.Name = "btnAdd";
             _btnInstructions.Name = "btnInstructions";
@@ -158,21 +157,9 @@ namespace Paclink
             Globals.Settings.Save("Properties", "Account Names", strAccountList);
             Directory.Delete(Globals.SiteRootDirectory + @"Accounts\" + strAccount + "_Account", true);
             Globals.Settings.DeleteGroup(strAccount);
-            OutlookExpress.RemoveOutlookExpressAccount(strAccount);
             Accounts.RefreshAccountsList();
             FillAccountSelection();
         } // btnRemove_Click
-
-        private void btnOutlookExpress_Click(object sender, EventArgs e)
-        {
-            // 
-            // Add this selected account to Outlook Express in this machine.
-            // 
-            if (cmbAccount.Text.ToLower() != "<add new account>")
-            {
-                OutlookExpress.AddOutlookExpressAccount(cmbAccount.Text);
-            }
-        } // btnOutlookExpress_Click
 
         private void btnClose_Click(object sender, EventArgs e)
         {
@@ -287,7 +274,6 @@ namespace Paclink
             // 
             // Restore the dialog box window.
             // 
-            btnOutlookExpress.Enabled = true;
             btnRemove.Enabled = true;
             Accounts.RefreshAccountsList();
             FillAccountSelection();

@@ -20,18 +20,6 @@ namespace Paclink
             // 
             // Initializes the program on startup...
             // 
-            try
-            {
-                if (!Globals.IsCMSavailable())
-                {
-                    Globals.queChannelDisplay.Enqueue("R*** No CMS site found - continuing...");
-                }
-            }
-            catch
-            {
-                Globals.queChannelDisplay.Enqueue("R*** No CMS site found - continuing...");
-            }
-
             int intIndex = Globals.Settings.Get("Properties", "Default Local IP Address Index", 0);
             if (intIndex < 0)
                 intIndex = 0;

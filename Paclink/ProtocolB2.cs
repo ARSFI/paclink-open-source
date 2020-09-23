@@ -82,7 +82,7 @@ namespace Paclink
 
 
             Globals.ResetProgressBar();
-            if (tmrDisconnect is object)
+            if (tmrDisconnect != null)
             {
                 tmrDisconnect.Stop();
                 tmrDisconnect.Dispose();
@@ -111,7 +111,7 @@ namespace Paclink
                 }
             }
         } // ChannelInput - String
-          
+
         // Receives binary data from the channel...
         private StringBuilder sbdDataIn = new StringBuilder();
         public void ChannelInput(ref byte[] bytBytes)
@@ -464,7 +464,7 @@ namespace Paclink
                 StateChange(EB2States.ReceivingB2Acceptance);
                 Send("F> " + sChecksum, true);
             }
-            else if (strLastCommandReceived is object && strLastCommandReceived.StartsWith("FF"))
+            else if (strLastCommandReceived != null && strLastCommandReceived.StartsWith("FF"))
             {
                 StateChange(EB2States.WaitingForNewCommand); // End of session send FQ and queue disconnect
                 Send("FQ");
@@ -555,7 +555,7 @@ namespace Paclink
             if (sbdText.Length > 0)
                 cllResponse.Add(Convert.ToInt32(sbdText.ToString()));
             return cllResponse;
-        } // ParseAcceptance
+        }
 
         private void B2Acceptance(string strText)
         {
@@ -723,8 +723,8 @@ namespace Paclink
         } // B2InboundProposal
 
         // Processes and inbound compressed binary message stream...
-        private bool blnInProcess = false;
-        private byte[] bytInProcess = null;
+        private bool blnInProcess;
+        private byte[] bytInProcess;
         private void B2MessageInbound(byte[] bytInbound) // Flag to indicate still processing, used to handle re entrancy
         {
             Globals.Proposal objProp;
@@ -746,7 +746,6 @@ namespace Paclink
             var intResult = default(int);
             int intPosition;
         Reprocess:
-            ;
 
             // Strip the header on the first block of a new parial recovery 
             int intHdr2Sumcheck = objPartialSession.StripHeaderFromPartial(ref bytInProcess);
@@ -880,7 +879,7 @@ namespace Paclink
                     intPosition += 1;
                 }
 
-                objProp = (Globals.Proposal)cllInboundMessageIDs[intInboundProposalIndex];
+                objProp = cllInboundMessageIDs[intInboundProposalIndex];
                 string strMID = objProp.msgID;
                 // Dim strTemp() As String = CStr(cllAcceptedInboundMids(intInboundProposalIndex)).Split(Chr(32))
                 var bytReceived = objPartialSession.RetrievePartial(strMID);
@@ -959,17 +958,17 @@ namespace Paclink
         private void Disconnect(int intMsDelay = 3000)
         {
             StateChange(EB2States.Disconnecting);
-            tmrDisconnect = new System.Timers.Timer();
+            tmrDisconnect = new Timer();
             tmrDisconnect.Elapsed += OnDisconnectTimer;
             tmrDisconnect.AutoReset = false;
             tmrDisconnect.Interval = intMsDelay;
             tmrDisconnect.Enabled = true;
-        } // Disconnect
+        }
 
         private void OnDisconnectTimer(object source, ElapsedEventArgs e)
         {
             objInitialProtocol.objClient.Disconnect();
-        } // OnDisconnectTimer
+        }
 
         private int IsPartialMessage(string MID, string Length)
         {

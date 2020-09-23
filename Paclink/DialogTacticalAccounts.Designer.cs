@@ -44,8 +44,6 @@ namespace Paclink
             _cmbAccount.TextChanged += new EventHandler(cmbAccount_TextChanged);
             _Label2 = new Label();
             _Label1 = new Label();
-            _btnOutlookExpress = new Button();
-            _btnOutlookExpress.Click += new EventHandler(btnOutlookExpress_Click);
             _btnPassword = new Button();
             _btnPassword.Click += new EventHandler(btnPassword_Click);
             _btnRemove = new Button();
@@ -102,15 +100,6 @@ namespace Paclink
             _Label1.Size = new Size(81, 13);
             _Label1.TabIndex = 17;
             _Label1.Text = "Account Name:";
-            // 
-            // btnOutlookExpress
-            // 
-            _btnOutlookExpress.Location = new Point(44, 128);
-            _btnOutlookExpress.Name = "_btnOutlookExpress";
-            _btnOutlookExpress.Size = new Size(248, 30);
-            _btnOutlookExpress.TabIndex = 2;
-            _btnOutlookExpress.Text = "Add Selected Account to Outlook Express";
-            _btnOutlookExpress.UseVisualStyleBackColor = true;
             // 
             // btnPassword
             // 
@@ -189,7 +178,6 @@ namespace Paclink
             Controls.Add(_cmbAccount);
             Controls.Add(_Label2);
             Controls.Add(_Label1);
-            Controls.Add(_btnOutlookExpress);
             Controls.Add(_btnPassword);
             Controls.Add(_btnRemove);
             Controls.Add(_btnAdd);
@@ -328,32 +316,6 @@ namespace Paclink
                 _Label1 = value;
                 if (_Label1 != null)
                 {
-                }
-            }
-        }
-
-        private Button _btnOutlookExpress;
-
-        internal Button btnOutlookExpress
-        {
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            get
-            {
-                return _btnOutlookExpress;
-            }
-
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            set
-            {
-                if (_btnOutlookExpress != null)
-                {
-                    _btnOutlookExpress.Click -= btnOutlookExpress_Click;
-                }
-
-                _btnOutlookExpress = value;
-                if (_btnOutlookExpress != null)
-                {
-                    _btnOutlookExpress.Click += btnOutlookExpress_Click;
                 }
             }
         }

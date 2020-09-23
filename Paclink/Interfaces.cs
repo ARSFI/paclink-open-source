@@ -30,16 +30,7 @@ namespace Paclink
         Sending,
         Receiving
     } // ELinkDirection
-
-    public struct TDisplayRecord
-    {
-        // Holds a record queued for display on an RTF text box...
-        public bool NoNewLine;
-        public string Color;
-        public string Tag;
-        public string Text;
-    } // TDisplayRecord
-
+    
     public interface IClient
     {
         // Common properties and methods...
@@ -78,4 +69,4 @@ namespace Paclink
         bool SetPTT(bool Send);
         void Close();
     }
-} // IRadio
+} 

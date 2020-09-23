@@ -35,452 +35,459 @@ namespace Paclink
         [DebuggerStepThrough()]
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            _barStatus = new StatusStrip();
-            _lblChannelStatus = new ToolStripStatusLabel();
-            _ChannelRate = new ToolStripStatusLabel();
-            _barChannelProgress = new ToolStripProgressBar();
-            _lblSMTPStatus = new ToolStripStatusLabel();
-            _lblProgramVersion = new ToolStripStatusLabel();
-            _lblUptime = new ToolStripStatusLabel();
-            _lblMessageDisplay = new TextBox();
-            _lblMessageDisplay.KeyPress += new KeyPressEventHandler(txtStateDisplay_KeyPress);
-            _pnlSplitter = new SplitContainer();
-            _ChannelDisplay = new RichTextBox();
-            _SMTPDisplay = new RichTextBox();
-            _mnuMain = new MenuStrip();
-            _mnuFile = new ToolStripMenuItem();
-            _mnuFile.Click += new EventHandler(mnuFile_Click);
-            _mnuProperties = new ToolStripMenuItem();
-            _mnuProperties.Click += new EventHandler(mnuProperties_Click);
-            _mnuPollingInterval = new ToolStripMenuItem();
-            _mnuPollingInterval.Click += new EventHandler(mnuPollingInterval_Click);
-            _ToolStripSeparator3 = new ToolStripSeparator();
-            _mnuAGWEngine = new ToolStripMenuItem();
-            _mnuAGWEngine.Click += new EventHandler(mnuAGWEngine_Click);
-            _mnuPacketAGWChannels = new ToolStripMenuItem();
-            _mnuPacketAGWChannels.Click += new EventHandler(mnuPacketAGWChannels_Click);
-            _mnuPacketTNCChannels = new ToolStripMenuItem();
-            _mnuPacketTNCChannels.Click += new EventHandler(mnuPacketTNCChannels_Click);
-            _mnuPactorChannels = new ToolStripMenuItem();
-            _mnuPactorChannels.Click += new EventHandler(mnuPactorChannels_Click);
-            _mnuTelnetChannels = new ToolStripMenuItem();
-            _mnuTelnetChannels.Click += new EventHandler(mnuTelnetChannels_Click);
-            _ToolStripSeparator4 = new ToolStripSeparator();
-            _mnuTacticalAccounts = new ToolStripMenuItem();
-            _mnuTacticalAccounts.Click += new EventHandler(mnuAccounts_Click);
-            _mnuCallsignAccounts = new ToolStripMenuItem();
-            _mnuCallsignAccounts.Click += new EventHandler(mnuCallsignAccounts_Click);
-            _mnuEditAccount = new ToolStripMenuItem();
-            _ToolStripSeparator1 = new ToolStripSeparator();
-            _mnuBackup = new ToolStripMenuItem();
-            _mnuBackup.Click += new EventHandler(mnuBackup_Click);
-            _mnuRestoreSettings = new ToolStripMenuItem();
-            _mnuRestoreSettings.Click += new EventHandler(mnuRestoreSettings_Click);
-            _ToolStripSeparator2 = new ToolStripSeparator();
-            _mnuExit = new ToolStripMenuItem();
-            _mnuExit.Click += new EventHandler(mnuExit_Click);
-            _mnuConnect = new ToolStripMenuItem();
-            _mnuConnect.Click += new EventHandler(mnuConnect_Click);
-            _mnuAutoConnect = new ToolStripMenuItem();
-            _mnuAutoConnect.Click += new EventHandler(mnuAutoConnect_Click);
-            _mnuConnectTo = new ToolStripMenuItem();
-            _mnuAbort = new ToolStripMenuItem();
-            _mnuAbort.Click += new EventHandler(mnuAbort_Click);
-            _mnuLogs = new ToolStripMenuItem();
-            _mnuLogs.Click += new EventHandler(mnuLogs_Click);
-            _mnuHelp = new ToolStripMenuItem();
-            _mnuHelpContents = new ToolStripMenuItem();
-            _mnuHelpContents.Click += new EventHandler(mnuHelpContents_Click);
-            _mnuDocumentation = new ToolStripMenuItem();
-            _mnuDocumentation.Click += new EventHandler(mnuDocumentation_Click);
-            _ToolStripSeparator6 = new ToolStripSeparator();
-            _mnuSimpleTerminal = new ToolStripMenuItem();
-            _mnuSimpleTerminal.Click += new EventHandler(mnuSimpleTerminal_Click);
-            _ToolStripSeparator5 = new ToolStripSeparator();
-            _mnuAbout = new ToolStripMenuItem();
-            _mnuAbout.Click += new EventHandler(mnuAbout_Click);
-            _mnuMinutesRemaining = new ToolStripMenuItem();
-            _mnuNoCMS = new ToolStripMenuItem();
-            _mnuNoCMS.Click += new EventHandler(mnuNoCMS_Click);
-            _mnuTest = new ToolStripMenuItem();
-            _mnuTest.Click += new EventHandler(mnuTest_Click);
-            _tmrMain = new Timer(components);
-            _tmrMain.Tick += new EventHandler(tmrMain_Tick);
-            _tmrDisplay = new Timer(components);
-            _tmrDisplay.Tick += new EventHandler(tmrDisplay_Tick);
-            _barStatus.SuspendLayout();
-            _pnlSplitter.Panel1.SuspendLayout();
-            _pnlSplitter.Panel2.SuspendLayout();
-            _pnlSplitter.SuspendLayout();
-            _mnuMain.SuspendLayout();
-            SuspendLayout();
-            // 
-            // barStatus
-            // 
-            _barStatus.AutoSize = false;
-            _barStatus.Items.AddRange(new ToolStripItem[] { _lblChannelStatus, _ChannelRate, _barChannelProgress, _lblSMTPStatus, _lblProgramVersion, _lblUptime });
-            _barStatus.Location = new Point(0, 285);
-            _barStatus.Name = "_barStatus";
-            _barStatus.ShowItemToolTips = true;
-            _barStatus.Size = new Size(694, 22);
-            _barStatus.TabIndex = 3;
-            // 
-            // lblChannelStatus
-            // 
-            _lblChannelStatus.AutoSize = false;
-            _lblChannelStatus.BorderSides = ToolStripStatusLabelBorderSides.Left | ToolStripStatusLabelBorderSides.Top | ToolStripStatusLabelBorderSides.Right | ToolStripStatusLabelBorderSides.Bottom;
-
-            _lblChannelStatus.BorderStyle = Border3DStyle.Sunken;
-            _lblChannelStatus.Name = "_lblChannelStatus";
-            _lblChannelStatus.Size = new Size(249, 17);
-            _lblChannelStatus.Spring = true;
-            // 
-            // ChannelRate
-            // 
-            _ChannelRate.AutoSize = false;
-            _ChannelRate.BorderSides = ToolStripStatusLabelBorderSides.Left | ToolStripStatusLabelBorderSides.Top | ToolStripStatusLabelBorderSides.Right | ToolStripStatusLabelBorderSides.Bottom;
-
-            _ChannelRate.BorderStyle = Border3DStyle.Sunken;
-            _ChannelRate.Name = "_ChannelRate";
-            _ChannelRate.Size = new Size(249, 17);
-            _ChannelRate.Spring = true;
-            // 
-            // barChannelProgress
-            // 
-            _barChannelProgress.AutoSize = false;
-            _barChannelProgress.Name = "_barChannelProgress";
-            _barChannelProgress.Size = new Size(100, 16);
-            // 
-            // lblSMTPStatus
-            // 
-            _lblSMTPStatus.AutoToolTip = true;
-            _lblSMTPStatus.BorderSides = ToolStripStatusLabelBorderSides.Left | ToolStripStatusLabelBorderSides.Top | ToolStripStatusLabelBorderSides.Right | ToolStripStatusLabelBorderSides.Bottom;
-
-            _lblSMTPStatus.BorderStyle = Border3DStyle.Sunken;
-            _lblSMTPStatus.Name = "_lblSMTPStatus";
-            _lblSMTPStatus.Size = new Size(26, 17);
-            _lblSMTPStatus.Text = "---";
-            // 
-            // lblProgramVersion
-            // 
-            _lblProgramVersion.BorderSides = ToolStripStatusLabelBorderSides.Left | ToolStripStatusLabelBorderSides.Top | ToolStripStatusLabelBorderSides.Right | ToolStripStatusLabelBorderSides.Bottom;
-
-            _lblProgramVersion.BorderStyle = Border3DStyle.Sunken;
-            _lblProgramVersion.Name = "_lblProgramVersion";
-            _lblProgramVersion.Size = new Size(26, 17);
-            _lblProgramVersion.Text = "---";
-            // 
-            // lblUptime
-            // 
-            _lblUptime.BorderSides = ToolStripStatusLabelBorderSides.Left | ToolStripStatusLabelBorderSides.Top | ToolStripStatusLabelBorderSides.Right | ToolStripStatusLabelBorderSides.Bottom;
-
-            _lblUptime.BorderStyle = Border3DStyle.Sunken;
-            _lblUptime.Name = "_lblUptime";
-            _lblUptime.Size = new Size(26, 17);
-            _lblUptime.Text = "---";
-            // 
-            // lblMessageDisplay
-            // 
-            _lblMessageDisplay.Dock = DockStyle.Bottom;
-            _lblMessageDisplay.Location = new Point(0, 265);
-            _lblMessageDisplay.Name = "_lblMessageDisplay";
-            _lblMessageDisplay.Size = new Size(694, 20);
-            _lblMessageDisplay.TabIndex = 2;
-            // 
-            // pnlSplitter
-            // 
-            _pnlSplitter.Dock = DockStyle.Fill;
-            _pnlSplitter.Location = new Point(0, 24);
-            _pnlSplitter.Name = "_pnlSplitter";
-            // 
-            // pnlSplitter.Panel1
-            // 
-            _pnlSplitter.Panel1.Controls.Add(_ChannelDisplay);
-            // 
-            // pnlSplitter.Panel2
-            // 
-            _pnlSplitter.Panel2.Controls.Add(_SMTPDisplay);
-            _pnlSplitter.Size = new Size(694, 241);
-            _pnlSplitter.SplitterDistance = 345;
-            _pnlSplitter.TabIndex = 4;
-            _pnlSplitter.TabStop = false;
-            // 
-            // ChannelDisplay
-            // 
-            _ChannelDisplay.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-
-            _ChannelDisplay.BackColor = Color.White;
-            _ChannelDisplay.Location = new Point(3, 3);
-            _ChannelDisplay.Name = "_ChannelDisplay";
-            _ChannelDisplay.ReadOnly = true;
-            _ChannelDisplay.Size = new Size(339, 232);
-            _ChannelDisplay.TabIndex = 0;
-            _ChannelDisplay.Text = "";
-            // 
-            // SMTPDisplay
-            // 
-            _SMTPDisplay.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-
-            _SMTPDisplay.BackColor = Color.White;
-            _SMTPDisplay.Location = new Point(3, 3);
-            _SMTPDisplay.Name = "_SMTPDisplay";
-            _SMTPDisplay.ReadOnly = true;
-            _SMTPDisplay.Size = new Size(339, 232);
-            _SMTPDisplay.TabIndex = 0;
-            _SMTPDisplay.Text = "";
-            // 
-            // mnuMain
-            // 
-            _mnuMain.Enabled = false;
-            _mnuMain.Items.AddRange(new ToolStripItem[] { _mnuFile, _mnuConnect, _mnuAbort, _mnuLogs, _mnuHelp, _mnuMinutesRemaining, _mnuNoCMS, _mnuTest });
-            _mnuMain.Location = new Point(0, 0);
-            _mnuMain.Name = "_mnuMain";
-            _mnuMain.Size = new Size(694, 24);
-            _mnuMain.TabIndex = 5;
-            // 
-            // mnuFile
-            // 
-            _mnuFile.DropDownItems.AddRange(new ToolStripItem[] { _mnuProperties, _mnuPollingInterval, _ToolStripSeparator3, _mnuAGWEngine, _mnuPacketAGWChannels, _mnuPacketTNCChannels, _mnuPactorChannels, _mnuTelnetChannels, _ToolStripSeparator4, _mnuTacticalAccounts, _mnuCallsignAccounts, _mnuEditAccount, _ToolStripSeparator1, _mnuBackup, _mnuRestoreSettings, _ToolStripSeparator2, _mnuExit });
-            _mnuFile.Name = "_mnuFile";
-            _mnuFile.Size = new Size(61, 20);
-            _mnuFile.Text = "Settings";
-            _mnuFile.ToolTipText = "Setup menues";
-            // 
-            // mnuProperties
-            // 
-            _mnuProperties.Name = "_mnuProperties";
-            _mnuProperties.Size = new Size(200, 22);
-            _mnuProperties.Text = "Site Properties...";
-            // 
-            // mnuPollingInterval
-            // 
-            _mnuPollingInterval.Name = "_mnuPollingInterval";
-            _mnuPollingInterval.Size = new Size(200, 22);
-            _mnuPollingInterval.Text = "P&olling Interval...";
-            // 
-            // ToolStripSeparator3
-            // 
-            _ToolStripSeparator3.Name = "_ToolStripSeparator3";
-            _ToolStripSeparator3.Size = new Size(197, 6);
-            // 
-            // mnuAGWEngine
-            // 
-            _mnuAGWEngine.Name = "_mnuAGWEngine";
-            _mnuAGWEngine.Size = new Size(200, 22);
-            _mnuAGWEngine.Text = "AGW &Engine...";
-            // 
-            // mnuPacketAGWChannels
-            // 
-            _mnuPacketAGWChannels.Name = "_mnuPacketAGWChannels";
-            _mnuPacketAGWChannels.Size = new Size(200, 22);
-            _mnuPacketAGWChannels.Text = "&Packet AGW Channels...";
-            // 
-            // mnuPacketTNCChannels
-            // 
-            _mnuPacketTNCChannels.Name = "_mnuPacketTNCChannels";
-            _mnuPacketTNCChannels.Size = new Size(200, 22);
-            _mnuPacketTNCChannels.Text = "Packet &TNC Channels...";
-            // 
-            // mnuPactorChannels
-            // 
-            _mnuPactorChannels.Name = "_mnuPactorChannels";
-            _mnuPactorChannels.Size = new Size(200, 22);
-            _mnuPactorChannels.Text = "Pactor TNC Channels...";
-            // 
-            // mnuTelnetChannels
-            // 
-            _mnuTelnetChannels.Name = "_mnuTelnetChannels";
-            _mnuTelnetChannels.Size = new Size(200, 22);
-            _mnuTelnetChannels.Text = "&Telnet Channels...";
-            // 
-            // ToolStripSeparator4
-            // 
-            _ToolStripSeparator4.Name = "_ToolStripSeparator4";
-            _ToolStripSeparator4.Size = new Size(197, 6);
-            // 
-            // mnuTacticalAccounts
-            // 
-            _mnuTacticalAccounts.Name = "_mnuTacticalAccounts";
-            _mnuTacticalAccounts.Size = new Size(200, 22);
-            _mnuTacticalAccounts.Text = "Tactical Accounts...";
-            // 
-            // mnuCallsignAccounts
-            // 
-            _mnuCallsignAccounts.Name = "_mnuCallsignAccounts";
-            _mnuCallsignAccounts.Size = new Size(200, 22);
-            _mnuCallsignAccounts.Text = "Callsign Accounts...";
-            // 
-            // mnuEditAccount
-            // 
-            _mnuEditAccount.Name = "_mnuEditAccount";
-            _mnuEditAccount.Size = new Size(200, 22);
-            _mnuEditAccount.Text = "Edit Account Profile...";
-            // 
-            // ToolStripSeparator1
-            // 
-            _ToolStripSeparator1.Name = "_ToolStripSeparator1";
-            _ToolStripSeparator1.Size = new Size(197, 6);
-            // 
-            // mnuBackup
-            // 
-            _mnuBackup.Name = "_mnuBackup";
-            _mnuBackup.Size = new Size(200, 22);
-            _mnuBackup.Text = "Backup INI file...";
-            // 
-            // mnuRestoreSettings
-            // 
-            _mnuRestoreSettings.Name = "_mnuRestoreSettings";
-            _mnuRestoreSettings.Size = new Size(200, 22);
-            _mnuRestoreSettings.Text = "Restore INI file...";
-            // 
-            // ToolStripSeparator2
-            // 
-            _ToolStripSeparator2.Name = "_ToolStripSeparator2";
-            _ToolStripSeparator2.Size = new Size(197, 6);
-            // 
-            // mnuExit
-            // 
-            _mnuExit.Name = "_mnuExit";
-            _mnuExit.Size = new Size(200, 22);
-            _mnuExit.Text = "E&xit";
-            // 
-            // mnuConnect
-            // 
-            _mnuConnect.DropDownItems.AddRange(new ToolStripItem[] { _mnuAutoConnect, _mnuConnectTo });
-            _mnuConnect.Name = "_mnuConnect";
-            _mnuConnect.Size = new Size(64, 20);
-            _mnuConnect.Text = "Connect";
-            _mnuConnect.ToolTipText = "Manual or automatic connection";
-            // 
-            // mnuAutoConnect
-            // 
-            _mnuAutoConnect.Name = "_mnuAutoConnect";
-            _mnuAutoConnect.Size = new Size(143, 22);
-            _mnuAutoConnect.Text = "Autoconnect";
-            // 
-            // mnuConnectTo
-            // 
-            _mnuConnectTo.Name = "_mnuConnectTo";
-            _mnuConnectTo.Size = new Size(143, 22);
-            _mnuConnectTo.Text = "Connect to...";
-            // 
-            // mnuAbort
-            // 
-            _mnuAbort.Name = "_mnuAbort";
-            _mnuAbort.Size = new Size(49, 20);
-            _mnuAbort.Text = "Abort";
-            _mnuAbort.ToolTipText = "Interrupt and connection in progress";
-            // 
-            // mnuLogs
-            // 
-            _mnuLogs.Name = "_mnuLogs";
-            _mnuLogs.Size = new Size(47, 20);
-            _mnuLogs.Text = "Log ";
-            _mnuLogs.ToolTipText = "Manage and View Log";
-            // 
-            // mnuHelp
-            // 
-            _mnuHelp.DropDownItems.AddRange(new ToolStripItem[] { _mnuHelpContents, _mnuDocumentation, _ToolStripSeparator6, _mnuSimpleTerminal, _ToolStripSeparator5, _mnuAbout });
-            _mnuHelp.Name = "_mnuHelp";
-            _mnuHelp.Size = new Size(44, 20);
-            _mnuHelp.Text = "Help";
-            // 
-            // mnuHelpContents
-            // 
-            _mnuHelpContents.Name = "_mnuHelpContents";
-            _mnuHelpContents.Size = new Size(168, 22);
-            _mnuHelpContents.Text = "&Contents...";
-            // 
-            // mnuDocumentation
-            // 
-            _mnuDocumentation.Name = "_mnuDocumentation";
-            _mnuDocumentation.Size = new Size(168, 22);
-            _mnuDocumentation.Text = "Documentation...";
-            _mnuDocumentation.ToolTipText = "Find and read documentation ";
-            // 
-            // ToolStripSeparator6
-            // 
-            _ToolStripSeparator6.Name = "_ToolStripSeparator6";
-            _ToolStripSeparator6.Size = new Size(165, 6);
-            // 
-            // mnuSimpleTerminal
-            // 
-            _mnuSimpleTerminal.Name = "_mnuSimpleTerminal";
-            _mnuSimpleTerminal.Size = new Size(168, 22);
-            _mnuSimpleTerminal.Text = "Simple Terminal...";
-            // 
-            // ToolStripSeparator5
-            // 
-            _ToolStripSeparator5.Name = "_ToolStripSeparator5";
-            _ToolStripSeparator5.Size = new Size(165, 6);
-            // 
-            // mnuAbout
-            // 
-            _mnuAbout.Name = "_mnuAbout";
-            _mnuAbout.Size = new Size(168, 22);
-            _mnuAbout.Text = "&About...";
-            // 
-            // mnuMinutesRemaining
-            // 
-            _mnuMinutesRemaining.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, Convert.ToByte(0));
-            _mnuMinutesRemaining.ForeColor = SystemColors.ControlText;
-            _mnuMinutesRemaining.Name = "_mnuMinutesRemaining";
-            _mnuMinutesRemaining.Size = new Size(121, 20);
-            _mnuMinutesRemaining.Text = "Next Poll in 0 Minutes";
-            // 
-            // mnuNoCMS
-            // 
-            _mnuNoCMS.Font = new Font("Tahoma", 8.25F, FontStyle.Bold);
-            _mnuNoCMS.ForeColor = Color.Red;
-            _mnuNoCMS.Name = "_mnuNoCMS";
-            _mnuNoCMS.Size = new Size(126, 20);
-            _mnuNoCMS.Text = "No CMS Connection";
-            _mnuNoCMS.Visible = false;
-            // 
-            // mnuTest
-            // 
-            _mnuTest.Name = "_mnuTest";
-            _mnuTest.Size = new Size(40, 20);
-            _mnuTest.Text = "Test";
-            _mnuTest.Visible = false;
-            // 
-            // tmrMain
-            // 
-            _tmrMain.Interval = 1000;
-            // 
-            // tmrDisplay
-            // 
-            _tmrDisplay.Enabled = true;
-            _tmrDisplay.Interval = 1000;
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
+            this._barStatus = new System.Windows.Forms.StatusStrip();
+            this._lblChannelStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this._ChannelRate = new System.Windows.Forms.ToolStripStatusLabel();
+            this._barChannelProgress = new System.Windows.Forms.ToolStripProgressBar();
+            this._lblSMTPStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this._lblProgramVersion = new System.Windows.Forms.ToolStripStatusLabel();
+            this._lblUptime = new System.Windows.Forms.ToolStripStatusLabel();
+            this._lblMessageDisplay = new System.Windows.Forms.TextBox();
+            this._pnlSplitter = new System.Windows.Forms.SplitContainer();
+            this._ChannelDisplay = new System.Windows.Forms.RichTextBox();
+            this._SMTPDisplay = new System.Windows.Forms.RichTextBox();
+            this._mnuMain = new System.Windows.Forms.MenuStrip();
+            this._mnuFile = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuProperties = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuPollingInterval = new System.Windows.Forms.ToolStripMenuItem();
+            this._ToolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this._mnuAGWEngine = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuPacketAGWChannels = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuPacketTNCChannels = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuPactorChannels = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuTelnetChannels = new System.Windows.Forms.ToolStripMenuItem();
+            this._ToolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this._mnuTacticalAccounts = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuCallsignAccounts = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuEditAccount = new System.Windows.Forms.ToolStripMenuItem();
+            this._ToolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this._mnuBackup = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuRestoreSettings = new System.Windows.Forms.ToolStripMenuItem();
+            this._ToolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this._mnuExit = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuConnect = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuAutoConnect = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuConnectTo = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuAbort = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuLogs = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuHelpContents = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuSimpleTerminal = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuMinutesRemaining = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuTest = new System.Windows.Forms.ToolStripMenuItem();
+            this._tmrMain = new System.Windows.Forms.Timer(this.components);
+            this._tmrDisplay = new System.Windows.Forms.Timer(this.components);
+            this._barStatus.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._pnlSplitter)).BeginInit();
+            this._pnlSplitter.Panel1.SuspendLayout();
+            this._pnlSplitter.Panel2.SuspendLayout();
+            this._pnlSplitter.SuspendLayout();
+            this._mnuMain.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // _barStatus
+            // 
+            this._barStatus.AutoSize = false;
+            this._barStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._lblChannelStatus,
+            this._ChannelRate,
+            this._barChannelProgress,
+            this._lblSMTPStatus,
+            this._lblProgramVersion,
+            this._lblUptime});
+            this._barStatus.Location = new System.Drawing.Point(0, 329);
+            this._barStatus.Name = "_barStatus";
+            this._barStatus.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
+            this._barStatus.ShowItemToolTips = true;
+            this._barStatus.Size = new System.Drawing.Size(810, 25);
+            this._barStatus.TabIndex = 3;
+            // 
+            // _lblChannelStatus
+            // 
+            this._lblChannelStatus.AutoSize = false;
+            this._lblChannelStatus.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this._lblChannelStatus.BorderStyle = System.Windows.Forms.Border3DStyle.Sunken;
+            this._lblChannelStatus.Name = "_lblChannelStatus";
+            this._lblChannelStatus.Size = new System.Drawing.Size(298, 20);
+            this._lblChannelStatus.Spring = true;
+            // 
+            // _ChannelRate
+            // 
+            this._ChannelRate.AutoSize = false;
+            this._ChannelRate.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this._ChannelRate.BorderStyle = System.Windows.Forms.Border3DStyle.Sunken;
+            this._ChannelRate.Name = "_ChannelRate";
+            this._ChannelRate.Size = new System.Drawing.Size(298, 20);
+            this._ChannelRate.Spring = true;
+            // 
+            // _barChannelProgress
+            // 
+            this._barChannelProgress.AutoSize = false;
+            this._barChannelProgress.Name = "_barChannelProgress";
+            this._barChannelProgress.Size = new System.Drawing.Size(117, 19);
+            // 
+            // _lblSMTPStatus
+            // 
+            this._lblSMTPStatus.AutoToolTip = true;
+            this._lblSMTPStatus.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this._lblSMTPStatus.BorderStyle = System.Windows.Forms.Border3DStyle.Sunken;
+            this._lblSMTPStatus.Name = "_lblSMTPStatus";
+            this._lblSMTPStatus.Size = new System.Drawing.Size(26, 20);
+            this._lblSMTPStatus.Text = "---";
+            // 
+            // _lblProgramVersion
+            // 
+            this._lblProgramVersion.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this._lblProgramVersion.BorderStyle = System.Windows.Forms.Border3DStyle.Sunken;
+            this._lblProgramVersion.Name = "_lblProgramVersion";
+            this._lblProgramVersion.Size = new System.Drawing.Size(26, 20);
+            this._lblProgramVersion.Text = "---";
+            // 
+            // _lblUptime
+            // 
+            this._lblUptime.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this._lblUptime.BorderStyle = System.Windows.Forms.Border3DStyle.Sunken;
+            this._lblUptime.Name = "_lblUptime";
+            this._lblUptime.Size = new System.Drawing.Size(26, 20);
+            this._lblUptime.Text = "---";
+            // 
+            // _lblMessageDisplay
+            // 
+            this._lblMessageDisplay.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this._lblMessageDisplay.Location = new System.Drawing.Point(0, 306);
+            this._lblMessageDisplay.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._lblMessageDisplay.Name = "_lblMessageDisplay";
+            this._lblMessageDisplay.Size = new System.Drawing.Size(810, 23);
+            this._lblMessageDisplay.TabIndex = 2;
+            this._lblMessageDisplay.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtStateDisplay_KeyPress);
+            // 
+            // _pnlSplitter
+            // 
+            this._pnlSplitter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._pnlSplitter.Location = new System.Drawing.Point(0, 24);
+            this._pnlSplitter.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._pnlSplitter.Name = "_pnlSplitter";
+            // 
+            // _pnlSplitter.Panel1
+            // 
+            this._pnlSplitter.Panel1.Controls.Add(this._ChannelDisplay);
+            // 
+            // _pnlSplitter.Panel2
+            // 
+            this._pnlSplitter.Panel2.Controls.Add(this._SMTPDisplay);
+            this._pnlSplitter.Size = new System.Drawing.Size(810, 282);
+            this._pnlSplitter.SplitterDistance = 402;
+            this._pnlSplitter.SplitterWidth = 5;
+            this._pnlSplitter.TabIndex = 4;
+            this._pnlSplitter.TabStop = false;
+            // 
+            // _ChannelDisplay
+            // 
+            this._ChannelDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this._ChannelDisplay.BackColor = System.Drawing.Color.White;
+            this._ChannelDisplay.Location = new System.Drawing.Point(4, 3);
+            this._ChannelDisplay.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._ChannelDisplay.Name = "_ChannelDisplay";
+            this._ChannelDisplay.ReadOnly = true;
+            this._ChannelDisplay.Size = new System.Drawing.Size(395, 271);
+            this._ChannelDisplay.TabIndex = 0;
+            this._ChannelDisplay.Text = "";
+            // 
+            // _SMTPDisplay
+            // 
+            this._SMTPDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this._SMTPDisplay.BackColor = System.Drawing.Color.White;
+            this._SMTPDisplay.Location = new System.Drawing.Point(4, 3);
+            this._SMTPDisplay.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._SMTPDisplay.Name = "_SMTPDisplay";
+            this._SMTPDisplay.ReadOnly = true;
+            this._SMTPDisplay.Size = new System.Drawing.Size(368, 271);
+            this._SMTPDisplay.TabIndex = 0;
+            this._SMTPDisplay.Text = "";
+            // 
+            // _mnuMain
+            // 
+            this._mnuMain.Enabled = false;
+            this._mnuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._mnuFile,
+            this._mnuConnect,
+            this._mnuAbort,
+            this._mnuLogs,
+            this._mnuHelp,
+            this._mnuMinutesRemaining,
+            this._mnuTest});
+            this._mnuMain.Location = new System.Drawing.Point(0, 0);
+            this._mnuMain.Name = "_mnuMain";
+            this._mnuMain.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
+            this._mnuMain.Size = new System.Drawing.Size(810, 24);
+            this._mnuMain.TabIndex = 5;
+            // 
+            // _mnuFile
+            // 
+            this._mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._mnuProperties,
+            this._mnuPollingInterval,
+            this._ToolStripSeparator3,
+            this._mnuAGWEngine,
+            this._mnuPacketAGWChannels,
+            this._mnuPacketTNCChannels,
+            this._mnuPactorChannels,
+            this._mnuTelnetChannels,
+            this._ToolStripSeparator4,
+            this._mnuTacticalAccounts,
+            this._mnuCallsignAccounts,
+            this._mnuEditAccount,
+            this._ToolStripSeparator1,
+            this._mnuBackup,
+            this._mnuRestoreSettings,
+            this._ToolStripSeparator2,
+            this._mnuExit});
+            this._mnuFile.Name = "_mnuFile";
+            this._mnuFile.Size = new System.Drawing.Size(61, 20);
+            this._mnuFile.Text = "Settings";
+            this._mnuFile.ToolTipText = "Setup menues";
+            this._mnuFile.Click += new System.EventHandler(this.mnuFile_Click);
+            // 
+            // _mnuProperties
+            // 
+            this._mnuProperties.Name = "_mnuProperties";
+            this._mnuProperties.Size = new System.Drawing.Size(200, 22);
+            this._mnuProperties.Text = "Site Properties...";
+            this._mnuProperties.Click += new System.EventHandler(this.mnuProperties_Click);
+            // 
+            // _mnuPollingInterval
+            // 
+            this._mnuPollingInterval.Name = "_mnuPollingInterval";
+            this._mnuPollingInterval.Size = new System.Drawing.Size(200, 22);
+            this._mnuPollingInterval.Text = "P&olling Interval...";
+            this._mnuPollingInterval.Click += new System.EventHandler(this.mnuPollingInterval_Click);
+            // 
+            // _ToolStripSeparator3
+            // 
+            this._ToolStripSeparator3.Name = "_ToolStripSeparator3";
+            this._ToolStripSeparator3.Size = new System.Drawing.Size(197, 6);
+            // 
+            // _mnuAGWEngine
+            // 
+            this._mnuAGWEngine.Name = "_mnuAGWEngine";
+            this._mnuAGWEngine.Size = new System.Drawing.Size(200, 22);
+            this._mnuAGWEngine.Text = "AGW &Engine...";
+            this._mnuAGWEngine.Click += new System.EventHandler(this.mnuAGWEngine_Click);
+            // 
+            // _mnuPacketAGWChannels
+            // 
+            this._mnuPacketAGWChannels.Name = "_mnuPacketAGWChannels";
+            this._mnuPacketAGWChannels.Size = new System.Drawing.Size(200, 22);
+            this._mnuPacketAGWChannels.Text = "&Packet AGW Channels...";
+            this._mnuPacketAGWChannels.Click += new System.EventHandler(this.mnuPacketAGWChannels_Click);
+            // 
+            // _mnuPacketTNCChannels
+            // 
+            this._mnuPacketTNCChannels.Name = "_mnuPacketTNCChannels";
+            this._mnuPacketTNCChannels.Size = new System.Drawing.Size(200, 22);
+            this._mnuPacketTNCChannels.Text = "Packet &TNC Channels...";
+            this._mnuPacketTNCChannels.Click += new System.EventHandler(this.mnuPacketTNCChannels_Click);
+            // 
+            // _mnuPactorChannels
+            // 
+            this._mnuPactorChannels.Name = "_mnuPactorChannels";
+            this._mnuPactorChannels.Size = new System.Drawing.Size(200, 22);
+            this._mnuPactorChannels.Text = "Pactor TNC Channels...";
+            this._mnuPactorChannels.Click += new System.EventHandler(this.mnuPactorChannels_Click);
+            // 
+            // _mnuTelnetChannels
+            // 
+            this._mnuTelnetChannels.Name = "_mnuTelnetChannels";
+            this._mnuTelnetChannels.Size = new System.Drawing.Size(200, 22);
+            this._mnuTelnetChannels.Text = "&Telnet Channels...";
+            this._mnuTelnetChannels.Click += new System.EventHandler(this.mnuTelnetChannels_Click);
+            // 
+            // _ToolStripSeparator4
+            // 
+            this._ToolStripSeparator4.Name = "_ToolStripSeparator4";
+            this._ToolStripSeparator4.Size = new System.Drawing.Size(197, 6);
+            // 
+            // _mnuTacticalAccounts
+            // 
+            this._mnuTacticalAccounts.Name = "_mnuTacticalAccounts";
+            this._mnuTacticalAccounts.Size = new System.Drawing.Size(200, 22);
+            this._mnuTacticalAccounts.Text = "Tactical Accounts...";
+            this._mnuTacticalAccounts.Click += new System.EventHandler(this.mnuAccounts_Click);
+            // 
+            // _mnuCallsignAccounts
+            // 
+            this._mnuCallsignAccounts.Name = "_mnuCallsignAccounts";
+            this._mnuCallsignAccounts.Size = new System.Drawing.Size(200, 22);
+            this._mnuCallsignAccounts.Text = "Callsign Accounts...";
+            this._mnuCallsignAccounts.Click += new System.EventHandler(this.mnuCallsignAccounts_Click);
+            // 
+            // _mnuEditAccount
+            // 
+            this._mnuEditAccount.Name = "_mnuEditAccount";
+            this._mnuEditAccount.Size = new System.Drawing.Size(200, 22);
+            this._mnuEditAccount.Text = "Edit Account Profile...";
+            // 
+            // _ToolStripSeparator1
+            // 
+            this._ToolStripSeparator1.Name = "_ToolStripSeparator1";
+            this._ToolStripSeparator1.Size = new System.Drawing.Size(197, 6);
+            // 
+            // _mnuBackup
+            // 
+            this._mnuBackup.Name = "_mnuBackup";
+            this._mnuBackup.Size = new System.Drawing.Size(200, 22);
+            this._mnuBackup.Text = "Backup INI file...";
+            this._mnuBackup.Click += new System.EventHandler(this.mnuBackup_Click);
+            // 
+            // _mnuRestoreSettings
+            // 
+            this._mnuRestoreSettings.Name = "_mnuRestoreSettings";
+            this._mnuRestoreSettings.Size = new System.Drawing.Size(200, 22);
+            this._mnuRestoreSettings.Text = "Restore INI file...";
+            this._mnuRestoreSettings.Click += new System.EventHandler(this.mnuRestoreSettings_Click);
+            // 
+            // _ToolStripSeparator2
+            // 
+            this._ToolStripSeparator2.Name = "_ToolStripSeparator2";
+            this._ToolStripSeparator2.Size = new System.Drawing.Size(197, 6);
+            // 
+            // _mnuExit
+            // 
+            this._mnuExit.Name = "_mnuExit";
+            this._mnuExit.Size = new System.Drawing.Size(200, 22);
+            this._mnuExit.Text = "E&xit";
+            this._mnuExit.Click += new System.EventHandler(this.mnuExit_Click);
+            // 
+            // _mnuConnect
+            // 
+            this._mnuConnect.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._mnuAutoConnect,
+            this._mnuConnectTo});
+            this._mnuConnect.Name = "_mnuConnect";
+            this._mnuConnect.Size = new System.Drawing.Size(64, 20);
+            this._mnuConnect.Text = "Connect";
+            this._mnuConnect.ToolTipText = "Manual or automatic connection";
+            this._mnuConnect.Click += new System.EventHandler(this.mnuConnect_Click);
+            // 
+            // _mnuAutoConnect
+            // 
+            this._mnuAutoConnect.Name = "_mnuAutoConnect";
+            this._mnuAutoConnect.Size = new System.Drawing.Size(143, 22);
+            this._mnuAutoConnect.Text = "Autoconnect";
+            this._mnuAutoConnect.Click += new System.EventHandler(this.mnuAutoConnect_Click);
+            // 
+            // _mnuConnectTo
+            // 
+            this._mnuConnectTo.Name = "_mnuConnectTo";
+            this._mnuConnectTo.Size = new System.Drawing.Size(143, 22);
+            this._mnuConnectTo.Text = "Connect to...";
+            // 
+            // _mnuAbort
+            // 
+            this._mnuAbort.Name = "_mnuAbort";
+            this._mnuAbort.Size = new System.Drawing.Size(49, 20);
+            this._mnuAbort.Text = "Abort";
+            this._mnuAbort.ToolTipText = "Interrupt and connection in progress";
+            this._mnuAbort.Click += new System.EventHandler(this.mnuAbort_Click);
+            // 
+            // _mnuLogs
+            // 
+            this._mnuLogs.Name = "_mnuLogs";
+            this._mnuLogs.Size = new System.Drawing.Size(42, 20);
+            this._mnuLogs.Text = "Log ";
+            this._mnuLogs.ToolTipText = "Manage and View Log";
+            this._mnuLogs.Click += new System.EventHandler(this.mnuLogs_Click);
+            // 
+            // _mnuHelp
+            // 
+            this._mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._mnuHelpContents,
+            this._mnuSimpleTerminal});
+            this._mnuHelp.Name = "_mnuHelp";
+            this._mnuHelp.Size = new System.Drawing.Size(44, 20);
+            this._mnuHelp.Text = "Help";
+            // 
+            // _mnuHelpContents
+            // 
+            this._mnuHelpContents.Name = "_mnuHelpContents";
+            this._mnuHelpContents.Size = new System.Drawing.Size(167, 22);
+            this._mnuHelpContents.Text = "&Contents...";
+            this._mnuHelpContents.Click += new System.EventHandler(this.mnuHelpContents_Click);
+            // 
+            // _mnuSimpleTerminal
+            // 
+            this._mnuSimpleTerminal.Name = "_mnuSimpleTerminal";
+            this._mnuSimpleTerminal.Size = new System.Drawing.Size(167, 22);
+            this._mnuSimpleTerminal.Text = "Simple Terminal...";
+            this._mnuSimpleTerminal.Click += new System.EventHandler(this.mnuSimpleTerminal_Click);
+            // 
+            // _mnuMinutesRemaining
+            // 
+            this._mnuMinutesRemaining.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this._mnuMinutesRemaining.ForeColor = System.Drawing.SystemColors.ControlText;
+            this._mnuMinutesRemaining.Name = "_mnuMinutesRemaining";
+            this._mnuMinutesRemaining.Size = new System.Drawing.Size(121, 20);
+            this._mnuMinutesRemaining.Text = "Next Poll in 0 Minutes";
+            // 
+            // _mnuTest
+            // 
+            this._mnuTest.Name = "_mnuTest";
+            this._mnuTest.Size = new System.Drawing.Size(12, 20);
+            // 
+            // _tmrMain
+            // 
+            this._tmrMain.Interval = 1000;
+            this._tmrMain.Tick += new System.EventHandler(this.tmrMain_Tick);
+            // 
+            // _tmrDisplay
+            // 
+            this._tmrDisplay.Enabled = true;
+            this._tmrDisplay.Interval = 1000;
+            this._tmrDisplay.Tick += new System.EventHandler(this.tmrDisplay_Tick);
             // 
             // Main
             // 
-            AutoScaleDimensions = new SizeF(6.0F, 13.0F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(694, 307);
-            Controls.Add(_pnlSplitter);
-            Controls.Add(_lblMessageDisplay);
-            Controls.Add(_barStatus);
-            Controls.Add(_mnuMain);
-            Icon = (Icon)resources.GetObject("$this.Icon");
-            Name = "Main";
-            StartPosition = FormStartPosition.Manual;
-            Text = "Paclink (... Initializing)";
-            _barStatus.ResumeLayout(false);
-            _barStatus.PerformLayout();
-            _pnlSplitter.Panel1.ResumeLayout(false);
-            _pnlSplitter.Panel2.ResumeLayout(false);
-            _pnlSplitter.ResumeLayout(false);
-            _mnuMain.ResumeLayout(false);
-            _mnuMain.PerformLayout();
-            FormClosed += new FormClosedEventHandler(MainClosed);
-            FormClosing += new FormClosingEventHandler(MainClosing);
-            Load += new EventHandler(MainLoad);
-            Resize += new EventHandler(MainResize);
-            ResumeLayout(false);
-            PerformLayout();
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(810, 354);
+            this.Controls.Add(this._pnlSplitter);
+            this.Controls.Add(this._lblMessageDisplay);
+            this.Controls.Add(this._barStatus);
+            this.Controls.Add(this._mnuMain);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.Name = "Main";
+            this.Text = "Paclink (... Initializing)";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainClosed);
+            this.Load += new System.EventHandler(this.MainLoad);
+            this._barStatus.ResumeLayout(false);
+            this._barStatus.PerformLayout();
+            this._pnlSplitter.Panel1.ResumeLayout(false);
+            this._pnlSplitter.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this._pnlSplitter)).EndInit();
+            this._pnlSplitter.ResumeLayout(false);
+            this._mnuMain.ResumeLayout(false);
+            this._mnuMain.PerformLayout();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
 
         private StatusStrip _barStatus;
@@ -1313,32 +1320,6 @@ namespace Paclink
             }
         }
 
-        private ToolStripMenuItem _mnuDocumentation;
-
-        internal ToolStripMenuItem mnuDocumentation
-        {
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            get
-            {
-                return _mnuDocumentation;
-            }
-
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            set
-            {
-                if (_mnuDocumentation != null)
-                {
-                    _mnuDocumentation.Click -= mnuDocumentation_Click;
-                }
-
-                _mnuDocumentation = value;
-                if (_mnuDocumentation != null)
-                {
-                    _mnuDocumentation.Click += mnuDocumentation_Click;
-                }
-            }
-        }
-
         private ToolStripMenuItem _mnuSimpleTerminal;
 
         internal ToolStripMenuItem mnuSimpleTerminal
@@ -1361,32 +1342,6 @@ namespace Paclink
                 if (_mnuSimpleTerminal != null)
                 {
                     _mnuSimpleTerminal.Click += mnuSimpleTerminal_Click;
-                }
-            }
-        }
-
-        private ToolStripMenuItem _mnuAbout;
-
-        internal ToolStripMenuItem mnuAbout
-        {
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            get
-            {
-                return _mnuAbout;
-            }
-
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            set
-            {
-                if (_mnuAbout != null)
-                {
-                    _mnuAbout.Click -= mnuAbout_Click;
-                }
-
-                _mnuAbout = value;
-                if (_mnuAbout != null)
-                {
-                    _mnuAbout.Click += mnuAbout_Click;
                 }
             }
         }
@@ -1465,32 +1420,6 @@ namespace Paclink
             }
         }
 
-        private ToolStripMenuItem _mnuNoCMS;
-
-        internal ToolStripMenuItem mnuNoCMS
-        {
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            get
-            {
-                return _mnuNoCMS;
-            }
-
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            set
-            {
-                if (_mnuNoCMS != null)
-                {
-                    _mnuNoCMS.Click -= mnuNoCMS_Click;
-                }
-
-                _mnuNoCMS = value;
-                if (_mnuNoCMS != null)
-                {
-                    _mnuNoCMS.Click += mnuNoCMS_Click;
-                }
-            }
-        }
-
         private ToolStripMenuItem _mnuMinutesRemaining;
 
         internal ToolStripMenuItem mnuMinutesRemaining
@@ -1515,79 +1444,7 @@ namespace Paclink
             }
         }
 
-        private ToolStripSeparator _ToolStripSeparator6;
-
-        internal ToolStripSeparator ToolStripSeparator6
-        {
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            get
-            {
-                return _ToolStripSeparator6;
-            }
-
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            set
-            {
-                if (_ToolStripSeparator6 != null)
-                {
-                }
-
-                _ToolStripSeparator6 = value;
-                if (_ToolStripSeparator6 != null)
-                {
-                }
-            }
-        }
-
-        private ToolStripSeparator _ToolStripSeparator5;
-
-        internal ToolStripSeparator ToolStripSeparator5
-        {
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            get
-            {
-                return _ToolStripSeparator5;
-            }
-
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            set
-            {
-                if (_ToolStripSeparator5 != null)
-                {
-                }
-
-                _ToolStripSeparator5 = value;
-                if (_ToolStripSeparator5 != null)
-                {
-                }
-            }
-        }
-
         private ToolStripMenuItem _mnuTest;
-
-        internal ToolStripMenuItem mnuTest
-        {
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            get
-            {
-                return _mnuTest;
-            }
-
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            set
-            {
-                if (_mnuTest != null)
-                {
-                    _mnuTest.Click -= mnuTest_Click;
-                }
-
-                _mnuTest = value;
-                if (_mnuTest != null)
-                {
-                    _mnuTest.Click += mnuTest_Click;
-                }
-            }
-        }
 
         private Timer _tmrDisplay;
 

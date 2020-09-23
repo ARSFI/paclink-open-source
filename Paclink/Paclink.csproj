@@ -8,11 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetZip" Version="1.13.8" />
-    <PackageReference Include="MimeKit" Version="2.9.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="MimeKit" Version="2.9.2" />
     <PackageReference Include="NLog" Version="4.7.4" />
-    <PackageReference Include="NLog.Targets.Gelf" Version="1.0.0" />
     <PackageReference Include="System.IO.Ports" Version="4.7.0" />
   </ItemGroup>
 
@@ -21,6 +18,7 @@
     <ProjectReference Include="..\DataAccessTests\DataAccessTests.csproj" />
     <ProjectReference Include="..\Libraries\WinlinkInterop\WinlinkInterop.csproj" />
     <ProjectReference Include="..\Libraries\WinlinkServiceClasses\WinlinkServiceClasses.csproj" />
+    <ProjectReference Include="..\NLog.Targets.Gelf\NLog.Targets.Gelf.csproj" />
     <ProjectReference Include="..\Paclink.Data\Paclink.Data.csproj" />
     <ProjectReference Include="..\TNC.Middleware\TNC.Middleware\TNC.Middleware.csproj" />
   </ItemGroup>
