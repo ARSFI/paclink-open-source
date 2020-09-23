@@ -819,9 +819,9 @@ namespace Paclink
             foreach (TChannelProperties currentStcChannel in Channels.Entries.Values)
             {
                 stcChannel = currentStcChannel;
-                if (stcChannel.ChannelType != EChannelModes.PactorTNC & stcChannel.Enabled == true)
+                if (stcChannel.ChannelType != ChannelMode.PactorTNC & stcChannel.Enabled == true)
                     return false;
-                if (stcChannel.ChannelType == EChannelModes.PactorTNC & stcChannel.EnableAutoforward)
+                if (stcChannel.ChannelType == ChannelMode.PactorTNC & stcChannel.EnableAutoforward)
                     return false;
             }
 

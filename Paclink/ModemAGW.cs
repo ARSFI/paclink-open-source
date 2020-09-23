@@ -14,14 +14,14 @@ using NLog;
 
 namespace Paclink
 {
-    public class ModemAgw : IModem
+    public class ModemAGW : IModem
     {
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
-        public ModemAgw()
+        public ModemAGW()
         {
             Globals.blnChannelActive = true;
-        } // New
+        } 
 
         /* TODO ERROR: Skipped RegionDirectiveTrivia */
         private ProtocolInitial objProtocol;
@@ -220,7 +220,7 @@ namespace Paclink
                 }
                 catch (Exception e)
                 {
-                    _log.Error("[ModemAgw.Poll] " + e.Message);
+                    _log.Error("[ModemAGW.Poll] " + e.Message);
                 }
             }
         }
@@ -346,7 +346,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                _log.Error("[ModemAgw.Initialize] " + e.Message);
+                _log.Error("[ModemAGW.Initialize] " + e.Message);
                 return false;
             }
         }  // Initialize
@@ -410,7 +410,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                _log.Error("[ModemAgw.DataToSend] " + e.Message);
+                _log.Error("[ModemAGW.DataToSend] " + e.Message);
             }
         } // DataToSend
 
@@ -449,7 +449,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                _log.Error("[ModemAgw.NormalDisconnect] " + e.Message);
+                _log.Error("[ModemAGW.NormalDisconnect] " + e.Message);
             }
         } // NormalDisconnect
 
@@ -617,7 +617,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                _log.Error("[ModemAgw.DirtyDisconnect] " + e.Message);
+                _log.Error("[ModemAGW.DirtyDisconnect] " + e.Message);
                 return false;
             }
         }  // DirtyDisconnect
@@ -744,7 +744,7 @@ namespace Paclink
             } // Wait an additional 10 sec for AGW to stabilize on some slow machines
         }   // PacketEngineRun
 
-        ~ModemAgw()
+        ~ModemAGW()
         {
         }
 
@@ -822,7 +822,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                _log.Error("[ModemAgw.objTCPPort_OnReadyToSend] " + e.Message);
+                _log.Error("[ModemAGW.objTCPPort_OnReadyToSend] " + e.Message);
             }
         }
 
@@ -876,7 +876,7 @@ namespace Paclink
                 }
                 catch (Exception e)
                 {
-                    _log.Error("[ModemAgw.Connect] " + e.Message);
+                    _log.Error("[ModemAGW.Connect] " + e.Message);
                     return false;
                 }
             }
@@ -1050,7 +1050,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    _log.Error("[ModemAgw.SequenceScript] " + ex.Message);
+                    _log.Error("[ModemAGW.SequenceScript] " + ex.Message);
                 }
             }
 
@@ -1263,7 +1263,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                _log.Error("[ModemAgw.ProcessReceivedFrame] Frame Type:" + strFrameType + " / " + ex.Message);
+                _log.Error("[ModemAGW.ProcessReceivedFrame] Frame Type:" + strFrameType + " / " + ex.Message);
             }
         } // ProcessReceivedFrame 
     }

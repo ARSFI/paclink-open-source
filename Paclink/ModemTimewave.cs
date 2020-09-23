@@ -92,14 +92,14 @@ namespace Paclink
                 {
                     if (objHostPort is object && objHostPort.IsOpen)
                     {
-                        if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
+                        if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PacketTNC)
                         {
                             objHostPort.HostCommand("DI");
                             objHostPort.WaitOnHostCommandResponse("DI");
                             objHostPort.HostCommand("DI");
                             objHostPort.WaitOnHostCommandResponse("DI");
                         }
-                        else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
+                        else if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC)
                         {
                             objHostPort.HostCommand("PA");
                             objHostPort.WaitOnHostCommandResponse("PA");
@@ -119,7 +119,7 @@ namespace Paclink
 
                 if (objHostPort is object)
                 {
-                    if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC & objHostPort.IsOpen)
+                    if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC & objHostPort.IsOpen)
                     {
                         // Returns the TNC to packet mode...
                         objHostPort.HostCommand("PA");
@@ -147,12 +147,12 @@ namespace Paclink
         {
             if (objHostPort is object && objHostPort.IsOpen)
             {
-                if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
+                if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PacketTNC)
                 {
                     objHostPort.HostCommand("DI");
                     objHostPort.WaitOnHostCommandResponse("DI");
                 }
-                else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
+                else if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC)
                 {
                     objHostPort.HostCommand("PA");
                     objHostPort.WaitOnHostCommandResponse("PA");
@@ -223,7 +223,7 @@ namespace Paclink
                 }
             }
 
-            if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
+            if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PacketTNC)
             {
                 if (Globals.objRadioControl != null)
                     Globals.objRadioControl.SetParameters(ref Globals.stcSelectedChannel);
@@ -254,7 +254,7 @@ namespace Paclink
                     blnInScript = false;
                 }
             }
-            else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
+            else if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC)
             {
                 // Set TNC to Pactor mode...
                 objHostPort.HostCommand("ML" + Globals.SiteCallsign); // Set MyTCall 
@@ -355,12 +355,12 @@ namespace Paclink
         public void Disconnect()
         {
             // Handle channel disconnect...
-            if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
+            if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PacketTNC)
             {
                 objHostPort.HostCommand("DI");
                 objHostPort.WaitOnHostCommandResponse("DI");
             }
-            else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
+            else if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC)
             {
                 // objHostPort.HostCommand("RC")
                 // objHostPort.WaitOnHostCommandResponse("RC")
@@ -586,7 +586,7 @@ namespace Paclink
             // Send a station identification in Pactor FEC mode...
 
             // Must be a Pactor link and the ID option is set...
-            if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC & Globals.stcSelectedChannel.PactorId & blnSendingID == false)
+            if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC & Globals.stcSelectedChannel.PactorId & blnSendingID == false)
             {
                 Globals.queChannelDisplay.Enqueue("G*** Sending station identification ...");
                 blnSendingID = true;
@@ -1138,7 +1138,7 @@ namespace Paclink
 
                 case Echo: // Pactor echoed data as sent
                     {
-                        if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
+                        if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC)
                         {
                             Globals.UpdateProgressBar(intHostFrameUpperBound - 2);
                         }
@@ -1197,11 +1197,11 @@ namespace Paclink
                         if (dttStatusRequestTimer < DateTime.Now)
                         {
                             dttStatusRequestTimer = DateTime.Now.AddMilliseconds((double)500);
-                            if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
+                            if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC)
                             {
                                 objSerial.Write(bytPactorStatusRequest, 0, 5);
                             }
-                            else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
+                            else if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PacketTNC)
                             {
                                 objSerial.Write(bytPacketStatusRequest, 0, 5);
                             }
@@ -1216,7 +1216,7 @@ namespace Paclink
                             strCommandToSend = "";
                         }
                         // Sends a block of pending data...
-                        else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC & blnPactorSending & queDataBlockOut.Count > 0 | Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC & queDataBlockOut.Count > 0)
+                        else if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC & blnPactorSending & queDataBlockOut.Count > 0 | Globals.stcSelectedChannel.ChannelType == ChannelMode.PacketTNC & queDataBlockOut.Count > 0)
 
 
                         {
@@ -1237,7 +1237,7 @@ namespace Paclink
                                 objSerial.Write(bytETB, 0, 1);
                                 blnClearToSend = false;
                                 intPacketsOutstanding += 1;
-                                if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
+                                if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PacketTNC)
                                 {
                                     // Frames contain 128 byte (or less). An data frame containing more than
                                     // 128 byte of data contain escape sequences that should not be counted...
@@ -1281,7 +1281,7 @@ namespace Paclink
                 }
 
                 chrPactorRate = strResponse[6];
-                if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
+                if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC)
                 {
                     string strDirection;
                     if (blnPactorSending)
@@ -1478,14 +1478,14 @@ namespace Paclink
                 return;
             }
 
-            if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
+            if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PacketTNC)
             {
                 HostCommand("PA");
                 WaitOnHostCommandResponse("PA");
                 HostCommand("HB");
                 WaitOnHostCommandResponse("HB");
             }
-            else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
+            else if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC)
             {
                 HostCommand("PT");
                 WaitOnHostCommandResponse("PT");

@@ -7,16 +7,6 @@ using WinlinkServiceClasses;
 
 namespace Paclink
 {
-    public enum EChannelModes
-    {
-        Telnet,
-        PacketAGW,
-        PacketTNC,
-        PactorTNC,
-        Winmor
-        // Additional mode names added here as the program is expanded for other devices or protocols.
-    } // EChannelClass
-
     public struct TChannelProperties
     {
         // 
@@ -28,7 +18,7 @@ namespace Paclink
         // 
         // All channels types...
         public DateTime StartTimestamp;
-        public EChannelModes ChannelType;
+        public ChannelMode ChannelType;
         public string ChannelName;
         public int Priority;
         public string RemoteCallsign;
@@ -139,7 +129,7 @@ namespace Paclink
                 if (!string.IsNullOrEmpty(strName))
                 {
                     var stcChannel = default(TChannelProperties);
-                    stcChannel.ChannelType = (EChannelModes)Enum.Parse(typeof(EChannelModes), Globals.Settings.Get(strName, "Channel Type", "0"));
+                    stcChannel.ChannelType = (ChannelMode)Enum.Parse(typeof(ChannelMode), Globals.Settings.Get(strName, "Channel Type", "0"));
                     stcChannel.ChannelName = Globals.Settings.Get(strName, "Channel Name", "");
                     stcChannel.Priority = Globals.Settings.Get(strName, "Priority", 5);
                     stcChannel.RemoteCallsign = Globals.Settings.Get(strName, "Remote Callsign", "");
@@ -148,14 +138,14 @@ namespace Paclink
                     var switchExpr = stcChannel.ChannelType;
                     switch (switchExpr)
                     {
-                        case EChannelModes.Telnet:
+                        case ChannelMode.Telnet:
                             {
                                 // Telnet only properties...
                                 stcChannel.EnableAutoforward = Globals.Settings.Get(strName, "Enable Autoforward", true);
                                 break;
                             }
                         // .LocalIPAddressIndex = objINIFile.GetInteger(strName, "LocalIP Address Index", 0")
-                        case EChannelModes.PacketAGW:
+                        case ChannelMode.PacketAGW:
                             {
                                 // Packet AGC only properties...
                                 stcChannel.AGWPort = Globals.Settings.Get(strName, "AGW Port", "");
@@ -169,7 +159,7 @@ namespace Paclink
                                 break;
                             }
 
-                        case EChannelModes.PacketTNC:
+                        case ChannelMode.PacketTNC:
                             {
                                 // Packet TNC only properties...
                                 stcChannel.TNCType = Globals.Settings.Get(strName, "TNC Type", "");
@@ -197,7 +187,7 @@ namespace Paclink
                                 break;
                             }
 
-                        case EChannelModes.PactorTNC:
+                        case ChannelMode.PactorTNC:
                             {
                                 // Pactor TNC only properties...
                                 stcChannel.TNCType = Globals.Settings.Get(strName, "TNC Type", "");
@@ -229,7 +219,7 @@ namespace Paclink
                                 break;
                             }
 
-                        case EChannelModes.Winmor:
+                        case ChannelMode.Winmor:
                             {
                                 stcChannel.TNCBusyHold = Globals.Settings.Get(strName, "TNC Busy Hold", true);
                                 stcChannel.EnableAutoforward = Globals.Settings.Get(strName, "Enable Autoforward", false);
@@ -325,13 +315,13 @@ namespace Paclink
             Globals.Settings.Save(strName, "Remote Callsign", stcChannel.RemoteCallsign);
             // objPropertiesFile.WriteInteger(strName, "Frequencies Scanned", .FrequenciesScanned)
             Globals.Settings.Save(strName, "Enabled", stcChannel.Enabled);
-            if (stcChannel.ChannelType == EChannelModes.Telnet)
+            if (stcChannel.ChannelType == ChannelMode.Telnet)
             {
                 // Telnet only properties...
                 Globals.Settings.Save(strName, "Enable Autoforward", stcChannel.EnableAutoforward);
             }
             // objPropertiesFile.WriteString(strName, "LocalIP Address Index", .LocalIPAddressIndex.ToString)
-            else if (stcChannel.ChannelType == EChannelModes.PacketAGW)
+            else if (stcChannel.ChannelType == ChannelMode.PacketAGW)
             {
                 // Packet AGW only properties...
                 Globals.Settings.Save(strName, "AGW Port", stcChannel.AGWPort);
@@ -343,7 +333,7 @@ namespace Paclink
                 Globals.Settings.Save(strName, "Enable Autoforward", stcChannel.EnableAutoforward);
                 SaveScript(strName, stcChannel.AGWScript);
             }
-            else if (stcChannel.ChannelType == EChannelModes.PacketTNC)
+            else if (stcChannel.ChannelType == ChannelMode.PacketTNC)
             {
                 // Packet TNC only properties...
                 Globals.Settings.Save(strName, "TNC Type", stcChannel.TNCType);
@@ -368,7 +358,7 @@ namespace Paclink
                 Globals.Settings.Save(strName, "TNC On-Air Baud", stcChannel.TNCOnAirBaud);
                 SaveScript(strName, stcChannel.TNCScript);
             }
-            else if (stcChannel.ChannelType == EChannelModes.PactorTNC)
+            else if (stcChannel.ChannelType == ChannelMode.PactorTNC)
             {
                 // Pactor TNC only properties...
                 Globals.Settings.Save(strName, "TNC Type", stcChannel.TNCType);
@@ -394,7 +384,7 @@ namespace Paclink
                 Globals.Settings.Save(strName, "PTC II TTL Level", stcChannel.TTLLevel);
                 Globals.Settings.Save(strName, "Use NMEA Commands", stcChannel.NMEA);
             }
-            else if (stcChannel.ChannelType == EChannelModes.Winmor)
+            else if (stcChannel.ChannelType == ChannelMode.Winmor)
             {
                 Globals.Settings.Save(strName, "TNC Busy Hold", stcChannel.TNCBusyHold);
                 Globals.Settings.Save(strName, "Enable Autoforward", stcChannel.EnableAutoforward);

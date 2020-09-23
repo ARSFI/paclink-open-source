@@ -80,7 +80,7 @@ namespace Paclink
             cmbChannelName.Items.Clear();
             foreach (TChannelProperties stcChannel in Channels.Entries.Values)
             {
-                if (stcChannel.ChannelType == EChannelModes.PacketAGW)
+                if (stcChannel.ChannelType == ChannelMode.PacketAGW)
                 {
                     cmbChannelName.Items.Add(stcChannel.ChannelName);
                 }
@@ -489,7 +489,7 @@ namespace Paclink
                 var stcNewChannel = default(TChannelProperties);
                 {
                     var withBlock = stcNewChannel;
-                    withBlock.ChannelType = EChannelModes.PacketAGW;
+                    withBlock.ChannelType = ChannelMode.PacketAGW;
                     withBlock.ChannelName = cmbChannelName.Text;
                     withBlock.Priority = Convert.ToInt32(nudPriority.Value);
                     withBlock.RemoteCallsign = txtRemoteCallsign.Text;
@@ -569,7 +569,7 @@ namespace Paclink
                 var stcUpdateChannel = default(TChannelProperties);
                 {
                     var withBlock = stcUpdateChannel;
-                    withBlock.ChannelType = EChannelModes.PacketAGW;
+                    withBlock.ChannelType = ChannelMode.PacketAGW;
                     withBlock.ChannelName = cmbChannelName.Text;
                     withBlock.Priority = Convert.ToInt32(nudPriority.Value);
                     withBlock.RemoteCallsign = txtRemoteCallsign.Text;

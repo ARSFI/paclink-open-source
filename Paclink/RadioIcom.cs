@@ -166,7 +166,7 @@ namespace Paclink
             // Function to set parameters for frequency and filters, possibly other parameters later...
             strRadioModel = Channel.RDOModel;
             SetParametersRet = true;
-            if (Channel.ChannelType == EChannelModes.PacketTNC)
+            if (Channel.ChannelType == ChannelMode.PacketTNC)
             {
                 SetParametersRet = SetVHFFrequency(Globals.ExtractFreq(ref Channel.RDOCenterFrequency), Channel.CIVAddress, Channel.RDOModel);
             }

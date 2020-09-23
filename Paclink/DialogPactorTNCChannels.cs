@@ -188,7 +188,7 @@ namespace Paclink
             cmbChannelName.Items.Clear();
             foreach (TChannelProperties stcChannel in Channels.Entries.Values)
             {
-                if (stcChannel.ChannelType == EChannelModes.PactorTNC)
+                if (stcChannel.ChannelType == ChannelMode.PactorTNC)
                 {
                     if (!string.IsNullOrEmpty(stcChannel.ChannelName.Trim()))
                         cmbChannelName.Items.Add(stcChannel.ChannelName);
@@ -334,7 +334,7 @@ namespace Paclink
 
         private void UpdateChannelProperties(ref TChannelProperties stcChannel)
         {
-            stcChannel.ChannelType = EChannelModes.PactorTNC; // TODO: Needs error checking for some parameters
+            stcChannel.ChannelType = ChannelMode.PactorTNC; // TODO: Needs error checking for some parameters
             stcChannel.ChannelName = cmbChannelName.Text;
             stcChannel.Priority = Convert.ToInt32(nudPriority.Value);
             stcChannel.Enabled = chkChannelEnabled.Checked;

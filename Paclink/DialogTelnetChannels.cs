@@ -66,7 +66,7 @@ namespace Paclink
             cmbChannelName.Items.Clear();
             foreach (TChannelProperties stcChannel in Channels.Entries.Values)
             {
-                if (stcChannel.ChannelType == EChannelModes.Telnet)
+                if (stcChannel.ChannelType == ChannelMode.Telnet)
                 {
                     if (!string.IsNullOrEmpty(stcChannel.ChannelName.Trim()))
                         cmbChannelName.Items.Add(stcChannel.ChannelName);
@@ -131,7 +131,7 @@ namespace Paclink
             {
                 var stcNewChannel = new TChannelProperties()
                 {
-                    ChannelType = EChannelModes.Telnet,
+                    ChannelType = ChannelMode.Telnet,
                     ChannelName = cmbChannelName.Text,
                     Priority = Convert.ToInt32(nudPriority.Value),
                     Enabled = chkEnabled.Checked,
@@ -178,7 +178,7 @@ namespace Paclink
                 var stcUpdateChannel = default(TChannelProperties);
                 {
                     var withBlock = stcUpdateChannel;
-                    withBlock.ChannelType = EChannelModes.Telnet;
+                    withBlock.ChannelType = ChannelMode.Telnet;
                     withBlock.ChannelName = cmbChannelName.Text;
                     withBlock.Priority = Convert.ToInt32(nudPriority.Value);
                     withBlock.Enabled = chkEnabled.Checked;

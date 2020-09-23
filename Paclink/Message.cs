@@ -14,7 +14,7 @@ namespace Paclink
     {
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
-        private enum EB2DecodeState
+        private enum B2DecodeState
         {
             Inactive,
             GetStartOfHeader,
@@ -51,7 +51,7 @@ namespace Paclink
         private string strMime = "";            // The entire message in mime format
 
         // Variables used by B2 messages...
-        private EB2DecodeState enmState;        // State variable used in decoding B2 images
+        private B2DecodeState enmState;        // State variable used in decoding B2 images
         private byte[] bytUncompressed;         // Uncompressed copy of message
         private byte[] bytCompressed;           // Compresses copy of message
         private byte[] bytFormatted;            // Copy of message formatted for binary transmission
@@ -63,7 +63,7 @@ namespace Paclink
         {
             MessageDate = DateTime.UtcNow;
             ExpirationDate = DateTime.UtcNow.AddDays(21);
-            enmState = EB2DecodeState.GetStartOfHeader;
+            enmState = B2DecodeState.GetStartOfHeader;
             bytUncompressed = new byte[1];
             bytCompressed = new byte[1];
         } // New - From Winlink
@@ -75,7 +75,7 @@ namespace Paclink
             bytCompressed = new byte[1];
             DecodeMime();
             PackB2Message();
-            enmState = EB2DecodeState.Inactive;
+            enmState = B2DecodeState.Inactive;
         } // New - To Winlink
 
         public int CompareTo(object objMessage)
@@ -504,7 +504,7 @@ namespace Paclink
             var switchExpr = enmState;
             switch (switchExpr)
             {
-                case EB2DecodeState.GetStartOfHeader:
+                case B2DecodeState.GetStartOfHeader:
                     {
                         if (bytSingle == SOH)
                         {
@@ -513,20 +513,20 @@ namespace Paclink
                             intB2Checksum = 0;
                             intProgress = 0;
                             bytCompressed = new byte[intArraySize + 1];
-                            enmState = EB2DecodeState.GetHeaderCount;
+                            enmState = B2DecodeState.GetHeaderCount;
                         }
 
                         break;
                     }
 
-                case EB2DecodeState.GetHeaderCount:
+                case B2DecodeState.GetHeaderCount:
                     {
                         intHeaderSize = bytSingle;
-                        enmState = EB2DecodeState.GetSubject;
+                        enmState = B2DecodeState.GetSubject;
                         break;
                     }
 
-                case EB2DecodeState.GetSubject:
+                case B2DecodeState.GetSubject:
                     {
                         if (bytSingle != NUL)
                         {
@@ -537,13 +537,13 @@ namespace Paclink
                             Subject = sbdSubject.ToString();
                             if (string.IsNullOrEmpty(Subject))
                                 Subject = "---";
-                            enmState = EB2DecodeState.GetOffset;
+                            enmState = B2DecodeState.GetOffset;
                         }
 
                         break;
                     }
 
-                case EB2DecodeState.GetOffset:
+                case B2DecodeState.GetOffset:
                     {
                         if (bytSingle != NUL)
                         {
@@ -551,22 +551,22 @@ namespace Paclink
                         }
                         else
                         {
-                            enmState = EB2DecodeState.GetStartOfBlock;
+                            enmState = B2DecodeState.GetStartOfBlock;
                             return 2;
                         }
 
                         break;
                     }
 
-                case EB2DecodeState.GetStartOfBlock:
+                case B2DecodeState.GetStartOfBlock:
                     {
                         if (bytSingle == STX)
                         {
-                            enmState = EB2DecodeState.GetBlockCount;
+                            enmState = B2DecodeState.GetBlockCount;
                         }
                         else if (bytSingle == EOT)
                         {
-                            enmState = EB2DecodeState.GetChecksum;
+                            enmState = B2DecodeState.GetChecksum;
                         }
                         else
                         {
@@ -576,16 +576,16 @@ namespace Paclink
                         break;
                     }
 
-                case EB2DecodeState.GetBlockCount:
+                case B2DecodeState.GetBlockCount:
                     {
                         intBlockSize = bytSingle;
                         if (intBlockSize == 0)
                             intBlockSize = 256;
-                        enmState = EB2DecodeState.GetDataBlock;
+                        enmState = B2DecodeState.GetDataBlock;
                         break;
                     }
 
-                case EB2DecodeState.GetDataBlock:
+                case B2DecodeState.GetDataBlock:
                     {
                         bytCompressed[intProgress] = bytSingle;
                         intB2Checksum += bytSingle;
@@ -599,14 +599,14 @@ namespace Paclink
                         intBlockSize -= 1;
                         if (intBlockSize == 0)
                         {
-                            enmState = EB2DecodeState.GetStartOfBlock;
+                            enmState = B2DecodeState.GetStartOfBlock;
                             return 2;
                         }
 
                         return 0;
                     }
 
-                case EB2DecodeState.GetChecksum:
+                case B2DecodeState.GetChecksum:
                     {
                         Array.Resize(ref bytCompressed, intProgress);
                         intB2Checksum = (intB2Checksum & 0xFF) * -1 & 0xFF;

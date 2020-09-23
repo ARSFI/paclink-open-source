@@ -309,7 +309,7 @@ namespace Paclink
                                 if (Globals.ObjSelectedModem.Close())
                                 {
                                     // ObjSelectedModem = Nothing
-                                    if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
+                                    if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC)
                                     {
                                         if (Globals.stcSelectedChannel.EnableAutoforward == false)
                                         {
@@ -325,7 +325,7 @@ namespace Paclink
                                             }
                                         }
                                     }
-                                    else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.Winmor)
+                                    else if (Globals.stcSelectedChannel.ChannelType == ChannelMode.Winmor)
                                     {
                                         if (Globals.stcSelectedChannel.EnableAutoforward == false)
                                         {
@@ -512,14 +512,14 @@ namespace Paclink
                 var switchExpr = Globals.stcSelectedChannel.ChannelType;
                 switch (switchExpr)
                 {
-                    case EChannelModes.PacketAGW:
+                    case ChannelMode.PacketAGW:
                         {
-                            Globals.ObjSelectedModem = new ModemAgw();
+                            Globals.ObjSelectedModem = new ModemAGW();
                             Globals.stcSelectedChannel.StartTimestamp = DateTime.Now.AddMinutes(60);
                             break;
                         }
 
-                    case EChannelModes.PacketTNC:
+                    case ChannelMode.PacketTNC:
                         {
                             var switchExpr1 = Globals.stcSelectedChannel.TNCType;
                             switch (switchExpr1)
@@ -556,7 +556,7 @@ namespace Paclink
                                 case "PTC IIusb":
                                 case "PTC DR-7800":
                                     {
-                                        Globals.ObjSelectedModem = new ModemScs();
+                                        Globals.ObjSelectedModem = new ModemSCS();
                                         Globals.stcSelectedChannel.StartTimestamp = DateTime.Now.AddMinutes(60);
                                         break;
                                     }
@@ -578,14 +578,14 @@ namespace Paclink
                             break;
                         }
 
-                    case EChannelModes.Telnet:
+                    case ChannelMode.Telnet:
                         {
                             Globals.ObjSelectedModem = new ModemTelnet(ref Globals.stcSelectedChannel);
                             Globals.stcSelectedChannel.StartTimestamp = DateTime.Now.AddMinutes(20);
                             break;
                         }
 
-                    case EChannelModes.PactorTNC:
+                    case ChannelMode.PactorTNC:
                         {
                             var switchExpr2 = Globals.stcSelectedChannel.TNCType;
                             switch (switchExpr2)
@@ -606,7 +606,7 @@ namespace Paclink
                                 case "PTC IIusb":
                                 case "PTC DR-7800":
                                     {
-                                        Globals.ObjSelectedModem = new ModemScs();
+                                        Globals.ObjSelectedModem = new ModemSCS();
                                         Globals.stcSelectedChannel.StartTimestamp = DateTime.Now.AddMinutes(120);
                                         break;
                                     }
@@ -623,7 +623,7 @@ namespace Paclink
                             break;
                         }
 
-                    case EChannelModes.Winmor:
+                    case ChannelMode.Winmor:
                         {
                             break;
                         }
@@ -645,26 +645,26 @@ namespace Paclink
                     var switchExpr3 = Globals.stcSelectedChannel.ChannelType;
                     switch (switchExpr3)
                     {
-                        case EChannelModes.PacketAGW:
-                        case EChannelModes.PacketTNC:
+                        case ChannelMode.PacketAGW:
+                        case ChannelMode.PacketTNC:
                             {
                                 Globals.queChannelDisplay.Enqueue("G*** Starting Packet Channel: " + Globals.stcSelectedChannel.ChannelName + " at " + Globals.TimestampEx());
                                 break;
                             }
 
-                        case EChannelModes.PactorTNC:
+                        case ChannelMode.PactorTNC:
                             {
                                 Globals.queChannelDisplay.Enqueue("G*** Starting Pactor Channel: " + Globals.stcSelectedChannel.ChannelName + " at " + Globals.TimestampEx());
                                 break;
                             }
 
-                        case EChannelModes.Telnet:
+                        case ChannelMode.Telnet:
                             {
                                 Globals.queChannelDisplay.Enqueue("G*** Starting Telnet Channel: " + Globals.stcSelectedChannel.ChannelName + " at " + Globals.TimestampEx());
                                 break;
                             }
 
-                        case EChannelModes.Winmor:
+                        case ChannelMode.Winmor:
                             {
                                 Globals.queChannelDisplay.Enqueue("G*** Starting WINMOR Channel: " + Globals.stcSelectedChannel.ChannelName + " at " + Globals.TimestampEx());
                                 break;

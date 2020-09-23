@@ -216,7 +216,7 @@ namespace Paclink
             cmbChannelName.Items.Clear();
             foreach (TChannelProperties stcChannel in Channels.Entries.Values)
             {
-                if (stcChannel.ChannelType == EChannelModes.PacketTNC)
+                if (stcChannel.ChannelType == ChannelMode.PacketTNC)
                 {
                     if (!string.IsNullOrEmpty(stcChannel.ChannelName.Trim()))
                         cmbChannelName.Items.Add(stcChannel.ChannelName);
@@ -315,7 +315,7 @@ namespace Paclink
 
         private void UpdateChannelProperties(ref TChannelProperties stcChannel)
         {
-            stcChannel.ChannelType = EChannelModes.PacketTNC;
+            stcChannel.ChannelType = ChannelMode.PacketTNC;
             stcChannel.ChannelName = cmbChannelName.Text;
             stcChannel.Priority = Convert.ToInt32(nudPriority.Value);
             stcChannel.RemoteCallsign = CleanupCallSign(cmbRemoteCallsign.Text);

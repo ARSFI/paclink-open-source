@@ -149,7 +149,7 @@ namespace Paclink
         {
             // Function to set parameters for frequency and filters, possibly other parameters later...
 
-            if (stcChannel.ChannelType == EChannelModes.PacketTNC)
+            if (stcChannel.ChannelType == ChannelMode.PacketTNC)
             {
                 try
                 {

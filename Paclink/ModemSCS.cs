@@ -10,7 +10,7 @@ using NLog;
 
 namespace Paclink
 {
-    public class ModemScs : IModem
+    public class ModemSCS : IModem
     {
         // This Class handles all PTC II TNCs (PTCII, IIe, IIex, IIpro, IIusb, DR-7800) for both Packet and Pactor connections
         private readonly Logger Log = LogManager.GetCurrentClassLogger();
@@ -273,7 +273,7 @@ namespace Paclink
 
             try
             {
-                if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
+                if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PacketTNC)
                 {
                     SendCommand("#ST 0", 31);
                     // note the followig is needed to set the packet call sign ....the PAC MYCALL does not appear to work correctly
@@ -281,7 +281,7 @@ namespace Paclink
                     // SendCommand("#PAC MYCALL " & SiteCallsign, 31)
                     SendCommand("I" + Globals.stcSelectedChannel.TNCPort.ToString() + ":" + Globals.SiteCallsign, Globals.stcSelectedChannel.TNCPort);
                 }
-                else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
+                else if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC)
                 {
                     SendCommand("#ST 2", 31);
                     string strPactorCallsign = Globals.SiteCallsign;
@@ -310,7 +310,7 @@ namespace Paclink
             }
 
             var strTemp = default(string);
-            if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC) // This handle packet connections
+            if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PacketTNC) // This handle packet connections
             {
                 try
                 {
@@ -348,7 +348,7 @@ namespace Paclink
                     Log.Error("[PTCIIClient.Connect F] " + ex.Message);
                 }
             }
-            else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
+            else if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC)
             {
                 try
                 {
@@ -615,7 +615,7 @@ namespace Paclink
             strCommandReply = "";
             try
             {
-                if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
+                if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC)
                 {
                     SendCommand("#DD", Globals.stcSelectedChannel.TNCPort);
                 }
@@ -679,12 +679,12 @@ namespace Paclink
             }
         } // Initialize
 
-        public ModemScs()
+        public ModemSCS()
         {
             Globals.blnChannelActive = true;
-            if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
+            if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PacketTNC)
                 Globals.queStateDisplay.Enqueue("Packet");
-            if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
+            if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC)
                 Globals.blnPactorDialogResume = !Globals.stcSelectedChannel.EnableAutoforward;
         } // New
 
@@ -720,7 +720,7 @@ namespace Paclink
                 }
 
                 // The following allows the Pactor manual user to retry a connect with a different PMBO/frequency
-                if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC & !blnAutomaticConnect & !blnNormalDisconnect & enmState != LinkStates.Initialized)
+                if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC & !blnAutomaticConnect & !blnNormalDisconnect & enmState != LinkStates.Initialized)
                 {
                     enmState = LinkStates.Initialized; // This allows bypassing the initialization 
                     Globals.queRateDisplay.Enqueue("------");
@@ -784,12 +784,12 @@ namespace Paclink
                 }
             }
 
-            if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC & objHostPort.blnISS & objProtocol is object)
+            if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC & objHostPort.blnISS & objProtocol is object)
             {
                 // Request bytes sent report...
                 SendCommand("%T", Globals.stcSelectedChannel.TNCPort);
             }
-            else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
+            else if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PacketTNC)
             {
                 SendCommand("L", Globals.stcSelectedChannel.TNCPort);
             }
@@ -931,7 +931,7 @@ namespace Paclink
             }
 
             // Process reply from a %T request for Pactor bytes sent...
-            if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC & enmState == LinkStates.Connected)
+            if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC & enmState == LinkStates.Connected)
             {
                 int tmpVal = 0;
                 if (int.TryParse(strData, out tmpVal))
@@ -955,7 +955,7 @@ namespace Paclink
             }
 
             // See if this is a response to a L command to check link state.
-            else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
+            else if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PacketTNC)
             {
                 if (!string.IsNullOrEmpty(strReport))
                 {
@@ -1049,7 +1049,7 @@ namespace Paclink
                 {
                     blnDisconnectProcessed = true;
                     Globals.queChannelDisplay.Enqueue("P" + strData + "  @ " + Globals.TimestampEx());
-                    if (objProtocol != null & Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
+                    if (objProtocol != null & Globals.stcSelectedChannel.ChannelType == ChannelMode.PacketTNC)
                     {
                         // A connection was established which created objProtocol...
                         objProtocol.LinkStateChange(ConnectionOrigin.Disconnected);
@@ -1063,7 +1063,7 @@ namespace Paclink
                             enmState = LinkStates.Disconnected;
                         }
                     }
-                    else if (objProtocol != null & Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC & (blnAutomaticConnect | blnNormalDisconnect))
+                    else if (objProtocol != null & Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC & (blnAutomaticConnect | blnNormalDisconnect))
                     {
                         // A connection was established which created objProtocol
                         // SendIdentification()
@@ -1079,7 +1079,7 @@ namespace Paclink
                             enmState = LinkStates.Disconnected;
                         }
                     }
-                    else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC & !blnAutomaticConnect & !blnNormalDisconnect & enmState != LinkStates.Initialized)
+                    else if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC & !blnAutomaticConnect & !blnNormalDisconnect & enmState != LinkStates.Initialized)
                     {
                         // Not automatic so allow selecting another RMS and or frequency...
                         enmState = LinkStates.Initialized; // This allows bypassing the Initialization
@@ -1105,7 +1105,7 @@ namespace Paclink
                     return;
                 } // Disconnect already processed
 
-                if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC & !blnAutomaticConnect & enmState != LinkStates.Initialized & Globals.blnPactorDialogResume)
+                if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC & !blnAutomaticConnect & enmState != LinkStates.Initialized & Globals.blnPactorDialogResume)
                 {
                     // Not automatic so allow selecting another RMS Frequency...
                     Globals.queRateDisplay.Enqueue("------");
@@ -1113,7 +1113,7 @@ namespace Paclink
             }
             else if (strData.IndexOf("Current port settings") != -1)
             {
-                if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
+                if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PacketTNC)
                 {
                     if (strData.IndexOf("9600") != -1)
                     {
@@ -1159,7 +1159,7 @@ namespace Paclink
 
         private void OnPTCStatusReport(byte[] bytStatus)
         {
-            if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
+            if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC)
             {
                 if (bytStatus.Length == 4 | bytStatus.Length == 7)
                 {
@@ -1629,7 +1629,7 @@ namespace Paclink
         private void SendIdentification()
         {
             stcConnectedCall.PendingDisconnect = false;
-            if (blnSendingID | Globals.stcSelectedChannel.ChannelType != EChannelModes.PactorTNC | !Globals.stcSelectedChannel.PactorId | blnNoIdentification | blnIDSending)
+            if (blnSendingID | Globals.stcSelectedChannel.ChannelType != ChannelMode.PactorTNC | !Globals.stcSelectedChannel.PactorId | blnNoIdentification | blnIDSending)
                 return; // Prevents sending ID twice
             blnSendingID = true;
             if (objHostPort is object && objHostPort.HostState == SCSHostPort.HostModeState.HostMode)
@@ -2769,7 +2769,7 @@ namespace Paclink
                     }
                 }
                 // Send a data packet
-                else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
+                else if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PacketTNC)
                 {
                     // Packet mode
                     if (intTNCFramesPending >= 5)
@@ -2795,7 +2795,7 @@ namespace Paclink
                         Globals.UpdateProgressBar(bytPendingFrame.Length - 6);
                     }
                 }
-                else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
+                else if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC)
                 {
                     // Pactor mode
                     if (intTNCBytesPosted - intTNCBytesSent > 1200)

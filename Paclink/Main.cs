@@ -509,7 +509,7 @@ namespace Paclink
                 {
                     foreach (TChannelProperties stcChannel in Channels.Entries.Values)
                     {
-                        if (stcChannel.Enabled == true & stcChannel.ChannelType != EChannelModes.Winmor)
+                        if (stcChannel.Enabled == true & stcChannel.ChannelType != ChannelMode.Winmor)
                         {
                             if (stcChannel.Priority == intPriority)
                             {

@@ -173,7 +173,7 @@ namespace Paclink
             // Function to set parameters for frequency and filters, possibly other parameters later...
             try
             {
-                if (Channel.ChannelType == EChannelModes.PacketTNC)
+                if (Channel.ChannelType == ChannelMode.PacketTNC)
                 {
                     SetVHFFrequency(Globals.ExtractFreq(ref Channel.RDOCenterFrequency), Channel.RDOModel);
                 }

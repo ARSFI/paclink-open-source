@@ -142,7 +142,7 @@ namespace Paclink
 
             if (objHostPort is object && objHostPort.IsOpen)
             {
-                if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
+                if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PacketTNC)
                 {
                     Disconnect();
                 }
@@ -171,7 +171,7 @@ namespace Paclink
 
             // Separating out this test for Packet and Pactor allows using some 3x3 MARS calls which are 
             // Legal for KAM+ Pactor but illegal for Packet. Rev 2.0.66.0
-            if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
+            if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PacketTNC)
             {
                 objHostPort.HostCommand("MYCALL " + Globals.SiteCallsign);
                 if (string.IsNullOrEmpty(objHostPort.WaitOnHostCommandResponse("MYCALL")))
@@ -181,7 +181,7 @@ namespace Paclink
                     return false;
                 }
             }
-            else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
+            else if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC)
             {
                 objHostPort.HostCommand("MYPTCALL " + Globals.SiteCallsign);
                 if (string.IsNullOrEmpty(objHostPort.WaitOnHostCommandResponse("MYPTCALL")))
@@ -228,7 +228,7 @@ namespace Paclink
                 }
             }
 
-            if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
+            if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PacketTNC)
             {
                 if (Globals.objRadioControl != null)
                     Globals.objRadioControl.SetParameters(ref Globals.stcSelectedChannel);
@@ -251,7 +251,7 @@ namespace Paclink
                     blnInScript = false;
                 }
             }
-            else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
+            else if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC)
             {
                 // This handles manual Pactor connections or unspecified automatic channels...
                 float tmpVal = 0.0F;
@@ -360,7 +360,7 @@ namespace Paclink
                     if (blnInScript)
                         strScriptResponse += strStatusReport;
                     Globals.queChannelDisplay.Enqueue("P" + strStatusReport.Trim());
-                    if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
+                    if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PacketTNC)
                     {
                         if (strStatusReport.IndexOf("*** CONNECTED") != -1)
                         {
@@ -373,7 +373,7 @@ namespace Paclink
                             enmState = LinkStates.Disconnected;
                         }
                     }
-                    else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
+                    else if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC)
                     {
                         if (strStatusReport.IndexOf("LINKED TO") != -1)
                         {
@@ -571,7 +571,7 @@ namespace Paclink
             // Send a station identification in Pactor FEC mode...
 
             // Must be a Pactor link and the ID option is set...
-            if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC & Globals.stcSelectedChannel.PactorId & blnSendingID == false)
+            if (Globals.stcSelectedChannel.ChannelType == ChannelMode.PactorTNC & Globals.stcSelectedChannel.PactorId & blnSendingID == false)
             {
                 Globals.queChannelDisplay.Enqueue("G*** Sending station identification ...");
                 blnSendingID = true;
@@ -773,11 +773,11 @@ namespace Paclink
                     return false;
                 }
 
-                if (stcChannel.ChannelType == EChannelModes.PacketTNC)
+                if (stcChannel.ChannelType == ChannelMode.PacketTNC)
                 {
                     bytChannel = 0x41; // "A"
                 }
-                else if (stcChannel.ChannelType == EChannelModes.PactorTNC)
+                else if (stcChannel.ChannelType == ChannelMode.PactorTNC)
                 {
                     bytChannel = 0x30; // "0"
                 }
@@ -1305,7 +1305,7 @@ namespace Paclink
                 case Echo: // "E" - Echoed data as sent
                     {
                         // Data echoed as sent...
-                        if (stcChannel.ChannelType == EChannelModes.PactorTNC)
+                        if (stcChannel.ChannelType == ChannelMode.PactorTNC)
                         {
                             Globals.UpdateProgressBar(intHostFrameUpperBound - 4);
                         }
@@ -1414,7 +1414,7 @@ namespace Paclink
                                 intAvailableBufferOut -= strCommandToSend.Length + 5;
                                 strCommandToSend = "";
                             }
-                            else if (enmLinkDirection == LinkDirection.Sending | stcChannel.ChannelType != EChannelModes.PactorTNC)
+                            else if (enmLinkDirection == LinkDirection.Sending | stcChannel.ChannelType != ChannelMode.PactorTNC)
                             {
                                 while (queDataBlockOut.Count > 0 & intAvailableBufferOut > 128)
                                 {
@@ -1434,7 +1434,7 @@ namespace Paclink
                                     objSerial.Write(bytDataToSend, 0, bytDataToSend.Length);
                                     objSerial.Write(bytFEND, 0, 1);
                                     intAvailableBufferOut -= 128;
-                                    if (stcChannel.ChannelType == EChannelModes.PacketTNC)
+                                    if (stcChannel.ChannelType == ChannelMode.PacketTNC)
                                         Globals.UpdateProgressBar(bytDataToSend.Length);
                                 }
                             }
@@ -1467,7 +1467,7 @@ namespace Paclink
             var strLines = strStatus.Split('\r');
             if (strLines.Length >= 2)
             {
-                if (stcChannel.ChannelType == EChannelModes.PacketTNC)
+                if (stcChannel.ChannelType == ChannelMode.PacketTNC)
                 {
                     string strReport = strLines[strLines.GetUpperBound(0) - 1];
                     Globals.queStateDisplay.Enqueue(strReport + "  " + Globals.ProgressBarStatus());
@@ -1641,14 +1641,14 @@ namespace Paclink
 
             if (stcChannel.TNCType == "KAM/+")
             {
-                if (stcChannel.ChannelType == EChannelModes.PacketTNC)
+                if (stcChannel.ChannelType == ChannelMode.PacketTNC)
                 {
                     HostCommand("PORT VHF");
                     WaitOnHostCommandResponse("PORT");
                     stcChannel.TNCPort = 2;
                     intTNCPort = 2;
                 }
-                else if (stcChannel.ChannelType == EChannelModes.PactorTNC)
+                else if (stcChannel.ChannelType == ChannelMode.PactorTNC)
                 {
                     HostCommand("PORT HF");
                     WaitOnHostCommandResponse("PORT");
@@ -1668,7 +1668,7 @@ namespace Paclink
             {
                 HostCommand("PORT " + stcChannel.TNCPort.ToString());
                 WaitOnHostCommandResponse("PORT");
-                if (stcChannel.ChannelType == EChannelModes.PactorTNC)
+                if (stcChannel.ChannelType == ChannelMode.PactorTNC)
                 {
                     HostCommand("SPACE 4000");
                     WaitOnHostCommandResponse("SPACE");
@@ -1680,7 +1680,7 @@ namespace Paclink
             }
             else if (stcChannel.TNCType == "KAM98")
             {
-                if (stcChannel.ChannelType == EChannelModes.PacketTNC)
+                if (stcChannel.ChannelType == ChannelMode.PacketTNC)
                 {
                     stcChannel.TNCPort = 2;
                     intTNCPort = 2;
@@ -1691,7 +1691,7 @@ namespace Paclink
                     HostCommand("SPACE 2100");
                     WaitOnHostCommandResponse("SPACE");
                 }
-                else if (stcChannel.ChannelType == EChannelModes.PactorTNC)
+                else if (stcChannel.ChannelType == ChannelMode.PactorTNC)
                 {
                     stcChannel.TNCPort = 1;
                     intTNCPort = 1;
@@ -1705,12 +1705,12 @@ namespace Paclink
             }
 
             // Causes the data rate label to be set...
-            if (stcChannel.ChannelType == EChannelModes.PacketTNC)
+            if (stcChannel.ChannelType == ChannelMode.PacketTNC)
             {
                 HostCommand("HB");
                 WaitOnHostCommandResponse("HB");
             }
-            else if (stcChannel.ChannelType == EChannelModes.PactorTNC)
+            else if (stcChannel.ChannelType == ChannelMode.PactorTNC)
             {
                 Globals.queRateDisplay.Enqueue("200 Baud");
             }
