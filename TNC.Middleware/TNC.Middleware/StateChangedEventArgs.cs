@@ -4,7 +4,7 @@ namespace TNC.Middleware
 {
     public class StateChangedEventArgs : EventArgs
     {
-        public ELinkStates State;
+        public LinkStates State;
         public string Message;
     }
 }

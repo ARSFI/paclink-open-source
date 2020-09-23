@@ -10,7 +10,7 @@ using NLog;
 
 namespace Paclink
 {
-    public class ClientSCS : IClient
+    public class ModemScs : IModem
     {
         // This Class handles all PTC II TNCs (PTCII, IIe, IIex, IIpro, IIusb, DR-7800) for both Packet and Pactor connections
         private readonly Logger Log = LogManager.GetCurrentClassLogger();
@@ -92,13 +92,13 @@ namespace Paclink
         }
 
         // Enums and Structures
-        private ELinkStates enmState = ELinkStates.Undefined;
+        private LinkStates enmState = LinkStates.Undefined;
 
         public void Abort()
         {
             // Closes the channel immediately...
 
-            if (enmState != ELinkStates.Connected)
+            if (enmState != LinkStates.Connected)
             {
                 Close();
                 return;
@@ -114,7 +114,7 @@ namespace Paclink
                 objHostPort = null;
             }
 
-            enmState = ELinkStates.LinkFailed;
+            enmState = LinkStates.LinkFailed;
             Close();
         } // Abort
           // Closes the channel and put TNC into known state.
@@ -127,7 +127,7 @@ namespace Paclink
             if (blnClosing)
                 return true;
             blnClosing = true;
-            if (!(enmState == ELinkStates.Disconnected | enmState == ELinkStates.LinkFailed | enmState == ELinkStates.NoSerialPort))
+            if (!(enmState == LinkStates.Disconnected | enmState == LinkStates.LinkFailed | enmState == LinkStates.NoSerialPort))
             {
                 ImmediateDisconnect();
             }
@@ -190,19 +190,19 @@ namespace Paclink
             int intIndex;
             string strTarget = Globals.stcSelectedChannel.RemoteCallsign;
             blnAutomaticConnect = blnAutomatic;
-            if (enmState != ELinkStates.Initialized)
+            if (enmState != LinkStates.Initialized)
             {
                 try
                 {
                     if (OpenSerialPort() == false)
                     {
-                        enmState = ELinkStates.NoSerialPort;
+                        enmState = LinkStates.NoSerialPort;
                         return false;
                     }
                 }
                 catch
                 {
-                    enmState = ELinkStates.NoSerialPort;
+                    enmState = LinkStates.NoSerialPort;
                     return false;
                 }
 
@@ -210,13 +210,13 @@ namespace Paclink
                 {
                     if (!InitializeTheTNC())
                     {
-                        enmState = ELinkStates.LinkFailed;
+                        enmState = LinkStates.LinkFailed;
                         Close();
                         return false;
                     }
                     else
                     {
-                        enmState = ELinkStates.Initialized;
+                        enmState = LinkStates.Initialized;
                     }
                 }
                 catch (Exception ex)
@@ -230,7 +230,7 @@ namespace Paclink
                 // Modified to work for Pactor and Packet...
                 if (Globals.stcSelectedChannel.RDOControl == "Serial" | Globals.stcSelectedChannel.RDOControl == "Via PTCII")
                 {
-                    Globals.objSCSClient = this;
+                    Globals.ObjScsModem = this;
                     if (Globals.objRadioControl == null)
                     {
                         if (Globals.stcSelectedChannel.RDOModel.StartsWith("Kenwood"))
@@ -329,8 +329,8 @@ namespace Paclink
                         {
                             Globals.queChannelDisplay.Enqueue("R*** Script Error - ending connection");
                             Globals.blnChannelActive = false;
-                            enmState = ELinkStates.LinkFailed;
-                            Globals.objSelectedClient = null;
+                            enmState = LinkStates.LinkFailed;
+                            Globals.ObjSelectedModem = null;
                             return false;
                         }
                     }
@@ -391,14 +391,14 @@ namespace Paclink
                             blnNoIdentification = true;
                             if (objProtocol != null)
                             {
-                                objProtocol.LinkStateChange(EConnection.Disconnected);
+                                objProtocol.LinkStateChange(ConnectionOrigin.Disconnected);
                                 objProtocol = null;
                             }
 
                             Globals.dlgPactorConnect.Close();
                             Globals.dlgPactorConnect = null;
                             blnNoIdentification = true;
-                            enmState = ELinkStates.LinkFailed;
+                            enmState = LinkStates.LinkFailed;
                             return false;
                         }
 
@@ -438,7 +438,7 @@ namespace Paclink
                             {
                                 Globals.queChannelDisplay.Enqueue("R*** Channel busy - autoforwarding ended");
                                 blnNoIdentification = true;
-                                enmState = ELinkStates.LinkFailed;
+                                enmState = LinkStates.LinkFailed;
                                 return false;
                             }
                         }
@@ -473,7 +473,7 @@ namespace Paclink
                 blnNormalDisconnect = false;
                 blnDisconnectProcessed = false;
                 intActivityTimer = 0;
-                enmState = ELinkStates.Connecting;
+                enmState = LinkStates.Connecting;
                 SendCommand("%B", Globals.stcSelectedChannel.TNCPort);
                 SendCommand("M N", Globals.stcSelectedChannel.TNCPort);
             }
@@ -567,18 +567,18 @@ namespace Paclink
         {
             // Invokes a channel disconnect...
 
-            if (stcConnectedCall.PendingDisconnect | enmState == ELinkStates.Connecting)
+            if (stcConnectedCall.PendingDisconnect | enmState == LinkStates.Connecting)
             {
                 ImmediateDisconnect();
                 if (objProtocol != null)
                 {
-                    objProtocol.LinkStateChange(EConnection.Disconnected);
+                    objProtocol.LinkStateChange(ConnectionOrigin.Disconnected);
                     objProtocol = null;
-                    enmState = ELinkStates.Disconnected;
+                    enmState = LinkStates.Disconnected;
                 }
                 else
                 {
-                    enmState = ELinkStates.LinkFailed;
+                    enmState = LinkStates.LinkFailed;
                 }
             }
             else
@@ -679,7 +679,7 @@ namespace Paclink
             }
         } // Initialize
 
-        public ClientSCS()
+        public ModemScs()
         {
             Globals.blnChannelActive = true;
             if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
@@ -720,20 +720,20 @@ namespace Paclink
                 }
 
                 // The following allows the Pactor manual user to retry a connect with a different PMBO/frequency
-                if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC & !blnAutomaticConnect & !blnNormalDisconnect & enmState != ELinkStates.Initialized)
+                if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC & !blnAutomaticConnect & !blnNormalDisconnect & enmState != LinkStates.Initialized)
                 {
-                    enmState = ELinkStates.Initialized; // This allows bypassing the initialization 
+                    enmState = LinkStates.Initialized; // This allows bypassing the initialization 
                     Globals.queRateDisplay.Enqueue("------");
                     return;
                 }
                 // All other timeout attempts take this path
                 if (objProtocol != null)
                 {
-                    objProtocol.LinkStateChange(EConnection.Disconnected);
+                    objProtocol.LinkStateChange(ConnectionOrigin.Disconnected);
                     objProtocol = null;
                 }
 
-                enmState = ELinkStates.LinkFailed;
+                enmState = LinkStates.LinkFailed;
                 return;
             }
 
@@ -745,7 +745,7 @@ namespace Paclink
                     intConnectScriptPtr = -1;
                     Globals.queChannelDisplay.Enqueue("R #Connect Script Timeout at " + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm UTC") + " - disconnecting");
                     ImmediateDisconnect();
-                    enmState = ELinkStates.LinkFailed;
+                    enmState = LinkStates.LinkFailed;
                 }
             }
             else if (intConnectTimer > 0)
@@ -761,11 +761,11 @@ namespace Paclink
                     ImmediateDisconnect();
                     if (objProtocol != null)
                     {
-                        objProtocol.LinkStateChange(EConnection.Disconnected);
+                        objProtocol.LinkStateChange(ConnectionOrigin.Disconnected);
                         objProtocol = null;
                     }
 
-                    enmState = ELinkStates.LinkFailed;
+                    enmState = LinkStates.LinkFailed;
                     Globals.blnStartingChannel = true;
                     return;
                 }
@@ -776,11 +776,11 @@ namespace Paclink
                 Thread.Sleep(500);
                 if (blnNormalDisconnect)
                 {
-                    enmState = ELinkStates.Disconnected;
+                    enmState = LinkStates.Disconnected;
                 }
                 else
                 {
-                    enmState = ELinkStates.LinkFailed;
+                    enmState = LinkStates.LinkFailed;
                 }
             }
 
@@ -931,7 +931,7 @@ namespace Paclink
             }
 
             // Process reply from a %T request for Pactor bytes sent...
-            if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC & enmState == ELinkStates.Connected)
+            if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC & enmState == LinkStates.Connected)
             {
                 int tmpVal = 0;
                 if (int.TryParse(strData, out tmpVal))
@@ -987,7 +987,7 @@ namespace Paclink
             }
             else if (strData.IndexOf("*** PTC Fault") != -1 | strData.IndexOf("*** Serial Port Fault") != -1)
             {
-                enmState = ELinkStates.LinkFailed;
+                enmState = LinkStates.LinkFailed;
             }
             else if (strData.IndexOf("CONNECTED to") != -1)
             {
@@ -997,7 +997,7 @@ namespace Paclink
                 intConnectTimer = 0; // Reset the ConnectCtr
                 if (intChannel == 31) // A Pactor connect
                 {
-                    enmState = ELinkStates.Connected;
+                    enmState = LinkStates.Connected;
                     intActivityTimer = 0;
                     intBytesSentCount = 0;
                     objHostPort.intTNCBytesSent = 0;
@@ -1034,7 +1034,7 @@ namespace Paclink
                         return;
                     }
 
-                    enmState = ELinkStates.Connected;
+                    enmState = LinkStates.Connected;
                     objProtocol = new ProtocolInitial(this, ref Globals.stcSelectedChannel);
                 }
                 else
@@ -1052,15 +1052,15 @@ namespace Paclink
                     if (objProtocol != null & Globals.stcSelectedChannel.ChannelType == EChannelModes.PacketTNC)
                     {
                         // A connection was established which created objProtocol...
-                        objProtocol.LinkStateChange(EConnection.Disconnected);
+                        objProtocol.LinkStateChange(ConnectionOrigin.Disconnected);
                         objProtocol = null;
                         if (strData.IndexOf("LINK FAIL") != -1)
                         {
-                            enmState = ELinkStates.LinkFailed;
+                            enmState = LinkStates.LinkFailed;
                         }
                         else
                         {
-                            enmState = ELinkStates.Disconnected;
+                            enmState = LinkStates.Disconnected;
                         }
                     }
                     else if (objProtocol != null & Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC & (blnAutomaticConnect | blnNormalDisconnect))
@@ -1068,36 +1068,36 @@ namespace Paclink
                         // A connection was established which created objProtocol
                         // SendIdentification()
                         blnDoFECId = true;
-                        objProtocol.LinkStateChange(EConnection.Disconnected);
+                        objProtocol.LinkStateChange(ConnectionOrigin.Disconnected);
                         objProtocol = null;
                         if (strData.IndexOf("LINK FAIL") != -1)
                         {
-                            enmState = ELinkStates.LinkFailed;
+                            enmState = LinkStates.LinkFailed;
                         }
                         else
                         {
-                            enmState = ELinkStates.Disconnected;
+                            enmState = LinkStates.Disconnected;
                         }
                     }
-                    else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC & !blnAutomaticConnect & !blnNormalDisconnect & enmState != ELinkStates.Initialized)
+                    else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC & !blnAutomaticConnect & !blnNormalDisconnect & enmState != LinkStates.Initialized)
                     {
                         // Not automatic so allow selecting another RMS and or frequency...
-                        enmState = ELinkStates.Initialized; // This allows bypassing the Initialization
+                        enmState = LinkStates.Initialized; // This allows bypassing the Initialization
                                                             // SendIdentification()
                         blnDoFECId = true;
                         if (objProtocol is object)
                         {
-                            objProtocol.LinkStateChange(EConnection.Disconnected);
+                            objProtocol.LinkStateChange(ConnectionOrigin.Disconnected);
                             objProtocol = null;
                         }
 
                         Globals.queRateDisplay.Enqueue("------");
-                        enmState = ELinkStates.Disconnected;
+                        enmState = LinkStates.Disconnected;
                         return;
                     }
                     else
                     {
-                        enmState = ELinkStates.LinkFailed;
+                        enmState = LinkStates.LinkFailed;
                     }
                 }
                 else
@@ -1105,7 +1105,7 @@ namespace Paclink
                     return;
                 } // Disconnect already processed
 
-                if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC & !blnAutomaticConnect & enmState != ELinkStates.Initialized & Globals.blnPactorDialogResume)
+                if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC & !blnAutomaticConnect & enmState != LinkStates.Initialized & Globals.blnPactorDialogResume)
                 {
                     // Not automatic so allow selecting another RMS Frequency...
                     Globals.queRateDisplay.Enqueue("------");
@@ -1283,13 +1283,13 @@ namespace Paclink
                         {
                             if (objProtocol != null)
                             {
-                                objProtocol.LinkStateChange(EConnection.Disconnected);
+                                objProtocol.LinkStateChange(ConnectionOrigin.Disconnected);
                                 objProtocol = null;
-                                enmState = ELinkStates.Disconnected;
+                                enmState = LinkStates.Disconnected;
                             }
                             else
                             {
-                                enmState = ELinkStates.LinkFailed;
+                                enmState = LinkStates.LinkFailed;
                             }
                         }
                     }
@@ -1410,9 +1410,9 @@ namespace Paclink
                                 }
                         }
 
-                        if (enmState != ELinkStates.Connected & (int)bytStatus[4] != 0)
+                        if (enmState != LinkStates.Connected & (int)bytStatus[4] != 0)
                         {
-                            enmState = ELinkStates.Connected;
+                            enmState = LinkStates.Connected;
                             intActivityTimer = 0;
                             objProtocol = new ProtocolInitial(this, ref Globals.stcSelectedChannel);
                         }
@@ -1691,7 +1691,7 @@ namespace Paclink
                             Globals.queChannelDisplay.Enqueue("X" + Text);
                         }
 
-                        enmState = ELinkStates.Connected;
+                        enmState = LinkStates.Connected;
                         objProtocol = new ProtocolInitial(this, ref Globals.stcSelectedChannel);
                         return true;  // Script Ptr should always be even
                     }
@@ -1722,7 +1722,7 @@ namespace Paclink
                                 intScriptTimer = 0;
                                 Globals.queChannelDisplay.Enqueue("G     #Script(" + (intConnectScriptPtr + 2).ToString() + "): " + ConnectScript[intConnectScriptPtr + 1]);
                                 Globals.queChannelDisplay.Enqueue("G #End Script");
-                                enmState = ELinkStates.Connected;
+                                enmState = LinkStates.Connected;
                                 intConnectScriptPtr = -1; // Terminate the scripting
                                 objProtocol = new ProtocolInitial(this, ref Globals.stcSelectedChannel);
                                 SequenceScriptRet = true;
@@ -1731,7 +1731,7 @@ namespace Paclink
                         else // Must be an odd number of scrip lines 
                         {
                             Globals.queChannelDisplay.Enqueue("G #Script terminated (end of script file): " + Text);
-                            enmState = ELinkStates.Connected;
+                            enmState = LinkStates.Connected;
                             intConnectScriptPtr = -1; // Terminate the scripting
                             objProtocol = new ProtocolInitial(this, ref Globals.stcSelectedChannel);
                             SequenceScriptRet = true;
@@ -1754,7 +1754,7 @@ namespace Paclink
             return SequenceScriptRet;
         } // SequenceScript
 
-        public ELinkStates State
+        public LinkStates State
         {
             get
             {

@@ -249,11 +249,11 @@ namespace Paclink
 
         private void MainClosing(object s, FormClosingEventArgs e)
         {
-            if (Globals.objSelectedClient != null)
+            if (Globals.ObjSelectedModem != null)
             {
                 Globals.blnManualAbort = true;
-                Globals.objSelectedClient.Abort();
-                Globals.objSelectedClient = null;
+                Globals.ObjSelectedModem.Abort();
+                Globals.ObjSelectedModem = null;
             }
 
             Globals.blnProgramClosing = true;
@@ -669,11 +669,11 @@ namespace Paclink
         private void mnuAbort_Click(object sender, EventArgs e)
         {
             mnuAbort.Enabled = false;
-            if (Globals.objSelectedClient != null)
+            if (Globals.ObjSelectedModem != null)
             {
                 Globals.blnManualAbort = true;
-                Globals.objSelectedClient.Abort();
-                Globals.objSelectedClient = null;
+                Globals.ObjSelectedModem.Abort();
+                Globals.ObjSelectedModem = null;
             }
 
             ChannelDisplayWrite("G*** Restarting Paclink after Abort clicked...");

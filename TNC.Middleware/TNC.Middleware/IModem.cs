@@ -2,12 +2,11 @@
 
 namespace TNC.Middleware
 {
-    //TODO: Rename to something better fitted to it's use - maybe IModem
-    public interface IClient
+    public interface IModem
     {
         event EventHandler StateChanged;
 
-        ELinkStates State { get; }
+        LinkStates State { get; }
         bool NormalDisconnect { get; set; } //TODO: Only assigned - never used - remove
 
         void Abort();

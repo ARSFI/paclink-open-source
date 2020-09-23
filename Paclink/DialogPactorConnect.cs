@@ -27,10 +27,10 @@ namespace Paclink
             _chkResumeDialog.Name = "chkResumeDialog";
         }
 
-        public DialogPactorConnect(IClient objSender, ref TChannelProperties Channel)
+        public DialogPactorConnect(IModem objSender, ref TChannelProperties Channel)
         {
             // This call is required by the Windows Form Designer...
-            objClient = objSender;
+            _objModem = objSender;
             stcChannel = Channel;
             blnLoading = true;
             InitializeComponent();
@@ -52,7 +52,7 @@ namespace Paclink
         private string[] arySelectedMBOs;
         private DateTime dttLastBusyUpdate = DateTime.Now;
         private bool blnChangesNotSaved;
-        private IClient objClient;
+        private IModem _objModem;
         private bool blnLoading;
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -64,8 +64,8 @@ namespace Paclink
             Globals.blnPactorDialogClosing = true;
             Globals.blnPactorDialogResuming = false;
             Globals.blnChannelActive = false;
-            Globals.objSelectedClient.Close();
-            Globals.objSelectedClient = null;
+            Globals.ObjSelectedModem.Close();
+            Globals.ObjSelectedModem = null;
             Globals.stcEditedSelectedChannel = default;
             DialogResult = DialogResult.Cancel;
             Close();
@@ -422,7 +422,7 @@ namespace Paclink
         private void tmrPollClient_Tick(object sender, EventArgs e)
         {
             BringToFront();
-            objClient.Poll();
+            _objModem.Poll();
         } // tmrPollClient_Tick
 
         public void UpdateChannelProperties(ref TChannelProperties Channel)

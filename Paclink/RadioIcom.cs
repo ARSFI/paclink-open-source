@@ -123,7 +123,7 @@ namespace Paclink
             if (Channel.RDOControl == "Via PTCII")
             {
                 blnViaPTC = true;
-                Globals.objSCSClient.SendRadioCommand("#TRX TY I " + Channel.RDOControlBaud + " $" + Channel.CIVAddress);
+                Globals.ObjScsModem.SendRadioCommand("#TRX TY I " + Channel.RDOControlBaud + " $" + Channel.CIVAddress);
                 Thread.Sleep(200);  // Changed to 200 by W4PHS
                 return true;
             }
@@ -419,7 +419,7 @@ namespace Paclink
                 string strBuffer = "";
                 for (int intIndex = 0, loopTo = bytCommand.Length - 1; intIndex <= loopTo; intIndex++)
                     strBuffer = strBuffer + "00" + (bytCommand[intIndex]).ToString("X").Right(2);
-                Globals.objSCSClient.SendRadioCommand("#TRX T " + strBuffer); // Use the Transfer capability of the TRX commands
+                Globals.ObjScsModem.SendRadioCommand("#TRX T " + strBuffer); // Use the Transfer capability of the TRX commands
                 Thread.Sleep(100);   // W4PHS
             }
             else
@@ -442,7 +442,7 @@ namespace Paclink
                     string strBuffer = "";
                     for (int intIndex = 0, loopTo = strCommand.Length - 1; intIndex <= loopTo; intIndex++)
                         strBuffer = strBuffer + ("00" + Globals.Asc(strCommand.Substring(intIndex, 1)[0]).ToString("X")).Right(2);
-                    Globals.objSCSClient.SendRadioCommand("#TRX T " + strBuffer); // Use the Transfer capability of the TRX commands
+                    Globals.ObjScsModem.SendRadioCommand("#TRX T " + strBuffer); // Use the Transfer capability of the TRX commands
                     Thread.Sleep(100);   // W4PHS
                 }
                 else

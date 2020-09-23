@@ -270,10 +270,10 @@ namespace Paclink
                 Thread.Sleep(100);
                 if (Globals.blnProgramClosing)
                     break;
-                if (Globals.objSelectedClient != null)
+                if (Globals.ObjSelectedModem != null)
                 {
-                    if (Globals.objSelectedClient != null)
-                        Globals.objSelectedClient.Poll();
+                    if (Globals.ObjSelectedModem != null)
+                        Globals.ObjSelectedModem.Poll();
                     if (!string.IsNullOrEmpty(Globals.strConnectedGridSquare) & Globals.blnEnableRadar)
                     {
                         if (thrBearing == null)
@@ -289,13 +289,13 @@ namespace Paclink
                 {
                     try
                     {
-                        if (Globals.objSelectedClient == null)
+                        if (Globals.ObjSelectedModem == null)
                         {
                             Globals.blnStartingChannel = false;
                         }
                         else
                         {
-                            if (Globals.objSelectedClient.State == ELinkStates.LinkFailed | Globals.objSelectedClient.State == ELinkStates.Disconnected)
+                            if (Globals.ObjSelectedModem.State == LinkStates.LinkFailed | Globals.ObjSelectedModem.State == LinkStates.Disconnected)
                             {
                                 if (Globals.blnAutoForwarding & Globals.blnFQSeen)
                                 {
@@ -306,9 +306,9 @@ namespace Paclink
 
                                 Globals.blnStartingChannel = false;
                                 Globals.blnEndBearingDisplay = true;
-                                if (Globals.objSelectedClient.Close())
+                                if (Globals.ObjSelectedModem.Close())
                                 {
-                                    // objSelectedClient = Nothing
+                                    // ObjSelectedModem = Nothing
                                     if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
                                     {
                                         if (Globals.stcSelectedChannel.EnableAutoforward == false)
@@ -351,10 +351,10 @@ namespace Paclink
                             // Force a disconnect if the channel has been held too long...
                             if (Globals.stcSelectedChannel.StartTimestamp < DateTime.Now)
                             {
-                                if (Globals.objSelectedClient != null)
+                                if (Globals.ObjSelectedModem != null)
                                 {
-                                    Globals.objSelectedClient.Abort();
-                                    Globals.objSelectedClient = null;
+                                    Globals.ObjSelectedModem.Abort();
+                                    Globals.ObjSelectedModem = null;
                                 }
                                 else
                                 {
@@ -514,7 +514,7 @@ namespace Paclink
                 {
                     case EChannelModes.PacketAGW:
                         {
-                            Globals.objSelectedClient = new ClientAGW();
+                            Globals.ObjSelectedModem = new ModemAgw();
                             Globals.stcSelectedChannel.StartTimestamp = DateTime.Now.AddMinutes(60);
                             break;
                         }
@@ -533,7 +533,7 @@ namespace Paclink
                                 case "KAMXL":
                                 case "KAM98":
                                     {
-                                        Globals.objSelectedClient = new ClientKantronics();
+                                        Globals.ObjSelectedModem = new ModemKantronics();
                                         Globals.stcSelectedChannel.StartTimestamp = DateTime.Now.AddMinutes(60);
                                         break;
                                     }
@@ -544,7 +544,7 @@ namespace Paclink
                                 case "TNC2/W8DEDhost":
                                 case "PK-900":
                                     {
-                                        Globals.objSelectedClient = new ClientTimewave();
+                                        Globals.ObjSelectedModem = new ModemTimewave();
                                         Globals.stcSelectedChannel.StartTimestamp = DateTime.Now.AddMinutes(60);
                                         break;
                                     }
@@ -556,7 +556,7 @@ namespace Paclink
                                 case "PTC IIusb":
                                 case "PTC DR-7800":
                                     {
-                                        Globals.objSelectedClient = new ClientSCS();
+                                        Globals.ObjSelectedModem = new ModemScs();
                                         Globals.stcSelectedChannel.StartTimestamp = DateTime.Now.AddMinutes(60);
                                         break;
                                     }
@@ -569,7 +569,7 @@ namespace Paclink
                                 case "TH-D7 int":
                                 case "Generic KISS":
                                     {
-                                        Globals.objSelectedClient = new ClientNativeKISS();
+                                        Globals.ObjSelectedModem = new ModemNativeKiss();
                                         Globals.stcSelectedChannel.StartTimestamp = DateTime.Now.AddMinutes(60);
                                         break;
                                     }
@@ -580,7 +580,7 @@ namespace Paclink
 
                     case EChannelModes.Telnet:
                         {
-                            Globals.objSelectedClient = new ClientTelnet(ref Globals.stcSelectedChannel);
+                            Globals.ObjSelectedModem = new ModemTelnet(ref Globals.stcSelectedChannel);
                             Globals.stcSelectedChannel.StartTimestamp = DateTime.Now.AddMinutes(20);
                             break;
                         }
@@ -594,7 +594,7 @@ namespace Paclink
                                 case "KAMXL":
                                 case "KAM98":
                                     {
-                                        Globals.objSelectedClient = new ClientKantronics();
+                                        Globals.ObjSelectedModem = new ModemKantronics();
                                         Globals.stcSelectedChannel.StartTimestamp = DateTime.Now.AddMinutes(120);
                                         break;
                                     }
@@ -606,7 +606,7 @@ namespace Paclink
                                 case "PTC IIusb":
                                 case "PTC DR-7800":
                                     {
-                                        Globals.objSelectedClient = new ClientSCS();
+                                        Globals.ObjSelectedModem = new ModemScs();
                                         Globals.stcSelectedChannel.StartTimestamp = DateTime.Now.AddMinutes(120);
                                         break;
                                     }
@@ -614,7 +614,7 @@ namespace Paclink
                                 case "DSP-232":
                                 case "PK-232": // , "PK-900"
                                     {
-                                        Globals.objSelectedClient = new ClientTimewave();
+                                        Globals.ObjSelectedModem = new ModemTimewave();
                                         Globals.stcSelectedChannel.StartTimestamp = DateTime.Now.AddMinutes(120);
                                         break;
                                     }
@@ -627,7 +627,7 @@ namespace Paclink
                         {
                             break;
                         }
-                        // objSelectedClient = New ClientWINMOR
+                        // ObjSelectedModem = New ClientWINMOR
                         // stcSelectedChannel.StartTimestamp = Now.AddMinutes(120)
                 }
             }
@@ -640,7 +640,7 @@ namespace Paclink
             try
             {
                 Globals.blnStartingChannel = true;
-                if (Globals.objSelectedClient != null)
+                if (Globals.ObjSelectedModem != null)
                 {
                     var switchExpr3 = Globals.stcSelectedChannel.ChannelType;
                     switch (switchExpr3)
@@ -671,10 +671,10 @@ namespace Paclink
                             }
                     }
 
-                    if (!Globals.objSelectedClient.Connect(blnAutomatic))
+                    if (!Globals.ObjSelectedModem.Connect(blnAutomatic))
                     {
-                        Globals.objSelectedClient?.Close();
-                        Globals.objSelectedClient = null;
+                        Globals.ObjSelectedModem?.Close();
+                        Globals.ObjSelectedModem = null;
                     }
                 }
             }
@@ -682,7 +682,7 @@ namespace Paclink
             {
                 try
                 {
-                    _log.Error("[StartChannel] Mode: " + Globals.stcSelectedChannel.ChannelType.ToString() + " TNC: " + Globals.stcSelectedChannel.TNCType + " State: " + Globals.objSelectedClient.State);
+                    _log.Error("[StartChannel] Mode: " + Globals.stcSelectedChannel.ChannelType.ToString() + " TNC: " + Globals.stcSelectedChannel.TNCType + " State: " + Globals.ObjSelectedModem.State);
                     _log.Error("[StartChannel] " + ex.Message);
                 }
                 catch

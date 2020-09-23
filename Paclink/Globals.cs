@@ -119,8 +119,8 @@ namespace Paclink
         public static POP3Port objPOP3Port;
         public static PrimaryThread objPrimaryThread;
         public static IRadio objRadioControl;
-        public static IClient objSCSClient;
-        public static IClient objSelectedClient;
+        public static IModem ObjScsModem;
+        public static IModem ObjSelectedModem;
         public static SMTPPort objSMTPPort;
         public static Terminal objTerminal;
         public static DateTime objUpTime = DateTime.UtcNow;

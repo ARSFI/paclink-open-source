@@ -14,11 +14,11 @@ using NLog;
 
 namespace Paclink
 {
-    public class ClientAGW : IClient
+    public class ModemAgw : IModem
     {
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
-        public ClientAGW()
+        public ModemAgw()
         {
             Globals.blnChannelActive = true;
         } // New
@@ -80,14 +80,14 @@ namespace Paclink
         }
 
         // Enums and Structures
-        private ELinkStates enmState = ELinkStates.Undefined;
-        private EConnection enmConnectionStatus;
+        private LinkStates enmState = LinkStates.Undefined;
+        private ConnectionOrigin enmConnectionStatus;
 
         // Queues
         private Queue quePortInput = Queue.Synchronized(new Queue());
         /* TODO ERROR: Skipped EndRegionDirectiveTrivia */
         /* TODO ERROR: Skipped RegionDirectiveTrivia */
-        public ELinkStates State
+        public LinkStates State
         {
             get
             {
@@ -193,7 +193,7 @@ namespace Paclink
                     {
                         Globals.queChannelDisplay.Enqueue("R*** " + Globals.stcSelectedChannel.AGWScriptTimeout.ToString() + " second connection timeout at " + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm UTC"));
                         DirtyDisconnect();
-                        enmState = ELinkStates.LinkFailed;
+                        enmState = LinkStates.LinkFailed;
                     }
 
                     ConnectedCall.ActivityTimer += 1;
@@ -201,14 +201,14 @@ namespace Paclink
                     {
                         Globals.queChannelDisplay.Enqueue("R*** " + Globals.stcSelectedChannel.AGWTimeout.ToString() + " minute activity timeout at " + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm UTC"));
                         DirtyDisconnect();
-                        enmState = ELinkStates.LinkFailed;
+                        enmState = LinkStates.LinkFailed;
                     }
 
                     if (intScriptTimer > Globals.stcSelectedChannel.AGWScriptTimeout)
                     {
                         Globals.queChannelDisplay.Enqueue("GConnect Script Timeout at " + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm UTC") + " # ... Disconnecting");
                         DirtyDisconnect();
-                        enmState = ELinkStates.LinkFailed;
+                        enmState = LinkStates.LinkFailed;
                     }
 
                     if (blnDisconnectPending & DateTime.Now.Subtract(dttStartDisconnect).TotalSeconds > 30)
@@ -220,7 +220,7 @@ namespace Paclink
                 }
                 catch (Exception e)
                 {
-                    _log.Error("[ClientAGW.Poll] " + e.Message);
+                    _log.Error("[ModemAgw.Poll] " + e.Message);
                 }
             }
         }
@@ -264,14 +264,14 @@ namespace Paclink
 
         public void Abort()
         {
-            if (enmState != ELinkStates.Connected)
+            if (enmState != LinkStates.Connected)
             {
                 DirtyDisconnect();
                 return;
             }
 
             Disconnect();
-            enmState = ELinkStates.LinkFailed;
+            enmState = LinkStates.LinkFailed;
         } // Abort *
 
         private bool Initialize()
@@ -346,7 +346,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                _log.Error("[ClientAGW.Initialize] " + e.Message);
+                _log.Error("[ModemAgw.Initialize] " + e.Message);
                 return false;
             }
         }  // Initialize
@@ -410,7 +410,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                _log.Error("[ClientAGW.DataToSend] " + e.Message);
+                _log.Error("[ModemAgw.DataToSend] " + e.Message);
             }
         } // DataToSend
 
@@ -422,14 +422,14 @@ namespace Paclink
                 var bytTemp = new byte[36];
                 if (!blnLoggedIn | string.IsNullOrEmpty(ConnectedCall.Callsign))
                 {
-                    enmState = ELinkStates.LinkFailed;
+                    enmState = LinkStates.LinkFailed;
                     return;
                 }
 
                 if (!blnNormalDisconnect | intConnectScriptPtr != -1)
                 {
                     DirtyDisconnect(); // use a dirty disconnect if partway through a script or Disconnect is pending
-                    enmState = ELinkStates.LinkFailed;
+                    enmState = LinkStates.LinkFailed;
                 }
                 else // normal disconnect
                 {
@@ -449,7 +449,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                _log.Error("[ClientAGW.NormalDisconnect] " + e.Message);
+                _log.Error("[ModemAgw.NormalDisconnect] " + e.Message);
             }
         } // NormalDisconnect
 
@@ -617,7 +617,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                _log.Error("[ClientAGW.DirtyDisconnect] " + e.Message);
+                _log.Error("[ModemAgw.DirtyDisconnect] " + e.Message);
                 return false;
             }
         }  // DirtyDisconnect
@@ -635,7 +635,7 @@ namespace Paclink
             if (blnClosing)
                 return true; // Too keep from reentrancy
             blnClosing = true;
-            if (!(enmState == ELinkStates.Disconnected | enmState == ELinkStates.LinkFailed))
+            if (!(enmState == LinkStates.Disconnected | enmState == LinkStates.LinkFailed))
             {
                 DirtyDisconnect();
             }
@@ -655,7 +655,7 @@ namespace Paclink
             Globals.queStatusDisplay.Enqueue("Idle");
             Globals.queRateDisplay.Enqueue("------");
             Globals.blnChannelActive = false;
-            Globals.objSelectedClient = null;
+            Globals.ObjSelectedModem = null;
             return CloseRet;
         } // Close
 
@@ -744,7 +744,7 @@ namespace Paclink
             } // Wait an additional 10 sec for AGW to stabilize on some slow machines
         }   // PacketEngineRun
 
-        ~ClientAGW()
+        ~ModemAgw()
         {
         }
 
@@ -822,7 +822,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                _log.Error("[ClientAGW.objTCPPort_OnReadyToSend] " + e.Message);
+                _log.Error("[ModemAgw.objTCPPort_OnReadyToSend] " + e.Message);
             }
         }
 
@@ -871,12 +871,12 @@ namespace Paclink
                     Globals.queChannelDisplay.Enqueue("R*** Connecting to " + strTarget);
                     intConnectTimer = 0;
                     objTCPPort.GetStream().Write(bytTemp, 0, bytTemp.Length);
-                    enmState = ELinkStates.Connecting;
+                    enmState = LinkStates.Connecting;
                     return true;
                 }
                 catch (Exception e)
                 {
-                    _log.Error("[ClientAGW.Connect] " + e.Message);
+                    _log.Error("[ModemAgw.Connect] " + e.Message);
                     return false;
                 }
             }
@@ -884,8 +884,8 @@ namespace Paclink
             {
                 Globals.queChannelDisplay.Enqueue("R*** Script Error - connection ended");
                 Globals.blnChannelActive = false;
-                enmState = ELinkStates.LinkFailed;
-                Globals.objSelectedClient = null;
+                enmState = LinkStates.LinkFailed;
+                Globals.ObjSelectedModem = null;
                 return false;
             }
         }
@@ -981,7 +981,7 @@ namespace Paclink
                             Globals.queChannelDisplay.Enqueue("R*** " + Text + " at " + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss UTC"));
                         }
                         // queChannelStatus.Enqueue("Connected")
-                        enmState = ELinkStates.Connected;
+                        enmState = LinkStates.Connected;
                         objProtocol = new ProtocolInitial(this, ref Globals.stcSelectedChannel);
                         return true;  // Script Ptr should always be even
                     }
@@ -1011,7 +1011,7 @@ namespace Paclink
                             {
                                 Globals.queChannelDisplay.Enqueue("G     #Script(" + (intConnectScriptPtr + 2).ToString() + "): " + ConnectScript[intConnectScriptPtr + 1]);
                                 Globals.queChannelDisplay.Enqueue("G #End Script");
-                                enmState = ELinkStates.Connected;
+                                enmState = LinkStates.Connected;
                                 intConnectScriptPtr = -1; // Terminate the scripting
                                 objProtocol = new ProtocolInitial(this, ref Globals.stcSelectedChannel);
                                 SequenceScriptRet = true;
@@ -1020,7 +1020,7 @@ namespace Paclink
                         else // Must be an odd number of scrip lines 
                         {
                             Globals.queChannelDisplay.Enqueue("G #Script terminated (end of script file): " + Text);
-                            enmState = ELinkStates.Connected;
+                            enmState = LinkStates.Connected;
                             intConnectScriptPtr = -1; // Terminate the scripting
                             objProtocol = new ProtocolInitial(this, ref Globals.stcSelectedChannel);
                             SequenceScriptRet = true;
@@ -1050,7 +1050,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    _log.Error("[ClientAGW.SequenceScript] " + ex.Message);
+                    _log.Error("[ModemAgw.SequenceScript] " + ex.Message);
                 }
             }
 
@@ -1232,11 +1232,11 @@ namespace Paclink
                             Globals.queChannelDisplay.Enqueue("P*** DISCONNECTED from " + strCallFrom);
                             if (blnNormalDisconnect)
                             {
-                                enmState = ELinkStates.Disconnected;
+                                enmState = LinkStates.Disconnected;
                             }
                             else
                             {
-                                enmState = ELinkStates.LinkFailed;
+                                enmState = LinkStates.LinkFailed;
                             }
 
                             break;
@@ -1263,7 +1263,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                _log.Error("[ClientAGW.ProcessReceivedFrame] Frame Type:" + strFrameType + " / " + ex.Message);
+                _log.Error("[ModemAgw.ProcessReceivedFrame] Frame Type:" + strFrameType + " / " + ex.Message);
             }
         } // ProcessReceivedFrame 
     }

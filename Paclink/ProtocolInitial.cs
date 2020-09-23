@@ -21,7 +21,7 @@ namespace Paclink
             Disconnected   // State while disconnected
         } // EProtocolStates
 
-        public IClient objClient;
+        public IModem ObjModem;
         private TChannelProperties stcChannel;
         private ProtocolB2 objB2Protocol;
         private EProtocolStates ProtocolState;  // The protocol state variable
@@ -34,9 +34,9 @@ namespace Paclink
         private bool blnSecureLogin = false; // Flag used to indicate secure login expected
         private string strChallengePhrase = ""; // Challenge phrase as received by ;PQ: command
 
-        public ProtocolInitial(IClient Parent, ref TChannelProperties strNewChannel)
+        public ProtocolInitial(IModem Parent, ref TChannelProperties strNewChannel)
         {
-            objClient = Parent;
+            ObjModem = Parent;
             stcChannel = strNewChannel;
             Globals.strConnectedCallsign = strNewChannel.RemoteCallsign; // Set the global callsign for use by Radar
             Globals.strConnectedGridSquare = ""; // and clear the connected Grid square
@@ -121,20 +121,20 @@ namespace Paclink
             }
         } // SSIDTag
 
-        public void LinkStateChange(EConnection enmLink)
+        public void LinkStateChange(ConnectionOrigin enmLink)
         {
             // Receives link state changes from the channel client...
 
             switch (enmLink)
             {
-                case EConnection.Disconnected:
+                case ConnectionOrigin.Disconnected:
                     {
                         Globals.strConnectedGridSquare = ""; // clear the connected Grid square
                         ProtocolStateChange(EProtocolStates.Disconnected);
                         break;
                     }
 
-                case EConnection.OutboundConnection:
+                case ConnectionOrigin.OutboundConnection:
                     {
                         ProtocolStateChange(EProtocolStates.Connected);
                         break;
@@ -182,11 +182,11 @@ namespace Paclink
             Globals.queChannelDisplay.Enqueue("B" + strText);
             if (blnCR)
             {
-                objClient.DataToSend(strText + Globals.CR);
+                ObjModem.DataToSend(strText + Globals.CR);
             }
             else
             {
-                objClient.DataToSend(strText);
+                ObjModem.DataToSend(strText);
             }
         } // Send
 
@@ -361,7 +361,7 @@ namespace Paclink
 
         private void OnDisconnectTimer(object source, ElapsedEventArgs e)
         {
-            objClient.Disconnect();
+            ObjModem.Disconnect();
             tmrDisconnect.Dispose();
             tmrDisconnect = null;
         } // OnDisconnectTimer

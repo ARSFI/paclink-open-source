@@ -93,15 +93,15 @@ namespace Paclink
                 blnViaPTC = true;
                 if (Channel.TNCType == "PTC II")
                 {
-                    Globals.objSCSClient.SendRadioCommand("#TRX TY Y " + Channel.RDOControlBaud + " A");
+                    Globals.ObjScsModem.SendRadioCommand("#TRX TY Y " + Channel.RDOControlBaud + " A");
                 }
                 else if (Channel.TTLLevel)
                 {
-                    Globals.objSCSClient.SendRadioCommand("#TRX TY Y " + Channel.RDOControlBaud + " A TTL");
+                    Globals.ObjScsModem.SendRadioCommand("#TRX TY Y " + Channel.RDOControlBaud + " A TTL");
                 }
                 else
                 {
-                    Globals.objSCSClient.SendRadioCommand("#TRX TY Y " + Channel.RDOControlBaud + " A V24");
+                    Globals.ObjScsModem.SendRadioCommand("#TRX TY Y " + Channel.RDOControlBaud + " A V24");
                 }
 
                 Thread.Sleep(100);
@@ -544,7 +544,7 @@ namespace Paclink
                 string strBuffer = "";
                 for (int intIndex = 0, loopTo = bytCommand.Length - 1; intIndex <= loopTo; intIndex++)
                     strBuffer = strBuffer + "00" + bytCommand[intIndex].ToString("X").Right(2);
-                Globals.objSCSClient.SendRadioCommand("#TRX T " + strBuffer); // Use the Transfer capability of the TRX commands
+                Globals.ObjScsModem.SendRadioCommand("#TRX T " + strBuffer); // Use the Transfer capability of the TRX commands
             }
             else
             {
@@ -568,7 +568,7 @@ namespace Paclink
                     string strTemp = "";
                     for (int intIndex = 0, loopTo = strCommand.Length - 1; intIndex <= loopTo; intIndex++)
                         strTemp = strTemp + ("00" + Globals.Asc(strCommand.Substring(intIndex, 1)[0]).ToString("X")).Right(2);
-                    Globals.objSCSClient.SendRadioCommand("#TRX T " + strTemp); // Use the Transfer capability of the TRX commands
+                    Globals.ObjScsModem.SendRadioCommand("#TRX T " + strTemp); // Use the Transfer capability of the TRX commands
                 }
                 else
                 {

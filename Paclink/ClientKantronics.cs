@@ -12,11 +12,11 @@ namespace Paclink
 {
 
     // This class handles all Kantronics TNCs for both Packet and Pactor connections...
-    public class ClientKantronics : IClient
+    public class ModemKantronics : IModem
     {
         private readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        public ClientKantronics()
+        public ModemKantronics()
         {
             this.RetryConnect += ClientKantronics_RetryConnect;
             // The class is instantiated to begin a channel connection...
@@ -29,7 +29,7 @@ namespace Paclink
         } // New
 
         // Enumerations
-        private ELinkStates enmState = ELinkStates.Undefined;
+        private LinkStates enmState = LinkStates.Undefined;
 
         // Date/Time
         private DateTime dttLastActivity;
@@ -54,7 +54,7 @@ namespace Paclink
 
         private delegate void RetryConnectEventHandler();
 
-        public ELinkStates State
+        public LinkStates State
         {
             get
             {
@@ -86,7 +86,7 @@ namespace Paclink
             {
                 objHostPort.LinkCommand('X');
                 Thread.Sleep(5000);
-                enmState = ELinkStates.Disconnected;
+                enmState = LinkStates.Disconnected;
             }
 
             if (blnClosed)
@@ -112,7 +112,7 @@ namespace Paclink
             }
 
             dttTimeout = DateTime.Now;
-            while (enmState != ELinkStates.Disconnected)
+            while (enmState != LinkStates.Disconnected)
             {
                 if (dttTimeout.AddSeconds(60) < DateTime.Now)
                     break;
@@ -125,7 +125,7 @@ namespace Paclink
             Globals.queStatusDisplay.Enqueue("Idle");
             Globals.queRateDisplay.Enqueue("------");
             Globals.blnChannelActive = false;
-            Globals.objSelectedClient = null;
+            Globals.ObjSelectedModem = null;
             return true;
         } // Close 
 
@@ -134,7 +134,7 @@ namespace Paclink
             // Forcably aborts a connection in progress...
             // This is used for any abnormal disconnect
 
-            if (enmState != ELinkStates.Connected)
+            if (enmState != LinkStates.Connected)
             {
                 Close();
                 return;
@@ -177,7 +177,7 @@ namespace Paclink
                 if (string.IsNullOrEmpty(objHostPort.WaitOnHostCommandResponse("MYCALL")))
                 {
                     Globals.queChannelDisplay.Enqueue("R*** Configuration of the TNC failed");
-                    enmState = ELinkStates.Disconnected;
+                    enmState = LinkStates.Disconnected;
                     return false;
                 }
             }
@@ -187,12 +187,12 @@ namespace Paclink
                 if (string.IsNullOrEmpty(objHostPort.WaitOnHostCommandResponse("MYPTCALL")))
                 {
                     Globals.queChannelDisplay.Enqueue("R*** Configuration of the TNC failed");
-                    enmState = ELinkStates.Disconnected;
+                    enmState = LinkStates.Disconnected;
                     return false;
                 }
             }
 
-            enmState = ELinkStates.Initialized;
+            enmState = LinkStates.Initialized;
             if (Globals.stcSelectedChannel.RDOControl == "Serial") // now will handle both Packet and Pactor
             {
                 if (Globals.objRadioControl != null)
@@ -275,7 +275,7 @@ namespace Paclink
                     Globals.dlgPactorConnect.ShowDialog();
                     if (Globals.dlgPactorConnect.DialogResult == DialogResult.Cancel)
                     {
-                        enmState = ELinkStates.Disconnected;
+                        enmState = LinkStates.Disconnected;
                         Globals.dlgPactorConnect.Close();
                         Globals.dlgPactorConnect = null;
                         Close();
@@ -342,7 +342,7 @@ namespace Paclink
         {
             objHostPort.HostCommand("D");
             objHostPort.WaitOnHostCommandResponse("D");
-            enmState = ELinkStates.Disconnected;
+            enmState = LinkStates.Disconnected;
         } // Disconnect 
 
         public void Poll()
@@ -364,20 +364,20 @@ namespace Paclink
                     {
                         if (strStatusReport.IndexOf("*** CONNECTED") != -1)
                         {
-                            enmState = ELinkStates.Connected;
+                            enmState = LinkStates.Connected;
                             objProtocol = new ProtocolInitial(this, ref Globals.stcSelectedChannel);
                         }
 
                         if (strStatusReport.IndexOf("*** DISCONNECTED") != -1)
                         {
-                            enmState = ELinkStates.Disconnected;
+                            enmState = LinkStates.Disconnected;
                         }
                     }
                     else if (Globals.stcSelectedChannel.ChannelType == EChannelModes.PactorTNC)
                     {
                         if (strStatusReport.IndexOf("LINKED TO") != -1)
                         {
-                            enmState = ELinkStates.Connected;
+                            enmState = LinkStates.Connected;
                             objProtocol = new ProtocolInitial(this, ref Globals.stcSelectedChannel);
                         }
 
@@ -386,7 +386,7 @@ namespace Paclink
                             if (blnSendingID)
                             {
                                 blnSendingID = false;
-                                enmState = ELinkStates.Disconnected;
+                                enmState = LinkStates.Disconnected;
                                 return;
                             }
                             else
@@ -607,7 +607,7 @@ namespace Paclink
             }
             else
             {
-                enmState = ELinkStates.Disconnected;
+                enmState = LinkStates.Disconnected;
             }
         } // SendIdentification
 
@@ -638,7 +638,7 @@ namespace Paclink
         private object objPollOutgoingLock = new object();
 
         // Enumerations
-        private ELinkDirection enmLinkDirection;
+        private LinkDirection enmLinkDirection;
 
         // Queues
         public Queue DataBlocksReceived = Queue.Synchronized(new Queue());
@@ -904,7 +904,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("[ClientKantronics.OpenSerialPortHostMode B] " + ex.Message);
+                    Log.Error("[ModemKantronics.OpenSerialPortHostMode B] " + ex.Message);
                     return false;
                 }
 
@@ -942,7 +942,7 @@ namespace Paclink
             // Posts a single character Pactor link command...
 
             if (chrCommand == 'T')
-                enmLinkDirection = ELinkDirection.Sending;
+                enmLinkDirection = LinkDirection.Sending;
             queLinkCommand.Enqueue(chrCommand);
             PollOutgoing();
         } // LinkCommand
@@ -1030,7 +1030,7 @@ namespace Paclink
 
         public void SendingFECMode()
         {
-            enmLinkDirection = ELinkDirection.Sending;
+            enmLinkDirection = LinkDirection.Sending;
         }
 
         public string WaitOnHostCommandResponse(string strMatch, int intTimeoutSeconds = 2)
@@ -1414,7 +1414,7 @@ namespace Paclink
                                 intAvailableBufferOut -= strCommandToSend.Length + 5;
                                 strCommandToSend = "";
                             }
-                            else if (enmLinkDirection == ELinkDirection.Sending | stcChannel.ChannelType != EChannelModes.PactorTNC)
+                            else if (enmLinkDirection == LinkDirection.Sending | stcChannel.ChannelType != EChannelModes.PactorTNC)
                             {
                                 while (queDataBlockOut.Count > 0 & intAvailableBufferOut > 128)
                                 {
@@ -1453,12 +1453,12 @@ namespace Paclink
           // Process the status report from the TNC...
         private void ProcessStatusReports(string strStatus)
         {
-            if (enmLinkDirection == ELinkDirection.Receiving)
+            if (enmLinkDirection == LinkDirection.Receiving)
             {
                 blnSending = false;
                 Globals.queStateDisplay.Enqueue("Pactor Receiving  " + Globals.ProgressBarStatus());
             }
-            else if (enmLinkDirection == ELinkDirection.Sending)
+            else if (enmLinkDirection == LinkDirection.Sending)
             {
                 blnSending = true;
                 Globals.queStateDisplay.Enqueue("Pactor Sending " + Globals.ProgressBarStatus());
@@ -1473,7 +1473,7 @@ namespace Paclink
                     Globals.queStateDisplay.Enqueue(strReport + "  " + Globals.ProgressBarStatus());
                     if (strReport.IndexOf("DISCONNECTED") != -1)
                     {
-                        enmLinkDirection = ELinkDirection.Disconnected;
+                        enmLinkDirection = LinkDirection.Disconnected;
                         Globals.queStateDisplay.Enqueue("");
                     }
                 }
@@ -1509,14 +1509,14 @@ namespace Paclink
             {
                 case 0x30:
                     {
-                        enmLinkDirection = ELinkDirection.Receiving;
+                        enmLinkDirection = LinkDirection.Receiving;
                         Globals.queStateDisplay.Enqueue("Pactor Receiving  " + Globals.ProgressBarStatus());
                         break;
                     }
 
                 case 0x31:
                     {
-                        enmLinkDirection = ELinkDirection.Sending;
+                        enmLinkDirection = LinkDirection.Sending;
                         Globals.queStateDisplay.Enqueue("Pactor Sending");
                         break;
                     }

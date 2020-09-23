@@ -92,15 +92,15 @@ namespace Paclink
                 blnViaPTC = true;
                 if (stcChannel.TNCType == "PTC II")
                 {
-                    Globals.objSCSClient.SendRadioCommand("#TRX TY K " + stcChannel.RDOControlBaud + " A");
+                    Globals.ObjScsModem.SendRadioCommand("#TRX TY K " + stcChannel.RDOControlBaud + " A");
                 }
                 else if (stcChannel.TTLLevel)
                 {
-                    Globals.objSCSClient.SendRadioCommand("#TRX TY K " + stcChannel.RDOControlBaud + " A TTL");
+                    Globals.ObjScsModem.SendRadioCommand("#TRX TY K " + stcChannel.RDOControlBaud + " A TTL");
                 }
                 else
                 {
-                    Globals.objSCSClient.SendRadioCommand("#TRX TY K " + stcChannel.RDOControlBaud + " A V24");
+                    Globals.ObjScsModem.SendRadioCommand("#TRX TY K " + stcChannel.RDOControlBaud + " A V24");
                 }
 
                 Thread.Sleep(200);
@@ -395,7 +395,7 @@ namespace Paclink
             {
                 if (blnViaPTC)
                 {
-                    Globals.objSCSClient.SendRadioCommand("#TRX T " + strCommand); // Use the Transfer capability of the TRX commands
+                    Globals.ObjScsModem.SendRadioCommand("#TRX T " + strCommand); // Use the Transfer capability of the TRX commands
                     strTrace = strTrace + "#TRX T " + strCommand;
                 }
                 else

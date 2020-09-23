@@ -1,7 +1,6 @@
 ﻿namespace TNC.Middleware
 {
-    //TODO: Rename to LinkStates
-    public enum ELinkStates
+    public enum LinkStates
     {
         Undefined,
         Initialized,

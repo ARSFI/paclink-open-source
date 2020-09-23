@@ -10,12 +10,12 @@ using TNCKissInterface;
 
 namespace Paclink
 {
-    public class ClientNativeKISS : IClient
+    public class ModemNativeKiss : IModem
     {
         private readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         // Enumerations
-        private ELinkStates enmState = ELinkStates.Undefined;
+        private LinkStates enmState = LinkStates.Undefined;
 
         // Date/Time
         private DateTime dttLastActivity;
@@ -103,7 +103,7 @@ namespace Paclink
 
         // Events
 
-        public ELinkStates State
+        public LinkStates State
         {
             get
             {
@@ -125,7 +125,7 @@ namespace Paclink
             }
         } // NormalDisconnect
 
-        public ClientNativeKISS()
+        public ModemNativeKiss()
         {
             // The class is instantiated to begin a channel connection...
             dttLastActivity = DateTime.Now;
@@ -148,7 +148,7 @@ namespace Paclink
                     objSerial.Dispose();
                 }
 
-                Globals.objSelectedClient = null;
+                Globals.ObjSelectedModem = null;
             }
         } // New
 
@@ -322,14 +322,14 @@ namespace Paclink
                         }
                         catch (Exception ex)
                         {
-                            Log.Error("[ClientNativeKISS.Open] " + strLine + Globals.CR + ex.Message);
+                            Log.Error("[ModemNativeKiss.Open] " + strLine + Globals.CR + ex.Message);
                         }
                     }
                     while (true);
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("[ClientNativeKISS.Open] " + ex.Message);
+                    Log.Error("[ModemNativeKiss.Open] " + ex.Message);
                 }
             }
 
@@ -367,7 +367,7 @@ namespace Paclink
                 if (objSerial.IsOpen == false)
                 {
                     Globals.queChannelDisplay.Enqueue("R*** Failed to open serial port on " + Globals.stcSelectedChannel.TNCSerialPort + ". Port may be in use by another application.");
-                    Log.Error("[ClientNativeKISS.Open] Failed to open serial port on " + Globals.stcSelectedChannel.TNCSerialPort);
+                    Log.Error("[ModemNativeKiss.Open] Failed to open serial port on " + Globals.stcSelectedChannel.TNCSerialPort);
                     return false;
                 }
                 else
@@ -377,7 +377,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Log.Error("[ClientNativeKISS.Open] " + ex.Message);
+                Log.Error("[ModemNativeKiss.Open] " + ex.Message);
                 return false;
             }
 
@@ -393,7 +393,7 @@ namespace Paclink
             if (OpenRet == false)
             {
                 Log.Error("[ClientNativeKiss.Open] Failed to Initialize KISS TNC");
-                enmState = ELinkStates.LinkFailed;
+                enmState = LinkStates.LinkFailed;
                 return false;
             }
             else
@@ -418,7 +418,7 @@ namespace Paclink
                     objKissChannel.SetSlotTime(intSlottime);
                     objKissChannel.SetTXDelay(intTXDelay);
                     objKissChannel.SetTXFullDuplex(Convert.ToInt32(blnFullDuplex));
-                    enmState = ELinkStates.Initialized;
+                    enmState = LinkStates.Initialized;
                 }
                 catch (Exception ex)
                 {
@@ -523,7 +523,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Log.Error("[ClientNativeKISS.InitializeKISSTnc] " + ex.Message);
+                Log.Error("[ModemNativeKiss.InitializeKISSTnc] " + ex.Message);
                 return false;
             }
         }
@@ -538,7 +538,7 @@ namespace Paclink
             {
                 if (Globals.blnManualAbort == true)
                 {
-                    enmState = ELinkStates.Disconnected;
+                    enmState = LinkStates.Disconnected;
                 }
 
                 blnClosed = true;
@@ -554,7 +554,7 @@ namespace Paclink
                     objProtocol.CloseProtocol();
                 var dttTimeout = DateTime.Now;
                 dttTimeout = DateTime.Now;
-                while (!(enmState == ELinkStates.Disconnected | enmState == ELinkStates.LinkFailed))
+                while (!(enmState == LinkStates.Disconnected | enmState == LinkStates.LinkFailed))
                 {
                     if (dttTimeout.AddSeconds(10) < DateTime.Now)
                         break;
@@ -584,12 +584,12 @@ namespace Paclink
                 Globals.queStatusDisplay.Enqueue("Idle");
                 Globals.queRateDisplay.Enqueue("------");
                 Globals.blnChannelActive = false;
-                Globals.objSelectedClient = null;
+                Globals.ObjSelectedModem = null;
                 return true;
             }
             catch (Exception ex)
             {
-                Log.Error("[ClientNativeKISS.Close]: " + ex.ToString());
+                Log.Error("[ModemNativeKiss.Close]: " + ex.ToString());
             }
 
             return default;
@@ -610,10 +610,10 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Log.Error("[ClientNativeKISS.Abort] : " + ex.ToString());
+                Log.Error("[ModemNativeKiss.Abort] : " + ex.ToString());
             }
 
-            enmState = ELinkStates.LinkFailed;
+            enmState = LinkStates.LinkFailed;
             Close();
         } // Abort 
 
@@ -625,7 +625,7 @@ namespace Paclink
                 return false;
             string strVia = "";
             string strTarget = Globals.stcSelectedChannel.RemoteCallsign;
-            if (enmState != ELinkStates.Initialized)
+            if (enmState != LinkStates.Initialized)
                 return false;
             try
             {
@@ -654,7 +654,7 @@ namespace Paclink
                         if (!Globals.objRadioControl.InitializeSerialPort(ref Globals.stcSelectedChannel))
                         {
                             Globals.queChannelDisplay.Enqueue("R*** Failure initializing Radio Control");
-                            Log.Error("[ClientNativeKISS.Connect A] Failure initializing Radio Control");
+                            Log.Error("[ModemNativeKiss.Connect A] Failure initializing Radio Control");
                             return false;
                         }
                     }
@@ -676,7 +676,7 @@ namespace Paclink
                         Globals.stcSelectedChannel.RemoteCallsign = strTarget;
                         if (string.IsNullOrEmpty(strVia))
                         {
-                            enmState = ELinkStates.Connecting;
+                            enmState = LinkStates.Connecting;
                             objCon = objKissDLProvider.CreateConnection(objConParam);
                             objCon.ConnectNoWait(Globals.stcSelectedChannel.RemoteCallsign);
                         }
@@ -688,7 +688,7 @@ namespace Paclink
                             {
                                 case 1:
                                     {
-                                        enmState = ELinkStates.Connecting;
+                                        enmState = LinkStates.Connecting;
                                         objCon = objKissDLProvider.CreateConnection(objConParam);
                                         objCon.ConnectNoWait(Globals.stcSelectedChannel.RemoteCallsign, aryVias[0].Trim());
                                         break;
@@ -696,7 +696,7 @@ namespace Paclink
 
                                 case 2:
                                     {
-                                        enmState = ELinkStates.Connecting;
+                                        enmState = LinkStates.Connecting;
                                         objCon = objKissDLProvider.CreateConnection(objConParam);
                                         objCon.ConnectNoWait(Globals.stcSelectedChannel.RemoteCallsign, aryVias[0].Trim(), aryVias[1].Trim());
                                         break;
@@ -705,7 +705,7 @@ namespace Paclink
                                 default:
                                     {
                                         Globals.queChannelDisplay.Enqueue("R*** Script Error - Max of 2 vias using Native KISS!");
-                                        enmState = ELinkStates.LinkFailed;
+                                        enmState = LinkStates.LinkFailed;
                                         return false;
                                     }
                             }
@@ -716,7 +716,7 @@ namespace Paclink
                     else
                     {
                         Globals.queChannelDisplay.Enqueue("R*** Script Error - ending connection");
-                        enmState = ELinkStates.LinkFailed;
+                        enmState = LinkStates.LinkFailed;
                         return false;
                     }
                 }
@@ -729,15 +729,15 @@ namespace Paclink
                     // Start KISS connection here
                     objCon = objKissDLProvider.CreateConnection(objConParam);
                     objCon.ConnectNoWait(Globals.stcSelectedChannel.RemoteCallsign);
-                    enmState = ELinkStates.Connecting;
+                    enmState = LinkStates.Connecting;
                 }
 
                 return true;
             }
             catch (Exception ex)
             {
-                Log.Error("[ClientNativeKISS.Connect C] " + ex.Message);
-                enmState = ELinkStates.LinkFailed;
+                Log.Error("[ModemNativeKiss.Connect C] " + ex.Message);
+                enmState = LinkStates.LinkFailed;
                 return false;
             }
         } // Connect 
@@ -779,7 +779,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Log.Error("[ClientNativeKISS.DataToSend(Byte())]: " + ex.ToString());
+                Log.Error("[ModemNativeKiss.DataToSend(Byte())]: " + ex.ToString());
             }
         } // DataToSend (bytes) 
 
@@ -792,7 +792,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                Log.Error("[ClientNativeKISS.Disconnect] :  " + ex.ToString());
+                Log.Error("[ModemNativeKiss.Disconnect] :  " + ex.ToString());
             }
         } // Disconnect 
 
@@ -822,11 +822,11 @@ namespace Paclink
                     {
                         case Connection.ConnectionState.Connected:
                             {
-                                if (enmState != ELinkStates.Connected & objProtocol == null)
+                                if (enmState != LinkStates.Connected & objProtocol == null)
                                 {
                                     Globals.queChannelDisplay.Enqueue("P*** " + "CONNECTED");
                                     Globals.queRateDisplay.Enqueue(strBaudRate);
-                                    enmState = ELinkStates.Connected;
+                                    enmState = LinkStates.Connected;
                                     objProtocol = new ProtocolInitial(this, ref Globals.stcSelectedChannel);
                                 }
 
@@ -841,16 +841,16 @@ namespace Paclink
 
                         case Connection.ConnectionState.Disconnected:
                             {
-                                if (enmState == ELinkStates.Connecting)
+                                if (enmState == LinkStates.Connecting)
                                 {
                                     Globals.queChannelDisplay.Enqueue("P*** " + "DISCONNECTED");
                                     Globals.queChannelDisplay.Enqueue("R*** " + "Connect failure with " + Globals.stcSelectedChannel.RemoteCallsign);
-                                    enmState = ELinkStates.LinkFailed;
+                                    enmState = LinkStates.LinkFailed;
                                 }
-                                else if (!(enmState == ELinkStates.Disconnected | enmState == ELinkStates.LinkFailed))
+                                else if (!(enmState == LinkStates.Disconnected | enmState == LinkStates.LinkFailed))
                                 {
                                     Globals.queChannelDisplay.Enqueue("P*** " + "DISCONNECTED");
-                                    enmState = ELinkStates.Disconnected;
+                                    enmState = LinkStates.Disconnected;
                                     return;
                                 }
 
@@ -870,14 +870,14 @@ namespace Paclink
                     Globals.queChannelDisplay.Enqueue("R*** Script Timeout...aborting script");
                     Abort();
                 }
-                else if (enmState == ELinkStates.Connecting & DateTime.Now.Subtract(dttStartConnect).TotalSeconds > 60)
+                else if (enmState == LinkStates.Connecting & DateTime.Now.Subtract(dttStartConnect).TotalSeconds > 60)
                 {
                     Globals.queChannelDisplay.Enqueue("R*** 60 second connect timeout...");
                     Abort();
                 }
             }
 
-            if (objCon.isConnected & enmState == ELinkStates.Connected & !blnClosed)
+            if (objCon.isConnected & enmState == LinkStates.Connected & !blnClosed)
             {
                 try
                 {
@@ -921,7 +921,7 @@ namespace Paclink
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("[ClientNativeKISS.Poll] : " + ex.ToString());
+                    Log.Error("[ModemNativeKiss.Poll] : " + ex.ToString());
                 }
             }
         } // Poll 

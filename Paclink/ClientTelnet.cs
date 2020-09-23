@@ -10,15 +10,15 @@ using NLog;
 
 namespace Paclink
 {
-    public class ClientTelnet : IClient
+    public class ModemTelnet : IModem
     {
         private readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         private TcpClient objTCPPort;
         private ProtocolInitial objProtocol;
         private TChannelProperties stcChannel;
-        private ELinkStates enmState = ELinkStates.Undefined;
-        private EConnection enmConnectionStatus;
+        private LinkStates enmState = LinkStates.Undefined;
+        private ConnectionOrigin enmConnectionStatus;
         private Queue queDataBytesIn = Queue.Synchronized(new Queue());
         private bool blnNormalDisconnect;
         private CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
@@ -28,7 +28,7 @@ namespace Paclink
         {
             if (Globals.blnChannelActive == false)
                 return;
-            if (enmState != ELinkStates.Connected)
+            if (enmState != LinkStates.Connected)
             {
                 intTimeout += 1;
                 if (intTimeout > 100) // Approx 10 seconds worth of timer ticks...
@@ -43,7 +43,7 @@ namespace Paclink
                         Globals.queChannelDisplay.Enqueue("R*** No connection to WL2K CMS Telnet at " + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm UTC"));
                     }
 
-                    enmState = ELinkStates.LinkFailed;
+                    enmState = LinkStates.LinkFailed;
                     cancelTokenSource.Cancel(); // cancels any pending reads
                     objTCPPort.Close();
                 }
@@ -61,7 +61,7 @@ namespace Paclink
                     break;
                 }
 
-                if (enmState == ELinkStates.Connected)
+                if (enmState == LinkStates.Connected)
                 {
                     objProtocol.ChannelInput(ref bytIn);
                 }
@@ -71,7 +71,7 @@ namespace Paclink
                 }
             }
 
-            if (enmState == ELinkStates.LinkFailed)
+            if (enmState == LinkStates.LinkFailed)
             {
                 if (objTCPPort is object)
                 {
@@ -84,13 +84,13 @@ namespace Paclink
                     {
                         if (objProtocol != null)
                         {
-                            objProtocol.LinkStateChange(EConnection.Disconnected);
+                            objProtocol.LinkStateChange(ConnectionOrigin.Disconnected);
                             objProtocol = null;
                         }
                     }
                     catch (Exception ex)
                     {
-                        Log.Error("[ClientTelnet.Poll] " + ex.Message);
+                        Log.Error("[ModemTelnet.Poll] " + ex.Message);
                     }
                 }
             }
@@ -108,7 +108,7 @@ namespace Paclink
 
         public void Abort()
         {
-            if (enmState != ELinkStates.Connected)
+            if (enmState != LinkStates.Connected)
             {
                 Close();
                 return;
@@ -124,18 +124,18 @@ namespace Paclink
                 Log.Error("[TelnetClient.Abort] " + ex.Message);
             }
 
-            enmState = ELinkStates.LinkFailed;
+            enmState = LinkStates.LinkFailed;
         } // Abort 
 
-        public ClientTelnet(ref TChannelProperties strNewChannel)
+        public ModemTelnet(ref TChannelProperties strNewChannel)
         {
             stcChannel = strNewChannel;
             Globals.blnChannelActive = true;
-            enmState = ELinkStates.Initialized;
+            enmState = LinkStates.Initialized;
             Globals.queRateDisplay.Enqueue("Internet");
         } // New
 
-        public ELinkStates State
+        public LinkStates State
         {
             get
             {
@@ -185,7 +185,7 @@ namespace Paclink
                     objProtocol.CloseProtocol();
                 Globals.queStateDisplay.Enqueue("");
                 Globals.blnChannelActive = false;
-                Globals.objSelectedClient = null;
+                Globals.ObjSelectedModem = null;
                 return true;
             }
 
@@ -220,7 +220,7 @@ namespace Paclink
                     objTCPPort.Client.Bind(new IPEndPoint(IPAddress.Parse(Globals.strLocalIPAddress), 0));
                 objTCPPort.ReceiveTimeout = 30;
                 objTCPPort.SendTimeout = 30;
-                enmState = ELinkStates.Connecting;
+                enmState = LinkStates.Connecting;
                 try
                 {
                     // If objWL2KServers.IsCMSAvailable = False Then
@@ -231,7 +231,7 @@ namespace Paclink
                     // Catch
                     // End Try
                     // objTCPPort.Dispose()
-                    // If objProtocol IsNot Nothing Then objProtocol.LinkStateChange(EConnection.Disconnected)
+                    // If objProtocol IsNot Nothing Then objProtocol.LinkStateChange(ConnectionOrigin.Disconnected)
                     // Return False
                     // End If
                     objTCPPort.LingerState = new LingerOption(true, 5);
@@ -273,7 +273,7 @@ namespace Paclink
                         }
                     }).Wait(30000);
 
-                    if (enmState == ELinkStates.Connected || enmState == ELinkStates.Callsign || enmState == ELinkStates.Password)
+                    if (enmState == LinkStates.Connected || enmState == LinkStates.Callsign || enmState == LinkStates.Password)
 
                         return true;
                 }
@@ -294,7 +294,7 @@ namespace Paclink
             }
 
             Globals.queChannelDisplay.Enqueue("R*** No Connection to any CMS Telnet server");
-            enmState = ELinkStates.LinkFailed;
+            enmState = LinkStates.LinkFailed;
             objTCPPort.LingerState = new LingerOption(false, 0);
             try
             {
@@ -308,7 +308,7 @@ namespace Paclink
             objTCPPort.Dispose();
             objTCPPort = null;
             if (objProtocol is object)
-                objProtocol.LinkStateChange(EConnection.Disconnected);
+                objProtocol.LinkStateChange(ConnectionOrigin.Disconnected);
             return false;
         } // Connect
 
@@ -380,7 +380,7 @@ namespace Paclink
                 var switchExpr = enmState;
                 switch (switchExpr)
                 {
-                    case ELinkStates.Callsign:
+                    case LinkStates.Callsign:
                         {
                             Globals.queChannelDisplay.Enqueue("X" + strLine);
                             if (strLine.Contains("Callsign"))
@@ -404,13 +404,13 @@ namespace Paclink
                                 var bytesToSend = Globals.GetBytes("." + strPactorCallsign + Globals.CR);
                                 objTCPPort.GetStream().Write(bytesToSend, 0, bytesToSend.Length);
                                 Globals.queChannelDisplay.Enqueue("B" + Globals.SiteCallsign);
-                                enmState = ELinkStates.Password;
+                                enmState = LinkStates.Password;
                             }
 
                             break;
                         }
 
-                    case ELinkStates.Password:
+                    case LinkStates.Password:
                         {
                             Globals.queChannelDisplay.Enqueue("X" + strLine);
                             if (strLine.Contains("Password"))
@@ -419,7 +419,7 @@ namespace Paclink
                                 var bytesToSend = Globals.GetBytes("CMSTelnet" + Globals.CR);
                                 objTCPPort.GetStream().Write(bytesToSend, 0, bytesToSend.Length);
                                 Globals.queChannelDisplay.Enqueue("B(CMS password)");
-                                enmState = ELinkStates.Connected;
+                                enmState = LinkStates.Connected;
                                 objProtocol = new ProtocolInitial(this, ref stcChannel);
                             }
 
@@ -432,7 +432,7 @@ namespace Paclink
         private void OnConnected(object s)
         {
             Globals.queChannelDisplay.Enqueue("G*** Connected");
-            enmState = ELinkStates.Callsign;
+            enmState = LinkStates.Callsign;
         } // OnConnected
 
         private void OnDataIn(object s, int bytesRead)
@@ -479,7 +479,7 @@ namespace Paclink
             {
                 if (objProtocol is object)
                 {
-                    objProtocol.LinkStateChange(EConnection.Disconnected);
+                    objProtocol.LinkStateChange(ConnectionOrigin.Disconnected);
                     objProtocol = null;
                 }
             }
@@ -490,11 +490,11 @@ namespace Paclink
 
             if (blnNormalDisconnect)
             {
-                enmState = ELinkStates.Disconnected;
+                enmState = LinkStates.Disconnected;
             }
             else
             {
-                enmState = ELinkStates.LinkFailed;
+                enmState = LinkStates.LinkFailed;
             }
         } // OnDisconnected
 
@@ -513,7 +513,7 @@ namespace Paclink
             // Called following a abnormal disconnect...
             try
             {
-                objProtocol.LinkStateChange(EConnection.Disconnected);
+                objProtocol.LinkStateChange(ConnectionOrigin.Disconnected);
                 objProtocol = null;
             }
             catch
@@ -531,7 +531,7 @@ namespace Paclink
             {
             }
 
-            enmState = ELinkStates.LinkFailed;
+            enmState = LinkStates.LinkFailed;
         } // OnLinkFailed
     }
 }

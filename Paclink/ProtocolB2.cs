@@ -224,7 +224,7 @@ namespace Paclink
         // '
         // ' The timer fired while we're receiving a message, so send a comment character back up the channel
         // '
-        // objInitialProtocol.objClient.DataToSend(";" & vbCr)
+        // objInitialProtocol._objModem.DataToSend(";" & vbCr)
 
         // '
         // ' Restart tjhe timer
@@ -239,11 +239,11 @@ namespace Paclink
             Globals.queChannelDisplay.Enqueue("B" + strText);
             if (blnCR)
             {
-                objInitialProtocol.objClient.DataToSend(strText + Globals.CR);
+                objInitialProtocol.ObjModem.DataToSend(strText + Globals.CR);
             }
             else
             {
-                objInitialProtocol.objClient.DataToSend(strText);
+                objInitialProtocol.ObjModem.DataToSend(strText);
             }
         } // Send
 
@@ -295,7 +295,7 @@ namespace Paclink
                         else if (strCommand.StartsWith("FQ"))
                         {
                             Globals.blnFQSeen = true;
-                            objInitialProtocol.objClient.NormalDisconnect = true;
+                            objInitialProtocol.ObjModem.NormalDisconnect = true;
                             Disconnect(500);
                         }
                         else if (strCommand.EndsWith(">"))
@@ -304,7 +304,7 @@ namespace Paclink
                         // Do nothing...
                         else if (strCommand.StartsWith("*** Reconnected to"))
                         {
-                            objInitialProtocol.objClient.NormalDisconnect = true;
+                            objInitialProtocol.ObjModem.NormalDisconnect = true;
                             Disconnect();
                         }
                         else
@@ -348,7 +348,7 @@ namespace Paclink
                         else if (strCommand.StartsWith("FQ"))
                         {
                             B2ConfirmSentMessages();
-                            objInitialProtocol.objClient.NormalDisconnect = true;
+                            objInitialProtocol.ObjModem.NormalDisconnect = true;
                             Disconnect(500);
                             Globals.blnFQSeen = true;
                         }
@@ -368,7 +368,7 @@ namespace Paclink
                         }
                         else if (strCommand.StartsWith("*** Reconnected to"))
                         {
-                            objInitialProtocol.objClient.NormalDisconnect = true;
+                            objInitialProtocol.ObjModem.NormalDisconnect = true;
                             Disconnect();
                         }
                         else
@@ -469,7 +469,7 @@ namespace Paclink
                 StateChange(EB2States.WaitingForNewCommand); // End of session send FQ and queue disconnect
                 Send("FQ");
                 Globals.blnFQSeen = true;
-                objInitialProtocol.objClient.NormalDisconnect = true;
+                objInitialProtocol.ObjModem.NormalDisconnect = true;
                 Disconnect(5000);
             }
             else
@@ -477,7 +477,7 @@ namespace Paclink
                 StateChange(EB2States.WaitingForNewCommand); // No messages to send - request a proposal from remote BBS...
                 Send("FF", true);
                 // setting Normal Disconnect = True will allow a normal disconnect even if the remote station disconnects before sending the "FQ"
-                objInitialProtocol.objClient.NormalDisconnect = true;
+                objInitialProtocol.ObjModem.NormalDisconnect = true;
                 Globals.ResetProgressBar();
             }
         } // B2OutboundProposal
@@ -589,7 +589,7 @@ namespace Paclink
                         Globals.queChannelDisplay.Enqueue("G*** Sending " + objMessage.MessageId + "...");
                         intCompressedMessageBytesSent += bytBuffer.Length;
                         intUncompressedMessageBytesSent += objMessage.Size();
-                        objInitialProtocol.objClient.DataToSend(bytBuffer);
+                        objInitialProtocol.ObjModem.DataToSend(bytBuffer);
                         StateChange(EB2States.WaitingForAcknowledgement);
                     }
                     else if (intOffset == -1)
@@ -772,7 +772,7 @@ namespace Paclink
                     if (objMessageInbound.Decompress(true) == false)
                     {
                         _log.Error("B2Protocol [423] Unable to decompress Inbound Message ");
-                        // objInitialProtocol.objClient.Break() ' Break for Pactor, has no affect on other channels TODO: verify placement
+                        // objInitialProtocol._objModem.Break() ' Break for Pactor, has no affect on other channels TODO: verify placement
                         Send("[423] Protocol Error - Unable to decompress received binary compressed message...");
                         Disconnect();
                         blnInProcess = false;
@@ -783,7 +783,7 @@ namespace Paclink
                     if (objMessageInbound.DecodeB2Message() == false)
                     {
                         _log.Error("B2Protocol [424] Unable to decode received binary compressed message...");
-                        // objInitialProtocol.objClient.Break() ' Break for Pactor, has no affect on other channels TODO: verify placement
+                        // objInitialProtocol._objModem.Break() ' Break for Pactor, has no affect on other channels TODO: verify placement
                         Send("[424] Protocol Error - Unable to decode received binary compressed message...");
                         Disconnect();
                         blnInProcess = false;
@@ -826,7 +826,7 @@ namespace Paclink
                 {
                     objPartialSession.PurgeCurrentPartial(); // If error delete current partial to avoid potential loop.
                     _log.Error("[B2MessageInbound] Protocol Error Problem receiving B2 message...nResult: " + intResult.ToString());
-                    // objInitialProtocol.objClient.Break() ' Break for Pactor, has no affect on other channels TODO: verify placement
+                    // objInitialProtocol._objModem.Break() ' Break for Pactor, has no affect on other channels TODO: verify placement
                     Send("[425/" + intResult.ToString() + "] Protocol Error - Problem receiving B2 message...");
                     Disconnect();
                     blnInProcess = false;
@@ -967,7 +967,7 @@ namespace Paclink
 
         private void OnDisconnectTimer(object source, ElapsedEventArgs e)
         {
-            objInitialProtocol.objClient.Disconnect();
+            objInitialProtocol.ObjModem.Disconnect();
         }
 
         private int IsPartialMessage(string MID, string Length)
