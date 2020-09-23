@@ -15,10 +15,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="NLog" Version="4.7.4" />
-    <PackageReference Include="NLog.Targets.Gelf" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NLog.Targets.Gelf\NLog.Targets.Gelf.csproj" />
     <ProjectReference Include="..\Paclink.Data\Paclink.Data.csproj" />
   </ItemGroup>
 
