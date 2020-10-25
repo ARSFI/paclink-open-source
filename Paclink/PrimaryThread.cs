@@ -48,8 +48,6 @@ namespace Paclink
 
                 Globals.Settings.Save("Properties", "ServiceCodes", Globals.strServiceCodes);
             }
-            // Tell WinlinkInterop what our callsign is.
-            Globals.objWL2KInterop?.SetCallsign(Globals.SiteCallsign);
             string strSitePassword = Globals.Settings.Get("Properties", "Site Password", "");
             Globals.POP3Password = Globals.Settings.Get("Properties", "EMail Password", strSitePassword);
             Globals.Settings.Save("Properties", "EMail Password", Globals.POP3Password);

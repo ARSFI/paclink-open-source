@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using NLog;
+using winlink;
 
 namespace Paclink
 {
@@ -18,7 +19,6 @@ namespace Paclink
             _Label2.Name = "Label2";
             _Label1.Name = "Label1";
             _btnPassword.Name = "btnPassword";
-            _btnRemove.Name = "btnRemove";
             _btnAdd.Name = "btnAdd";
             _btnInstructions.Name = "btnInstructions";
             _Label3.Name = "Label3";
@@ -120,49 +120,6 @@ namespace Paclink
             FillAccountSelection();
         } // btnAdd_Click
 
-        private void btnRemove_Click(object s, EventArgs e)
-        {
-            // 
-            // Removes a tactical account from the system...
-            // 
-            string strAccount = cmbAccount.Text.Trim();
-            if (MessageBox.Show("Confirm removal of " + strAccount + " from the Winlink database?", "Confirm Remove", MessageBoxButtons.OKCancel) != DialogResult.Cancel)
-            {
-                Cursor = Cursors.WaitCursor;
-                // 
-                // Remove the account from the system.
-                // 
-                string strResponse = Globals.objWL2KInterop.RemoveTacticalAddress(strAccount);
-                if (!string.IsNullOrEmpty(strResponse))
-                {
-                    Cursor = Cursors.Default;
-                    MessageBox.Show("Error removing tactical account " + strAccount + ": " + strResponse, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    return;
-                }
-                // 
-                // Remove account from registry list.
-                // 
-                string strAccountList = Globals.Settings.Get("Properties", "Account Names", "");
-                strAccountList = strAccountList.Replace(strAccount + "|", "");
-                Globals.Settings.Save("Properties", "Account Names", strAccountList);
-                // 
-                // Remove account directory.
-                // 
-                if (Directory.Exists(Globals.SiteRootDirectory + @"Accounts\" + strAccount + "_Account"))
-                {
-                    Directory.Delete(Globals.SiteRootDirectory + @"Accounts\" + strAccount + "_Account", true);
-                }
-
-                Globals.Settings.DeleteGroup(strAccount);
-                // 
-                // Restore the dialog box window.
-                // 
-                Accounts.RefreshAccountsList();
-                FillAccountSelection();
-                Cursor = Cursors.Default;
-            }
-        } // btnRemove_Click
-
         private void btnPassword_Click(object s, EventArgs e)
         {
             // 
@@ -179,69 +136,77 @@ namespace Paclink
             // They confirmed that they want to make the change.
             // 
             Cursor = Cursors.WaitCursor;
-            strOldPassword = objDialogChangePassword.GetOldPassword();
-            string strNewPassword = objDialogChangePassword.GetNewPassword();
-            string strAccount = cmbAccount.Text.Trim();
-            // 
-            // Test for existence of the tactical address in the CMS database.
-            // 
-            if (Globals.objWL2KInterop.AccountRegistered(strAccount))
+            try
             {
+                strOldPassword = objDialogChangePassword.GetOldPassword();
+                string strNewPassword = objDialogChangePassword.GetNewPassword();
+                string strAccount = cmbAccount.Text.Trim();
                 // 
-                // This account is already registered.  Check the old password.
+                // Test for existence of the tactical address in the CMS database.
                 // 
-                if (Globals.objWL2KInterop.ValidatePassword(strAccount, strOldPassword) == false)
+                if (WinlinkWebServices.AccountExists(strAccount))
                 {
-                    Cursor = Cursors.Default;
+                    // 
+                    // This account is already registered.  Check the old password.
+                    // 
+                    if (!WinlinkWebServices.ValidatePassword(strAccount, strOldPassword))
+                    {
+                        MessageBox.Show(
+                            "The address/account has been previously used and the entered old password" +
+                            " does not match the password for '" + strAccount + "' in the Winlink database" +
+                            Globals.CR + Globals.CR + "To use this address/account " +
+                            "name you must have the previously assigned password.", "Validating Password",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Exclamation);
+                        return;
+                    }
+                    // 
+                    // Set the new password 
+                    // 
+                    try
+                    {
+                        WinlinkWebServices.ChangePassword(strAccount, strOldPassword, strNewPassword);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error while setting password: " + ex.Message, "Error", MessageBoxButtons.OK,
+                            MessageBoxIcon.Exclamation);
+                        return;
+                    }
+                }
+                else
+                {
+                    // 
+                    // This account is not know by the system.
+                    // 
                     MessageBox.Show(
-                        "The address/account has been previously used and the entered old password" + 
-                        " does not match the password for '" + strAccount + "' in the Winlink database" +
-                        Globals.CR + Globals.CR + "To use this address/account " +
-                        "name you must have the previously assigned password.", "Validating Password",
+                        "The tactical address " + strAccount + " has not been registered with the Winlink system.",
+                        "Checking address",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Exclamation);
-                    return;
                 }
                 // 
-                // Set the new password in the system table.
+                // Update the password in the .ini file.
                 // 
-                string strReply = Globals.objWL2KInterop.SetPassword(strAccount, strOldPassword, strNewPassword);
-                if (!string.IsNullOrEmpty(strReply))
-                {
-                    Cursor = Cursors.Default;
-                    MessageBox.Show("Error while setting password: " + strReply, "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    return;
-                }
-            }
-            else
-            {
+                Globals.Settings.Save(strAccount, "EMail Password", strNewPassword);
                 // 
-                // This account is not know by the system.
+                // Finished
                 // 
-                Cursor = Cursors.Default;
+                Accounts.RefreshAccountsList();
+                FillAccountSelection();
                 MessageBox.Show(
-                    "The tactical address " + strAccount + " has not been registered with the Winlink system.", 
-                    "Checking address",
+                    "The password for " + strAccount + " has been changed to " + strNewPassword,
+                    "Password Changed",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Exclamation);
+                    MessageBoxIcon.Information);
+                return;
+
             }
-            // 
-            // Update the password in the .ini file.
-            // 
-            Globals.Settings.Save(strAccount, "EMail Password", strNewPassword);
-            // 
-            // Finished
-            // 
-            Accounts.RefreshAccountsList();
-            FillAccountSelection();
-            Cursor = Cursors.Default;
-            MessageBox.Show(
-                "The password for " + strAccount + " has been changed to " + strNewPassword, 
-                "Password Changed",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
-            return;
-        } // btnPassword_Click
+            finally
+            {
+                Cursor = Cursors.Default;
+            }
+        }
 
         private void btnClose_Click(object sender, EventArgs e)
         {
@@ -351,13 +316,12 @@ namespace Paclink
             }
 
             // Restore the dialog box window...
-            btnRemove.Enabled = true;
             btnPassword.Enabled = true;
             btnAdd.Enabled = false;
             Accounts.RefreshAccountsList();
             FillAccountSelection();
             return blnReturn;
-        } // AddNewAccount
+        } 
 
         public bool AddTacticalAccountToWinlink(string strTacticalAddress, string strPassword)
         {
@@ -368,18 +332,18 @@ namespace Paclink
             // 
             // Test for existence of the tactical address in the CMS database.
             // 
-            if (Globals.objWL2KInterop.AccountRegistered(strTacticalAddress))
+            if (WinlinkWebServices.AccountExists(strTacticalAddress))
             {
                 // 
                 // This account is already registered.  Check the password.
                 // 
-                if (Globals.objWL2KInterop.ValidatePassword(strTacticalAddress, strPassword) == false)
+                if (!WinlinkWebServices.ValidatePassword(strTacticalAddress, strPassword))
                 {
                     MessageBox.Show(
                         "The address/account has been previously used and the entered password " +
                         "does not match the password for '" + strTacticalAddress + "' in the Winlink database" +
-                        Globals.CR + Globals.CR + "To use this address/account " + 
-                        "name you must have the previously assigned password.", 
+                        Globals.CR + Globals.CR + "To use this address/account " +
+                        "name you must have the previously assigned password.",
                         "Validating Password",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Exclamation);
@@ -395,7 +359,7 @@ namespace Paclink
 
                 {
                     MessageBox.Show(
-                        "Using the same Tactical address from different Paclink sites must be done carefully." + 
+                        "Using the same Tactical address from different Paclink sites must be done carefully." +
                         Globals.CR + "Once mail is retrieved by a Paclink site it is considered delivered by the WL2K system " +
                         Globals.CR + "and will not longer be accessable to other sites.",
                         "Caution!",
@@ -407,23 +371,22 @@ namespace Paclink
             // 
             // Add the new tactical address to the CMS database.
             // 
-            string strResult = Globals.objWL2KInterop.AddTacticalAddress(strTacticalAddress, strPassword);
-            if (!string.IsNullOrEmpty(strResult))
+            try
             {
-                Cursor = Cursors.Default;
+                WinlinkWebServices.AddTacticalAddress(strTacticalAddress, strPassword);
+            }
+            catch (Exception ex)
+            {
                 MessageBox.Show(
-                    "Error adding tactical account " + strTacticalAddress + ": " + strResult, 
+                    "Error adding tactical account " + strTacticalAddress + ": " + ex.Message,
                     "Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
                 return false;
             }
-            // 
-            // Finished
-            // 
-            Cursor = Cursors.Default;
+
             return true;
-        } // AddTacticalAccountToWinlink
+        } 
 
         private void btnHelp_Click(object sender, EventArgs e)
         {

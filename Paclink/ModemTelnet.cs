@@ -207,7 +207,7 @@ namespace Paclink
             else
             {
 #if DEBUG
-                strCMSHost = Globals.Settings.Get("System", "CMS Domain Name (Debug)", "cms-z.winlink.org");
+                strCMSHost = "cms-z.winlink.org";
 #else
                 strCMSHost = Globals.Settings.Get("System", "CMS Domain Name", "cms.winlink.org");
 #endif

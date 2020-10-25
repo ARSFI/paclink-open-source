@@ -35,163 +35,165 @@ namespace Paclink
         [DebuggerStepThrough()]
         private void InitializeComponent()
         {
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(DialogTacticalAccounts));
-            _btnClose = new Button();
-            _btnClose.Click += new EventHandler(btnClose_Click);
-            _txtPassword = new TextBox();
-            _cmbAccount = new ComboBox();
-            _cmbAccount.Leave += new EventHandler(cmbAccount_Leave);
-            _cmbAccount.TextChanged += new EventHandler(cmbAccount_TextChanged);
-            _Label2 = new Label();
-            _Label1 = new Label();
-            _btnPassword = new Button();
-            _btnPassword.Click += new EventHandler(btnPassword_Click);
-            _btnRemove = new Button();
-            _btnRemove.Click += new EventHandler(btnRemove_Click);
-            _btnAdd = new Button();
-            _btnAdd.Click += new EventHandler(btnAdd_Click);
-            _btnInstructions = new Button();
-            _btnInstructions.Click += new EventHandler(btnInstructions_Click);
-            _Label3 = new Label();
-            _btnHelp = new Button();
-            _btnHelp.Click += new EventHandler(btnHelp_Click);
-            _Label9 = new Label();
-            SuspendLayout();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DialogTacticalAccounts));
+            this._btnClose = new System.Windows.Forms.Button();
+            this._txtPassword = new System.Windows.Forms.TextBox();
+            this._cmbAccount = new System.Windows.Forms.ComboBox();
+            this._Label2 = new System.Windows.Forms.Label();
+            this._Label1 = new System.Windows.Forms.Label();
+            this._btnPassword = new System.Windows.Forms.Button();
+            this._btnAdd = new System.Windows.Forms.Button();
+            this._btnInstructions = new System.Windows.Forms.Button();
+            this._Label3 = new System.Windows.Forms.Label();
+            this._btnHelp = new System.Windows.Forms.Button();
+            this._Label9 = new System.Windows.Forms.Label();
+            this.SuspendLayout();
             // 
-            // btnClose
+            // _btnClose
             // 
-            _btnClose.Location = new Point(333, 161);
-            _btnClose.Name = "_btnClose";
-            _btnClose.Size = new Size(193, 30);
-            _btnClose.TabIndex = 7;
-            _btnClose.Text = "Close";
-            _btnClose.UseVisualStyleBackColor = true;
+            this._btnClose.Location = new System.Drawing.Point(388, 186);
+            this._btnClose.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._btnClose.Name = "_btnClose";
+            this._btnClose.Size = new System.Drawing.Size(225, 35);
+            this._btnClose.TabIndex = 7;
+            this._btnClose.Text = "Close";
+            this._btnClose.UseVisualStyleBackColor = true;
+            this._btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
-            // txtPassword
+            // _txtPassword
             // 
-            _txtPassword.Location = new Point(117, 68);
-            _txtPassword.Name = "_txtPassword";
-            _txtPassword.Size = new Size(146, 20);
-            _txtPassword.TabIndex = 1;
-            _txtPassword.TextAlign = HorizontalAlignment.Center;
+            this._txtPassword.Location = new System.Drawing.Point(136, 78);
+            this._txtPassword.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._txtPassword.Name = "_txtPassword";
+            this._txtPassword.Size = new System.Drawing.Size(170, 23);
+            this._txtPassword.TabIndex = 1;
+            this._txtPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // cmbAccount
+            // _cmbAccount
             // 
-            _cmbAccount.FormattingEnabled = true;
-            _cmbAccount.Location = new Point(117, 41);
-            _cmbAccount.Name = "_cmbAccount";
-            _cmbAccount.Size = new Size(195, 21);
-            _cmbAccount.TabIndex = 0;
+            this._cmbAccount.FormattingEnabled = true;
+            this._cmbAccount.Location = new System.Drawing.Point(136, 47);
+            this._cmbAccount.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._cmbAccount.Name = "_cmbAccount";
+            this._cmbAccount.Size = new System.Drawing.Size(227, 23);
+            this._cmbAccount.TabIndex = 0;
+            this._cmbAccount.TextChanged += new System.EventHandler(this.cmbAccount_TextChanged);
+            this._cmbAccount.Leave += new System.EventHandler(this.cmbAccount_Leave);
             // 
-            // Label2
+            // _Label2
             // 
-            _Label2.AutoSize = true;
-            _Label2.Location = new Point(16, 71);
-            _Label2.Name = "_Label2";
-            _Label2.Size = new Size(99, 13);
-            _Label2.TabIndex = 18;
-            _Label2.Text = "Account Password:";
+            this._Label2.AutoSize = true;
+            this._Label2.Location = new System.Drawing.Point(19, 82);
+            this._Label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._Label2.Name = "_Label2";
+            this._Label2.Size = new System.Drawing.Size(108, 15);
+            this._Label2.TabIndex = 18;
+            this._Label2.Text = "Account Password:";
             // 
-            // Label1
+            // _Label1
             // 
-            _Label1.AutoSize = true;
-            _Label1.Location = new Point(34, 44);
-            _Label1.Name = "_Label1";
-            _Label1.Size = new Size(81, 13);
-            _Label1.TabIndex = 17;
-            _Label1.Text = "Account Name:";
+            this._Label1.AutoSize = true;
+            this._Label1.Location = new System.Drawing.Point(40, 51);
+            this._Label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._Label1.Name = "_Label1";
+            this._Label1.Size = new System.Drawing.Size(90, 15);
+            this._Label1.TabIndex = 17;
+            this._Label1.Text = "Account Name:";
             // 
-            // btnPassword
+            // _btnPassword
             // 
-            _btnPassword.Location = new Point(333, 126);
-            _btnPassword.Name = "_btnPassword";
-            _btnPassword.Size = new Size(193, 30);
-            _btnPassword.TabIndex = 6;
-            _btnPassword.Text = "Change Account Password";
-            _btnPassword.UseVisualStyleBackColor = true;
+            this._btnPassword.Location = new System.Drawing.Point(388, 108);
+            this._btnPassword.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._btnPassword.Name = "_btnPassword";
+            this._btnPassword.Size = new System.Drawing.Size(225, 35);
+            this._btnPassword.TabIndex = 6;
+            this._btnPassword.Text = "Change Account Password";
+            this._btnPassword.UseVisualStyleBackColor = true;
+            this._btnPassword.Click += new System.EventHandler(this.btnPassword_Click);
             // 
-            // btnRemove
+            // _btnAdd
             // 
-            _btnRemove.Location = new Point(333, 91);
-            _btnRemove.Name = "_btnRemove";
-            _btnRemove.Size = new Size(193, 30);
-            _btnRemove.TabIndex = 5;
-            _btnRemove.Text = "Remove An Account";
-            _btnRemove.UseVisualStyleBackColor = true;
+            this._btnAdd.Location = new System.Drawing.Point(388, 65);
+            this._btnAdd.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._btnAdd.Name = "_btnAdd";
+            this._btnAdd.Size = new System.Drawing.Size(225, 35);
+            this._btnAdd.TabIndex = 4;
+            this._btnAdd.Text = "Add An Account";
+            this._btnAdd.UseVisualStyleBackColor = true;
+            this._btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
-            // btnAdd
+            // _btnInstructions
             // 
-            _btnAdd.Location = new Point(333, 56);
-            _btnAdd.Name = "_btnAdd";
-            _btnAdd.Size = new Size(193, 30);
-            _btnAdd.TabIndex = 4;
-            _btnAdd.Text = "Add An Account";
-            _btnAdd.UseVisualStyleBackColor = true;
+            this._btnInstructions.Location = new System.Drawing.Point(388, 24);
+            this._btnInstructions.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._btnInstructions.Name = "_btnInstructions";
+            this._btnInstructions.Size = new System.Drawing.Size(225, 35);
+            this._btnInstructions.TabIndex = 3;
+            this._btnInstructions.Text = "Instructions...";
+            this._btnInstructions.UseVisualStyleBackColor = true;
+            this._btnInstructions.Click += new System.EventHandler(this.btnInstructions_Click);
             // 
-            // btnInstructions
+            // _Label3
             // 
-            _btnInstructions.Location = new Point(333, 21);
-            _btnInstructions.Name = "_btnInstructions";
-            _btnInstructions.Size = new Size(193, 30);
-            _btnInstructions.TabIndex = 3;
-            _btnInstructions.Text = "Instructions...";
-            _btnInstructions.UseVisualStyleBackColor = true;
+            this._Label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this._Label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this._Label3.Location = new System.Drawing.Point(47, 198);
+            this._Label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._Label3.Name = "_Label3";
+            this._Label3.Size = new System.Drawing.Size(293, 66);
+            this._Label3.TabIndex = 19;
+            this._Label3.Text = "Accounts created are with default profile values.  To view/edit WL2K data base pr" +
+    "ofile values use Files|Edit Account Profile menu.";
             // 
-            // Label3
+            // _btnHelp
             // 
-            _Label3.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, Convert.ToByte(0));
-            _Label3.ForeColor = Color.FromArgb(Convert.ToInt32(Convert.ToByte(192)), Convert.ToInt32(Convert.ToByte(0)), Convert.ToInt32(Convert.ToByte(0)));
-            _Label3.Location = new Point(40, 172);
-            _Label3.Name = "_Label3";
-            _Label3.Size = new Size(251, 57);
-            _Label3.TabIndex = 19;
-            _Label3.Text = "Accounts created are with default profile values.  To view/edit WL2K data base pr" + "ofile values use Files|Edit Account Profile menu.";
+            this._btnHelp.Location = new System.Drawing.Point(388, 226);
+            this._btnHelp.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._btnHelp.Name = "_btnHelp";
+            this._btnHelp.Size = new System.Drawing.Size(225, 35);
+            this._btnHelp.TabIndex = 20;
+            this._btnHelp.Text = "Help";
+            this._btnHelp.UseVisualStyleBackColor = true;
+            this._btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
-            // btnHelp
+            // _Label9
             // 
-            _btnHelp.Location = new Point(333, 196);
-            _btnHelp.Name = "_btnHelp";
-            _btnHelp.Size = new Size(193, 30);
-            _btnHelp.TabIndex = 20;
-            _btnHelp.Text = "Help";
-            _btnHelp.UseVisualStyleBackColor = true;
-            // 
-            // Label9
-            // 
-            _Label9.AutoSize = true;
-            _Label9.Location = new Point(151, 94);
-            _Label9.Name = "_Label9";
-            _Label9.Size = new Size(81, 13);
-            _Label9.TabIndex = 321;
-            _Label9.Text = "(Case sensitive)";
+            this._Label9.AutoSize = true;
+            this._Label9.Location = new System.Drawing.Point(176, 108);
+            this._Label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._Label9.Name = "_Label9";
+            this._Label9.Size = new System.Drawing.Size(88, 15);
+            this._Label9.TabIndex = 321;
+            this._Label9.Text = "(Case sensitive)";
             // 
             // DialogTacticalAccounts
             // 
-            AutoScaleDimensions = new SizeF(6.0F, 13.0F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(566, 247);
-            Controls.Add(_Label9);
-            Controls.Add(_btnHelp);
-            Controls.Add(_Label3);
-            Controls.Add(_btnClose);
-            Controls.Add(_txtPassword);
-            Controls.Add(_cmbAccount);
-            Controls.Add(_Label2);
-            Controls.Add(_Label1);
-            Controls.Add(_btnPassword);
-            Controls.Add(_btnRemove);
-            Controls.Add(_btnAdd);
-            Controls.Add(_btnInstructions);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
-            Icon = (Icon)resources.GetObject("$this.Icon");
-            MaximizeBox = false;
-            MinimizeBox = false;
-            Name = "DialogTacticalAccounts";
-            StartPosition = FormStartPosition.CenterScreen;
-            Text = "Manage Tactical Accounts";
-            Load += new EventHandler(TacticalAccounts_Load);
-            ResumeLayout(false);
-            PerformLayout();
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(660, 285);
+            this.Controls.Add(this._Label9);
+            this.Controls.Add(this._btnHelp);
+            this.Controls.Add(this._Label3);
+            this.Controls.Add(this._btnClose);
+            this.Controls.Add(this._txtPassword);
+            this.Controls.Add(this._cmbAccount);
+            this.Controls.Add(this._Label2);
+            this.Controls.Add(this._Label1);
+            this.Controls.Add(this._btnPassword);
+            this.Controls.Add(this._btnAdd);
+            this.Controls.Add(this._btnInstructions);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "DialogTacticalAccounts";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Manage Tactical Accounts";
+            this.Load += new System.EventHandler(this.TacticalAccounts_Load);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
 
         private Button _btnClose;
@@ -342,32 +344,6 @@ namespace Paclink
                 if (_btnPassword != null)
                 {
                     _btnPassword.Click += btnPassword_Click;
-                }
-            }
-        }
-
-        private Button _btnRemove;
-
-        internal Button btnRemove
-        {
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            get
-            {
-                return _btnRemove;
-            }
-
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            set
-            {
-                if (_btnRemove != null)
-                {
-                    _btnRemove.Click -= btnRemove_Click;
-                }
-
-                _btnRemove = value;
-                if (_btnRemove != null)
-                {
-                    _btnRemove.Click += btnRemove_Click;
                 }
             }
         }

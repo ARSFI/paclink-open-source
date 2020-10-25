@@ -251,10 +251,6 @@ namespace Paclink
             Globals.intRMSRelayPort = Convert.ToInt32(txtRMSRelayPort.Text);
             Globals.blnForceHFRouting = chkForceHFRouting.Checked;
 
-            // Tell WinlinkInterop what our callsign is.
-            if (Globals.objWL2KInterop is object)
-                Globals.objWL2KInterop.SetCallsign(Globals.SiteCallsign);
-
             // Test the POP3 and SMTP Port numbers
             objTestPort = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try

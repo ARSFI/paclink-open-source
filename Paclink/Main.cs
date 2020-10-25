@@ -243,8 +243,6 @@ namespace Paclink
         {
             Globals.objPrimaryThread?.Close();
             Globals.objPrimaryThread = null;
-            Globals.objWL2KInterop?.Close();
-            Globals.objWL2KInterop = null;
         }
 
         private void MainClosing(object s, FormClosingEventArgs e)
@@ -302,8 +300,7 @@ namespace Paclink
             Globals.blnForceHFRouting = Globals.Settings.Get("Properties", "Force radio-only", false);
             Globals.blnEnablAutoforward = Globals.Settings.Get("Properties", "Enable Autoforward", false);
             Globals.blnPactorDialogResume = Globals.Settings.Get("Properties", "Pactor Dialog Resume", true);
-            Globals.objWL2KInterop.SetWebServiceKey("CC5E139204DA41A3B544A5F2CEB21051");
-
+            
             lblMessageDisplay.Enabled = true;
             lblMessageDisplay.BackColor = ChannelDisplay.BackColor;
             barChannelProgress.Enabled = false;

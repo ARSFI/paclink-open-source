@@ -13,7 +13,8 @@ using System.Threading;
 using System.Windows.Forms;
 using NLog;
 using Paclink.Data;
-using WinlinkServiceClasses;
+using winlink;
+using winlink.cms.webservices;
 
 namespace Paclink
 {
@@ -124,11 +125,21 @@ namespace Paclink
         public static SMTPPort objSMTPPort;
         public static Terminal objTerminal;
         public static DateTime objUpTime = DateTime.UtcNow;
-        public static WinlinkInterop.WinlinkInterop objWL2KInterop = new WinlinkInterop.WinlinkInterop("");
         public static Main objMain;
 
         // Enumerations
         public static ProtocolB2.EB2States enmEB2States;
+
+        static Globals()
+        {
+#if DEBUG
+            var host = "http://cms-z.winlink.org";
+#else
+            var host = Globals.Settings.Get("System", "WebServices API Domain", "https://api.winlink.org");
+#endif
+            //initialize api static class with our access key
+            WinlinkWebServices.SetConfiguration(new WinlinkWebServiceConfiguration { WebServicesHost = host, WebServiceAccessKey = "CC5E139204DA41A3B544A5F2CEB21051" });
+        }
 
         public class Proposal
         {
@@ -926,13 +937,13 @@ namespace Paclink
         {
             try
             {
-                objWL2KInterop.PostVersionRecord(SiteCallsign, Application.ProductName, Application.ProductVersion);
+                WinlinkWebServices.AddProgramVersion(SiteCallsign, Application.ProductName, Application.ProductVersion, "");
             }
-            catch
+            catch (Exception ex)
             {
-                // Do nothing...
+                _log.Warn(ex, ex.Message);
             }
-        } // PostVersionRecord
+        }
 
         public static string GetBaseCallsign(string strCallsign)
         {
@@ -1605,8 +1616,8 @@ namespace Paclink
             // 
             // Try to get the full list of channels matching our service code(s).
             // 
-            var lstChannels = objWL2KInterop.GatewayChannelList(blnPacketChannels, strServiceCodes, "Paclink:" + SiteCallsign);
-            if (lstChannels is object)
+            var lstChannels = GatewayChannelList(blnPacketChannels, strServiceCodes, "Paclink:" + SiteCallsign);
+            if (lstChannels != null)
             {
                 // 
                 // We got a gateway status response.  Select the channels we want.
@@ -1667,6 +1678,82 @@ namespace Paclink
             // 
             blnFinishedGettingChannels = true;
             return;
+        }
+
+        private static List<GatewayStatusRecord> GatewayChannelList(bool blnPacketChannels, string strServiceCodes, string strCaller, string strForceCMSArg = "")
+        {
+            // 
+            // Get a list of the available gateway channels, and return it as a List of GatewayStatusRecord.
+            // Return Nothing if we can't get the list.
+
+            List<GatewayStatusRecord> objResponse = null;
+            try
+            {
+                objResponse = WinlinkWebServices.GetGatewayStatusRecords(GatewayOperatingMode.AnyAll, 168, strServiceCodes);
+            }
+            catch (Exception ex)
+            {
+                _log.Warn(ex, ex.Message);
+                return null;
+            }
+
+            // 
+            // Select either HF or VHF/UHF channels.
+            // 
+            var lstGateways = new List<GatewayStatusRecord>();
+            GatewayStatusRecord objNewStation;
+            bool blnUseChannel;
+            foreach (GatewayStatusRecord objStation in objResponse)
+            {
+                if (objStation.HoursSinceStatus < 5 * 24)
+                {
+                    // Create a new GatewayStatusRecord
+                    objNewStation = new GatewayStatusRecord();
+                    objNewStation.BaseCallsign = objStation.BaseCallsign.Trim().ToUpper();
+                    objNewStation.Callsign = objStation.Callsign.Trim().ToUpper();
+                    objNewStation.Comments = objStation.Comments;
+                    objNewStation.HoursSinceStatus = objStation.HoursSinceStatus;
+                    objNewStation.LastStatus = objStation.LastStatus;
+                    objNewStation.Latitude = objStation.Latitude;
+                    objNewStation.Longitude = objStation.Longitude;
+                    objNewStation.Timestamp = objStation.Timestamp;
+                    objNewStation.GatewayChannels = new List<GatewayChannelRecord>();
+                    // Check each channel for this station.
+                    foreach (GatewayChannelRecord objChan in objStation.GatewayChannels)
+                    {
+                        // Determine if we should include this channel in the list.
+                        blnUseChannel = false;
+                        if (blnPacketChannels)
+                        {
+                            // Select packet channels
+                            if ((objChan.Mode < 10 | objChan.Mode == 51 | objChan.Mode == 52) & objChan.Frequency > 50000000 & (objChan.Baud == "1200" | objChan.Baud == "9600"))
+                            {
+                                blnUseChannel = true;
+                            }
+                        }
+                        // Select HF channels
+                        else if (objChan.Mode >= 10 & objChan.Mode != 51 & objChan.Mode != 52 & objChan.Frequency > 1800000)
+                        {
+                            blnUseChannel = true;
+                        }
+
+                        if (blnUseChannel)
+                        {
+                            // Use this channel
+                            objNewStation.GatewayChannels.Add(objChan);
+                        }
+                    }
+                    // If gateway has any channels, add it to the list we will return
+                    if (objNewStation.GatewayChannels.Count > 0)
+                    {
+                        lstGateways.Add(objNewStation);
+                    }
+                }
+            }
+            // 
+            // Finished.  Return the channel information.
+            // 
+            return lstGateways;
         }
 
         public static string CleanSerialPort(string strPortName)
