@@ -1,0 +1,3 @@
+[submodule "Libraries/winlink-webservices"]
+	path = Libraries/winlink-webservices
+	url = https://github.com/ARSFI/winlink-webservices.git
