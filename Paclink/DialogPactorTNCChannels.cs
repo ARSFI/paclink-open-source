@@ -1057,9 +1057,15 @@ namespace Paclink
             // 
             string strError;
             btnUpdateChannelList.Enabled = false;
-            Cursor = Cursors.WaitCursor;
-            strError = Channels.GetChannelRecords(false, Globals.strServiceCodes);
-            Cursor = Cursors.Default;
+            try
+            {
+                Cursor = Cursors.WaitCursor;
+                strError = Channels.GetChannelRecords(false, Globals.strServiceCodes);
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
+            }
             btnUpdateChannelList.Enabled = true;
             if (string.IsNullOrEmpty(strError))
             {

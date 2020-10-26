@@ -135,9 +135,10 @@ namespace Paclink
             // 
             // They confirmed that they want to make the change.
             // 
-            Cursor = Cursors.WaitCursor;
             try
             {
+                Cursor = Cursors.WaitCursor;
+
                 strOldPassword = objDialogChangePassword.GetOldPassword();
                 string strNewPassword = objDialogChangePassword.GetNewPassword();
                 string strAccount = cmbAccount.Text.Trim();

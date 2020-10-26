@@ -173,66 +173,72 @@ namespace Paclink
             // Perform program initialization.
             // 
             Globals.objMain = this;
-            Cursor = Cursors.WaitCursor;
-            ChannelDisplay.Cursor = Cursors.WaitCursor;
-            SMTPDisplay.Cursor = Cursors.WaitCursor;
-            ChannelDisplay.ForeColor = Color.Green;
-            if (Globals.UseRMSRelay())
+            try
             {
-                ChannelDisplay.Text = "*** Initializing. Paclink is set to connect to RMS Relay.  RMS Relay must be running." + Globals.CRLF;
+                Cursor = Cursors.WaitCursor;
+                ChannelDisplay.Cursor = Cursors.WaitCursor;
+                SMTPDisplay.Cursor = Cursors.WaitCursor;
+                ChannelDisplay.ForeColor = Color.Green;
+                if (Globals.UseRMSRelay())
+                {
+                    ChannelDisplay.Text = "*** Initializing. Paclink is set to connect to RMS Relay.  RMS Relay must be running." + Globals.CRLF;
+                }
+                else
+                {
+                    ChannelDisplay.Text = "*** Initializing..." + Globals.CRLF;
+                }
+
+                Refresh();
+
+                // Create any required subdirectories...
+                if (Directory.Exists(Globals.SiteRootDirectory + "Accounts") == false)
+                {
+                    Directory.CreateDirectory(Globals.SiteRootDirectory + "Accounts");
+                }
+
+                if (Directory.Exists(Globals.SiteRootDirectory + "Channels") == false)
+                {
+                    Directory.CreateDirectory(Globals.SiteRootDirectory + "Channels");
+                }
+
+                if (Directory.Exists(Globals.SiteRootDirectory + "Data") == false)
+                {
+                    Directory.CreateDirectory(Globals.SiteRootDirectory + "Data");
+                }
+
+                if (Directory.Exists(Globals.SiteRootDirectory + "Log") == false)
+                {
+                    Directory.CreateDirectory(Globals.SiteRootDirectory + "Log");
+                }
+
+                if (Directory.Exists(Globals.SiteRootDirectory + "Documentation") == false)
+                {
+                    Directory.CreateDirectory(Globals.SiteRootDirectory + "Documentation");
+                }
+
+                if (Directory.Exists(Globals.SiteRootDirectory + "From Winlink") == false)
+                {
+                    Directory.CreateDirectory(Globals.SiteRootDirectory + "From Winlink");
+                }
+
+                if (Directory.Exists(Globals.SiteRootDirectory + "To Winlink") == false)
+                {
+                    Directory.CreateDirectory(Globals.SiteRootDirectory + "To Winlink");
+                }
+
+                if (Directory.Exists(Globals.SiteRootDirectory + "Temp Inbound") == false)
+                {
+                    Directory.CreateDirectory(Globals.SiteRootDirectory + "Temp Inbound"); // Used to save partial inbound messages
+                }
+
+                Globals.objPrimaryThread = new PrimaryThread();
             }
-            else
+            finally
             {
-                ChannelDisplay.Text = "*** Initializing..." + Globals.CRLF;
+                Cursor = Cursors.Default;
+                ChannelDisplay.Cursor = Cursors.Default;
+                SMTPDisplay.Cursor = Cursors.Default;
             }
-
-            Refresh();
-
-            // Create any required subdirectories...
-            if (Directory.Exists(Globals.SiteRootDirectory + "Accounts") == false)
-            {
-                Directory.CreateDirectory(Globals.SiteRootDirectory + "Accounts");
-            }
-
-            if (Directory.Exists(Globals.SiteRootDirectory + "Channels") == false)
-            {
-                Directory.CreateDirectory(Globals.SiteRootDirectory + "Channels");
-            }
-
-            if (Directory.Exists(Globals.SiteRootDirectory + "Data") == false)
-            {
-                Directory.CreateDirectory(Globals.SiteRootDirectory + "Data");
-            }
-
-            if (Directory.Exists(Globals.SiteRootDirectory + "Log") == false)
-            {
-                Directory.CreateDirectory(Globals.SiteRootDirectory + "Log");
-            }
-
-            if (Directory.Exists(Globals.SiteRootDirectory + "Documentation") == false)
-            {
-                Directory.CreateDirectory(Globals.SiteRootDirectory + "Documentation");
-            }
-
-            if (Directory.Exists(Globals.SiteRootDirectory + "From Winlink") == false)
-            {
-                Directory.CreateDirectory(Globals.SiteRootDirectory + "From Winlink");
-            }
-
-            if (Directory.Exists(Globals.SiteRootDirectory + "To Winlink") == false)
-            {
-                Directory.CreateDirectory(Globals.SiteRootDirectory + "To Winlink");
-            }
-
-            if (Directory.Exists(Globals.SiteRootDirectory + "Temp Inbound") == false)
-            {
-                Directory.CreateDirectory(Globals.SiteRootDirectory + "Temp Inbound"); // Used to save partial inbound messages
-            }
-
-            Globals.objPrimaryThread = new PrimaryThread();
-            Cursor = Cursors.Default;
-            ChannelDisplay.Cursor = Cursors.Default;
-            SMTPDisplay.Cursor = Cursors.Default;
             // 
             // Report what version of Paclink is running.
             // 
