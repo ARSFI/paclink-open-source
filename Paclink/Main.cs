@@ -729,7 +729,7 @@ namespace Paclink
                 {
                     try
                     {
-                        Process.Start(dlgViewLog.FileName);
+                        Process.Start(new ProcessStartInfo(dlgViewLog.FileName) { UseShellExecute = true });
                     }
                     catch (Exception ex)
                     {
