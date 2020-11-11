@@ -26,8 +26,6 @@ namespace Paclink
             _txtGridSquare.Name = "txtGridSquare";
             _txtSiteCallsign.Name = "txtSiteCallsign";
             _chkLANAccessable.Name = "chkLANAccessable";
-            _Label9.Name = "Label9";
-            _txtSizeLimit.Name = "txtSizeLimit";
             _Label1.Name = "Label1";
             _Label11.Name = "Label11";
             _txtPrefix.Name = "txtPrefix";
@@ -117,7 +115,6 @@ namespace Paclink
             chkForceHFRouting.Checked = Globals.blnForceHFRouting;
             txtPrefix.Text = Globals.Settings.Get("Properties", "Prefix", "");
             txtSuffix.Text = Globals.Settings.Get("Properties", "Suffix", "");
-            txtSizeLimit.Text = Globals.Settings.Get("Properties", "Size Limit", "120000");
             txtSecureLoginPassword.Enabled = true;
             if (txtSecureLoginPassword.Enabled == false)
                 txtSecureLoginPassword.Text = "";
@@ -147,18 +144,6 @@ namespace Paclink
         private void OK_Button_Click(object sender, EventArgs e)
         {
             // Save the profile data...
-            int sizeLimit = 0;
-            if (!int.TryParse(txtSizeLimit.Text, out sizeLimit))
-            {
-                MessageBox.Show("Attachment limit must be between 0 and 120000. 0 blocks all attachments.", "Attachment Limit Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return;
-            }
-            else if (sizeLimit < 0 || sizeLimit > 120000)
-            {
-                MessageBox.Show("Attachment limit must be between 0 and 120000. 0 blocks all attachments.", "Attachment Limit Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return;
-            }
-
             ushort pop3Port = 0;
             if (!ushort.TryParse(txtPOP3PortNumber.Text, out pop3Port))
             {
@@ -312,7 +297,6 @@ namespace Paclink
             Globals.Settings.Save("Properties", "Enable Radar", Globals.blnEnableRadar);
             Globals.Settings.Save("Properties", "Prefix", txtPrefix.Text.Trim());
             Globals.Settings.Save("Properties", "Suffix", txtSuffix.Text.Trim());
-            Globals.Settings.Save("Properties", "Size Limit", txtSizeLimit.Text.Trim());
             Globals.Settings.Save("Properties", "Default Local IP Address Index", cmbLocalIPAddress.SelectedIndex);
             Globals.Settings.Save("Properties", "Use RMS Relay", Globals.blnUseRMSRelay);
             Globals.Settings.Save("Properties", "Local IP Path", Globals.strRMSRelayIPPath);

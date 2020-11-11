@@ -43,8 +43,6 @@ namespace Paclink
             this._txtGridSquare = new System.Windows.Forms.TextBox();
             this._txtSiteCallsign = new System.Windows.Forms.TextBox();
             this._chkLANAccessable = new System.Windows.Forms.CheckBox();
-            this._Label9 = new System.Windows.Forms.Label();
-            this._txtSizeLimit = new System.Windows.Forms.TextBox();
             this._Label1 = new System.Windows.Forms.Label();
             this._Label11 = new System.Windows.Forms.Label();
             this._txtPrefix = new System.Windows.Forms.TextBox();
@@ -77,7 +75,7 @@ namespace Paclink
             // 
             // _Label26
             // 
-            this._Label26.Location = new System.Drawing.Point(62, 395);
+            this._Label26.Location = new System.Drawing.Point(62, 362);
             this._Label26.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._Label26.Name = "_Label26";
             this._Label26.Size = new System.Drawing.Size(630, 36);
@@ -87,7 +85,7 @@ namespace Paclink
             // _txtPOP3PortNumber
             // 
             this._txtPOP3PortNumber.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this._txtPOP3PortNumber.Location = new System.Drawing.Point(203, 226);
+            this._txtPOP3PortNumber.Location = new System.Drawing.Point(203, 196);
             this._txtPOP3PortNumber.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this._txtPOP3PortNumber.Name = "_txtPOP3PortNumber";
             this._txtPOP3PortNumber.Size = new System.Drawing.Size(79, 23);
@@ -100,7 +98,7 @@ namespace Paclink
             // _Label23
             // 
             this._Label23.AutoSize = true;
-            this._Label23.Location = new System.Drawing.Point(82, 230);
+            this._Label23.Location = new System.Drawing.Point(82, 200);
             this._Label23.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._Label23.Name = "_Label23";
             this._Label23.Size = new System.Drawing.Size(111, 15);
@@ -110,7 +108,7 @@ namespace Paclink
             // _txtSMTPPortNumber
             // 
             this._txtSMTPPortNumber.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this._txtSMTPPortNumber.Location = new System.Drawing.Point(203, 196);
+            this._txtSMTPPortNumber.Location = new System.Drawing.Point(203, 166);
             this._txtSMTPPortNumber.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this._txtSMTPPortNumber.Name = "_txtSMTPPortNumber";
             this._txtSMTPPortNumber.Size = new System.Drawing.Size(79, 23);
@@ -123,7 +121,7 @@ namespace Paclink
             // _Label21
             // 
             this._Label21.AutoSize = true;
-            this._Label21.Location = new System.Drawing.Point(79, 200);
+            this._Label21.Location = new System.Drawing.Point(79, 170);
             this._Label21.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._Label21.Name = "_Label21";
             this._Label21.Size = new System.Drawing.Size(112, 15);
@@ -197,25 +195,6 @@ namespace Paclink
         "AN");
             this._chkLANAccessable.UseVisualStyleBackColor = true;
             // 
-            // _Label9
-            // 
-            this._Label9.AutoSize = true;
-            this._Label9.Location = new System.Drawing.Point(12, 170);
-            this._Label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this._Label9.Name = "_Label9";
-            this._Label9.Size = new System.Drawing.Size(180, 15);
-            this._Label9.TabIndex = 75;
-            this._Label9.Text = "Message size limit (compressed):";
-            // 
-            // _txtSizeLimit
-            // 
-            this._txtSizeLimit.Location = new System.Drawing.Point(203, 166);
-            this._txtSizeLimit.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this._txtSizeLimit.Name = "_txtSizeLimit";
-            this._txtSizeLimit.Size = new System.Drawing.Size(129, 23);
-            this._txtSizeLimit.TabIndex = 4;
-            this._ToolTip1.SetToolTip(this._txtSizeLimit, "Attachment limit in bytes. 0 removes all attachments. (Default=120000)");
-            // 
             // _Label1
             // 
             this._Label1.AutoSize = true;
@@ -266,7 +245,7 @@ namespace Paclink
             // 
             // _OK_Button
             // 
-            this._OK_Button.Location = new System.Drawing.Point(134, 437);
+            this._OK_Button.Location = new System.Drawing.Point(134, 404);
             this._OK_Button.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this._OK_Button.Name = "_OK_Button";
             this._OK_Button.Size = new System.Drawing.Size(154, 30);
@@ -277,7 +256,7 @@ namespace Paclink
             // _Cancel_Button
             // 
             this._Cancel_Button.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this._Cancel_Button.Location = new System.Drawing.Point(301, 437);
+            this._Cancel_Button.Location = new System.Drawing.Point(301, 404);
             this._Cancel_Button.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this._Cancel_Button.Name = "_Cancel_Button";
             this._Cancel_Button.Size = new System.Drawing.Size(154, 30);
@@ -346,7 +325,7 @@ namespace Paclink
             // _btnHelp
             // 
             this._btnHelp.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this._btnHelp.Location = new System.Drawing.Point(467, 437);
+            this._btnHelp.Location = new System.Drawing.Point(467, 404);
             this._btnHelp.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this._btnHelp.Name = "_btnHelp";
             this._btnHelp.Size = new System.Drawing.Size(154, 30);
@@ -382,7 +361,7 @@ namespace Paclink
             this._GroupBox1.Controls.Add(this._txtRMSRelayIPPath);
             this._GroupBox1.Controls.Add(this._rdoUseRMSRelay);
             this._GroupBox1.Controls.Add(this._rdoUseCMS);
-            this._GroupBox1.Location = new System.Drawing.Point(46, 295);
+            this._GroupBox1.Location = new System.Drawing.Point(46, 265);
             this._GroupBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this._GroupBox1.Name = "_GroupBox1";
             this._GroupBox1.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -450,7 +429,7 @@ namespace Paclink
             // _Label7
             // 
             this._Label7.AutoSize = true;
-            this._Label7.Location = new System.Drawing.Point(99, 260);
+            this._Label7.Location = new System.Drawing.Point(99, 230);
             this._Label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._Label7.Name = "_Label7";
             this._Label7.Size = new System.Drawing.Size(91, 15);
@@ -460,7 +439,7 @@ namespace Paclink
             // _txtServiceCodes
             // 
             this._txtServiceCodes.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this._txtServiceCodes.Location = new System.Drawing.Point(203, 258);
+            this._txtServiceCodes.Location = new System.Drawing.Point(203, 228);
             this._txtServiceCodes.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this._txtServiceCodes.Name = "_txtServiceCodes";
             this._txtServiceCodes.Size = new System.Drawing.Size(229, 23);
@@ -502,7 +481,7 @@ namespace Paclink
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(762, 492);
+            this.ClientSize = new System.Drawing.Size(762, 444);
             this.Controls.Add(this._Label14);
             this.Controls.Add(this._Label13);
             this.Controls.Add(this._chkForceHFRouting);
@@ -524,8 +503,6 @@ namespace Paclink
             this.Controls.Add(this._Label21);
             this.Controls.Add(this._btnHelp);
             this.Controls.Add(this._txtSMTPPortNumber);
-            this.Controls.Add(this._Label9);
-            this.Controls.Add(this._txtSizeLimit);
             this.Controls.Add(this._Label8);
             this.Controls.Add(this._txtSiteCallsign);
             this.Controls.Add(this._Cancel_Button);
@@ -935,54 +912,6 @@ namespace Paclink
 
                 _ToolTip1 = value;
                 if (_ToolTip1 != null)
-                {
-                }
-            }
-        }
-
-        private Label _Label9;
-
-        internal Label Label9
-        {
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            get
-            {
-                return _Label9;
-            }
-
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            set
-            {
-                if (_Label9 != null)
-                {
-                }
-
-                _Label9 = value;
-                if (_Label9 != null)
-                {
-                }
-            }
-        }
-
-        private TextBox _txtSizeLimit;
-
-        internal TextBox txtSizeLimit
-        {
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            get
-            {
-                return _txtSizeLimit;
-            }
-
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            set
-            {
-                if (_txtSizeLimit != null)
-                {
-                }
-
-                _txtSizeLimit = value;
-                if (_txtSizeLimit != null)
                 {
                 }
             }
