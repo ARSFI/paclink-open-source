@@ -439,7 +439,7 @@ namespace Paclink
 
                         case "BufferType":
                             {
-                                enmBufferType = (BufferType)Convert.ToInt32(strTokens[1]);
+                                enmBufferType = (BufferType) Enum.Parse(typeof(BufferType), strTokens[1]);
                                 break;
                             }
 
