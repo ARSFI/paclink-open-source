@@ -882,18 +882,15 @@ namespace Paclink
 
         private bool SetRMSList()
         {
-            var aryResults = new string[0];
-            int intIndex;
-            string strFreqList;
-            if (File.Exists(Globals.SiteRootDirectory + @"\Data\RMS Channels.dat"))
-            {
-                aryResults = Channels.ParseChannelList(Globals.SiteRootDirectory + @"\Data\RMS Channels.dat");
-            }
-            else
+            if (!Channels.HasChannelList(false))
             {
                 MessageBox.Show("Click 'Update Channel List' to download the list of available channels");
                 return false;
             }
+
+            var aryResults = Channels.ParseChannelList(false);
+            int intIndex;
+            string strFreqList;
 
             if (aryResults.Length > 0)
             {

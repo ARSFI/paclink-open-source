@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using NLog;
+using Paclink.Data;
 using winlink.cms.webservices;
 
 namespace Paclink
@@ -457,14 +458,6 @@ namespace Paclink
         public static string GetChannelRecords(bool VHFchannels, string strServiceCodes)
         {
             // 
-            // Update the HF channel list.
-            // 
-            string strCallSign;
-            string strFreqEntry;
-            string strSQL = "";
-            var dicStation = new SortedDictionary<string, string>();
-
-            // 
             // Try to get a list of either HF or VHF channels.
             // 
             var lstGateways = Globals.GetChannelsList(VHFchannels);
@@ -473,69 +466,54 @@ namespace Paclink
             {
                 return "Unable to download channel information from Winlink server.";
             }
-            // 
-            // Build a dictionary with channel callsign as the key and frequency entries as values.
-            // 
-            foreach (GatewayStatusRecord ObjStation in lstGateways)
+
+            var channelDatabase = new Channel(DatabaseFactory.Get());
+            try
             {
-                strCallSign = ObjStation.Callsign;
-                foreach (GatewayChannelRecord objChan in ObjStation.GatewayChannels)
+                channelDatabase.BeginUpdateSession();
+                channelDatabase.ClearChannelList(VHFchannels);
+
+                foreach (var station in lstGateways)
                 {
-                    strFreqEntry = objChan.Frequency.ToString();
-                    strFreqEntry += "|" + objChan.Gridsquare;
-                    strFreqEntry += "|" + objChan.Mode.ToString();
-                    strFreqEntry += "|" + objChan.OperatingHours.Replace(" ", "");
-                    strFreqEntry += "|" + objChan.ServiceCode;
-                    if (dicStation.ContainsKey(strCallSign))
+                    foreach (var channel in station.GatewayChannels)
                     {
-                        dicStation[strCallSign] += "," + strFreqEntry;
-                    }
-                    else
-                    {
-                        dicStation.Add(strCallSign, strFreqEntry);
+                        channelDatabase.AddChannelRecord(
+                            VHFchannels, station.Callsign, channel.Frequency,
+                            channel.Gridsquare, channel.Mode, channel.OperatingHours.Replace(" ", ""), channel.ServiceCode);
                     }
                 }
-            }
-            // 
-            // Create a string in the format we want to store the channels in.
-            // 
-            var sbdChannels = new StringBuilder();
-            foreach (KeyValuePair<string, string> kvp in dicStation)
-                sbdChannels.Append(kvp.Key + ":" + kvp.Value + Globals.CRLF);
-            // 
-            // Create the channel file.
-            // 
-            if (VHFchannels)
+
+                channelDatabase.CommitUpdateSession();
+            } 
+            catch (Exception e)
             {
-                File.WriteAllText(Globals.SiteRootDirectory + @"Data\RMS VHF Channels.dat", sbdChannels.ToString());
-            }
-            else
-            {
-                File.WriteAllText(Globals.SiteRootDirectory + @"Data\RMS Channels.dat", sbdChannels.ToString());
+                channelDatabase.RollbackUpdateSession();
+                return "Could not update channel database: " + e.ToString();
             }
 
             return "";
         }
 
-        public static string[] ParseChannelList(string strFilename)
+        public static bool HasChannelList(bool isPacket)
+        {
+            var channelDatabase = new Channel(DatabaseFactory.Get());
+            return channelDatabase.ContainsChannelList(isPacket);
+        }
+
+        public static string[] ParseChannelList(bool isPacket)
         {
             // 
             // Function to parse the channel freq list (used for Public, EMComm and MARS
             // Returns an empty string array if error or file not found.
             // 
-            var aryResult = new string[0];
-            if (!File.Exists(strFilename))
-                return aryResult;
-            try
+            var channelDatabase = new Channel(DatabaseFactory.Get());
+            var result = new List<string>();
+            foreach (var entry in channelDatabase.GetChannelList(isPacket))
             {
-                aryResult = File.ReadAllLines(strFilename);
-            }
-            catch
-            {
-                return aryResult;
+                result.Add(entry.Key + ":" + entry.Value);
             }
 
-            return aryResult;
+            return result.ToArray();
         } // ParseChannelList
     } // Channels
 }

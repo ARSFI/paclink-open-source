@@ -266,7 +266,7 @@ namespace Paclink
         private void PactorConnect_Load(object sender, EventArgs e)
         {
             // Initializize the controls...
-            var aryResults = new string[0];
+            var aryResults = Channels.ParseChannelList(false);
             int intIndex;
             string strFreqList;
             Top = Globals.Settings.Get("Pactor Control", "Top", 100);
@@ -277,11 +277,7 @@ namespace Paclink
                 Text = "Pactor: " + stcChannel.ChannelName;
                 lblPMBOType.Text = Globals.strServiceCodes;
                 chkResumeDialog.Checked = Globals.blnPactorDialogResume;
-                if (File.Exists(Globals.SiteRootDirectory + @"\Data\RMS Channels.dat"))
-                {
-                    aryResults = Channels.ParseChannelList(Globals.SiteRootDirectory + @"\Data\RMS Channels.dat");
-                }
-                else
+                if (aryResults.Length == 0)
                 {
                     MessageBox.Show("Click 'Update Channel List' to download the list of available channels");
                     return;

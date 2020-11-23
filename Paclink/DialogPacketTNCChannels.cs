@@ -152,20 +152,17 @@ namespace Paclink
 
         private bool SetRMSList()
         {
-            var aryResults = new string[0];
-            int intIndex;
-            string strFreqList;
-            string strStationCall;
-            bool blnFoundCallsign;
-            if (System.IO.File.Exists(Globals.SiteRootDirectory + @"\Data\RMS VHF Channels.dat"))
-            {
-                aryResults = Channels.ParseChannelList(Globals.SiteRootDirectory + @"\Data\RMS VHF Channels.dat");
-            }
-            else
+            if (!Channels.HasChannelList(true))
             {
                 MessageBox.Show("Click 'Update Channel List' to download the list of available channels");
                 return false;
             }
+
+            var aryResults = Channels.ParseChannelList(true);
+            int intIndex;
+            string strFreqList;
+            string strStationCall;
+            bool blnFoundCallsign;
 
             if (aryResults.Length > 0)
             {
