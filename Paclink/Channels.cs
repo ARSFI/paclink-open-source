@@ -412,20 +412,18 @@ namespace Paclink
         private static void SaveScript(string strChannel, string strScript)
         {
             // 
-            // Saves a script in the \Data subdirectory for the channel named in strChannel.
+            // Saves a script for the channel named in strChannel.
             // 
+            var channelDatabase = new Channel(DatabaseFactory.Get());
             try
             {
-                string strScriptFilePath = Globals.SiteRootDirectory + @"Data\" + strChannel + ".script";
-                if (strScript is object && strScript.Length > 0)
-                {
-                    File.WriteAllText(strScriptFilePath, strScript);
-                }
-                else if (File.Exists(strScriptFilePath))
-                    File.Delete(strScriptFilePath);
+                channelDatabase.BeginUpdateSession();
+                channelDatabase.WriteScript(strChannel, strScript);
+                channelDatabase.CommitUpdateSession();
             }
             catch (Exception e)
             {
+                channelDatabase.RollbackUpdateSession();
                 _log.Error("[Channels.SaveScript] " + e.Message);
             }
         } // SaveScript
@@ -433,19 +431,12 @@ namespace Paclink
         private static string GetScript(string strChannel)
         {
             // 
-            // Gets a script from the \Data subdirectory for the channel named in strChannel.
+            // Gets a script for the channel named in strChannel.
             // 
+            var channelDatabase = new Channel(DatabaseFactory.Get());
             try
             {
-                string strScriptFilePath = Globals.SiteRootDirectory + @"Data\" + strChannel + ".script";
-                if (File.Exists(strScriptFilePath))
-                {
-                    return File.ReadAllText(strScriptFilePath);
-                }
-                else
-                {
-                    return null;
-                }
+                return channelDatabase.GetScript(strChannel);
             }
             catch (Exception e)
             {

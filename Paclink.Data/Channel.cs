@@ -81,5 +81,31 @@ namespace Paclink.Data
 
             return result;
         }
+
+        public void WriteScript(string channelName, string script)
+        {
+            _database.NonQuery(string.Format("DELETE FROM `ChannelScripts` WHERE `ChannelName`='{0}", channelName));
+
+            var sql = @"
+                INSERT INTO `ChannelScripts` (`ChannelName`, `ChannelScript`)
+                VALUES ('{0}', '{1}')";
+            _database.NonQuery(string.Format(sql, channelName, script));
+        }
+
+        public string GetScript(string channelName)
+        {
+            var sql = "SELECT `ChannelScript` FROM `ChannelScripts` WHERE `ChannelName`='{0}'";
+            var channelList = _database.FillDataSet(
+                string.Format(sql, channelName), "ChannelScripts");
+
+            if (channelList.Tables[0].Rows.Count == 0)
+            {
+                return null;
+            }
+            else
+            {
+                return channelList.Tables[0].Rows[0]["ChannelScript"].ToString();
+            }
+        }
     }
 }

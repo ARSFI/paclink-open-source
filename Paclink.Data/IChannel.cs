@@ -13,5 +13,9 @@ namespace Paclink.Data
         void ClearChannelList(bool isPacket);
 
         SortedDictionary<string, string> GetChannelList(bool isPacket);
+
+        void WriteScript(string channelName, string script);
+
+        string GetScript(string channelName);
     }
 }

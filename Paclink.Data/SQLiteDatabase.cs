@@ -70,7 +70,10 @@ namespace Paclink.Data
 
                 cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Channel(`IsPacket` BOOLEAN NOT NULL, `Callsign` STRING, `Frequency` INTEGER, `GridSquare` STRING, `Mode` INTEGER, `OperatingHours` STRING, `ServiceCode` STRING)";
                 cmd.ExecuteNonQuery();
-                
+
+                cmd.CommandText = @"CREATE TABLE IF NOT EXISTS ChannelScripts(`ChannelName` STRING, `ChannelScript` TEXT)";
+                cmd.ExecuteNonQuery();
+
                 //add db version property
                 cmd.CommandText = $"REPLACE INTO Properties (`Timestamp`,`Group`,`Property`,`Value`) VALUES (datetime('now'),'System','{SchemaVersionProperty}','{_databaseVersion}')";
                 cmd.ExecuteNonQuery();
