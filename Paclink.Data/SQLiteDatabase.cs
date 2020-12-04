@@ -74,6 +74,9 @@ namespace Paclink.Data
                 cmd.CommandText = @"CREATE TABLE IF NOT EXISTS ChannelScripts(`ChannelName` STRING, `ChannelScript` TEXT)";
                 cmd.ExecuteNonQuery();
 
+                cmd.CommandText = @"CREATE TABLE IF NOT EXISTS MessageIdsSeen(`SeenDate` TEXT, `MessageId` STRING)";
+                cmd.ExecuteNonQuery();
+
                 //add db version property
                 cmd.CommandText = $"REPLACE INTO Properties (`Timestamp`,`Group`,`Property`,`Value`) VALUES (datetime('now'),'System','{SchemaVersionProperty}','{_databaseVersion}')";
                 cmd.ExecuteNonQuery();

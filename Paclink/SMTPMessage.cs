@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using NLog;
+using Paclink.Data;
 
 namespace Paclink
 {
@@ -59,7 +60,8 @@ namespace Paclink
                 string strMessageFilePath = Globals.SiteRootDirectory + @"To Winlink\" + MessageId + ".mime";
                 Directory.CreateDirectory(Path.GetDirectoryName(strMessageFilePath));
                 File.WriteAllText(strMessageFilePath, Mime);
-                MidsSeen.AddMessageId(MessageId);
+                var messageStoreDatabase = new MessageStore(DatabaseFactory.Get());
+                messageStoreDatabase.AddMessageIdSeen(MessageId);
                 LocalDelivery();
                 return true;
             }

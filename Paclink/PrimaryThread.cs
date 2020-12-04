@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows.Forms;
 using NLog;
+using Paclink.Data;
 
 namespace Paclink
 {
@@ -194,6 +195,8 @@ namespace Paclink
                 _log.Error("[SMTPThread] SMTP/POP3 Port Setup: " + ex.Message);
             }
 
+            var messageStoreDatabase = new MessageStore(DatabaseFactory.Get());
+
             do
             {
                 Thread.Sleep(4000);
@@ -202,7 +205,7 @@ namespace Paclink
                 if (_intDay != DateTime.UtcNow.Day)
                 {
                     _intDay = DateTime.UtcNow.Day;
-                    MidsSeen.PurgeMidsSeenFile();
+                    messageStoreDatabase.PurgeMessageIdsSeen();
                 }
                 // 
                 // Initiates processing of any messages received from Winlink.

@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Timers;
 using NLog;
+using Paclink.Data;
 
 namespace Paclink
 {
@@ -649,6 +650,7 @@ namespace Paclink
                 cllInboundMessageIDs.Clear();
                 var sbdText = new StringBuilder();
                 sbdText.Append("FS ");
+                var messageStoreDatabase = new MessageStore(DatabaseFactory.Get());
                 foreach (string strLine in cllInboundProposals)
                 {
                     var strToks = strLine.Split(' ');
@@ -657,7 +659,7 @@ namespace Paclink
                     objProp.msgID = strToks[2];
                     objProp.uncompressedSize = Convert.ToInt32(strToks[3]);
                     objProp.compressedSize = Convert.ToInt32(strToks[4]);
-                    if (MidsSeen.IsMessageIdSeen(objProp.msgID))
+                    if (messageStoreDatabase.IsMessageIdSeen(objProp.msgID))
                     {
                         sbdText.Append("N");
                     }
@@ -798,7 +800,8 @@ namespace Paclink
                     // record the message ID as having been seen and processed...
                     if (objMessageInbound.SaveToFile(Globals.SiteRootDirectory + @"From Winlink\" + objMessageInbound.MessageId + ".mime"))
                     {
-                        MidsSeen.AddMessageId(objMessageInbound.MessageId);
+                        var messageStoreDatabase = new MessageStore(DatabaseFactory.Get());
+                        messageStoreDatabase.AddMessageIdSeen(objMessageInbound.MessageId);
                     }
 
                     // Save statistics...
