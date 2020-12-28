@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using NLog;
+using Paclink.Data;
 
 namespace Paclink
 {
@@ -337,8 +338,6 @@ namespace Paclink
 
         private void AddRadioAccount(string strCallsign, string strPassword)
         {
-            // Create a new callsign account directory...
-            Directory.CreateDirectory(Globals.SiteRootDirectory + @"Accounts\" + strCallsign + "_Account");
             string strAccountList = Globals.Settings.Get("Properties", "Account Names", "");
             strAccountList = strAccountList + strCallsign + "|";
             Globals.Settings.Save("Properties", "Site Callsign", strCallsign);
@@ -363,10 +362,8 @@ namespace Paclink
             // Remove callsign account directory...
             try
             {
-                if (Directory.Exists(Globals.SiteRootDirectory + @"Accounts\" + strCallsign + "_Account"))
-                {
-                    Directory.Delete(Globals.SiteRootDirectory + @"Accounts\" + strCallsign + "_Account", true);
-                }
+                var messageStore = new MessageStore(DatabaseFactory.Get());
+                messageStore.DeleteAccountEmails(strCallsign);
             }
             catch (Exception ex)
             {

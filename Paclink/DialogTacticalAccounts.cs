@@ -301,9 +301,6 @@ namespace Paclink
             bool blnReturn;
             if (AddTacticalAccountToWinlink(cmbAccount.Text, txtPassword.Text))
             {
-                // Make a new sub-directory for this account...
-                Directory.CreateDirectory(Globals.SiteRootDirectory + @"Accounts\" + cmbAccount.Text + "_Account");
-
                 // Add the account name to the properties file...
                 string strAccountList = Globals.Settings.Get("Properties", "Account Names", "");
                 strAccountList = strAccountList + cmbAccount.Text + "|";

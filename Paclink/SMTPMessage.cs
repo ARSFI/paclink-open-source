@@ -110,15 +110,15 @@ namespace Paclink
 
         private void LocalDelivery()
         {
+            var messageStore = new MessageStore(DatabaseFactory.Get());
+
             foreach (WinlinkAddress objAddress in cllToAddresses)
             {
                 if (Accounts.AccountsString.IndexOf(objAddress.RadioAddress) != -1)
                 {
-                    string strMessageFilePath = Globals.SiteRootDirectory + @"Accounts\" + objAddress.RadioAddress + @"_Account\" + MessageId + ".mime";
                     try
                     {
-                        Directory.CreateDirectory(Path.GetDirectoryName(strMessageFilePath));
-                        File.WriteAllText(strMessageFilePath, Mime);
+                        messageStore.SaveAccountMessage(MessageId, objAddress.RadioAddress, UTF8Encoding.UTF8.GetBytes(Mime));
                     }
                     catch (Exception e)
                     {
@@ -131,11 +131,9 @@ namespace Paclink
             {
                 if (Accounts.AccountsString.IndexOf(objAddress.RadioAddress) != -1)
                 {
-                    string strMessageFilePath = Globals.SiteRootDirectory + @"Accounts\" + objAddress.RadioAddress + @"_Account\" + MessageId + ".mime";
                     try
                     {
-                        Directory.CreateDirectory(Path.GetDirectoryName(strMessageFilePath));
-                        File.WriteAllText(strMessageFilePath, Mime);
+                        messageStore.SaveAccountMessage(MessageId, objAddress.RadioAddress, UTF8Encoding.UTF8.GetBytes(Mime));
                     }
                     catch (Exception e)
                     {

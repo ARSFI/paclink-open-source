@@ -854,14 +854,13 @@ namespace Paclink
         {
             // Remove and account directories that are no longer used...
             string strDirectoryNames = Settings.Get("Properties", "Account Names", "");
-            var strDirectories = Directory.GetDirectories(SiteRootDirectory + "Accounts");
-            foreach (string strDirectory in strDirectories)
+
+            var messageStore = new MessageStore(DatabaseFactory.Get());
+            foreach (string account in messageStore.GetAccountsWithEmails())
             {
-                string strDirectoryName = strDirectory.Replace(SiteRootDirectory + @"Accounts\", "");
-                var strTokens = strDirectoryName.Split('_');
-                if (strDirectoryNames.IndexOf(strTokens[0] + "|") == -1)
+                if (strDirectoryNames.IndexOf(account + "|") == -1)
                 {
-                    Directory.Delete(strDirectory, true);
+                    messageStore.DeleteAccountEmails(account);
                 }
             }
         } // UpdateAccountDirectories

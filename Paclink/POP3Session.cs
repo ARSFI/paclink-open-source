@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Timers;
 using NLog;
+using Paclink.Data;
 
 namespace Paclink
 {
@@ -49,13 +50,11 @@ namespace Paclink
         }
 
         private bool[] blnDeleteFlags;
-        private FileInfo[] aryPendingMimeList;
-        private FileStream objMimeFileStream;
         private SessionState POP3State;
         private string strCommand;
         private string strCommandBuffer;
         private string strParameter;
-        private string strMimeFilePath;
+        private bool authorized;
         private string strAccountName;
         private string strPassword;
         private int intNumberOfMimeFiles;
@@ -176,8 +175,8 @@ namespace Paclink
                             case "PASS": // Accept the password to verify account...
                                 {
                                     strPassword = strParameter.ToUpper();
-                                    strMimeFilePath = Authorize(strAccountName, strPassword);
-                                    if (!string.IsNullOrEmpty(strMimeFilePath))
+                                    authorized = Authorize(strAccountName, strPassword);
+                                    if (authorized)
                                     {
                                         AuthorizedUser = strAccountName;
                                         POP3State = SessionState.Transaction;
@@ -280,26 +279,17 @@ namespace Paclink
 
         private void GetPendingMimeList()
         {
-            if (File.Exists(strMimeFilePath) == false)
-            {
-                Directory.CreateDirectory(strMimeFilePath);
-            }
-
-            var objMimeDirectoryInfo = new DirectoryInfo(strMimeFilePath);
+            var messageStore = new MessageStore(DatabaseFactory.Get());
             int intCount = 0;
             int intByteCount = 0;
-            aryPendingMimeList = null;
             blnDeleteFlags = null;
-            aryPendingMimeList = objMimeDirectoryInfo.GetFiles();
-            if (aryPendingMimeList is object)
+            var pendingEmails = messageStore.GetAccountEmails(strAccountName);
+            foreach (var email in pendingEmails)
             {
-                foreach (FileInfo objFileInfo in aryPendingMimeList)
-                {
-                    Array.Resize(ref blnDeleteFlags, intCount + 1);
-                    blnDeleteFlags[intCount] = false;
-                    intCount += 1;
-                    intByteCount += Convert.ToInt32(objFileInfo.Length);
-                }
+                Array.Resize(ref blnDeleteFlags, intCount + 1);
+                blnDeleteFlags[intCount] = false;
+                intCount += 1;
+                intByteCount += Convert.ToInt32(email.Value.Length);
             }
 
             intNumberOfMimeFiles = intCount;
@@ -325,12 +315,14 @@ namespace Paclink
             if (string.IsNullOrEmpty(strMessageId))  // List everything as a multi line response...
             {
                 strResponse = "+OK " + intNumberOfMimeFiles.ToString() + " " + intTotalBytes.ToString() + Globals.CRLF;
-                if (aryPendingMimeList is object)
+                if (intNumberOfMimeFiles > 0)
                 {
-                    foreach (FileInfo objFileInfo in aryPendingMimeList)
+                    var messageStore = new MessageStore(DatabaseFactory.Get());
+                    var pendingEmails = messageStore.GetAccountEmails(strAccountName);
+                    foreach (var email in pendingEmails)
                     {
                         intCount = intCount + 1;
-                        strResponse = strResponse + intCount.ToString() + " " + objFileInfo.Length.ToString() + Globals.CRLF;
+                        strResponse = strResponse + intCount.ToString() + " " + email.Value.Length.ToString() + Globals.CRLF;
                     }
                 }
 
@@ -340,11 +332,13 @@ namespace Paclink
             {
                 int intIndex;
                 intIndex = Convert.ToInt32(strMessageId);
-                if (aryPendingMimeList is object)
+                if (intNumberOfMimeFiles > 0)
                 {
+                    var messageStore = new MessageStore(DatabaseFactory.Get());                
                     if (intIndex > 0 & intIndex <= intNumberOfMimeFiles)
                     {
-                        strResponse = "+OK " + intIndex.ToString() + " " + aryPendingMimeList[intIndex - 1].Length.ToString() + Globals.CRLF;
+                        var email = messageStore.GetAccountEmails(strAccountName)[intIndex - 1].Value;
+                        strResponse = "+OK " + intIndex.ToString() + " " + email.Length.ToString() + Globals.CRLF;
                     }
                     else
                     {
@@ -378,17 +372,12 @@ namespace Paclink
                 UidlResponseRet = "+OK " + Globals.CRLF;
                 if (intNumberOfMimeFiles != 0)
                 {
-                    if (aryPendingMimeList is object)
+                    var messageStore = new MessageStore(DatabaseFactory.Get());
+                    var emails = messageStore.GetAccountEmails(strAccountName);
+                    foreach (var email in emails)
                     {
-                        foreach (FileInfo objFileInfo in aryPendingMimeList)
-                        {
-                            intCount = intCount + 1;
-                            strId = objFileInfo.FullName;
-                            intLastSlashPosition = strId.LastIndexOf(@"\");
-                            strId = strId.Substring(intLastSlashPosition + 1);
-                            strId = strId.Replace(".mime", "");
-                            UidlResponseRet = UidlResponseRet + intCount.ToString() + " " + strId + Globals.CRLF;
-                        }
+                        intCount = intCount + 1;
+                        UidlResponseRet = UidlResponseRet + intCount.ToString() + " " + email.Key + Globals.CRLF;
                     }
 
                     UidlResponseRet = UidlResponseRet + "." + Globals.CRLF; // add terminator
@@ -401,20 +390,12 @@ namespace Paclink
             else // Request for specific message just send a single line response...
             {
                 intIndex = Convert.ToInt32(strMessageId);
-                if (aryPendingMimeList is object)
+               
+                if (intIndex > 0 & intIndex <= intNumberOfMimeFiles)
                 {
-                    if (intIndex > 0 & intIndex <= intNumberOfMimeFiles)
-                    {
-                        strId = aryPendingMimeList[intIndex - 1].FullName;
-                        intLastSlashPosition = strId.LastIndexOf(@"\");
-                        strId = strId.Substring(intLastSlashPosition + 1);
-                        strId = strId.Replace(".mime", "");
-                        UidlResponseRet = "+OK " + intIndex.ToString() + " " + strId + Globals.CRLF;
-                    }
-                    else
-                    {
-                        UidlResponseRet = "-ERR" + Globals.CRLF;
-                    }
+                    var messageStore = new MessageStore(DatabaseFactory.Get());
+                    var email = messageStore.GetAccountEmails(strAccountName)[intIndex];
+                    UidlResponseRet = "+OK " + intIndex.ToString() + " " + email.Key + Globals.CRLF;
                 }
                 else
                 {
@@ -474,14 +455,16 @@ namespace Paclink
                 return DeleteMimeFilesRet;
             }
 
-            if (aryPendingMimeList is object)
+            if (intNumberOfMimeFiles > 0)
             {
+                var messageStore = new MessageStore(DatabaseFactory.Get());
+                var emails = messageStore.GetAccountEmails(strAccountName);
                 var loopTo = intNumberOfMimeFiles;
                 for (intIndex = 1; intIndex <= loopTo; intIndex++)
                 {
                     if (blnDeleteFlags[intIndex - 1] == true)
                     {
-                        File.Delete(aryPendingMimeList[intIndex - 1].FullName);
+                        messageStore.DeleteAccountEmail(strAccountName, emails[intIndex - 1].Key);
                     }
                 }
             }
@@ -507,14 +490,15 @@ namespace Paclink
                     return RetrieveMessageRet;
                 }
 
-                if (aryPendingMimeList is object)
+                if (intNumberOfMimeFiles > 0)
                 {
+                    var messageStore = new MessageStore(DatabaseFactory.Get());
+                    var emails = messageStore.GetAccountEmails(strAccountName);
                     if (intIndex > 0 & intIndex <= blnDeleteFlags.Length)
                     {
                         if (blnDeleteFlags[intIndex - 1] == false) // Only retrieve messages NOT marked for deletion
                         {
-                            srdMime = new StreamReader(aryPendingMimeList[intIndex - 1].FullName);
-                            strMessage = srdMime.ReadToEnd();
+                            strMessage = UTF8Encoding.UTF8.GetString(emails[intIndex - 1].Value);
 
                             // Decode header for display and logging.
                             var strSubject = default(string);
@@ -536,15 +520,11 @@ namespace Paclink
 
                             // Add byte stuffing for <CrLf . >
                             strMessage = strMessage.Replace(Globals.CRLF + ".", Globals.CRLF + "..");
-                            string strMessageId = aryPendingMimeList[intIndex - 1].FullName;
-                            int nPosLastSlash = strMessageId.LastIndexOf(@"\");
-                            strMessageId = strMessageId.Substring(nPosLastSlash + 1);
-                            strMessageId = strMessageId.Replace(".mime", "");
+                            string strMessageId = emails[intIndex - 1].Key;
                             Globals.queSMTPDisplay.Enqueue("G" + strMessageId + " delivered to " + strAccountName);
                             Globals.queSMTPDisplay.Enqueue("G   " + strFrom);
                             Globals.queSMTPDisplay.Enqueue("G   " + strSubject);
                             RetrieveMessageRet = "+OK " + Globals.CRLF + strMessage + Globals.CRLF + "." + Globals.CRLF;
-                            srdMime.Close();
                             return RetrieveMessageRet;
                         }
                     }
@@ -582,8 +562,10 @@ namespace Paclink
                     {
                         if (blnDeleteFlags[intIndex - 1] == false) // only retrieve messages NOT marked for deletion
                         {
-                            strMime = new StreamReader(aryPendingMimeList[intIndex - 1].FullName);
-                            strMessage = strMime.ReadToEnd();
+                            var messageStore = new MessageStore(DatabaseFactory.Get());
+                            var emails = messageStore.GetAccountEmails(strAccountName);
+
+                            strMessage = UTF8Encoding.UTF8.GetString(emails[intIndex - 1].Value);
                             // Add byte stuffing for <CrLf . >
                             strMessage = strMessage.Replace(Globals.CRLF + ".", Globals.CRLF + "..");
                             int intEndOfHeader = 4 + strMessage.IndexOf(Globals.CRLF + Globals.CRLF);
@@ -606,7 +588,6 @@ namespace Paclink
                                 }
                             }
 
-                            strMime.Close();
                             return "+OK " + Globals.CRLF + sHeader + sBody + Globals.CRLF + "." + Globals.CRLF;
                         }
                     }
@@ -621,21 +602,21 @@ namespace Paclink
             }
         } // TopResponse
 
-        public string Authorize(string strAccount, string strPassword)
+        public bool Authorize(string strAccount, string strPassword)
         {
-            // Function to check authorization in the Accounts array list. Returns the Mime file path 
-            // if authorized user otherwise returns and empty string...
+            // Function to check authorization in the Accounts array list. Returns true 
+            // if authorized user otherwise returns false.
 
             var objAccount = Accounts.GetUserAccount(strAccount);
             if ((objAccount.Name ?? "") == (strAccount ?? ""))
             {
                 if ((objAccount.Password ?? "") == (strPassword ?? "") && !string.IsNullOrEmpty(strPassword))
                 {
-                    return objAccount.MimePathOut;
+                    return true;
                 }
             }
 
-            return "";
+            return false;
         } // Authorize
     }
 }

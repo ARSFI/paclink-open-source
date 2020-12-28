@@ -245,8 +245,7 @@ namespace Paclink
                     var messageStore = new MessageStore(DatabaseFactory.Get());
                     var strFromMessageList = messageStore.GetToWinlinkMessages();
                     Globals.intPendingForWinlink = strFromMessageList.Count;
-                    var strFileList = Directory.GetFiles(Globals.SiteRootDirectory + @"Accounts\", "*.mime", SearchOption.AllDirectories);
-                    Globals.intPendingForClients = strFileList.Length;
+                    Globals.intPendingForClients = messageStore.GetNumberOfAccountEmails();
                     // 
                     // Displays the message pending counts.
                     // 

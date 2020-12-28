@@ -55,7 +55,7 @@ namespace Paclink
                 {
                     Array.Resize(ref bytOrig, intLen + bytData.Length + 1);
                     bytData.CopyTo(bytOrig, intLen);
-                    messageStore.SaveTemporaryInboundMessage(strMID, bytData);
+                    messageStore.SaveTemporaryInboundMessage(strMID, bytOrig);
                 }
                 else
                 {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Paclink.Data;
+using System;
 using System.IO;
 using System.Windows.Forms;
 
@@ -155,7 +156,10 @@ namespace Paclink
             while (strAccountList.IndexOf(strAccount + "|") != -1) // This added to delete multiples if they exist
                 strAccountList = strAccountList.Replace(strAccount + "|", "");
             Globals.Settings.Save("Properties", "Account Names", strAccountList);
-            Directory.Delete(Globals.SiteRootDirectory + @"Accounts\" + strAccount + "_Account", true);
+
+            var messageStore = new MessageStore(DatabaseFactory.Get());
+            messageStore.DeleteAccountEmails(strAccount);
+
             Globals.Settings.DeleteGroup(strAccount);
             Accounts.RefreshAccountsList();
             FillAccountSelection();
@@ -257,11 +261,7 @@ namespace Paclink
             // 
             bool blnReturn;
             cmbAccount.Text = cmbAccount.Text.ToUpper().Trim();
-            // If RegisterRadioCallsign(cmbAccount.Text, txtPassword.Text, txtBasePassword.Text.Trim) Then
-            // 
-            // Make a new sub-directory for this account.
-            // 
-            Directory.CreateDirectory(Globals.SiteRootDirectory + @"Accounts\" + cmbAccount.Text + "_Account");
+
             string strAccountList = Globals.Settings.Get("Properties", "Account Names", "");
             // 
             // Add the account name to the registry list.

@@ -41,7 +41,7 @@ namespace Paclink
                         newAccount.Prefix = Globals.Settings.Get(strEachAccount, "Prefix", "");
                         newAccount.Suffix = Globals.Settings.Get(strEachAccount, "Suffix", "");
                         newAccount.MimePathIn = string.Empty;
-                        newAccount.MimePathOut = Globals.SiteRootDirectory + @"Accounts\" + strEachAccount + @"_Account\";
+                        newAccount.MimePathOut = string.Empty;
                         try
                         {
                             AccountsList.Add(strEachAccount, newAccount);

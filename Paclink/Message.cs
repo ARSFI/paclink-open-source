@@ -105,12 +105,6 @@ namespace Paclink
             return false;
         }
 
-        internal void DeleteFile(string strFilePath)
-        {
-            if (File.Exists(strFilePath))
-                File.Delete(strFilePath);
-        }
-
         internal void DeleteFromDatabase(string mid)
         {
             var messageStore = new MessageStore(DatabaseFactory.Get());
@@ -176,21 +170,6 @@ namespace Paclink
                 aryAttachments.Add(objAttachment);
             }
         } // AddAttachment
-
-        internal bool SaveMessage()
-        {
-            EncodeMime();
-            if (!string.IsNullOrEmpty(Mime))
-            {
-                var messageStore = new MessageStore(DatabaseFactory.Get());
-                messageStore.SaveFromWinlinkMessage(MessageId, UTF8Encoding.UTF8.GetBytes(Mime));
-                return true;
-            }
-
-            _log.Error("[Message.SaveMessage] " + MessageId + " empty mime");
-            ErrorDescription = "Failure to encode mime format";
-            return false;
-        } // SaveMessage
 
         private bool DecodeMime()
         {

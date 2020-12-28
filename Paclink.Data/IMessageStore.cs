@@ -22,7 +22,6 @@ namespace Paclink.Data
         void SaveTemporaryInboundMessage(string messageId, byte[] message);
 
         // Replacement for "From Winlink" folder.
-        byte[] GetFromWinlinkMessage(string messageId);
         void DeleteFromWinlinkMessage(string messageId);
         void SaveFromWinlinkMessage(string messageId, byte[] message);
         List<KeyValuePair<string, byte[]>> GetFromWinlinkMessages();
@@ -32,6 +31,15 @@ namespace Paclink.Data
         void DeleteToWinlinkMessage(string messageId);
         void SaveToWinlinkMessage(string messageId, byte[] message);
 
+        // Replacement for "Failed Mime" folder.
         void SaveFailedMimeMessage(string messageId, byte[] message);
+
+        // Replacement for "Accounts" folder.
+        void DeleteAccountEmails(string account);
+        void DeleteAccountEmail(string account, string mId);
+        List<string> GetAccountsWithEmails();
+        List<KeyValuePair<string, byte[]>> GetAccountEmails(string account);
+        int GetNumberOfAccountEmails();
+        void SaveAccountMessage(string messageId, string account, byte[] message);
     }
 }
