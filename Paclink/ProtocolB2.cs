@@ -798,7 +798,7 @@ namespace Paclink
 
                     // If the message has been successfully received and saved then
                     // record the message ID as having been seen and processed...
-                    if (objMessageInbound.SaveToFile(Globals.SiteRootDirectory + @"From Winlink\" + objMessageInbound.MessageId + ".mime"))
+                    if (objMessageInbound.SaveToDatabase(objMessageInbound.MessageId))
                     {
                         var messageStoreDatabase = new MessageStore(DatabaseFactory.Get());
                         messageStoreDatabase.AddMessageIdSeen(objMessageInbound.MessageId);

@@ -216,11 +216,6 @@ namespace Paclink
                     Directory.CreateDirectory(Globals.SiteRootDirectory + "Documentation");
                 }
 
-                if (Directory.Exists(Globals.SiteRootDirectory + "From Winlink") == false)
-                {
-                    Directory.CreateDirectory(Globals.SiteRootDirectory + "From Winlink");
-                }
-
                 if (Directory.Exists(Globals.SiteRootDirectory + "To Winlink") == false)
                 {
                     Directory.CreateDirectory(Globals.SiteRootDirectory + "To Winlink");

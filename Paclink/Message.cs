@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using NLog;
+using Paclink.Data;
 
 namespace Paclink
 {
@@ -88,18 +89,19 @@ namespace Paclink
             return 1;
         } // CompareTo
 
-        internal bool SaveToFile(string strFilePath)
+        internal bool SaveToDatabase(string mId)
         {
             if (!EncodeMime())
                 return false;
             if (!string.IsNullOrEmpty(Mime))
             {
-                File.WriteAllText(strFilePath, Mime);
+                var messageStore = new MessageStore(DatabaseFactory.Get());
+                messageStore.SaveFromWinlinkMessage(mId, UTF8Encoding.UTF8.GetBytes(Mime));
                 return true;
             }
 
             return false;
-        } // SaveToFile
+        }
 
         internal void DeleteFile(string strFilePath)
         {
@@ -169,13 +171,11 @@ namespace Paclink
 
         internal bool SaveMessage()
         {
-            // Saves the image in the mime property into the "From Winlink" subdirectory...
-
             EncodeMime();
             if (!string.IsNullOrEmpty(Mime))
             {
-                string strMessageFilePath = Globals.SiteRootDirectory + @"From Winlink\" + MessageId + ".mime";
-                File.WriteAllText(strMessageFilePath, Mime);
+                var messageStore = new MessageStore(DatabaseFactory.Get());
+                messageStore.SaveFromWinlinkMessage(MessageId, UTF8Encoding.UTF8.GetBytes(Mime));
                 return true;
             }
 

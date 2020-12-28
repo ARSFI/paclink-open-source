@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using NLog;
@@ -212,10 +213,10 @@ namespace Paclink
                 // 
                 try
                 {
-                    var strWinlinkMessages = Directory.GetFiles(Globals.SiteRootDirectory + @"From Winlink\", "*.mime");
-                    foreach (string strWinlinkMessage in strWinlinkMessages)
+                    var messageStore = new MessageStore(DatabaseFactory.Get());
+                    foreach (var message in messageStore.GetFromWinlinkMessages())
                     {
-                        string strMime = File.ReadAllText(strWinlinkMessage);
+                        string strMime = UTF8Encoding.UTF8.GetString(message.Value);
                         var objWinlinkMessage = new SMTPMessage(strMime, false);
                         if (objWinlinkMessage.IsAccepted)
                         {
@@ -229,7 +230,7 @@ namespace Paclink
                             _log.Error("[PrimaryThreads.SMTPThread] Failure to decode " + objWinlinkMessage.Mime + " from Winlink");
                         }
 
-                        File.Delete(strWinlinkMessage);
+                        messageStore.DeleteFromWinlinkMessage(message.Key);
                     }
                 }
                 catch (Exception ex)

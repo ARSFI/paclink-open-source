@@ -20,5 +20,12 @@ namespace Paclink.Data
         void DeleteTemporaryInboundMessage(string messageId);
         void PurgeOldTemporaryInboundMessages();
         void SaveTemporaryInboundMessage(string messageId, byte[] message);
+
+        // Replacement for "From Winlink" folder.
+        byte[] GetFromWinlinkMessage(string messageId);
+        void DeleteFromWinlinkMessage(string messageId);
+        void SaveFromWinlinkMessage(string messageId, byte[] message);
+
+        List<KeyValuePair<string, byte[]>> GetFromWinlinkMessages();
     }
 }
