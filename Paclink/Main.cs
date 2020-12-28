@@ -226,11 +226,6 @@ namespace Paclink
                     Directory.CreateDirectory(Globals.SiteRootDirectory + "To Winlink");
                 }
 
-                if (Directory.Exists(Globals.SiteRootDirectory + "Temp Inbound") == false)
-                {
-                    Directory.CreateDirectory(Globals.SiteRootDirectory + "Temp Inbound"); // Used to save partial inbound messages
-                }
-
                 Globals.objPrimaryThread = new PrimaryThread();
             }
             finally

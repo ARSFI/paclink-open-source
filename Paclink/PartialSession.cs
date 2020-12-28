@@ -2,6 +2,7 @@
 using System.IO;
 using Microsoft.VisualBasic;
 using NLog;
+using Paclink.Data;
 
 namespace Paclink
 {
@@ -20,10 +21,8 @@ namespace Paclink
             bytData = new byte[0];
             try
             {
-                if (File.Exists(Globals.SiteRootDirectory + @"Temp Inbound\" + MID + ".indata"))
-                {
-                    File.Delete(Globals.SiteRootDirectory + @"Temp Inbound\" + MID + ".indata");
-                }
+                var messageStore = new MessageStore(DatabaseFactory.Get());
+                messageStore.DeleteTemporaryInboundMessage(MID);
             }
             catch (Exception ex)
             {
@@ -44,27 +43,23 @@ namespace Paclink
             {
                 if (bytData.Length < 255)
                     return;
-                string strFilename = Globals.SiteRootDirectory + @"Temp Inbound\" + strMID + ".indata";
-                if (strFilename.Length > 200)
-                {
-                    _log.Error("[PartialSessions, WritePartialToFile] Filename too large: " + strFilename);
-                    return;
-                }
+
+                var messageStore = new MessageStore(DatabaseFactory.Get());
 
                 // 
                 // Write or append the byte data to the output file
-                // 
-                if (File.Exists(strFilename))
+                //
+                var bytOrig = messageStore.GetTemporaryInboundMessage(strMID);
+                int intLen = bytOrig.Length;
+                if (intLen > 0)
                 {
-                    var bytOrig = File.ReadAllBytes(strFilename);
-                    int intLen = bytOrig.Length;
                     Array.Resize(ref bytOrig, intLen + bytData.Length + 1);
                     bytData.CopyTo(bytOrig, intLen);
-                    File.WriteAllBytes(strFilename, bytOrig);
+                    messageStore.SaveTemporaryInboundMessage(strMID, bytData);
                 }
                 else
                 {
-                    File.WriteAllBytes(strFilename, bytData);
+                    messageStore.SaveTemporaryInboundMessage(strMID, bytData);
                 }
 
                 bytData = new byte[0];
@@ -75,20 +70,14 @@ namespace Paclink
             }
         } // WritePartialToFile
 
-        public void DebugWritePartialToFile(byte[] bytDebug)
-        {
-            if (bytDebug.Length == 0)
-                return;
-            File.WriteAllBytes(Globals.SiteRootDirectory + @"Temp Inbound\" + strMID + "_Raw" + bytDebug.Length.ToString() + ".indata", bytDebug);
-        } // DebugWritePartialToFile
-
         public void PurgeCurrentPartial()
         {
             // Called to purge the partial if the message was received completly or protocol failure
             bytData = new byte[0];
             try
             {
-                File.Delete(Globals.SiteRootDirectory + @"Temp Inbound\" + strMID + ".indata");
+                var messageStore = new MessageStore(DatabaseFactory.Get());
+                messageStore.DeleteTemporaryInboundMessage(strMID);
             }
             catch
             {
@@ -98,20 +87,14 @@ namespace Paclink
         // Function to retrieve the partial file to be re processed by MessageInbound
         public byte[] RetrievePartial(string MID)
         {
-            byte[] bytFiledata;
-            if (File.Exists(Globals.SiteRootDirectory + @"Temp Inbound\" + MID + ".indata"))
-            {
-                // return the bytes accumulated in the file
-                bytFiledata = File.ReadAllBytes(Globals.SiteRootDirectory + @"Temp Inbound\" + MID + ".indata");
-                return bytFiledata;
-            }
-            else // just return a 0 length array
+            var messageStore = new MessageStore(DatabaseFactory.Get());
+            byte[] bytFiledata = messageStore.GetTemporaryInboundMessage(MID);
+            if (bytFiledata.Length == 0)
             {
                 blnFirstRcvdBlk = false;
                 blnRemoveHdr8 = false;
-                bytFiledata = new byte[0];
-                return bytFiledata;
             }
+            return bytFiledata;
         } // RetrievePartial
 
         // Function to strip the headers from the first blocks of a transmission of a  partial and return checksum of the stripped header

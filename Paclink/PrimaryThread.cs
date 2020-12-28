@@ -698,21 +698,8 @@ namespace Paclink
 
             try
             {
-                var objDirectoryInfo = new DirectoryInfo(Globals.SiteRootDirectory + "Temp Inbound");
-                var objFileInfo = objDirectoryInfo.GetFiles("*.indata");
-                foreach (FileInfo objFile in objFileInfo)
-                {
-                    if (DateTime.Now.Subtract(objFile.LastWriteTime).TotalHours > 24)
-                    {
-                        try
-                        {
-                            File.Delete(objFile.FullName);
-                        }
-                        catch
-                        {
-                        }
-                    }
-                }
+                var dataStore = new MessageStore(DatabaseFactory.Get());
+                dataStore.PurgeOldTemporaryInboundMessages();
             }
             catch (Exception ex)
             {

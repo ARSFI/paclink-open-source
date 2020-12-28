@@ -982,11 +982,10 @@ namespace Paclink
             byte[] bytFiledata;
             try
             {
-                if (File.Exists(Globals.SiteRootDirectory + @"Temp Inbound\" + MID + ".indata"))
+                var dataStore = new MessageStore(DatabaseFactory.Get());
+                bytFiledata = dataStore.GetTemporaryInboundMessage(MID);
+                if (bytFiledata.Length > 0)
                 {
-                    // Return the bytes accumulated in the file...
-                    bytFiledata = File.ReadAllBytes(Globals.SiteRootDirectory + @"Temp Inbound\" + MID + ".indata");
-
                     // Assume any partial will be a multiple of 250 real bytes as the last block of < 250 bytes
                     // would indicate a completed file...
                     if (bytFiledata.Length > 255)
@@ -996,20 +995,20 @@ namespace Paclink
                         {
                             // Problem with partial... 
                             _log.Error("IsPartialMessage: Computed Bytes received is not modulo 250, Partial MID: " + MID + " Purged!");
-                            File.Delete(Globals.SiteRootDirectory + @"Temp Inbound\" + MID + ".indata");
+                            dataStore.DeleteTemporaryInboundMessage(MID);
                             intBytesReceived = 0;
                         }
                         else if (intBytesReceived >= Convert.ToInt32(Length))
                         {
                             _log.Error("IsPartialMessage: Partial Length exceeded proposed length, Partial MID: " + MID + " Purged!");
-                            File.Delete(Globals.SiteRootDirectory + @"Temp Inbound\" + MID + ".indata");
+                            dataStore.DeleteTemporaryInboundMessage(MID);
                             intBytesReceived = 0;
                         }
                     }
                     else
                     {
                         _log.Error("IsPartialMessage: Partial Files size < 255, Partial MID: " + MID + " Purged!");
-                        File.Delete(Globals.SiteRootDirectory + @"Temp Inbound\" + MID + ".indata");
+                        dataStore.DeleteTemporaryInboundMessage(MID);
                     }
                 }
 
@@ -1017,7 +1016,8 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                File.Delete(Globals.SiteRootDirectory + @"Temp Inbound\" + MID + ".indata");
+                var dataStore = new MessageStore(DatabaseFactory.Get());
+                dataStore.DeleteTemporaryInboundMessage(MID);
                 _log.Error("[IsPartialMessage] " + e.Message);
                 return 0;
             }

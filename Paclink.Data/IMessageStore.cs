@@ -14,5 +14,11 @@ namespace Paclink.Data
         void PurgeMessageIdsSeen();
         bool IsMessageIdSeen(string messageId);
         void AddMessageIdSeen(string messageId);
+
+        // Replacement for "Temp Inbound" folder.
+        byte[] GetTemporaryInboundMessage(string messageId);
+        void DeleteTemporaryInboundMessage(string messageId);
+        void PurgeOldTemporaryInboundMessages();
+        void SaveTemporaryInboundMessage(string messageId, byte[] message);
     }
 }

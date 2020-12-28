@@ -56,5 +56,48 @@ namespace Paclink.Data
         {
             throw new NotImplementedException();
         }
+
+        public byte[] GetTemporaryInboundMessage(string messageId)
+        {
+            var sql = "SELECT `MessageData` FROM `TempInboundMessage` WHERE `MessageId`='{0}'";
+            var messages = _database.FillDataSet(string.Format(sql, messageId), "TempInboundMessage");
+            
+            if (messages.Tables[0].Rows.Count == 0)
+            {
+                return new byte[0];
+            }
+            else
+            {
+                var base64String = messages.Tables[0].Rows[0]["MessageData"].ToString();
+                return Convert.FromBase64String(base64String);
+            }
+        }
+
+        public void DeleteTemporaryInboundMessage(string messageId)
+        {
+            _database.NonQuery(string.Format(@"DELETE FROM `TempInboundMessage` WHERE `MessageId`=='{0}'", messageId));
+        }
+
+        public void SaveTemporaryInboundMessage(string messageId, byte[] message)
+        {
+            try
+            {
+                _database.NonQuery("BEGIN");
+                DeleteTemporaryInboundMessage(messageId);
+
+                var base64String = Convert.ToBase64String(message);
+                _database.NonQuery(string.Format(@"INSERT INTO `TempInboundMessage` (`MessageId`, `Timestamp`, `MessageData`) VALUES ('{0}', datetime('now'), '{1}')", messageId, base64String));
+                _database.NonQuery("COMMIT");
+            } 
+            finally
+            {
+                _database.NonQuery("ROLLBACK");
+            }
+        }
+
+        public void PurgeOldTemporaryInboundMessages()
+        {
+            _database.NonQuery(@"DELETE FROM `TempInboundMessage` WHERE `Timestamp` <= datetime('now', '-1 days')");
+        }
     }
 }
