@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Paclink.Data;
+using System;
 using System.Collections;
 using System.IO;
 using System.Text;
@@ -216,15 +217,16 @@ namespace Paclink
             var aryTemporaryOutboundMessages = new ArrayList();
 
             // Find all files pending for delivery...
-            var strFiles = Directory.GetFiles(Globals.SiteRootDirectory + @"To Winlink\", "*.mime");
-            if (strFiles.Length > 1)
-                Globals.queChannelDisplay.Enqueue("G*** Sorting " + strFiles.Length.ToString() + " outbound messages for precedence...");
+            var messageStore = new MessageStore(DatabaseFactory.Get());
+            var messages = messageStore.GetToWinlinkMessages();
+            if (messages.Count > 1)
+                Globals.queChannelDisplay.Enqueue("G*** Sorting " + messages.Count + " outbound messages for precedence...");
             for (int intIndex = 0; intIndex <= 4; intIndex++) // step through each of the Precedence classes Highest to lowest order
             {
                 aryTemporaryOutboundMessages.Clear();
-                foreach (string strFile in strFiles)
+                foreach (var kvp in messages)
                 {
-                    var objMessage = new Message(strFile);
+                    var objMessage = new Message(kvp.Key);
                     if (objMessage.Subject.ToUpper().IndexOf("//MARS " + "ZOPRM".Substring(intIndex, 1) + "/") != -1)
                     {
                         if (!string.IsNullOrEmpty(objMessage.MessageId) & !string.IsNullOrEmpty(objMessage.Mime) & objMessage.CompressedSize() > 0)
@@ -233,14 +235,9 @@ namespace Paclink
                         }
                         else
                         {
-                            Globals.queChannelDisplay.Enqueue("R*** " + strFile + " failed");
-                            Globals.queChannelDisplay.Enqueue("R*** Check 'Failed Mime' subdirectory");
-                            if (!Directory.Exists(Globals.SiteRootDirectory + @"Failed Mime\"))
-                            {
-                                Directory.CreateDirectory(Globals.SiteRootDirectory + @"Failed Mime\");
-                            }
-
-                            File.Move(strFile, strFile.Replace(@"To Winlink\", @"Failed Mime\"));
+                            Globals.queChannelDisplay.Enqueue("R*** " + kvp.Key + " failed");
+                            Globals.queChannelDisplay.Enqueue("R*** Check 'Failed Mime' table");
+                            messageStore.SaveFailedMimeMessage(kvp.Key, kvp.Value);
                         }
                     }
 
@@ -252,14 +249,9 @@ namespace Paclink
                         }
                         else
                         {
-                            Globals.queChannelDisplay.Enqueue("R*** " + strFile + " failed");
-                            Globals.queChannelDisplay.Enqueue("R*** Check 'Failed Mime' subdirectory");
-                            if (!Directory.Exists(Globals.SiteRootDirectory + @"Failed Mime\"))
-                            {
-                                Directory.CreateDirectory(Globals.SiteRootDirectory + @"Failed Mime\");
-                            }
-
-                            File.Move(strFile, strFile.Replace(@"To Winlink\", @"Failed Mime\"));
+                            Globals.queChannelDisplay.Enqueue("R*** " + kvp.Key + " failed");
+                            Globals.queChannelDisplay.Enqueue("R*** Check 'Failed Mime' table");
+                            messageStore.SaveFailedMimeMessage(kvp.Key, kvp.Value);
                         }
                     }
                 }

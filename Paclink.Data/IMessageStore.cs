@@ -25,7 +25,13 @@ namespace Paclink.Data
         byte[] GetFromWinlinkMessage(string messageId);
         void DeleteFromWinlinkMessage(string messageId);
         void SaveFromWinlinkMessage(string messageId, byte[] message);
-
         List<KeyValuePair<string, byte[]>> GetFromWinlinkMessages();
+
+        // Replacement for "To Winlink" folder.
+        byte[] GetToWinlinkMessage(string messageId);
+        void DeleteToWinlinkMessage(string messageId);
+        void SaveToWinlinkMessage(string messageId, byte[] message);
+
+        void SaveFailedMimeMessage(string messageId, byte[] message);
     }
 }

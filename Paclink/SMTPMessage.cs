@@ -52,16 +52,14 @@ namespace Paclink
 
         internal bool SaveMessageToWinlink()
         {
-            // Saves the image in the mime property into the "To Winlink" subdirectory...
+            // Saves the image in the mime property into the "To Winlink" table...
 
             EncodeMime();
             if (!string.IsNullOrEmpty(Mime))
             {
-                string strMessageFilePath = Globals.SiteRootDirectory + @"To Winlink\" + MessageId + ".mime";
-                Directory.CreateDirectory(Path.GetDirectoryName(strMessageFilePath));
-                File.WriteAllText(strMessageFilePath, Mime);
-                var messageStoreDatabase = new MessageStore(DatabaseFactory.Get());
-                messageStoreDatabase.AddMessageIdSeen(MessageId);
+                var messageStore = new MessageStore(DatabaseFactory.Get());
+                messageStore.SaveToWinlinkMessage(MessageId, UTF8Encoding.UTF8.GetBytes(Mime));
+                messageStore.AddMessageIdSeen(MessageId);
                 LocalDelivery();
                 return true;
             }

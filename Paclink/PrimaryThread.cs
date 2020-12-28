@@ -242,9 +242,10 @@ namespace Paclink
                 // 
                 try
                 {
-                    var strFileList = Directory.GetFiles(Globals.SiteRootDirectory + @"To Winlink\", "*.mime");
-                    Globals.intPendingForWinlink = strFileList.Length;
-                    strFileList = Directory.GetFiles(Globals.SiteRootDirectory + @"Accounts\", "*.mime", SearchOption.AllDirectories);
+                    var messageStore = new MessageStore(DatabaseFactory.Get());
+                    var strFromMessageList = messageStore.GetToWinlinkMessages();
+                    Globals.intPendingForWinlink = strFromMessageList.Count;
+                    var strFileList = Directory.GetFiles(Globals.SiteRootDirectory + @"Accounts\", "*.mime", SearchOption.AllDirectories);
                     Globals.intPendingForClients = strFileList.Length;
                     // 
                     // Displays the message pending counts.

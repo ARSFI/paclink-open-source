@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Timers;
 using NLog;
+using Paclink.Data;
 
 namespace Paclink
 {
@@ -76,7 +77,7 @@ namespace Paclink
         private string strNextTransparentBuffer;
         // Private strMimeFilename As String
         private bool blnMessageErrorFlag;
-        private string strMimeFilePath;
+        private bool authenticated;
         private string strAccountName;
         private string strPassword;
         private StringBuilder sbdInboundMessage;
@@ -251,11 +252,10 @@ namespace Paclink
                                     // Return to the ready state on Authorization success or faiure...
                                     SMTPState = SessionState.Ready;
 
-                                    // Check the user array for authorization: UserName and Password must match (case insensitive)...
-                                    strMimeFilePath = Authorize(strAccountName, strPassword);
+                                    authenticated = Authorize(strAccountName, strPassword);
 
-                                    // Sucessful authorization if the MIME path is returned...
-                                    if (!string.IsNullOrEmpty(strMimeFilePath))
+                                    // Sucessful authorization if true
+                                    if (authenticated)
                                     {
                                         return "235 OK Authenticated" + Globals.CRLF;
                                     }
@@ -314,14 +314,13 @@ namespace Paclink
                                     // Decode the Base64 Client reply for password...
                                     strPassword = Base64Decode(strInputStream).ToUpper();
 
-                                    // Check the user array for authorization: Account name and password must match (case insensitive)...
-                                    strMimeFilePath = Authorize(strAccountName, strPassword);
-
                                     // Return to the ready state on Authorization success or faiure...
                                     SMTPState = SessionState.Ready;
 
-                                    // Sucessful authorization if the MIME path is returned...
-                                    if (!string.IsNullOrEmpty(strMimeFilePath))
+                                    authenticated = Authorize(strAccountName, strPassword);
+
+                                    // Sucessful authorization if true is returned...
+                                    if (authenticated)
                                     {
                                         Globals.queSMTPDisplay.Enqueue("BSMTP link from " + strAccountName + " at " + Globals.TimestampEx());
                                         return "235 OK Authenticated" + Globals.CRLF;
@@ -355,7 +354,7 @@ namespace Paclink
                                         }
                                     }
 
-                                    if (!string.IsNullOrEmpty(strMimeFilePath))
+                                    if (authenticated)
                                     {
                                         blnMessageErrorFlag = false; // Reset the message error flag
                                         SMTPState = SessionState.StartMail;
@@ -405,8 +404,8 @@ namespace Paclink
                                         SMTPState = SessionState.Ready;
 
                                         // Check the user array for authorization: UserName and Password must match (case insensitive)
-                                        strMimeFilePath = Authorize(strAccountName, strPassword);
-                                        if (!string.IsNullOrEmpty(strMimeFilePath)) // sucessful authorization if the MIME path is returned
+                                        authenticated  = Authorize(strAccountName, strPassword);
+                                        if (authenticated) // sucessful authorization if true is returned
                                         {
                                             return "235 OK Authenticated" + Globals.CRLF;
                                         }
@@ -470,7 +469,7 @@ namespace Paclink
                                 // Added by RM Feb 25, 2008 check for compressed size
                                 if (objPaclinkMessage.SaveMessageToWinlink())
                                 {
-                                    if (CheckForOversizeMessage(Globals.SiteRootDirectory + @"To Winlink\" + objPaclinkMessage.MessageId + ".mime"))
+                                    if (CheckForOversizeMessage(objPaclinkMessage.MessageId))
                                     {
                                         Globals.queSMTPDisplay.Enqueue("B" + objPaclinkMessage.MessageId + " received from " + strAccountName);
                                         Globals.queSMTPDisplay.Enqueue("B   Subject: " + objPaclinkMessage.Subject);
@@ -732,21 +731,21 @@ namespace Paclink
             return NewFilenameRet;
         } // NewFilename
 
-        private string Authorize(string strAccount, string strPassword)
+        private bool Authorize(string strAccount, string strPassword)
         {
-            // Function to check authorization in the Accounts array list. Returns the Mime file path 
-            // if authorized user otherwise returns and empty string...
+            // Function to check authorization in the Accounts array list. Returns true 
+            // if authorized user otherwise returns false.
 
             var objAccount = Accounts.GetUserAccount(strAccount);
             if ((objAccount.Name ?? "") == (strAccount ?? ""))
             {
                 if ((objAccount.Password ?? "") == (strPassword ?? "") && !string.IsNullOrEmpty(strPassword))
                 {
-                    return objAccount.MimePathIn;
+                    return true;
                 }
             }
 
-            return "";
+            return false;
         } // Authorize
 
         private string Base64Decode(string strB64String)
@@ -826,14 +825,15 @@ namespace Paclink
             strPassword = strTempPassword;
         } // UserPasswordDecode
 
-        private bool CheckForOversizeMessage(string strMessageFilename)
+        private bool CheckForOversizeMessage(string mId)
         {
-            var objMessage = new Message(strMessageFilename);
+            var objMessage = new Message(mId);
             objMessage.B2Output(0);
             int intMessageCompressedSize = objMessage.CompressedSize();
             if (intMessageCompressedSize > 119900)
             {
-                objMessage.DeleteFile(strMessageFilename);
+                var messageStore = new MessageStore(DatabaseFactory.Get());
+                messageStore.DeleteToWinlinkMessage(mId);
                 return true;
             }
 

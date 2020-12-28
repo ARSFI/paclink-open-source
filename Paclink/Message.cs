@@ -69,9 +69,11 @@ namespace Paclink
             bytCompressed = new byte[1];
         } // New - From Winlink
 
-        internal Message(string strFilePath)
+        internal Message(string mId)
         {
-            Mime = File.ReadAllText(strFilePath);
+            var messageStore = new MessageStore(DatabaseFactory.Get());
+            var msg = messageStore.GetToWinlinkMessage(mId);
+            Mime = UTF8Encoding.UTF8.GetString(msg);
             bytUncompressed = new byte[1];
             bytCompressed = new byte[1];
             DecodeMime();
@@ -107,6 +109,12 @@ namespace Paclink
         {
             if (File.Exists(strFilePath))
                 File.Delete(strFilePath);
+        }
+
+        internal void DeleteFromDatabase(string mid)
+        {
+            var messageStore = new MessageStore(DatabaseFactory.Get());
+            messageStore.DeleteFromWinlinkMessage(mid);
         }
 
         internal int Size()

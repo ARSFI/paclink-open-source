@@ -40,7 +40,7 @@ namespace Paclink
                         newAccount.AlternateAddress = Globals.Settings.Get(strEachAccount, "Alternate Address", "");
                         newAccount.Prefix = Globals.Settings.Get(strEachAccount, "Prefix", "");
                         newAccount.Suffix = Globals.Settings.Get(strEachAccount, "Suffix", "");
-                        newAccount.MimePathIn = Globals.SiteRootDirectory + @"To Winlink\";
+                        newAccount.MimePathIn = string.Empty;
                         newAccount.MimePathOut = Globals.SiteRootDirectory + @"Accounts\" + strEachAccount + @"_Account\";
                         try
                         {

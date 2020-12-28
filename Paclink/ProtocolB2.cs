@@ -451,7 +451,7 @@ namespace Paclink
                         }
                         else
                         {
-                            objOutboundMessage.DeleteFile(Globals.SiteRootDirectory + @"To Winlink\" + objOutboundMessage.MessageId + ".mime");
+                            objOutboundMessage.DeleteFromDatabase(objOutboundMessage.MessageId);
                         }
                     }
                     else
@@ -596,7 +596,7 @@ namespace Paclink
                     else if (intOffset == -1)
                     {
                         Globals.queChannelDisplay.Enqueue("R*** [498] Protocol error - Message Id: " + objMessage.MessageId + " Offset: " + intOffset.ToString() + " Failure to encode B2 format...");
-                        objMessage.DeleteFile(Globals.SiteRootDirectory + @"To Winlink\" + objMessage.MessageId + ".mime");
+                        objMessage.DeleteFromDatabase(objMessage.MessageId);
                     }
                 }
 
@@ -949,7 +949,7 @@ namespace Paclink
                 Message objMessage = (Message)aryOutboundMessages[0];
                 if (objMessage.MessageId.Length != 0)
                 {
-                    objMessage.DeleteFile(Globals.SiteRootDirectory + @"To Winlink\" + objMessage.MessageId + ".mime");
+                    objMessage.DeleteFromDatabase(objMessage.MessageId);
                 }
 
                 aryOutboundMessages.RemoveAt(0);

@@ -95,6 +95,11 @@ namespace Paclink.Data
             }
         }
 
+        public void PurgeOldTemporaryInboundMessages()
+        {
+            _database.NonQuery(@"DELETE FROM `TempInboundMessage` WHERE `Timestamp` <= datetime('now', '-1 days')");
+        }
+
         public byte[] GetFromWinlinkMessage(string messageId)
         {
             var sql = "SELECT `MessageData` FROM `FromWinlinkMessage` WHERE `MessageId`='{0}'";
@@ -139,7 +144,7 @@ namespace Paclink.Data
             var messages = _database.FillDataSet(sql, "FromWinlinkMessage");
 
             var result = new List<KeyValuePair<string, byte[]>>();
-            
+
             for (var index = 0; index < messages.Tables[0].Rows.Count; index++)
             {
                 var kvp = new KeyValuePair<string, byte[]>(
@@ -151,9 +156,66 @@ namespace Paclink.Data
             return result;
         }
 
-        public void PurgeOldTemporaryInboundMessages()
+        public byte[] GetToWinlinkMessage(string messageId)
         {
-            _database.NonQuery(@"DELETE FROM `TempInboundMessage` WHERE `Timestamp` <= datetime('now', '-1 days')");
+            var sql = "SELECT `MessageData` FROM `ToWinlinkMessage` WHERE `MessageId`='{0}'";
+            var messages = _database.FillDataSet(string.Format(sql, messageId), "ToWinlinkMessage");
+
+            if (messages.Tables[0].Rows.Count == 0)
+            {
+                return new byte[0];
+            }
+            else
+            {
+                var base64String = messages.Tables[0].Rows[0]["MessageData"].ToString();
+                return Convert.FromBase64String(base64String);
+            }
+        }
+
+        public void DeleteToWinlinkMessage(string messageId)
+        {
+            _database.NonQuery(string.Format(@"DELETE FROM `ToWinlinkMessage` WHERE `MessageId`=='{0}'", messageId));
+        }
+
+        public void SaveToWinlinkMessage(string messageId, byte[] message)
+        {
+            try
+            {
+                _database.NonQuery("BEGIN");
+                DeleteToWinlinkMessage(messageId);
+
+                var base64String = Convert.ToBase64String(message);
+                _database.NonQuery(string.Format(@"INSERT INTO `ToWinlinkMessage` (`MessageId`, `MessageData`) VALUES ('{0}', '{1}')", messageId, base64String));
+                _database.NonQuery("COMMIT");
+            }
+            finally
+            {
+                _database.NonQuery("ROLLBACK");
+            }
+        }
+
+        public List<KeyValuePair<string, byte[]>> GetToWinlinkMessages()
+        {
+            var sql = "SELECT `MessageId`, `MessageData` FROM `ToWinlinkMessage`";
+            var messages = _database.FillDataSet(sql, "ToWinlinkMessage");
+
+            var result = new List<KeyValuePair<string, byte[]>>();
+
+            for (var index = 0; index < messages.Tables[0].Rows.Count; index++)
+            {
+                var kvp = new KeyValuePair<string, byte[]>(
+                    messages.Tables[0].Rows[index]["MessageId"].ToString(),
+                    Convert.FromBase64String(messages.Tables[0].Rows[index]["MessageId"].ToString()));
+                result.Add(kvp);
+            }
+
+            return result;
+        }
+
+        public void SaveFailedMimeMessage(string messageId, byte[] message)
+        {
+            var base64String = Convert.ToBase64String(message);
+            _database.NonQuery(string.Format(@"INSERT INTO `FailedMimeMessage` (`MessageId`, `MessageData`) VALUES ('{0}', '{1}')", messageId, base64String));
         }
     }
 }
