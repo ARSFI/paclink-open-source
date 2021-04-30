@@ -14,11 +14,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\TNCKissInterface\TNCKissInterface\TNCKissInterface.csproj" />
     <ProjectReference Include="..\DataAccessTests\DataAccessTests.csproj" />
     <ProjectReference Include="..\Libraries\winlink-webservices\WinlinkWebServices\WinlinkWebServices.csproj" />
     <ProjectReference Include="..\NLog.Targets.Gelf\NLog.Targets.Gelf.csproj" />
     <ProjectReference Include="..\Paclink.Data\Paclink.Data.csproj" />
+    <ProjectReference Include="..\TNCKissInterface\TNCKissInterface\TNCKissInterface.csproj" />
   </ItemGroup>
 
   <ItemGroup>
