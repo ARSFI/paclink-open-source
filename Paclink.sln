@@ -54,8 +54,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessTests", "DataAcce
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paclink.Data", "Paclink.Data\Paclink.Data.csproj", "{2812E63C-BA22-4B61-AE4F-751361D2BF9C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NLog.Targets.Gelf", "NLog.Targets.Gelf\NLog.Targets.Gelf.csproj", "{9F3F9625-45FF-4C63-9EBF-656D64C308C2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinlinkWebServices", "Libraries\winlink-webservices\WinlinkWebServices\WinlinkWebServices.csproj", "{0346CC1F-5DA6-4F46-9E73-51B6003AC857}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TNC.Middleware", "TNC.Middleware\TNC.Middleware.csproj", "{66416857-0106-419D-AA7B-0C3D6F286787}"
@@ -94,14 +92,6 @@ Global
 		{2812E63C-BA22-4B61-AE4F-751361D2BF9C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2812E63C-BA22-4B61-AE4F-751361D2BF9C}.Release|x86.ActiveCfg = Release|Any CPU
 		{2812E63C-BA22-4B61-AE4F-751361D2BF9C}.Release|x86.Build.0 = Release|Any CPU
-		{9F3F9625-45FF-4C63-9EBF-656D64C308C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9F3F9625-45FF-4C63-9EBF-656D64C308C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9F3F9625-45FF-4C63-9EBF-656D64C308C2}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{9F3F9625-45FF-4C63-9EBF-656D64C308C2}.Debug|x86.Build.0 = Debug|Any CPU
-		{9F3F9625-45FF-4C63-9EBF-656D64C308C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9F3F9625-45FF-4C63-9EBF-656D64C308C2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9F3F9625-45FF-4C63-9EBF-656D64C308C2}.Release|x86.ActiveCfg = Release|Any CPU
-		{9F3F9625-45FF-4C63-9EBF-656D64C308C2}.Release|x86.Build.0 = Release|Any CPU
 		{0346CC1F-5DA6-4F46-9E73-51B6003AC857}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0346CC1F-5DA6-4F46-9E73-51B6003AC857}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0346CC1F-5DA6-4F46-9E73-51B6003AC857}.Debug|x86.ActiveCfg = Debug|Any CPU
