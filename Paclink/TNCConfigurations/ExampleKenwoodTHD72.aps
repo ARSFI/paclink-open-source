@@ -1,0 +1,67 @@
+;  THD72.aps  Rev. D, 20130227
+;  Original example initialization file for the Native KISS driver written by Peter Woods, N6PRW
+;  Edited May 24, 2009 by Rick Muething, KN6KB
+;  Modified Feb. 27, 2013 by Rick Briggs, KL7BR
+;  This file is for the TH-D72 at 1200 and 9600 baud
+;  9600 baud NOT tested at time of current revision, Feb. 2013
+;  Parameters may not be optimum for all radios and networks but should be a good starting point
+;  COM port flow control is set to Hardware
+;  This filename must have a .aps extension for use by Paclink
+;  This file contains two sections: one for 1200 baud on-air, one for 9600 baud on-air
+;  Any line with a leading ";" is ignored
+;  Any text following a ";" is ignored and may be used to comment
+;  TH-D72 command parameter ranges are in parentheses and default values are bracketed
+;
+BEGIN1200B ; This section used for 1200 baud setup
+;  Any number of lines between KISSSTART and KISSEND may be used. If a line is empty  or commented it is not sent
+;  The commands "KISSSTART" and "KISSEND" are not sent to the TNC
+KISSSTART
+HBAUD 1200;  Set the on-air baud rate to 1200
+KISS ON;  When set to ON, RESTART command will cause the TNC to enter KISS mode
+RESTART;  Enter KISS mode
+KISSEND
+;
+;  Set up any required escape characters
+;  Change to command mode
+ESCAPE C;  Escape character "C" needed on D700, D710 and D72 to avert problem with "TC 1<Cr>" string
+;
+;  TYPICAL KISS PARAMETERS (should work but may not be optimum for a specific radio or network)
+;  The KISS parameters should be consistent with and optimized for the on-air baud rate
+;  These are fairly typical for a 1200 baud on-air rate.
+;
+TXDELAY 40;  (0-120)[30] 400 ms fairly slow ...modern packet radios may work down to 10 (100 ms)
+PERSIST 128;  (0-255)[128] (larger value is more aggressive)
+SLOTTIME 7;  (0-250)[3] 70 ms (smaller value is more aggressive)
+FULLDUP OFF;  (ON/OFF)[OFF] Default value
+PACLEN 128;  (0-255)[128] Large values possible on D72 may improve throughput some
+MAXFRAME 1;  (1)[1]  Max number of outstanding frames transmitted at one time
+FRACK 3;  (0-250)[3]  Number of seconds to wait for a remote acknowledge before a retransmit
+RETRY 10;  (0-15)[10]  Number of attempts to resend to an unresponsive remote station
+KISS OFF;  (OFF/ON)[OFF]  Exit Kiss on channel close (default)
+END1200B ;  End of 1200 baud setup
+;
+;
+;
+BEGIN9600B ;  This section used for 9600 baud setup
+;  These would be fairly typical for a 9600 baud on-air rate
+;
+;  The commands "KISSSTART" and "KISSEND" are not sent to the TNC
+KISSSTART
+HBAUD 9600;  Set the on-air baud rate to 9600
+KISS ON;  When set to ON, RESTART command will cause the TNC to enter KISS mode
+RESTART;  Enter KISS mode
+KISSEND
+;
+;  Set up any required escape characters
+;  Change to command mode
+ESCAPE C;  Escape character "C" needed on D700, D710 and D72 to avert problem with "TC 1<Cr>" string
+TXDELAY 30;  (0-120)[30]  300 ms fairly slow for 9600 baud ...modern packet radios may work down to 10 (100 ms)
+PERSIST 200;  (0-255)[128]  (larger value is more aggressive)
+SLOTTIME 4;  (0-250)[3]  40 ms (smaller value is more aggressive)
+FULLDUP OFF; (ON/OFF)[OFF]  Default value
+PACLEN 128;  (0-255)[128]  Large values desirable
+MAXFRAME 1;  (1)[1]  Maximum number of frames to be transmitted at one time
+FRACK 3;  (0-250)[3] Number of seconds to wait for a remote acknowledge before a retransmit
+RETRY 10;  (0-15)[10] Number of attempts to resend to an unresponsive remote station
+KISS OFF;  (ON/OFF)[OFF) Exit Kiss on channel close (default)
+END9600B ;  End of 9600 baud setup
