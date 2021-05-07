@@ -84,7 +84,7 @@ namespace Paclink.Data
 
         public void WriteScript(string channelName, string script)
         {
-            _database.NonQuery(string.Format("DELETE FROM `ChannelScripts` WHERE `ChannelName`='{0}", channelName));
+            _database.NonQuery(string.Format("DELETE FROM `ChannelScripts` WHERE `ChannelName`='{0}'", channelName));
 
             var sql = @"
                 INSERT INTO `ChannelScripts` (`ChannelName`, `ChannelScript`)
