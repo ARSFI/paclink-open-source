@@ -382,18 +382,20 @@ namespace Paclink
             }
 
             OpenRet = InitializeKISSTnc(); // initialize the TNC to KISS mode
-            if (objSerial != null)
-            {
-                objSerial.Close();
-                Thread.Sleep(Globals.intComCloseTime);
-                objSerial.Dispose();
-                objSerial = null;
-            }
 
             if (OpenRet == false)
             {
                 Log.Error("[ClientNativeKiss.Open] Failed to Initialize KISS TNC");
                 enmState = LinkStates.LinkFailed;
+
+                if (objSerial != null)
+                {
+                    objSerial.Close();
+                    Thread.Sleep(Globals.intComCloseTime);
+                    objSerial.Dispose();
+                    objSerial = null;
+                }
+
                 return false;
             }
             else
@@ -401,7 +403,7 @@ namespace Paclink
                 // All OK so set up Peter's Native KISS DLL
                 try
                 {
-                    objKissComPort = new COMPort(Globals.stcSelectedChannel.TNCSerialPort, Convert.ToInt32(Globals.stcSelectedChannel.TNCBaudRate));
+                    objKissComPort = new COMPort(objSerial); // Globals.stcSelectedChannel.TNCSerialPort, Convert.ToInt32(Globals.stcSelectedChannel.TNCBaudRate));
                     // set up the optional escape characters
                     if (!string.IsNullOrEmpty(strEscapeChars))
                         objKissComPort.escapedCharList = strEscapeChars; // Escape characters from .aps file
