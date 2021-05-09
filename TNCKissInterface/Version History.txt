@@ -1,0 +1,28 @@
+
+TNCKissInterface.dll revision History
+
+Version 1.1.0.22	22-Mar-2017 (G8BPQ)
+	Fix possiblly sending more than MAXFRAME frames after REJ received
+
+Version 1.1.0.21	23-Jan-2015 (W4PHS)
+	Check for closed serial port in sendToPort()
+	Add short delay after serial port close.
+
+Version 1.1.0.20  25-Jul-2012 (W4PHS)
+	Restart ACK timer when retransmission is done so that a lost retransmission will be detected and retried.
+
+Version 1.1.0.19
+	Update parsing of KISS framing characters to handle the case where the same FEND byte is used for
+	   both the end of one frame and the start of another.
+	Add additional connection event handler which provides an indication of all connection status changes
+	   not just connect and disconnect.
+
+Version 1.1.0.11:
+	Added configurable pending ack timer to connection parameter buffer.  Provides performance
+	boost handling inbound iframes when no outbound iframes are pending.
+
+Version 1.1.0.9:
+	Fix protocol issue discovered during digipeater stress testing
+
+Version 1.1.0.7:
+	Initial release,
