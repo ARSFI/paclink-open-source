@@ -37,9 +37,6 @@ namespace Paclink
                                                // used to update progress bar.
 
 
-        // Queues
-        private Queue queTNCData = Queue.Synchronized(new Queue());
-
         // Bytes
         private byte[] bytExitKiss = new byte[] { 0xC0, 0xFF, 0xC0 }; // KISS Exit sequence
 
@@ -74,19 +71,7 @@ namespace Paclink
             [MethodImpl(MethodImplOptions.Synchronized)]
             set
             {
-                if (_objSerial != null)
-                {
-
-
-                    // Read the bytes available to a synchronous queue
-                    _objSerial.DataReceived -= objSerial_DataReceived;
-                }
-
                 _objSerial = value;
-                if (_objSerial != null)
-                {
-                    _objSerial.DataReceived += objSerial_DataReceived;
-                }
             }
         }
 
@@ -343,16 +328,14 @@ namespace Paclink
             // Open the serial port...
             try
             {
-                objSerial = new SerialPort();
-                objSerial.PortName = Globals.stcSelectedChannel.TNCSerialPort;
-                objSerial.ReceivedBytesThreshold = 1;
-                objSerial.BaudRate = Convert.ToInt32(Globals.stcSelectedChannel.TNCBaudRate);
-                objSerial.DataBits = 8;
-                objSerial.StopBits = StopBits.One;
-                objSerial.Parity = Parity.None;
+                objSerial = new SerialPort( 
+                    Globals.stcSelectedChannel.TNCSerialPort,
+                    Convert.ToInt32(Globals.stcSelectedChannel.TNCBaudRate),
+                    Parity.None,
+                    8,
+                    StopBits.One);
                 objSerial.Handshake = Handshake.None;
                 objSerial.RtsEnable = true;
-                objSerial.DtrEnable = true;
                 try
                 {
                     objSerial.Open();
@@ -444,13 +427,15 @@ namespace Paclink
         {
             try
             {
+                var switchExpr = Globals.stcSelectedChannel.TNCType;
+
                 // send exit KISS sequence in case TNC was left in KISS mode
                 objSerial.Write(bytExitKiss, 0, bytExitKiss.Length);
                 Thread.Sleep(200);
                 // Send return to get cmd: prompt
                 objSerial.Write(Globals.CR);
                 Thread.Sleep(200);
-                var switchExpr = Globals.stcSelectedChannel.TNCType;
+
                 switch (switchExpr)
                 {
                     case "TM-D710 int":
@@ -476,7 +461,11 @@ namespace Paclink
                     case "TM-D700 int":
                     case "TH-D7 int":
                         {
+                            //objSerial.Write(new byte[] { (byte)0x03 }, 0, 1); // Ctrl-C in case we're stil in converse/KISS mode.
+
                             objSerial.Write("TC 1" + Globals.CR); // force the interface to Display unit
+                            Thread.Sleep(100);
+                            objSerial.Write("TNC 0" + Globals.CR); // select normal mode
                             Thread.Sleep(100);
                             objSerial.Write("TNC 2" + Globals.CR); // select the TNC Packet mode
                             Thread.Sleep(100);
@@ -493,14 +482,23 @@ namespace Paclink
                                 objSerial.Write("DTB 1" + Globals.CR);
                             } // Enable the TNC to use B band
 
+                            // For the D700, TC 0 will switch the radio to packet mode and allow the TNC
+                            // and KISS commands to properly be read. The radio also needs a few seconds
+                            // to actually go into packet mode (see https://www.on7lds.net/auto/tmd700a.htm).
+                            objSerial.Write("TC 0" + Globals.CR);
+                            Thread.Sleep(2000);
                             break;
                         }
                 }
 
                 Thread.Sleep(500);
-                queTNCData.Clear();
                 strCommandReply = "";
                 objSerial.Write(Globals.CR);
+
+                // Discard any output that may come over from the radio. 
+                // Keeping it in the buffer could interfere with KISS mode ops.
+                Thread.Sleep(100);
+                objSerial.DiscardInBuffer();
 
                 // Send KISSSTART sequence
                 foreach (string cmd in strKissStart)
@@ -1109,20 +1107,5 @@ namespace Paclink
 
             return strTemp.Split(' ')[0].Trim();
         } // GetConnectTarget
-
-        private void objSerial_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
-            try
-            {
-                int intBytesToRead = objSerial.BytesToRead;
-                var bytBuffer = new byte[intBytesToRead];
-                objSerial.Read(bytBuffer, 0, intBytesToRead);
-                queTNCData.Enqueue(bytBuffer);
-            }
-            catch (Exception ex)
-            {
-                Log.Error("[ClientNativeKiss.objSerial_DataReceived] Err: " + ex.Message);
-            }
-        }
     }
 }

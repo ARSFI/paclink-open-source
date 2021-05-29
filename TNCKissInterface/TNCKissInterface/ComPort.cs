@@ -213,13 +213,18 @@ namespace TNCKissInterface
             else
             {
                 if (sPort == null)
+                {
                     port = new SerialPort(comPort, baud, Parity.None, 8, StopBits.One);
-                else
-                    port = sPort;
 
-                // No flow control.  Upper AX.25 layer handles dropped data
-                port.Handshake = Handshake.None;
-                port.RtsEnable = true;
+                    // No flow control.  Upper AX.25 layer handles dropped data
+                    port.Handshake = Handshake.None;
+                    port.RtsEnable = true;
+                }
+                else
+                {
+                    // Flow control was initialized already, so no need to do it again.
+                    port = sPort;
+                }
 
                 if (!loopBackMode) // We don't use the serial port in loopback mode
                 {
@@ -769,12 +774,11 @@ namespace TNCKissInterface
         void SerialPortRead()
         {
             Byte[] tmpBuf = new Byte[2048];
-            Int32 numBytes;
             Int32 count;
 
             try
             {
-                count = port.Read(tmpBuf, 0, tmpBuf.Length);
+                count = port.BaseStream.Read(tmpBuf, 0, tmpBuf.Length);
 
                 if (!receivePortDataQueue.Enqueue((Object)(Support.PackByte(tmpBuf, 0, count))))
                 {
