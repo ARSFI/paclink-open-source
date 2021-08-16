@@ -321,7 +321,7 @@ namespace Paclink
             }
 
             AddRadioAccount(Globals.SiteCallsign, Globals.SecureLoginPassword);
-            MyApplication.Forms.Main.Text = "Paclink - " + Globals.SiteCallsign;
+            MyApplication.Forms.Main.UpdateSiteCallsign(Globals.SiteCallsign);
             Globals.UpdateAccountDirectories();
             DialogResult = DialogResult.OK;
             Cursor = Cursors.Default;

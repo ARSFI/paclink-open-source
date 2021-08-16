@@ -40,10 +40,6 @@ namespace Paclink
         public static TChannelProperties stcEditedSelectedChannel = default;
 
         // Main form display components...
-        public static Form DisplayForm;
-        public static MenuStrip MainMenu;
-        public static ToolStripMenuItem MainMenuAbort;
-        public static ToolStripMenuItem MainMenuConnect;
         public static Queue queChannelDisplay = Queue.Synchronized(new Queue());
         public static Queue queProgressDisplay = Queue.Synchronized(new Queue());
         public static Queue queRateDisplay = Queue.Synchronized(new Queue());

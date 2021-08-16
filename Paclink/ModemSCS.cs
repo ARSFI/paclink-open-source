@@ -387,7 +387,7 @@ namespace Paclink
                         blnWaitingForManualConnect = false;
                         if (Globals.dlgPactorConnect.DialogResult == DialogResult.Cancel)
                         {
-                            MyApplication.Forms.Main.Refresh();
+                            MyApplication.Forms.Main.RefreshWindow();
                             blnNoIdentification = true;
                             if (objProtocol != null)
                             {

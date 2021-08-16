@@ -58,7 +58,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinlinkWebServices", "Libra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TNC.Middleware", "TNC.Middleware\TNC.Middleware.csproj", "{66416857-0106-419D-AA7B-0C3D6F286787}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TNCKissInterface", "TNCKissInterface\TNCKissInterface\TNCKissInterface.csproj", "{A63067BC-6BFC-430F-801F-F6F289311E90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TNCKissInterface", "TNCKissInterface\TNCKissInterface\TNCKissInterface.csproj", "{A63067BC-6BFC-430F-801F-F6F289311E90}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paclink.UI.Windows", "Paclink.UI.Windows\Paclink.UI.Windows.csproj", "{A44933D7-4E0F-421E-ACB2-DD47DB866376}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paclink.UI.Common", "Paclink.UI.Common\Paclink.UI.Common.csproj", "{9F808E90-1708-4054-8AD8-7DF7C6857FD4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -116,6 +120,22 @@ Global
 		{A63067BC-6BFC-430F-801F-F6F289311E90}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A63067BC-6BFC-430F-801F-F6F289311E90}.Release|x86.ActiveCfg = Release|x86
 		{A63067BC-6BFC-430F-801F-F6F289311E90}.Release|x86.Build.0 = Release|x86
+		{A44933D7-4E0F-421E-ACB2-DD47DB866376}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A44933D7-4E0F-421E-ACB2-DD47DB866376}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A44933D7-4E0F-421E-ACB2-DD47DB866376}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A44933D7-4E0F-421E-ACB2-DD47DB866376}.Debug|x86.Build.0 = Debug|Any CPU
+		{A44933D7-4E0F-421E-ACB2-DD47DB866376}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A44933D7-4E0F-421E-ACB2-DD47DB866376}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A44933D7-4E0F-421E-ACB2-DD47DB866376}.Release|x86.ActiveCfg = Release|Any CPU
+		{A44933D7-4E0F-421E-ACB2-DD47DB866376}.Release|x86.Build.0 = Release|Any CPU
+		{9F808E90-1708-4054-8AD8-7DF7C6857FD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F808E90-1708-4054-8AD8-7DF7C6857FD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F808E90-1708-4054-8AD8-7DF7C6857FD4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9F808E90-1708-4054-8AD8-7DF7C6857FD4}.Debug|x86.Build.0 = Debug|Any CPU
+		{9F808E90-1708-4054-8AD8-7DF7C6857FD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F808E90-1708-4054-8AD8-7DF7C6857FD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F808E90-1708-4054-8AD8-7DF7C6857FD4}.Release|x86.ActiveCfg = Release|Any CPU
+		{9F808E90-1708-4054-8AD8-7DF7C6857FD4}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

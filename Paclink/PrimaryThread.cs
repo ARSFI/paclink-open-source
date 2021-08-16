@@ -76,7 +76,7 @@ namespace Paclink
                     if (DialogSiteProperties.IsValid() == false)
                     {
                         MessageBox.Show("Paclink must have a valid initial configuration to continue...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        MyApplication.Forms.Main.Close();
+                        MyApplication.Forms.Main.CloseWindow();
                         return;
                     }
                 }
@@ -97,14 +97,14 @@ namespace Paclink
 
             try
             {
-                MyApplication.Forms.Main.UpdateChannelsList();
+                MyApplication.Forms.Main.UpdateChannelList();
             }
             catch (Exception ex)
             {
                 _log.Error("[Main.Startup G] " + ex.Message);
             }
 
-            MyApplication.Forms.Main.Text = "Paclink - " + Globals.SiteCallsign;
+            MyApplication.Forms.Main.UpdateSiteCallsign(Globals.SiteCallsign);
             if (Globals.UseRMSRelay())
             {
                 Globals.queChannelDisplay.Enqueue("G*** Paclink is set to connect to RMS Relay.");
@@ -116,7 +116,7 @@ namespace Paclink
             }
 
             Globals.queChannelDisplay.Enqueue("G*** Paclink " + Application.ProductVersion + " ready...");
-            MyApplication.Forms.Main.mnuMain.Enabled = true;
+            MyApplication.Forms.Main.EnableMainWindowInterface();
             if (thrSMTP != null)
             {
                 _abortSMTPThread = true;

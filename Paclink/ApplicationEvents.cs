@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using NLog;
+using Paclink.UI.Common;
 
 namespace Paclink
 {
@@ -30,7 +31,7 @@ namespace Paclink
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Forms.Main = new Main();
-            Application.Run(Forms.Main);
+            UserInterfaceFactory.GetUiSystem().DisplayMainForm(Forms.Main);
         }
 
         private static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
