@@ -212,7 +212,13 @@ namespace Paclink
             var objTestPort = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try
             {
-                objTestPort.Bind(new IPEndPoint(IPAddress.Parse(Globals.strLocalIPAddresses[selectedLocalIP]), proposedPort));
+                IPAddress testIP = IPAddress.Any;
+                if (Globals.strLocalIPAddresses[selectedLocalIP] != "Default")
+                {
+                    // Listen on all interfaces by default.
+                    testIP = IPAddress.Parse(Globals.strLocalIPAddresses[selectedLocalIP]);
+                }
+                objTestPort.Bind(new IPEndPoint(testIP, proposedPort));
                 objTestPort.Listen(10);
                 objTestPort.Close();
                 return true;
