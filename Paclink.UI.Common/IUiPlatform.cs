@@ -6,7 +6,8 @@ namespace Paclink.UI.Common
 {
     public enum AvailableForms
     {
-        MainWindow
+        MainWindow,
+        SiteProperties,
     };
 
     public interface IUiPlatform

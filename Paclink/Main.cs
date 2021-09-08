@@ -420,9 +420,10 @@ namespace Paclink
 
         public void ShowSiteProperties()
         {
-            var dlgProperties = new DialogSiteProperties();
-            dlgProperties.ShowDialog();
-            if (DialogSiteProperties.IsValid() == false)
+            DialogSitePropertiesViewModel vm = new DialogSitePropertiesViewModel();
+
+            UserInterfaceFactory.GetUiSystem().DisplayForm(AvailableForms.SiteProperties, vm);
+            if (vm.IsCallsignAndGridSquareValid() == false)
             {
                 UserInterfaceFactory.GetUiSystem().DisplayModalError(
                     "Paclink must have a valid configuration to continue...", "Error");

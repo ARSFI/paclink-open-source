@@ -6,6 +6,7 @@ using System.Threading;
 using System.Windows.Forms;
 using NLog;
 using Paclink.Data;
+using Paclink.UI.Common;
 
 namespace Paclink
 {
@@ -69,11 +70,11 @@ namespace Paclink
             try
             {
                 // Open the properties dialog box if no initial configuration has been set...
-                if (DialogSiteProperties.IsValid() == false)
+                DialogSitePropertiesViewModel vm = new DialogSitePropertiesViewModel();
+                if (vm.IsCallsignAndGridSquareValid() == false)
                 {
-                    var objProperties = new DialogSiteProperties();
-                    objProperties.ShowDialog();
-                    if (DialogSiteProperties.IsValid() == false)
+                    UserInterfaceFactory.GetUiSystem().DisplayForm(AvailableForms.SiteProperties, vm);
+                    if (vm.IsCallsignAndGridSquareValid() == false)
                     {
                         MessageBox.Show("Paclink must have a valid initial configuration to continue...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         MyApplication.Forms.Main.CloseWindow();
