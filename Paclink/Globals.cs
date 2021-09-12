@@ -13,6 +13,7 @@ using System.Threading;
 using System.Windows.Forms;
 using NLog;
 using Paclink.Data;
+using Paclink.UI.Common;
 using winlink;
 using winlink.cms.webservices;
 
@@ -24,6 +25,7 @@ namespace Paclink
 
         public static IDatabase Database = DatabaseFactory.Get();
         public static IProperties Settings = new Properties(Database);
+        public static IPollingBacking PollingData = new DialogPollingViewModel();
 
         public const string LF = "\n";
         public const string CR = "\r";

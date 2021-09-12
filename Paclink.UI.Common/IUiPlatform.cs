@@ -8,6 +8,7 @@ namespace Paclink.UI.Common
     {
         MainWindow,
         SiteProperties,
+        Polling,
     };
 
     public interface IUiPlatform

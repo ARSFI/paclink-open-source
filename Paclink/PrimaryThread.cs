@@ -59,7 +59,7 @@ namespace Paclink
             Channels.FillChannelCollection();
             try
             {
-                DialogPolling.InitializePollingFlags();
+                Globals.PollingData.LoadParameters();
                 DialogAGWEngine.InitializeAGWProperties();
             }
             catch (Exception ex)
@@ -405,23 +405,23 @@ namespace Paclink
                 // Starts a new channel poll at the end of each polling interval...
                 try
                 {
-                    if (DialogPolling.AutoPoll)
+                    if (Globals.PollingData.AutoPoll)
                     {
                         if (_intMinutes != DateTime.Now.Minute)
                         {
                             _intMinutes = DateTime.Now.Minute;
-                            DialogPolling.MinutesRemaining -= 1;
+                            Globals.PollingData.DecrementMinutesRemaining();
                         }
 
                         if (Globals.blnChannelActive == false & Terminal.blnTerminalIsOpen == false)
                         {
-                            if (DialogPolling.MinutesRemaining <= 0)
+                            if (Globals.PollingData.MinutesRemaining <= 0)
                             {
                                 if (Globals.AutomaticChannels.Count > 0)
                                 {
                                     Globals.blnAutoForwarding = true;
                                     Globals.intAutoforwardChannelIndex = 0;
-                                    DialogPolling.MinutesRemaining = DialogPolling.AutoPollInterval;
+                                    Globals.PollingData.ResetMinutesRemaining();
                                     Globals.queChannelDisplay.Enqueue("G*** Starting automatic forwarding at " + Globals.TimestampEx());
                                 }
                             }
@@ -436,13 +436,13 @@ namespace Paclink
                 // Starts a new channel poll on receipt of a new message from an SMTP client...
                 try
                 {
-                    if (DialogPolling.PollOnReceivedMessage && Globals.intPendingForWinlink > 0 && Globals.blnAutoForwarding == false)
+                    if (Globals.PollingData.PollOnReceivedMessage && Globals.intPendingForWinlink > 0 && Globals.blnAutoForwarding == false)
                     {
                         if (Globals.AutomaticChannels.Count > 0)
                         {
                             Globals.blnAutoForwarding = true;
                             Globals.intAutoforwardChannelIndex = 0;
-                            DialogPolling.MinutesRemaining = DialogPolling.AutoPollInterval;
+                            Globals.PollingData.ResetMinutesRemaining();
                             Globals.queChannelDisplay.Enqueue("G*** Starting automatic forwarding at " + Globals.TimestampEx());
                         }
                         else if (Globals.IsManualPactorOnly())

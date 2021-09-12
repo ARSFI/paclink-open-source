@@ -20,6 +20,9 @@ namespace Paclink.UI.Windows
                 case AvailableForms.SiteProperties:
                     window = new DialogSiteProperties((ISitePropertiesBacking)backingObject);
                     break;
+                case AvailableForms.Polling:
+                    window = new DialogPolling((IPollingBacking)backingObject);
+                    break;
                 default:
                     throw new ArgumentException(string.Format("Invalid form: {0}", form));
             }

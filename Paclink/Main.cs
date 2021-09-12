@@ -57,7 +57,7 @@ namespace Paclink
         {
             get
             {
-                return DialogPolling.AutoPoll;
+                return Globals.PollingData.AutoPoll;
             }
         }
 
@@ -65,7 +65,7 @@ namespace Paclink
         {
             get
             {
-                return DialogPolling.AutoPollInterval;
+                return Globals.PollingData.AutoPollInterval;
             }
         }
 
@@ -73,7 +73,7 @@ namespace Paclink
         {
             get
             {
-                return DialogPolling.MinutesRemaining;
+                return Globals.PollingData.MinutesRemaining;
             }
         }
 
@@ -296,7 +296,7 @@ namespace Paclink
         {
             if (Globals.blnChannelActive == false)
             {
-                DialogPolling.MinutesRemaining = DialogPolling.AutoPollInterval;
+                Globals.PollingData.ResetMinutesRemaining();
                 Globals.queChannelDisplay.Enqueue("G*** Starting channel autoconnect...");
                 if (Globals.AutomaticChannels.Count == 0)
                 {
@@ -495,8 +495,7 @@ namespace Paclink
 
         public void ShowPollingInterval()
         {
-            var dlgPolling = new DialogPolling();
-            dlgPolling.ShowDialog();
+            UserInterfaceFactory.GetUiSystem().DisplayForm(AvailableForms.Polling, Globals.PollingData);
         }
 
         public void ShowPactorChannels()
