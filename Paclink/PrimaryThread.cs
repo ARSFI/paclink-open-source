@@ -60,7 +60,6 @@ namespace Paclink
             try
             {
                 Globals.PollingData.LoadParameters();
-                DialogAGWEngine.InitializeAGWProperties();
             }
             catch (Exception ex)
             {

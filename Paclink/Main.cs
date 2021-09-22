@@ -161,7 +161,7 @@ namespace Paclink
         {
             get
             {
-                return DialogAGWEngine.AGWLocation != 0;
+                return new DialogAgwEngineViewModel().AgwLocation != 0;
             }
         }
 
@@ -471,8 +471,7 @@ namespace Paclink
 
         public void ShowAGWEngine()
         {
-            var dlgAGWEngine = new DialogAGWEngine();
-            dlgAGWEngine.ShowDialog();
+            UserInterfaceFactory.GetUiSystem().DisplayForm(AvailableForms.AgwEngine, new DialogAgwEngineViewModel());
         }
 
         public void ShowPacketAGWChannels()

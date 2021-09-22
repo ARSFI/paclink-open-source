@@ -13,6 +13,8 @@ namespace Paclink
     {
         private readonly Logger Log = LogManager.GetCurrentClassLogger();
 
+        private DialogAgwEngineViewModel _dialogAgwEngine = new DialogAgwEngineViewModel();
+
         public DialogPacketAGWChannels()
         {
             InitializeComponent();
@@ -128,15 +130,15 @@ namespace Paclink
         {
             try
             {
-                string strAGWIniPath = DialogAGWEngine.AGWPath + "AGWPE.INI";
+                string strAGWIniPath = _dialogAgwEngine.AgwPath + "AGWPE.INI";
                 string[] strTokens;
                 cmbAGWPort.Items.Clear();
-                if (DialogAGWEngine.AGWLocation == 0)
+                if (_dialogAgwEngine.AgwLocation == 0)
                 {
                     cmbAGWPort.Text = "<AGW engine not configured or not enabled>";
                     return;
                 }
-                else if (DialogAGWEngine.AGWLocation == 1) // If local read the INI file to get port info
+                else if (_dialogAgwEngine.AgwLocation == 1) // If local read the INI file to get port info
                 {
                     if (!File.Exists(strAGWIniPath))
                     {
@@ -170,7 +172,7 @@ namespace Paclink
                         var strType = default(string);
                         var strFrequency = default(string);
                         var strPort = default(string);
-                        string strPortIniFile = DialogAGWEngine.AGWPath + "PORT" + intIndex.ToString() + ".ini";
+                        string strPortIniFile = _dialogAgwEngine.AgwPath + "PORT" + intIndex.ToString() + ".ini";
                         if (File.Exists(strPortIniFile))
                         {
                             string strPortData = File.ReadAllText(strPortIniFile);
@@ -214,18 +216,18 @@ namespace Paclink
                     try
                     {
                         cmbAGWPort.Items.Clear();
-                        cmbAGWPort.Text = "Requesting port info from remote AGW Engine @ host " + DialogAGWEngine.AGWHost;
+                        cmbAGWPort.Text = "Requesting port info from remote AGW Engine @ host " + _dialogAgwEngine.AgwHost;
                         if (objTCPPort != null) objTCPPort.Close();
                         tmrTimer10sec.Enabled = true;
                         objTCPPort = new TcpClient();
-                        objTCPPort.ConnectAsync(DialogAGWEngine.AGWHost, DialogAGWEngine.AGWTCPPort).ContinueWith(t =>
+                        objTCPPort.ConnectAsync(_dialogAgwEngine.AgwHost, _dialogAgwEngine.AgwTcpPort).ContinueWith(t =>
                         {
                             OnConnected(this);
                         }).Wait(0);
                     }
                     catch
                     {
-                        cmbAGWPort.Text = "Could not connect to remote AGW Engine @ host " + DialogAGWEngine.AGWHost;
+                        cmbAGWPort.Text = "Could not connect to remote AGW Engine @ host " + _dialogAgwEngine.AgwHost;
                         tmrTimer10sec.Enabled = false;
                     }
                 }
@@ -285,13 +287,13 @@ namespace Paclink
                 var asc = new ASCIIEncoding(); // had to declare this to eliminate an ocasional error
                 asc.GetBytes("P", 0, 1, bytTemp2, 4);
                 Array.Copy(Globals.ComputeLengthB(255 + 255), 0, bytTemp2, 28, 4);
-                asc.GetBytes(DialogAGWEngine.AGWUserId, 0, DialogAGWEngine.AGWUserId.Length, bytTemp2, 36);
-                asc.GetBytes(DialogAGWEngine.AGWPassword, 0, DialogAGWEngine.AGWPassword.Length, bytTemp2, 36 + 255);
+                asc.GetBytes(_dialogAgwEngine.AgwUserId, 0, _dialogAgwEngine.AgwUserId.Length, bytTemp2, 36);
+                asc.GetBytes(_dialogAgwEngine.AgwPassword, 0, _dialogAgwEngine.AgwPassword.Length, bytTemp2, 36 + 255);
                 objTCPPort.GetStream().Write(bytTemp2, 0, bytTemp2.Length);;
             }
             catch (Exception ex)
             {
-                AddAGWPortInfo("", "Error in Remote AGW Engine Login @ host " + DialogAGWEngine.AGWHost, true);
+                AddAGWPortInfo("", "Error in Remote AGW Engine Login @ host " + _dialogAgwEngine.AgwHost, true);
                 Log.Error("[PacketAGWChannels, LoginAGWRemote] " + ex.Message);
                 tmrTimer10sec.Enabled = false;
             }
@@ -313,7 +315,7 @@ namespace Paclink
             {
                 Log.Error("[AGWEngine, RequestAGWPortInfo] " + ex.Message);
                 tmrTimer10sec.Enabled = false;
-                AddAGWPortInfo("", "Error requesting Port Info from Remote AGW Engine @ host " + DialogAGWEngine.AGWHost, true);
+                AddAGWPortInfo("", "Error requesting Port Info from Remote AGW Engine @ host " + _dialogAgwEngine.AgwHost, true);
             }
         } // GetAGWPortInfo
 
@@ -373,7 +375,7 @@ namespace Paclink
                 catch (Exception ex)
                 {
                     Log.Error("[AGWEngine, tcpOnDataIn] " + ex.Message);
-                    AddAGWPortInfo("", "Port Info request failure with host " + DialogAGWEngine.AGWHost, true);
+                    AddAGWPortInfo("", "Port Info request failure with host " + _dialogAgwEngine.AgwHost, true);
                 }
                 break;
             }
@@ -397,7 +399,7 @@ namespace Paclink
 
         private void OnConnected(object sender)
         {
-            if (!string.IsNullOrEmpty(DialogAGWEngine.AGWUserId))
+            if (!string.IsNullOrEmpty(_dialogAgwEngine.AgwUserId))
             {
                 LoginAGWRemote();  // do a secure AGWPE login 
             }
@@ -426,8 +428,8 @@ namespace Paclink
         private void tmrTimer10sec_Tick(object sender, EventArgs e)
         {
             tmrTimer10sec.Enabled = false;
-            Log.Error("[PacketAGWChannels]  10 sec timeout on remote AGWPE port info Request to " + DialogAGWEngine.AGWHost);
-            AddAGWPortInfo("", "Timeout on port info request to remote computer AGW Engine @ host " + DialogAGWEngine.AGWHost, true);
+            Log.Error("[PacketAGWChannels]  10 sec timeout on remote AGWPE port info Request to " + _dialogAgwEngine.AgwHost);
+            AddAGWPortInfo("", "Timeout on port info request to remote computer AGW Engine @ host " + _dialogAgwEngine.AgwHost, true);
             try
             {
                 objTCPPort.Close();

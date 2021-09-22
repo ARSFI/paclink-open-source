@@ -17,6 +17,7 @@ namespace Paclink
     public class ModemAGW : IModem
     {
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
+        private DialogAgwEngineViewModel _dialogAgwEngine = new DialogAgwEngineViewModel();
 
         public ModemAGW()
         {
@@ -303,7 +304,7 @@ namespace Paclink
                 }
 
                 objASCIIEncoding = new ASCIIEncoding();
-                if (DialogAGWEngine.AGWLocation == 1)
+                if (_dialogAgwEngine.AgwLocation == 1)
                 {
                     // add start up of packet engine and login
                     PacketEngineRun();
@@ -313,7 +314,7 @@ namespace Paclink
                 Globals.queChannelDisplay.Enqueue("R*** Connecting to Packet Engine");
                 objTCPPort.ReceiveTimeout = 30;
                 //objTCPPort.KeepAlive = true;
-                objTCPPort.ConnectAsync(DialogAGWEngine.AGWHost, DialogAGWEngine.AGWTCPPort).ContinueWith(t =>
+                objTCPPort.ConnectAsync(_dialogAgwEngine.AgwHost, _dialogAgwEngine.AgwTcpPort).ContinueWith(t =>
                 {
                     OnConnected(objTCPPort);
 
@@ -700,11 +701,11 @@ namespace Paclink
             if (objAGWProcess.Length != 0)
                 return; // AGW Packet Engine is running
                         // Configure for Packet Engine Pro or AGW Packet Engine
-            if (File.Exists(DialogAGWEngine.AGWPath + "Packet Engine Pro.exe"))
+            if (File.Exists(_dialogAgwEngine.AgwPath + "Packet Engine Pro.exe"))
             {
                 strProcessName = "Packet Engine Pro";
             }
-            else if (File.Exists(DialogAGWEngine.AGWPath + "AGW Packet Engine.exe"))
+            else if (File.Exists(_dialogAgwEngine.AgwPath + "AGW Packet Engine.exe"))
             {
                 strProcessName = "AGW Packet Engine";
             }
@@ -717,10 +718,10 @@ namespace Paclink
             // Start the AGW Packet Engine or Packet Engine Pro
             var objProcess = new Process();
             var objProcessStartInfo = new ProcessStartInfo();
-            objProcessStartInfo.WorkingDirectory = DialogAGWEngine.AGWPath;
+            objProcessStartInfo.WorkingDirectory = _dialogAgwEngine.AgwPath;
             objProcessStartInfo.UseShellExecute = true;
             objProcessStartInfo.WindowStyle = ProcessWindowStyle.Minimized;
-            objProcessStartInfo.FileName = DialogAGWEngine.AGWPath + strProcessName + ".exe";
+            objProcessStartInfo.FileName = _dialogAgwEngine.AgwPath + strProcessName + ".exe";
             objProcess.StartInfo = objProcessStartInfo;
             Globals.queChannelDisplay.Enqueue("R*** Starting " + strProcessName);
             objProcess.Start();
@@ -804,15 +805,15 @@ namespace Paclink
         {
             try
             {
-                if (!string.IsNullOrEmpty(DialogAGWEngine.AGWUserId)) // do a secure AGWPE login (needs to be verified)
+                if (!string.IsNullOrEmpty(_dialogAgwEngine.AgwUserId)) // do a secure AGWPE login (needs to be verified)
                 {
-                    // MainForm.UpdateChannelText("*** Secure login to Packet Engine for user ID " & DialogAGWEngine.AGWUserId)
-                    Globals.queChannelDisplay.Enqueue("R*** Secure login to Packet Engine for user ID " + DialogAGWEngine.AGWUserId);
+                    // MainForm.UpdateChannelText("*** Secure login to Packet Engine for user ID " & _dialogAgwEngine.AgwUserId)
+                    Globals.queChannelDisplay.Enqueue("R*** Secure login to Packet Engine for user ID " + _dialogAgwEngine.AgwUserId);
                     var bTemp = new byte[546];
                     objASCIIEncoding.GetBytes("P", 0, 1, bTemp, 4); // login frame
                     Array.Copy(ComputeLengthB(255 + 255), 0, bTemp, 28, 4);
-                    objASCIIEncoding.GetBytes(DialogAGWEngine.AGWUserId, 0, DialogAGWEngine.AGWUserId.Length, bTemp, 36);
-                    objASCIIEncoding.GetBytes(DialogAGWEngine.AGWPassword, 0, DialogAGWEngine.AGWPassword.Length, bTemp, 36 + 255);
+                    objASCIIEncoding.GetBytes(_dialogAgwEngine.AgwUserId, 0, _dialogAgwEngine.AgwUserId.Length, bTemp, 36);
+                    objASCIIEncoding.GetBytes(_dialogAgwEngine.AgwPassword, 0, _dialogAgwEngine.AgwPassword.Length, bTemp, 36 + 255);
                     objTCPPort.GetStream().Write(bTemp, 0, bTemp.Length);
                     Thread.Sleep(500);
                 }

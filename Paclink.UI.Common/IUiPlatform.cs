@@ -9,6 +9,7 @@ namespace Paclink.UI.Common
         MainWindow,
         SiteProperties,
         Polling,
+        AgwEngine,
     };
 
     public interface IUiPlatform

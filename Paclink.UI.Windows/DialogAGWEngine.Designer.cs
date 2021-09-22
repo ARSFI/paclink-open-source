@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
-namespace Paclink
+namespace Paclink.UI.Windows
 {
     public partial class DialogAGWEngine : Form
     {
@@ -62,8 +62,6 @@ namespace Paclink
             _btnRemote.Click += new EventHandler(btnRemote_Click);
             _btnBrowse = new Button();
             _btnBrowse.Click += new EventHandler(btnBrowse_Click);
-            _tmrTimer10sec = new Timer(components);
-            _tmrTimer10sec.Tick += new EventHandler(tmrTimer10sec_Tick);
             _btnHelp = new Button();
             _btnHelp.Click += new EventHandler(btnHelp_Click);
             SuspendLayout();
@@ -232,10 +230,6 @@ namespace Paclink
             _btnBrowse.TabIndex = 17;
             _btnBrowse.Text = "Browse";
             _btnBrowse.UseVisualStyleBackColor = true;
-            // 
-            // tmrTimer10sec
-            // 
-            _tmrTimer10sec.Interval = 10000;
             // 
             // btnHelp
             // 
@@ -723,32 +717,6 @@ namespace Paclink
                 if (_btnRemote != null)
                 {
                     _btnRemote.Click += btnRemote_Click;
-                }
-            }
-        }
-
-        private Timer _tmrTimer10sec;
-
-        internal Timer tmrTimer10sec
-        {
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            get
-            {
-                return _tmrTimer10sec;
-            }
-
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            set
-            {
-                if (_tmrTimer10sec != null)
-                {
-                    _tmrTimer10sec.Tick -= tmrTimer10sec_Tick;
-                }
-
-                _tmrTimer10sec = value;
-                if (_tmrTimer10sec != null)
-                {
-                    _tmrTimer10sec.Tick += tmrTimer10sec_Tick;
                 }
             }
         }
