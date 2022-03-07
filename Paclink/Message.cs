@@ -109,6 +109,7 @@ namespace Paclink
         {
             var messageStore = new MessageStore(DatabaseFactory.Get());
             messageStore.DeleteFromWinlinkMessage(mid);
+            messageStore.DeleteToWinlinkMessage(mid);
         }
 
         internal int Size()
