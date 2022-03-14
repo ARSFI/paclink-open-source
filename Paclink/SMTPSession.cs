@@ -695,7 +695,7 @@ namespace Paclink
                 intPositionCrLfPeriod = (strTransparentBuffer + strMessage).IndexOf(Globals.CRLF + ".");
                 if (intPositionCrLfPeriod != -1) // There is a transparent "."
                 {
-                    strRecordBuffer = strRecordBuffer + strMessage.Left(intPositionCrLfPeriod - 1);
+                    strRecordBuffer = strRecordBuffer + strMessage.Left(intPositionCrLfPeriod);
                     strMessage = strMessage.Right(strMessage.Length - intPositionCrLfPeriod + 1);  // skip the transparent "."
                 }
                 else // No more transparent "." left in strMessage...
@@ -806,15 +806,15 @@ namespace Paclink
             if (intCount > 1)
             {
                 var loopTo = bytDecodeBytes.Length;
-                for (intCount = 0; intCount <= loopTo; intCount++)
+                for (intCount = 0; intCount < loopTo; intCount++)
                 {
-                    if (bytDecodeBytes[intCount] != 0 & !blnPassword)
+                    if (bytDecodeBytes[intCount] != 0 && !blnPassword)
                     {
                         strTempUserId = strTempUserId + (char)bytDecodeBytes[intCount];
                     }
 
-                    blnPassword = blnPassword | intCount > 0 & bytDecodeBytes[intCount] == 0;
-                    if (bytDecodeBytes[intCount] != 0 & blnPassword)
+                    blnPassword = blnPassword || (intCount > 0 && bytDecodeBytes[intCount] == 0);
+                    if (bytDecodeBytes[intCount] != 0 && blnPassword)
                     {
                         strTempPassword = strTempPassword + (char)bytDecodeBytes[intCount];
                     }
