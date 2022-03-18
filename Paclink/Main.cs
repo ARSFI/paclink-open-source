@@ -198,13 +198,6 @@ namespace Paclink
             }
 
             Globals.SiteDataDirectory = Globals.SiteRootDirectory + @"Data\";
-            if (Globals.SiteBinDirectory.ToLower().IndexOf("bin") == -1)
-            {
-                UserInterfaceFactory.GetUiSystem().DisplayModalError(
-                    "Illegal Paclink directory structure...Paclink.exe " + @"Must be in the \Bin subdirectory as installed!",
-                    "Directory Error");
-                Environment.Exit(0);
-            }
 
             Globals.Settings.Save("Main", "Program Version", Globals.strProductVersion);
             Globals.blnUseRMSRelay = Globals.Settings.Get("Properties", "Use RMS Relay", false);
