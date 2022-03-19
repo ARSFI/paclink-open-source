@@ -26,6 +26,9 @@ namespace Paclink.UI.Windows
                 case AvailableForms.AgwEngine:
                     window = new DialogAGWEngine((IAGWEngineBacking)backingObject);
                     break;
+                case AvailableForms.ChangePassword:
+                    window = new DialogChangePassword((IChangePasswordBacking)backingObject);
+                    break;
                 default:
                     throw new ArgumentException(string.Format("Invalid form: {0}", form));
             }

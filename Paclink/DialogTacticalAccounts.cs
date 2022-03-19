@@ -1,7 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using NLog;
+using Paclink.UI.Common;
+using System;
 using System.Windows.Forms;
-using NLog;
 using winlink;
 
 namespace Paclink
@@ -128,10 +128,15 @@ namespace Paclink
             // Prompt for the old and new passwords.
             // 
             string strOldPassword = txtPassword.Text.Trim();
-            var objDialogChangePassword = new DialogChangePassword(strOldPassword);
-            var enmResult = objDialogChangePassword.ShowDialog();
-            if (enmResult == DialogResult.Cancel)
-                return;
+
+            DialogChangePasswordViewModel vm = new DialogChangePasswordViewModel();
+            vm.OldPassword = strOldPassword;
+            UserInterfaceFactory.GetUiSystem().DisplayForm(AvailableForms.ChangePassword, vm);
+
+            //TODO: need to figure out how to reference dialog results
+            //if (enmResult == DialogResult.Cancel)
+            //    return;
+
             // 
             // They confirmed that they want to make the change.
             // 
@@ -139,8 +144,8 @@ namespace Paclink
             {
                 Cursor = Cursors.WaitCursor;
 
-                strOldPassword = objDialogChangePassword.GetOldPassword();
-                string strNewPassword = objDialogChangePassword.GetNewPassword();
+                strOldPassword = vm.OldPassword;
+                string strNewPassword = vm.NewPassword;
                 string strAccount = cmbAccount.Text.Trim();
                 // 
                 // Test for existence of the tactical address in the CMS database.
@@ -319,7 +324,7 @@ namespace Paclink
             Accounts.RefreshAccountsList();
             FillAccountSelection();
             return blnReturn;
-        } 
+        }
 
         public bool AddTacticalAccountToWinlink(string strTacticalAddress, string strPassword)
         {
@@ -384,7 +389,7 @@ namespace Paclink
             }
 
             return true;
-        } 
+        }
 
         private void btnHelp_Click(object sender, EventArgs e)
         {
