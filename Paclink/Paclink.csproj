@@ -14,7 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataAccessTests\DataAccessTests.csproj" />
     <ProjectReference Include="..\Libraries\winlink-webservices\WinlinkWebServices\WinlinkWebServices.csproj" />
     <ProjectReference Include="..\Paclink.Data\Paclink.Data.csproj" />
     <ProjectReference Include="..\Paclink.UI.Common\Paclink.UI.Common.csproj" />
@@ -26,9 +25,5 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /F /Y &quot;$(ProjectDir)..\Paclink.UI.Windows\$(OutDir)\Paclink.UI.Windows.dll&quot; &quot;$(ProjectDir)$(OutDir)\&quot;" />
-  </Target>
 
 </Project>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30114.105
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32314.265
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paclink", "Paclink\Paclink.csproj", "{17605A58-990F-004D-063D-2BF61B29BCEC}"
 EndProject
@@ -60,9 +60,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TNC.Middleware", "TNC.Middl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TNCKissInterface", "TNCKissInterface\TNCKissInterface\TNCKissInterface.csproj", "{A63067BC-6BFC-430F-801F-F6F289311E90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paclink.UI.Windows", "Paclink.UI.Windows\Paclink.UI.Windows.csproj", "{A44933D7-4E0F-421E-ACB2-DD47DB866376}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paclink.UI.Windows", "Paclink.UI.Windows\Paclink.UI.Windows.csproj", "{A44933D7-4E0F-421E-ACB2-DD47DB866376}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paclink.UI.Common", "Paclink.UI.Common\Paclink.UI.Common.csproj", "{9F808E90-1708-4054-8AD8-7DF7C6857FD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paclink.UI.Common", "Paclink.UI.Common\Paclink.UI.Common.csproj", "{9F808E90-1708-4054-8AD8-7DF7C6857FD4}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{39652E28-AEAB-4073-8D40-1208D2348736}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,8 +86,8 @@ Global
 		{FAB7B3C7-B5A8-4208-8ABC-6081A16EDA7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FAB7B3C7-B5A8-4208-8ABC-6081A16EDA7E}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{FAB7B3C7-B5A8-4208-8ABC-6081A16EDA7E}.Debug|x86.Build.0 = Debug|Any CPU
-		{FAB7B3C7-B5A8-4208-8ABC-6081A16EDA7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FAB7B3C7-B5A8-4208-8ABC-6081A16EDA7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAB7B3C7-B5A8-4208-8ABC-6081A16EDA7E}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAB7B3C7-B5A8-4208-8ABC-6081A16EDA7E}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{FAB7B3C7-B5A8-4208-8ABC-6081A16EDA7E}.Release|x86.ActiveCfg = Release|Any CPU
 		{FAB7B3C7-B5A8-4208-8ABC-6081A16EDA7E}.Release|x86.Build.0 = Release|Any CPU
 		{2812E63C-BA22-4B61-AE4F-751361D2BF9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -136,6 +138,10 @@ Global
 		{9F808E90-1708-4054-8AD8-7DF7C6857FD4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9F808E90-1708-4054-8AD8-7DF7C6857FD4}.Release|x86.ActiveCfg = Release|Any CPU
 		{9F808E90-1708-4054-8AD8-7DF7C6857FD4}.Release|x86.Build.0 = Release|Any CPU
+		{39652E28-AEAB-4073-8D40-1208D2348736}.Debug|Any CPU.ActiveCfg = Debug
+		{39652E28-AEAB-4073-8D40-1208D2348736}.Debug|x86.ActiveCfg = Debug
+		{39652E28-AEAB-4073-8D40-1208D2348736}.Release|Any CPU.ActiveCfg = Release
+		{39652E28-AEAB-4073-8D40-1208D2348736}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
