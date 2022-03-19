@@ -12,5 +12,6 @@ namespace Paclink.UI.Common
 
         string OldPassword { get; }
         string NewPassword { get; set; }
+        DialogFormResult DialogResult { get; set; }
     }
 }

@@ -47,17 +47,14 @@ namespace Paclink
             }
 
             _backingObject.NewPassword = strNewPassword;
-
-            //TODO: maybe set flag in backing object for dialog result
-            DialogResult = DialogResult.OK;
+            _backingObject.DialogResult = Paclink.UI.Common.DialogFormResult.OK;
 
             Close();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            //TODO: maybe set flag in backing object for dialog result
-            DialogResult = DialogResult.Cancel;
+            _backingObject.DialogResult = Paclink.UI.Common.DialogFormResult.Cancel;
 
             Close();
         }

@@ -133,9 +133,8 @@ namespace Paclink
             vm.OldPassword = strOldPassword;
             UserInterfaceFactory.GetUiSystem().DisplayForm(AvailableForms.ChangePassword, vm);
 
-            //TODO: need to figure out how to reference dialog results
-            //if (enmResult == DialogResult.Cancel)
-            //    return;
+            if (vm.DialogResult != Paclink.UI.Common.DialogFormResult.OK)
+               return;
 
             // 
             // They confirmed that they want to make the change.
@@ -358,7 +357,7 @@ namespace Paclink
                     "not available." + Globals.CRLF + "Do you want to add this account to this Paclink site anyway?",
                     "Existing Tactical Address Found",
                     MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question) == DialogResult.Yes)
+                    MessageBoxIcon.Question) == DialogResult.OK)
 
                 {
                     MessageBox.Show(
