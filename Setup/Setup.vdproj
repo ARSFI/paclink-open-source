@@ -118,7 +118,7 @@
             {
             "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
             "Name" = "8:#1925"
-            "AlwaysCreate" = "11:FALSE"
+            "AlwaysCreate" = "11:TRUE"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Property" = "8:TARGETDIR"
@@ -129,7 +129,7 @@
             "{1525181F-901A-416C-8A58-119130FE478E}:_53246BC96A48443F8E2894A9DF5CE45E"
             {
             "Name" = "8:#1919"
-            "AlwaysCreate" = "11:FALSE"
+            "AlwaysCreate" = "11:TRUE"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Property" = "8:ProgramMenuFolder"
@@ -140,7 +140,7 @@
             "{1525181F-901A-416C-8A58-119130FE478E}:_E81892F012F743DCA36573D9CFC738BA"
             {
             "Name" = "8:#1916"
-            "AlwaysCreate" = "11:FALSE"
+            "AlwaysCreate" = "11:TRUE"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Property" = "8:DesktopFolder"
@@ -165,7 +165,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:PaclinkOS"
         "ProductCode" = "8:{CD28A979-C881-4C02-A873-3AC2F7D55B14}"
-        "PackageCode" = "8:{18AC8972-6464-48C4-B40B-954397607AC1}"
+        "PackageCode" = "8:{B08045F3-793E-447C-8C06-414B9CF7CB73}"
         "UpgradeCode" = "8:{5C11A888-EB9D-4F37-84CD-26CC4A0C7DF1}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -285,6 +285,20 @@
         }
         "Shortcut"
         {
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_0E2C9836C4A5435EA0FE5339B6C5033C"
+            {
+            "Name" = "8:Shortcut to PaclinkOS"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_E4686F1E525A427BB2C83F41DCED5507"
+            "Folder" = "8:_08BD8AF29F1842ADBDB40903DE2ABE83"
+            "WorkingFolder" = "8:_08BD8AF29F1842ADBDB40903DE2ABE83"
+            "Icon" = "8:"
+            "Feature" = "8:"
+            }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_28B0BB2EDCA8403E9424CEC8FC9F81B2"
             {
             "Name" = "8:PaclinkOS"
@@ -310,6 +324,34 @@
             "Target" = "8:_E81892F012F743DCA36573D9CFC738BA"
             "Folder" = "8:_53246BC96A48443F8E2894A9DF5CE45E"
             "WorkingFolder" = "8:_53246BC96A48443F8E2894A9DF5CE45E"
+            "Icon" = "8:"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_4A31863F07E74DEBB205F1FDB9411233"
+            {
+            "Name" = "8:Shortcut to PaclinkOS"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_E4686F1E525A427BB2C83F41DCED5507"
+            "Folder" = "8:_53246BC96A48443F8E2894A9DF5CE45E"
+            "WorkingFolder" = "8:_08BD8AF29F1842ADBDB40903DE2ABE83"
+            "Icon" = "8:"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_6FEEF6F6B49F48D1A6C046CB3FE3CEB5"
+            {
+            "Name" = "8:Shortcut to PaclinkOS"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_E4686F1E525A427BB2C83F41DCED5507"
+            "Folder" = "8:_E81892F012F743DCA36573D9CFC738BA"
+            "WorkingFolder" = "8:_08BD8AF29F1842ADBDB40903DE2ABE83"
             "Icon" = "8:"
             "Feature" = "8:"
             }
