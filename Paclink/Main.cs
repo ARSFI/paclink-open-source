@@ -222,6 +222,7 @@ namespace Paclink
             {
                 _window.EnableWaitDisplay();
 
+                /*
                 // Create any required subdirectories...
                 if (Directory.Exists(Globals.SiteRootDirectory + "Accounts") == false)
                 {
@@ -247,6 +248,7 @@ namespace Paclink
                 {
                     Directory.CreateDirectory(Globals.SiteRootDirectory + "Documentation");
                 }
+                */
             } finally
             {
                 _window.DisableWaitDisplay();
