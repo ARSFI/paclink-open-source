@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="MimeKit" Version="2.9.2" />
-    <PackageReference Include="NLog" Version="4.7.4" />
+    <PackageReference Include="NLog" Version="4.7.10" />
     <PackageReference Include="System.IO.Ports" Version="5.0.1" />
   </ItemGroup>
 
@@ -17,6 +17,8 @@
     <ProjectReference Include="..\Libraries\winlink-webservices\WinlinkWebServices\WinlinkWebServices.csproj" />
     <ProjectReference Include="..\Paclink.Data\Paclink.Data.csproj" />
     <ProjectReference Include="..\Paclink.UI.Common\Paclink.UI.Common.csproj" />
+    <ProjectReference Include="..\Paclink.UI.Windows\Paclink.UI.Windows.csproj" />
+    <ProjectReference Include="..\TNC.Middleware\TNC.Middleware.csproj" />
     <ProjectReference Include="..\TNCKissInterface\TNCKissInterface\TNCKissInterface.csproj" />
   </ItemGroup>
 
