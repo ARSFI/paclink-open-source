@@ -10,7 +10,8 @@ namespace Paclink.UI.Common
         SiteProperties,
         Polling,
         AgwEngine,
-        ChangePassword
+        ChangePassword,
+        CallsignAccounts
     };
 
     public interface IUiPlatform

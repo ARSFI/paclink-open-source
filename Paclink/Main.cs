@@ -460,8 +460,7 @@ namespace Paclink
 
         public void ShowCallsignAccounts()
         {
-            var dlgCallsignAccount = new DialogCallsignAccounts();
-            dlgCallsignAccount.ShowDialog();
+            UserInterfaceFactory.GetUiSystem().DisplayForm(AvailableForms.CallsignAccounts, new DialogCallsignAccountsViewModel());
         }
 
         public void ShowAGWEngine()
