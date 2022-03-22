@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
-namespace Paclink
+namespace Paclink.UI.Windows
 {
     public partial class DialogTacticalAccounts : Form
     {
@@ -44,7 +44,6 @@ namespace Paclink
             this._btnPassword = new System.Windows.Forms.Button();
             this._btnAdd = new System.Windows.Forms.Button();
             this._btnInstructions = new System.Windows.Forms.Button();
-            this._Label3 = new System.Windows.Forms.Label();
             this._btnHelp = new System.Windows.Forms.Button();
             this._Label9 = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -133,18 +132,6 @@ namespace Paclink
             this._btnInstructions.UseVisualStyleBackColor = true;
             this._btnInstructions.Click += new System.EventHandler(this.btnInstructions_Click);
             // 
-            // _Label3
-            // 
-            this._Label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this._Label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this._Label3.Location = new System.Drawing.Point(47, 198);
-            this._Label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this._Label3.Name = "_Label3";
-            this._Label3.Size = new System.Drawing.Size(293, 66);
-            this._Label3.TabIndex = 19;
-            this._Label3.Text = "Accounts created are with default profile values.  To view/edit WL2K data base pr" +
-    "ofile values use Files|Edit Account Profile menu.";
-            // 
             // _btnHelp
             // 
             this._btnHelp.Location = new System.Drawing.Point(388, 226);
@@ -173,7 +160,6 @@ namespace Paclink
             this.ClientSize = new System.Drawing.Size(660, 285);
             this.Controls.Add(this._Label9);
             this.Controls.Add(this._btnHelp);
-            this.Controls.Add(this._Label3);
             this.Controls.Add(this._btnClose);
             this.Controls.Add(this._txtPassword);
             this.Controls.Add(this._cmbAccount);
@@ -396,30 +382,6 @@ namespace Paclink
                 if (_btnInstructions != null)
                 {
                     _btnInstructions.Click += btnInstructions_Click;
-                }
-            }
-        }
-
-        private Label _Label3;
-
-        internal Label Label3
-        {
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            get
-            {
-                return _Label3;
-            }
-
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            set
-            {
-                if (_Label3 != null)
-                {
-                }
-
-                _Label3 = value;
-                if (_Label3 != null)
-                {
                 }
             }
         }

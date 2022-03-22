@@ -262,12 +262,12 @@ namespace Paclink.UI.Windows
 
         public void RefreshWindow()
         {
-            throw new NotImplementedException();
+            // empty
         }
 
         public void CloseWindow()
         {
-            throw new NotImplementedException();
+            // empty
         }
     }
 } // CallsignAccounts

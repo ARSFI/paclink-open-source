@@ -454,8 +454,7 @@ namespace Paclink
          */
         public void ShowTacticalAccounts()
         {
-            var dlgTacticalAccounts = new DialogTacticalAccounts();
-            dlgTacticalAccounts.ShowDialog();
+            UserInterfaceFactory.GetUiSystem().DisplayForm(AvailableForms.TacticalAccounts, new DialogTacticalAccountsViewModel());
         }
 
         public void ShowCallsignAccounts()

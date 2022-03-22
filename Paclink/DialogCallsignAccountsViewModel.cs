@@ -50,7 +50,7 @@ namespace Paclink
         public List<string> GetAccountNames()
         {
             var accountNames = new List<string>();
-            foreach (Accounts.AccountRecord UserAccount in Accounts.AccountsList.Values)
+            foreach (AccountRecord UserAccount in Accounts.AccountsList.Values)
             {
                 if (Globals.IsValidRadioCallsign(UserAccount.Name))
                 {

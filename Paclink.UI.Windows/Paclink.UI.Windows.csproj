@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Libraries\winlink-webservices\WinlinkWebServices\WinlinkWebServices.csproj" />
     <ProjectReference Include="..\Paclink.UI.Common\Paclink.UI.Common.csproj" />
   </ItemGroup>
 
@@ -19,6 +20,7 @@
     <Compile Update="DialogChangePassword.cs" />
     <Compile Update="DialogPolling.cs" />
     <Compile Update="DialogSiteProperties.cs" />
+    <Compile Update="DialogTacticalAccounts.cs" />
     <Compile Update="Main.cs" />
   </ItemGroup>
 

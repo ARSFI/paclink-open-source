@@ -2,16 +2,20 @@
 using Paclink.UI.Common;
 using System;
 using System.Windows.Forms;
-using winlink;
 
-namespace Paclink
+
+namespace Paclink.UI.Windows
 {
-    public partial class DialogTacticalAccounts
+    public partial class DialogTacticalAccounts : ITacticalAccountsWindow
     {
         private readonly Logger Log = LogManager.GetCurrentClassLogger();
+        private ITacticalAccountsBacking _backingObject = null;
+        public ITacticalAccountsBacking BackingObject => _backingObject;
 
-        public DialogTacticalAccounts()
+        public DialogTacticalAccounts(ITacticalAccountsBacking backingObject)
         {
+            _backingObject = backingObject;
+
             InitializeComponent();
             _btnClose.Name = "btnClose";
             _txtPassword.Name = "txtPassword";
@@ -21,7 +25,6 @@ namespace Paclink
             _btnPassword.Name = "btnPassword";
             _btnAdd.Name = "btnAdd";
             _btnInstructions.Name = "btnInstructions";
-            _Label3.Name = "Label3";
             _btnHelp.Name = "btnHelp";
             _Label9.Name = "Label9";
         }
@@ -36,32 +39,33 @@ namespace Paclink
             // 
             /* TODO ERROR: Skipped IfDirectiveTrivia *//* TODO ERROR: Skipped DisabledTextTrivia *//* TODO ERROR: Skipped EndIfDirectiveTrivia */
             FillAccountSelection();
-        } // TacticalAccounts_Load
+        }
 
         private void cmbAccount_Leave(object sender, EventArgs e)
         {
             if (cmbAccount.Text == "<Add new account>")
                 return;
-            if (!Globals.IsValidFileName(cmbAccount.Text))
+            if (!BackingObject.IsValidFileName(cmbAccount.Text))
                 cmbAccount.Focus();
-        } // cmbAccount_Leave
+        }
 
         private void cmbAccount_TextChanged(object sender, EventArgs e)
         {
-            txtPassword.Text = Globals.Settings.Get(cmbAccount.Text, "EMail Password", "");
-        } // cmbAccount_TextChanged
+            txtPassword.Text = BackingObject.GetEmailPassword(cmbAccount.Text);
+        }
 
         private void btnInstructions_Click(object sender, EventArgs e)
         {
             // 
             // Displays instructions for entering a tactical address...
             // 
-            MessageBox.Show("A tactical account name may consist of a tactical address of alpha characters" + Globals.CRLF + "ONLY or alpha characters ONLY, followed by a dash, followed by alphanumeric" + Globals.CRLF + "characters . A name may not exceed 12 characters. " + Globals.CRLF + Globals.CRLF + "Valid account name examples:  MLBSHELTER, REDCROSS-12, POLICE-9A, FLDADEEOC-1" + Globals.CRLF + "The <account name>@Winlink.org will be the E-mail address of the account user." + Globals.CRLF + Globals.CRLF + "To enter a ham or MARS radio callsign account use the Callsign Accounts dialog box.");
-
-
-
-
-        } // btnInstructions_Click
+            MessageBox.Show("A tactical account name may consist of a tactical address of alpha characters\r\n" +
+                "ONLY or alpha characters ONLY, followed by a dash, followed by alphanumeric\r\n" +
+                "characters . A name may not exceed 12 characters. \r\n\r\n" +
+                "Valid account name examples:  MLBSHELTER, REDCROSS-12, POLICE-9A, FLDADEEOC-1\r\n" +
+                "The <account name>@Winlink.org will be the E-mail address of the account user.\r\n\r\n" +
+                "To enter a ham or MARS radio callsign account use the Callsign Accounts dialog box.");
+        }
 
         private void btnAdd_Click(object s, EventArgs e)
         {
@@ -97,9 +101,9 @@ namespace Paclink
                 return;
             }
 
-            if (txtPassword.Text.Length < 3)
+            if (txtPassword.Text.Length < 6)
             {
-                MessageBox.Show("Password must be at least three characters...");
+                MessageBox.Show("Password must be at least six characters...");
                 txtPassword.Focus();
                 return;
             }
@@ -118,99 +122,42 @@ namespace Paclink
 
             btnAdd.Enabled = true;
             FillAccountSelection();
-        } // btnAdd_Click
+        }
 
         private void btnPassword_Click(object s, EventArgs e)
         {
             // 
             // Changes the password for the tactical address.
             // 
-            // Prompt for the old and new passwords.
-            // 
-            string strOldPassword = txtPassword.Text.Trim();
-
-            DialogChangePasswordViewModel vm = new DialogChangePasswordViewModel();
-            vm.OldPassword = strOldPassword;
-            UserInterfaceFactory.GetUiSystem().DisplayForm(AvailableForms.ChangePassword, vm);
-
-            if (vm.DialogResult != Paclink.UI.Common.DialogFormResult.OK)
-               return;
 
             // 
-            // They confirmed that they want to make the change.
+            // Test for existence of the tactical address
             // 
-            try
+            string account = cmbAccount.Text.Trim();
+            if (!BackingObject.AccountExists(account))
             {
-                Cursor = Cursors.WaitCursor;
-
-                strOldPassword = vm.OldPassword;
-                string strNewPassword = vm.NewPassword;
-                string strAccount = cmbAccount.Text.Trim();
-                // 
-                // Test for existence of the tactical address in the CMS database.
-                // 
-                if (WinlinkWebServices.AccountExists(strAccount))
-                {
-                    // 
-                    // This account is already registered.  Check the old password.
-                    // 
-                    if (!WinlinkWebServices.ValidatePassword(strAccount, strOldPassword))
-                    {
-                        MessageBox.Show(
-                            "The address/account has been previously used and the entered old password" +
-                            " does not match the password for '" + strAccount + "' in the Winlink database" +
-                            Globals.CR + Globals.CR + "To use this address/account " +
-                            "name you must have the previously assigned password.", "Validating Password",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Exclamation);
-                        return;
-                    }
-                    // 
-                    // Set the new password 
-                    // 
-                    try
-                    {
-                        WinlinkWebServices.ChangePassword(strAccount, strOldPassword, strNewPassword);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error while setting password: " + ex.Message, "Error", MessageBoxButtons.OK,
-                            MessageBoxIcon.Exclamation);
-                        return;
-                    }
-                }
-                else
-                {
-                    // 
-                    // This account is not know by the system.
-                    // 
-                    MessageBox.Show(
-                        "The tactical address " + strAccount + " has not been registered with the Winlink system.",
-                        "Checking address",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Exclamation);
-                }
-                // 
-                // Update the password in the .ini file.
-                // 
-                Globals.Settings.Save(strAccount, "EMail Password", strNewPassword);
-                // 
-                // Finished
-                // 
-                Accounts.RefreshAccountsList();
-                FillAccountSelection();
                 MessageBox.Show(
-                    "The password for " + strAccount + " has been changed to " + strNewPassword,
-                    "Password Changed",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                    "The tactical address " + account + " has not been registered with the Winlink system.",
+                    "Checking address", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
+            }
 
-            }
-            finally
+            string oldPassword = txtPassword.Text.Trim();
+            if (BackingObject.ChangeTacticalPassword(account, oldPassword))
             {
-                Cursor = Cursors.Default;
+                var newPassword = BackingObject.GetEmailPassword(account);
+                MessageBox.Show(
+                    "The password for " + account + " has been changed to '" + newPassword + "'",
+                    "Password Changed", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+            else
+            {
+                MessageBox.Show("The password was not changed.", "Password Change", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            BackingObject.RefreshAccountsList();
+            FillAccountSelection();
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -218,9 +165,9 @@ namespace Paclink
             // 
             // Closes this dialog box.
             // 
-            Globals.UpdateAccountDirectories();
+            BackingObject.UpdateAccountDirectories();
             Close();
-        } // btnClose_Click
+        }
 
         private void FillAccountSelection()
         {
@@ -229,19 +176,16 @@ namespace Paclink
             // 
             cmbAccount.Items.Clear();
             cmbAccount.Sorted = true;
-            foreach (Accounts.AccountRecord UserAccount in Accounts.AccountsList.Values)
+            var tacticalAccountNames = BackingObject.GetTacticalAccountNames();
+            foreach (var tacticalAccountName in tacticalAccountNames)
             {
-                if (!Globals.IsValidRadioCallsign(UserAccount.Name))
-                {
-                    if (!string.IsNullOrEmpty(UserAccount.Name))
-                        cmbAccount.Items.Add(UserAccount.Name);
-                }
+                cmbAccount.Items.Add(tacticalAccountName);
             }
 
             cmbAccount.Items.Add("<Add new account>");
             cmbAccount.Text = Convert.ToString(cmbAccount.Items[0]);
             cmbAccount.Focus();
-        } // FillAccountSelection
+        }
 
         private bool IsValidAccountName(string sName)
         {
@@ -271,7 +215,7 @@ namespace Paclink
             }
 
             return true;
-        } // IsValidAccountName
+        }
 
         private void EntryErrorMessage()
         {
@@ -284,18 +228,18 @@ namespace Paclink
                 "Error",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
-        } // EntryErrorMessage
+        }
 
         private bool IsAccountNameInUseHere(string strAccountName)
         {
             // 
             // Returns True if the indicated account name is registered locally...
             // 
-            var Account = Accounts.GetUserAccount(strAccountName);
+            var Account = BackingObject.GetUserAccount(strAccountName);
             if ((Account.Name ?? "") == (strAccountName ?? ""))
                 return true;
             return false;
-        } // IsAccountNameInUseHere
+        }
 
         private bool AddNewAccount()
         {
@@ -306,10 +250,10 @@ namespace Paclink
             if (AddTacticalAccountToWinlink(cmbAccount.Text, txtPassword.Text))
             {
                 // Add the account name to the properties file...
-                string strAccountList = Globals.Settings.Get("Properties", "Account Names", "");
+                string strAccountList = BackingObject.GetAccountNames();
                 strAccountList = strAccountList + cmbAccount.Text + "|";
-                Globals.Settings.Save("Properties", "Account Names", strAccountList);
-                Globals.Settings.Save(cmbAccount.Text, "EMail Password", txtPassword.Text);
+                BackingObject.SaveAccountNames(strAccountList);
+                BackingObject.SaveEmailPassword(cmbAccount.Text, txtPassword.Text);
                 blnReturn = true;
             }
             else
@@ -320,7 +264,7 @@ namespace Paclink
             // Restore the dialog box window...
             btnPassword.Enabled = true;
             btnAdd.Enabled = false;
-            Accounts.RefreshAccountsList();
+            BackingObject.RefreshAccountsList();
             FillAccountSelection();
             return blnReturn;
         }
@@ -334,18 +278,17 @@ namespace Paclink
             // 
             // Test for existence of the tactical address in the CMS database.
             // 
-            if (WinlinkWebServices.AccountExists(strTacticalAddress))
+            if (BackingObject.AccountExists(strTacticalAddress))
             {
                 // 
                 // This account is already registered.  Check the password.
                 // 
-                if (!WinlinkWebServices.ValidatePassword(strTacticalAddress, strPassword))
+                if (!BackingObject.ValidatePassword(strTacticalAddress, strPassword))
                 {
                     MessageBox.Show(
                         "The address/account has been previously used and the entered password " +
-                        "does not match the password for '" + strTacticalAddress + "' in the Winlink database" +
-                        Globals.CR + Globals.CR + "To use this address/account " +
-                        "name you must have the previously assigned password.",
+                        "does not match the password for '" + strTacticalAddress + "' in the Winlink database\r\n\r\n" +
+                        "To use this address/account name you must have the previously assigned password.",
                         "Validating Password",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Exclamation);
@@ -354,28 +297,27 @@ namespace Paclink
 
                 if (MessageBox.Show(
                     "The account name '" + strTacticalAddress + "' is already in use or otherwise " +
-                    "not available." + Globals.CRLF + "Do you want to add this account to this Paclink site anyway?",
+                    "not available.\r\nDo you want to add this account to this Paclink site anyway?",
                     "Existing Tactical Address Found",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question) == DialogResult.OK)
 
                 {
                     MessageBox.Show(
-                        "Using the same Tactical address from different Paclink sites must be done carefully." +
-                        Globals.CR + "Once mail is retrieved by a Paclink site it is considered delivered by the WL2K system " +
-                        Globals.CR + "and will not longer be accessable to other sites.",
-                        "Caution!",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
+                        "Using the same Tactical address from different Paclink sites must be done carefully.\r\n" +
+                        "Once mail is retrieved by a Paclink site it is considered delivered by the WL2K system \r\n" +
+                         "and will not longer be accessable to other sites.",
+                        "Caution!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return true;
                 }
             }
+
             // 
             // Add the new tactical address to the CMS database.
             // 
             try
             {
-                WinlinkWebServices.AddTacticalAddress(strTacticalAddress, strPassword);
+                BackingObject.AddTacticalAddress(strTacticalAddress, strPassword);
             }
             catch (Exception ex)
             {
@@ -394,12 +336,22 @@ namespace Paclink
         {
             try
             {
-                Help.ShowHelp(this, Globals.SiteRootDirectory + @"Help\Paclink.chm", HelpNavigator.Topic, @"html\hs100.htm");
+                Help.ShowHelp(this, BackingObject.SiteRootDirectory + @"Help\Paclink.chm", HelpNavigator.Topic, @"html\hs100.htm");
             }
             catch (Exception ex)
             {
                 Log.Error("[TacticalAccounts.btnHelp_Click] " + ex.Message);
             }
-        } // btnHelp_Click
+        }
+
+        public void RefreshWindow()
+        {
+            // empty
+        }
+
+        public void CloseWindow()
+        {
+            // empty
+        }
     }
-} // TacticalAccounts
+}
