@@ -9,6 +9,7 @@ namespace Paclink.UI.Common
         string GetEmailPassword(string text);
         bool ChangeTacticalPassword(string account, string password);
         bool AccountExists(string account);
+        void RemoveAccount(string accountName);
         bool ChangePassword(string account, string oldPassword, string newPassword);
         bool ValidatePassword(string tacticalAddress, string password);
         void AddTacticalAddress(string tacticalAddress, string password);

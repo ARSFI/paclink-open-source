@@ -2,6 +2,7 @@
 using Paclink.UI.Common;
 using System;
 using System.Windows.Forms;
+using R = Paclink.Resources.Properties.Resources;
 
 
 namespace Paclink.UI.Windows
@@ -101,15 +102,9 @@ namespace Paclink.UI.Windows
                 return;
             }
 
-            if (txtPassword.Text.Length < 6)
+            if (txtPassword.Text.Length < 6 || txtPassword.Text.Length > 12)
             {
-                MessageBox.Show("Password must be at least six characters...");
-                txtPassword.Focus();
-                return;
-            }
-            else if (txtPassword.Text.Length > 12)
-            {
-                MessageBox.Show("Password must be twelve characters or less long...");
+                UserInterfaceFactory.GetUiSystem().DisplayModalError(R.Entry_Error, R.Password_Requirements);
                 txtPassword.Focus();
                 return;
             }
@@ -137,8 +132,11 @@ namespace Paclink.UI.Windows
             if (!BackingObject.AccountExists(account))
             {
                 MessageBox.Show(
-                    "The tactical address " + account + " has not been registered with the Winlink system.",
+                    "The tactical address is not registered with the Winlink system.",
                     "Checking address", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                //remove from local database - cms overrides local
+                BackingObject.RemoveAccount(account);
+                BackingObject.RefreshAccountsList();
                 return;
             }
 

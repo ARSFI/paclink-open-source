@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Libraries\winlink-webservices\WinlinkWebServices\WinlinkWebServices.csproj" />
+    <ProjectReference Include="..\Paclink.Resources\Paclink.Resources.csproj" />
     <ProjectReference Include="..\Paclink.UI.Common\Paclink.UI.Common.csproj" />
   </ItemGroup>
 
