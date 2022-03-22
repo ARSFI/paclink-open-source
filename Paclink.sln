@@ -66,6 +66,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paclink.UI.Common", "Paclin
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{39652E28-AEAB-4073-8D40-1208D2348736}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paclink.Resources", "Paclink.Resources\Paclink.Resources.csproj", "{D9CEF973-8E39-4E25-BFAF-589478E5BD25}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -143,6 +145,14 @@ Global
 		{39652E28-AEAB-4073-8D40-1208D2348736}.Release|Any CPU.ActiveCfg = Release
 		{39652E28-AEAB-4073-8D40-1208D2348736}.Release|Any CPU.Build.0 = Release
 		{39652E28-AEAB-4073-8D40-1208D2348736}.Release|x86.ActiveCfg = Release
+		{D9CEF973-8E39-4E25-BFAF-589478E5BD25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9CEF973-8E39-4E25-BFAF-589478E5BD25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9CEF973-8E39-4E25-BFAF-589478E5BD25}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D9CEF973-8E39-4E25-BFAF-589478E5BD25}.Debug|x86.Build.0 = Debug|Any CPU
+		{D9CEF973-8E39-4E25-BFAF-589478E5BD25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9CEF973-8E39-4E25-BFAF-589478E5BD25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9CEF973-8E39-4E25-BFAF-589478E5BD25}.Release|x86.ActiveCfg = Release|Any CPU
+		{D9CEF973-8E39-4E25-BFAF-589478E5BD25}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
