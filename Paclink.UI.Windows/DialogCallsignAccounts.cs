@@ -1,14 +1,19 @@
-﻿using Paclink.Data;
+﻿using Paclink.UI.Common;
 using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace Paclink
+namespace Paclink.UI.Windows
 {
-    public partial class DialogCallsignAccounts
+    public partial class DialogCallsignAccounts : ICallsignAccountsWindow
     {
-        public DialogCallsignAccounts()
+        private ICallsignAccountsBacking _backingObject;
+        public ICallsignAccountsBacking BackingObject => _backingObject;
+
+        public DialogCallsignAccounts(ICallsignAccountsBacking backingObject)
         {
+            _backingObject = backingObject;
+
             InitializeComponent();
             _btnClose.Name = "btnClose";
             _txtPassword.Name = "txtPassword";
@@ -31,25 +36,20 @@ namespace Paclink
 
         private void cmbAccount_TextChanged(object sender, EventArgs e)
         {
-            txtPassword.Text = Globals.Settings.Get(cmbAccount.Text, "EMail Password", "");
+            txtPassword.Text = BackingObject.GetEmailPassword(cmbAccount.Text);
             strOldPassword = txtPassword.Text;
         } // cmbAccount_TextChanged
 
         private void btnInstructions_Click(object sender, EventArgs e)
         {
             // Displays instructions for entering a callsign address...
-
             MessageBox.Show(
-                "A callsign account name must consist of a valid ham or MARS radio callsign." + Globals.CRLF + 
-                "examples:  W1ABC, WA9DEF-12" + Globals.CRLF + Globals.CRLF +
-                "The <account name>@Winlink.org will be the email address of the account user." + Globals.CRLF + 
-                "If the account name uses a -ssid extension then you must also enter the " + Globals.CRLF + 
-                "password of the base callsign in the field provided." + Globals.CRLF + Globals.CRLF +
+                "A callsign account name must consist of a valid ham or MARS radio callsign.\r\n" +
+                "examples:  W1ABC, WA9DEF-12\r\n\r\n" +
+                "The <account name>@Winlink.org will be the email address of the account user.\r\n" +
+                "If the account name uses a -ssid extension then you must also enter the \r\n" +
+                "password of the base callsign in the field provided.\r\n\r\n" +
                 "To enter a tactical account use the Tactical Accounts dialog box.");
-
-
-
-
         } // btnInstructions_Click
 
         private void btnAdd_Click(object s, EventArgs e)
@@ -58,7 +58,7 @@ namespace Paclink
             cmbAccount.Text = cmbAccount.Text.Trim().ToUpper();
             txtPassword.Text = strPassword;
             string strAccountName = cmbAccount.Text;
-            bool blnIsHamCall = Globals.IsValidRadioCallsign(strAccountName);
+            bool blnIsHamCall = BackingObject.IsValidRadioCallsign(strAccountName);
             bool blnIsDashSSID = blnIsHamCall & strAccountName.IndexOf("-") != -1;
             if (cmbAccount.Text.Length < 3)
             {
@@ -72,28 +72,28 @@ namespace Paclink
                 cmbAccount.Focus();
                 return;
             }
-            else if (!Globals.IsValidRadioCallsign(cmbAccount.Text))
+            else if (!BackingObject.IsValidRadioCallsign(cmbAccount.Text))
             {
                 EntryErrorMessage();
                 cmbAccount.Focus();
                 return;
             }
-            else if (IsAccount(cmbAccount.Text))
+            else if (BackingObject.IsAccount(cmbAccount.Text))
             {
                 MessageBox.Show("This account name is already an account...");
                 cmbAccount.Focus();
                 return;
             }
-            else if (IsChannel(cmbAccount.Text))
+            else if (BackingObject.IsChannel(cmbAccount.Text))
             {
                 MessageBox.Show("This account name is already in use as a channel name...");
                 cmbAccount.Focus();
                 return;
             }
 
-            if (txtPassword.Text.Trim().Length < 3)
+            if (txtPassword.Text.Trim().Length < 6)
             {
-                MessageBox.Show("Password must be at least three characters...");
+                MessageBox.Show("Password must be at least six characters...");
                 txtPassword.Focus();
                 return;
             }
@@ -138,10 +138,10 @@ namespace Paclink
             // Remove the selected callsign account from the local site.
             // 
             string strAccount = cmbAccount.Text.ToUpper().Trim();
-            if ((Globals.SiteCallsign ?? "") == (strAccount ?? ""))
+            if ((BackingObject.SiteCallsign ?? "") == (strAccount ?? ""))
             {
                 MessageBox.Show(
-                    "The site callsign account cannot be removed from the Accounts menu!" + Globals.CR +
+                    "The site callsign account cannot be removed from the Accounts menu!\r\n" +
                     "Use the Properties menu to change the site callsign.", "Remove Account",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
@@ -152,16 +152,8 @@ namespace Paclink
                 "Confirm Remove",
                 MessageBoxButtons.YesNoCancel) == DialogResult.Cancel)
                 return;
-            string strAccountList = Globals.Settings.Get("Properties", "Account Names", "");
-            while (strAccountList.IndexOf(strAccount + "|") != -1) // This added to delete multiples if they exist
-                strAccountList = strAccountList.Replace(strAccount + "|", "");
-            Globals.Settings.Save("Properties", "Account Names", strAccountList);
 
-            var messageStore = new MessageStore(DatabaseFactory.Get());
-            messageStore.DeleteAccountEmails(strAccount);
-
-            Globals.Settings.DeleteGroup(strAccount);
-            Accounts.RefreshAccountsList();
+            BackingObject.RemoveAccount(strAccount);
             FillAccountSelection();
         } // btnRemove_Click
 
@@ -171,13 +163,14 @@ namespace Paclink
             // Closes this dialog box.
             // 
             string strCallsign = cmbAccount.Text;
-            if (strCallsign != "<Add new account>" && string.Compare(txtPassword.Text.Trim(), strOldPassword, false) != 0)
+            string password = txtPassword.Text.Trim();
+            if (strCallsign != "<Add new account>" && string.Compare(password, strOldPassword, false) != 0)
             {
                 // Update the password for this callsign.
-                Globals.Settings.Save(strCallsign, "EMail Password", txtPassword.Text.Trim());
+                BackingObject.SaveEmailPassword(strCallsign, password);
             }
 
-            Globals.UpdateAccountDirectories();
+            BackingObject.UpdateAccountDirectories();
             Close();
         } // btnClose_Click
 
@@ -185,13 +178,10 @@ namespace Paclink
         {
             cmbAccount.Items.Clear();
             cmbAccount.Sorted = true;
-            foreach (Accounts.AccountRecord UserAccount in Accounts.AccountsList.Values)
+            List<string> accountNames = BackingObject.GetAccountNames();
+            foreach (var accountName in accountNames)
             {
-                if (Globals.IsValidRadioCallsign(UserAccount.Name))
-                {
-                    if (!string.IsNullOrEmpty(UserAccount.Name))
-                        cmbAccount.Items.Add(UserAccount.Name);
-                }
+                cmbAccount.Items.Add(accountName);
             }
 
             cmbAccount.Items.Add("<Add new account>");
@@ -216,7 +206,7 @@ namespace Paclink
             // 
             // Returns True if strCallsign is a valid callsign with a valid SSID.
             // 
-            if (!Globals.IsValidRadioCallsign(strCallsign))
+            if (!BackingObject.IsValidRadioCallsign(strCallsign))
                 return false;
             var strTokens = strCallsign.Split('-');
             if (strTokens.Length != 2)
@@ -234,26 +224,6 @@ namespace Paclink
             }
         } // IsValidAccountName
 
-        private bool IsAccount(string strAccountName)
-        {
-            // 
-            // Returns True if the indicated account name is registered locally.
-            // 
-            var Account = Accounts.GetUserAccount(strAccountName);
-            if ((Account.Name ?? "") == (strAccountName ?? ""))
-                return true;
-            return false;
-        } // IsAccountNameInUseHere
-
-        public static bool IsChannel(string strChannelName)
-        {
-            string strChannelNames = Globals.Settings.Get("Properties", "Channel Names", "");
-            if (strChannelNames.IndexOf(strChannelName + "|") != -1)
-                return true;
-            else
-                return false;
-        } // IsChannel
-
         private bool AddNewAccount()
         {
             // 
@@ -262,20 +232,13 @@ namespace Paclink
             bool blnReturn;
             cmbAccount.Text = cmbAccount.Text.ToUpper().Trim();
 
-            string strAccountList = Globals.Settings.Get("Properties", "Account Names", "");
-            // 
-            // Add the account name to the registry list.
-            // 
-            strAccountList = strAccountList + cmbAccount.Text + "|";
-            Globals.Settings.Save("Properties", "Account Names", strAccountList);
-            Globals.Settings.Save(cmbAccount.Text, "EMail Password", txtPassword.Text.Trim());
+            blnReturn = BackingObject.AddUserAccount(cmbAccount.Text, txtPassword.Text.Trim());
             strOldPassword = txtPassword.Text;
-            blnReturn = true;
+
             // 
             // Restore the dialog box window.
             // 
             btnRemove.Enabled = true;
-            Accounts.RefreshAccountsList();
             FillAccountSelection();
             return blnReturn;
         } // AddNewAccount
@@ -284,17 +247,27 @@ namespace Paclink
         {
             if (cmbAccount.Text == "<Add new account>")
                 return;
-            if (!Globals.IsValidFileName(cmbAccount.Text))
+            if (!BackingObject.IsValidFileName(cmbAccount.Text))
                 cmbAccount.Focus();
         } // cmbAccount_Leave
 
         private void btnHelp_Click(object sender, EventArgs e)
         {
-            Help.ShowHelp(this, Globals.SiteRootDirectory + @"Help\Paclink.chm", HelpNavigator.Topic, @"html\hs90.htm");
+            Help.ShowHelp(this, BackingObject.SiteRootDirectory + @"Help\Paclink.chm", HelpNavigator.Topic, @"html\hs90.htm");
         } // btnHelp_Click
 
         private void cmbAccount_SelectedIndexChanged(object sender, EventArgs e)
         {
+        }
+
+        public void RefreshWindow()
+        {
+            // empty
+        }
+
+        public void CloseWindow()
+        {
+            // empty
         }
     }
 } // CallsignAccounts

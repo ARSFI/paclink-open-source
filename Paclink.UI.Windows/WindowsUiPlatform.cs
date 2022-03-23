@@ -29,6 +29,12 @@ namespace Paclink.UI.Windows
                 case AvailableForms.ChangePassword:
                     window = new DialogChangePassword((IChangePasswordBacking)backingObject);
                     break;
+                case AvailableForms.CallsignAccounts:
+                    window = new DialogCallsignAccounts((ICallsignAccountsBacking)backingObject);
+                    break;
+                case AvailableForms.TacticalAccounts:
+                    window = new DialogTacticalAccounts((ITacticalAccountsBacking)backingObject);
+                    break;
                 default:
                     throw new ArgumentException(string.Format("Invalid form: {0}", form));
             }

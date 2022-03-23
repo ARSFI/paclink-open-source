@@ -1,10 +1,9 @@
 ﻿using Paclink.UI.Common;
 using System;
-using System.Windows.Forms;
 
-namespace Paclink
+namespace Paclink.UI.Windows
 {
-    public partial class DialogChangePassword
+    public partial class DialogChangePassword : IChangePasswordWindow
     {
         private IChangePasswordBacking _backingObject;
         public IChangePasswordBacking BackingObject => _backingObject;
@@ -58,5 +57,16 @@ namespace Paclink
 
             Close();
         }
+
+        public void RefreshWindow()
+        {
+            // empty
+        }
+
+        public void CloseWindow()
+        {
+            // empty
+        }
+
     }
 }
