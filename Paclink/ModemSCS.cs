@@ -1708,7 +1708,7 @@ namespace Paclink
                         }
                         else if (ConnectScript.Length > intConnectScriptPtr + 1)
                         {
-                            blnTextFound = Text.ToUpper().Contains(ConnectScript[intConnectScriptPtr + 1]);
+                            blnTextFound = Text.ToUpper().Contains(ConnectScript[intConnectScriptPtr + 1].Trim().ToUpper());
                             if (blnTextFound & intConnectScriptPtr + 2 < ConnectScript.Length)
                             {
                                 intScriptTimer = 0; // Reset the script timer
