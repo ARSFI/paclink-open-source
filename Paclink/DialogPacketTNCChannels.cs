@@ -66,7 +66,7 @@ namespace Paclink
             _cmbFreqs.Name = "cmbFreqs";
         }
 
-        private TChannelProperties stcSelectedChannel;
+        private ChannelProperties stcSelectedChannel;
         private string[] arySelectedMBOs;
 
         private void PacketTNCChannels_Load(object sender, EventArgs e)
@@ -212,7 +212,7 @@ namespace Paclink
         private void FillChannelList()
         {
             cmbChannelName.Items.Clear();
-            foreach (TChannelProperties stcChannel in Channels.Entries.Values)
+            foreach (ChannelProperties stcChannel in Channels.Entries.Values)
             {
                 if (stcChannel.ChannelType == ChannelMode.PacketTNC)
                 {
@@ -247,7 +247,7 @@ namespace Paclink
 
         private void SetEntries()
         {
-            stcSelectedChannel = (TChannelProperties)Channels.Entries[cmbChannelName.Text];
+            stcSelectedChannel = (ChannelProperties)Channels.Entries[cmbChannelName.Text];
             {
                 var withBlock = stcSelectedChannel;
                 string strPhsFreq = withBlock.RDOCenterFrequency;
@@ -311,7 +311,7 @@ namespace Paclink
             cmbFreqs.Enabled = true;
         } // SetEntries
 
-        private void UpdateChannelProperties(ref TChannelProperties stcChannel)
+        private void UpdateChannelProperties(ref ChannelProperties stcChannel)
         {
             stcChannel.ChannelType = ChannelMode.PacketTNC;
             stcChannel.ChannelName = cmbChannelName.Text;
@@ -695,7 +695,7 @@ namespace Paclink
                     }
                 }
 
-                var stcNewChannel = default(TChannelProperties);
+                var stcNewChannel = default(ChannelProperties);
                 UpdateChannelProperties(ref stcNewChannel);
                 Channels.AddChannel(ref stcNewChannel);
                 Channels.FillChannelCollection();
@@ -768,7 +768,7 @@ namespace Paclink
                     }
                 }
 
-                var stcUpdateChannel = default(TChannelProperties);
+                var stcUpdateChannel = default(ChannelProperties);
                 UpdateChannelProperties(ref stcUpdateChannel);
                 Channels.UpdateChannel(ref stcUpdateChannel);
                 Channels.FillChannelCollection();

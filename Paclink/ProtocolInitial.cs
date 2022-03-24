@@ -23,7 +23,7 @@ namespace Paclink
         } // EProtocolStates
 
         public IModem ObjModem;
-        private TChannelProperties stcChannel;
+        private ChannelProperties stcChannel;
         private ProtocolB2 objB2Protocol;
         private EProtocolStates ProtocolState;  // The protocol state variable
         private ArrayList aryOutboundMessages;  // Holds pending outbound messages
@@ -35,7 +35,7 @@ namespace Paclink
         private bool blnSecureLogin = false; // Flag used to indicate secure login expected
         private string strChallengePhrase = ""; // Challenge phrase as received by ;PQ: command
 
-        public ProtocolInitial(IModem Parent, ref TChannelProperties strNewChannel)
+        public ProtocolInitial(IModem Parent, ref ChannelProperties strNewChannel)
         {
             ObjModem = Parent;
             stcChannel = strNewChannel;

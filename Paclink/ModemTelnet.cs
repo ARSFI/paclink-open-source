@@ -16,7 +16,7 @@ namespace Paclink
 
         private TcpClient objTCPPort;
         private ProtocolInitial objProtocol;
-        private TChannelProperties stcChannel;
+        private ChannelProperties stcChannel;
         private LinkStates enmState = LinkStates.Undefined;
         private ConnectionOrigin enmConnectionStatus;
         private Queue queDataBytesIn = Queue.Synchronized(new Queue());
@@ -127,7 +127,7 @@ namespace Paclink
             enmState = LinkStates.LinkFailed;
         } // Abort 
 
-        public ModemTelnet(ref TChannelProperties strNewChannel)
+        public ModemTelnet(ref ChannelProperties strNewChannel)
         {
             stcChannel = strNewChannel;
             Globals.blnChannelActive = true;

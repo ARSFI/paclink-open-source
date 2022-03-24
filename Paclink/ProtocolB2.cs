@@ -25,7 +25,7 @@ namespace Paclink
             Disconnecting
         } // EB2States
 
-        private TChannelProperties stcChannel;
+        private ChannelProperties stcChannel;
         private ProtocolInitial objInitialProtocol;
         private Message objMessageInbound;
         private PartialSession objPartialSession = new PartialSession();
@@ -50,7 +50,7 @@ namespace Paclink
         private int intUncompressedMessageBytesReceived;
         private int[] intProposedCompressedSize = new int[5]; // An array to hold the compressed size of message for each proposal.
 
-        public ProtocolB2(ProtocolInitial Parent, ref TChannelProperties stcNewChannel, ref ArrayList aryMessages)
+        public ProtocolB2(ProtocolInitial Parent, ref ChannelProperties stcNewChannel, ref ArrayList aryMessages)
         {
 
             // 

@@ -48,7 +48,7 @@ namespace Paclink
             _btnHelp.Name = "btnHelp";
         }
 
-        private TChannelProperties stcSelectedChannel;
+        private ChannelProperties stcSelectedChannel;
         private TcpClient _objTCPPort;
 
         private TcpClient objTCPPort
@@ -81,7 +81,7 @@ namespace Paclink
         private void FillChannelList()
         {
             cmbChannelName.Items.Clear();
-            foreach (TChannelProperties stcChannel in Channels.Entries.Values)
+            foreach (ChannelProperties stcChannel in Channels.Entries.Values)
             {
                 if (stcChannel.ChannelType == ChannelMode.PacketAGW)
                 {
@@ -108,7 +108,7 @@ namespace Paclink
 
         private void SetEntries()
         {
-            stcSelectedChannel = (TChannelProperties)Channels.Entries[cmbChannelName.Text];
+            stcSelectedChannel = (ChannelProperties)Channels.Entries[cmbChannelName.Text];
             {
                 var withBlock = stcSelectedChannel;
                 nudPriority.Value = withBlock.Priority;
@@ -489,7 +489,7 @@ namespace Paclink
             }
             else
             {
-                var stcNewChannel = default(TChannelProperties);
+                var stcNewChannel = default(ChannelProperties);
                 {
                     var withBlock = stcNewChannel;
                     withBlock.ChannelType = ChannelMode.PacketAGW;
@@ -569,7 +569,7 @@ namespace Paclink
             }
             else
             {
-                var stcUpdateChannel = default(TChannelProperties);
+                var stcUpdateChannel = default(ChannelProperties);
                 {
                     var withBlock = stcUpdateChannel;
                     withBlock.ChannelType = ChannelMode.PacketAGW;

@@ -9,7 +9,7 @@ namespace Paclink
 
         public void AddChannel(string channelName, ChannelMode channelType, int priority, bool enabled, bool autoForward, string remoteCallsign)
         {
-            var channel = new TChannelProperties();
+            var channel = new ChannelProperties();
             channel.ChannelName = channelName;
             channel.ChannelType = channelType;
             channel.Priority = priority;
@@ -31,7 +31,7 @@ namespace Paclink
 
         public int GetChannelPriority(string channelName)
         {
-            var channel = (TChannelProperties)Channels.Entries[channelName];
+            var channel = (ChannelProperties)Channels.Entries[channelName];
             return channel.Priority;
         }
 
@@ -43,7 +43,7 @@ namespace Paclink
         public List<string> GetTelnetChannelNames()
         {
             var channelNames = new List<string>();
-            foreach (TChannelProperties channel in Channels.Entries.Values)
+            foreach (ChannelProperties channel in Channels.Entries.Values)
             {
                 if (channel.ChannelType == ChannelMode.Telnet)
                 {
@@ -65,7 +65,7 @@ namespace Paclink
 
         public bool IsChannelEnabled(string channelName)
         {
-            var channel = (TChannelProperties)Channels.Entries[channelName];
+            var channel = (ChannelProperties)Channels.Entries[channelName];
             return channel.Enabled;
         }
 
@@ -86,7 +86,7 @@ namespace Paclink
 
         public void UpdateChannel(string channelName, ChannelMode channelType, int priority, bool enabled, bool autoForward, string remoteCallsign)
         {
-            var channel = new TChannelProperties();
+            var channel = new ChannelProperties();
             channel.ChannelName = channelName;
             channel.ChannelType = channelType;
             channel.Priority = priority;
