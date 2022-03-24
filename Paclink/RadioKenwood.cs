@@ -3,6 +3,7 @@ using System.IO.Ports;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using NLog;
+using Paclink.UI.Common;
 
 namespace Paclink
 {

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using NLog;
+using Paclink.UI.Common;
 
 namespace Paclink
 {

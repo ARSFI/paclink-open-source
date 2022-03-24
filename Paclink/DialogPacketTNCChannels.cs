@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Paclink.UI.Common;
+using System;
 using System.IO.Ports;
 using System.Windows.Forms;
 

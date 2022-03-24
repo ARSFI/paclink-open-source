@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using NLog;
+using Paclink.UI.Common;
 
 namespace Paclink
 {

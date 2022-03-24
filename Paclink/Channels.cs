@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using NLog;
 using Paclink.Data;
+using Paclink.UI.Common;
 using winlink.cms.webservices;
 
 namespace Paclink

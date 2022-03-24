@@ -481,8 +481,7 @@ namespace Paclink
 
         public void ShowTelnetChannels()
         {
-            var dlgTelnetChannels = new DialogTelnetChannels();
-            dlgTelnetChannels.ShowDialog();
+            UserInterfaceFactory.GetUiSystem().DisplayForm(AvailableForms.TelnetChannels, new DialogTelnetChannelsViewModel());
         }
 
         public void ShowPollingInterval()
