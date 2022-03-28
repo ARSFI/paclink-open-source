@@ -59,12 +59,26 @@ namespace Paclink.Data
 
         public bool Get(string group, string name, bool defaultValue)
         {
-            return Convert.ToBoolean(Get(group, name, Convert.ToString(defaultValue)));
+            try
+            {
+                return Convert.ToBoolean(Get(group, name, Convert.ToString(defaultValue)));
+            }
+            catch (FormatException)
+            {
+                return defaultValue;
+            }
         }
 
         public int Get(string group, string name, int defaultValue)
         {
-            return Convert.ToInt32(Get(group, name, Convert.ToString(defaultValue)));
+            try
+            {
+                return Convert.ToInt32(Get(group, name, Convert.ToString(defaultValue)));
+            }
+            catch (FormatException)
+            {
+                return defaultValue;
+            }
         }
 
         public void Save(string group, string name, string value)

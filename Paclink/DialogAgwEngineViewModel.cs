@@ -99,9 +99,9 @@ namespace Paclink
         public void SaveSettings(int location, string path, string host, int port, string userId, string password)
         {
             Globals.Settings.Save(Globals.strProductName, "AGW Location", location);
-            Globals.Settings.Save(Globals.strProductName, "AGW Port", path);
-            Globals.Settings.Save(Globals.strProductName, "AGW Path", host);
-            Globals.Settings.Save(Globals.strProductName, "AGW Host", port);
+            Globals.Settings.Save(Globals.strProductName, "AGW Port", port);
+            Globals.Settings.Save(Globals.strProductName, "AGW Path", path);
+            Globals.Settings.Save(Globals.strProductName, "AGW Host", host);
             Globals.Settings.Save(Globals.strProductName, "AGW User Id", userId);
             Globals.Settings.Save(Globals.strProductName, "AGW Password", password);
         }

@@ -489,20 +489,18 @@ namespace Paclink
             else
             {
                 var stcNewChannel = default(TChannelProperties);
-                {
-                    var withBlock = stcNewChannel;
-                    withBlock.ChannelType = ChannelMode.PacketAGW;
-                    withBlock.ChannelName = cmbChannelName.Text;
-                    withBlock.Priority = Convert.ToInt32(nudPriority.Value);
-                    withBlock.RemoteCallsign = txtRemoteCallsign.Text;
-                    withBlock.AGWTimeout = Convert.ToInt32(nudActivityTimeout.Value);
-                    withBlock.AGWPacketLength = Convert.ToInt32(nudPacketLength.Value);
-                    withBlock.AGWPort = cmbAGWPort.Text;
-                    withBlock.AGWScript = txtScript.Text;
-                    withBlock.AGWScriptTimeout = Convert.ToInt32(nudScriptTimeout.Value);
-                    withBlock.Enabled = chkEnabled.Checked;
-                    withBlock.EnableAutoforward = true; // Packet Channels always enabled
-                }
+
+                stcNewChannel.ChannelType = ChannelMode.PacketAGW;
+                stcNewChannel.ChannelName = cmbChannelName.Text;
+                stcNewChannel.Priority = Convert.ToInt32(nudPriority.Value);
+                stcNewChannel.RemoteCallsign = txtRemoteCallsign.Text;
+                stcNewChannel.AGWTimeout = Convert.ToInt32(nudActivityTimeout.Value);
+                stcNewChannel.AGWPacketLength = Convert.ToInt32(nudPacketLength.Value);
+                stcNewChannel.AGWPort = cmbAGWPort.Text;
+                stcNewChannel.AGWScript = txtScript.Text;
+                stcNewChannel.AGWScriptTimeout = Convert.ToInt32(nudScriptTimeout.Value);
+                stcNewChannel.Enabled = chkEnabled.Checked;
+                stcNewChannel.EnableAutoforward = true; // Packet Channels always enabled
 
                 Channels.AddChannel(ref stcNewChannel);
                 Channels.FillChannelCollection();
@@ -569,21 +567,19 @@ namespace Paclink
             else
             {
                 var stcUpdateChannel = default(TChannelProperties);
-                {
-                    var withBlock = stcUpdateChannel;
-                    withBlock.ChannelType = ChannelMode.PacketAGW;
-                    withBlock.ChannelName = cmbChannelName.Text;
-                    withBlock.Priority = Convert.ToInt32(nudPriority.Value);
-                    withBlock.RemoteCallsign = txtRemoteCallsign.Text;
-                    withBlock.AGWTimeout = Convert.ToInt32(nudActivityTimeout.Value);
-                    withBlock.AGWPacketLength = Convert.ToInt32(nudPacketLength.Value);
-                    withBlock.AGWPort = cmbAGWPort.Text;
-                    withBlock.AGWScript = txtScript.Text;
-                    withBlock.AGWScriptTimeout = Convert.ToInt32(nudScriptTimeout.Value);
-                    withBlock.AGWMaxFrames = Convert.ToInt32(nudMaxOutstanding.Value);
-                    withBlock.Enabled = chkEnabled.Checked;
-                    withBlock.EnableAutoforward = true; // Packet Channels always enabled
-                }
+
+                stcUpdateChannel.ChannelType = ChannelMode.PacketAGW;
+                stcUpdateChannel.ChannelName = cmbChannelName.Text;
+                stcUpdateChannel.Priority = Convert.ToInt32(nudPriority.Value);
+                stcUpdateChannel.RemoteCallsign = txtRemoteCallsign.Text;
+                stcUpdateChannel.AGWTimeout = Convert.ToInt32(nudActivityTimeout.Value);
+                stcUpdateChannel.AGWPacketLength = Convert.ToInt32(nudPacketLength.Value);
+                stcUpdateChannel.AGWPort = cmbAGWPort.Text;
+                stcUpdateChannel.AGWScript = txtScript.Text;
+                stcUpdateChannel.AGWScriptTimeout = Convert.ToInt32(nudScriptTimeout.Value);
+                stcUpdateChannel.AGWMaxFrames = Convert.ToInt32(nudMaxOutstanding.Value);
+                stcUpdateChannel.Enabled = chkEnabled.Checked;
+                stcUpdateChannel.EnableAutoforward = true; // Packet Channels always enabled
 
                 Channels.UpdateChannel(ref stcUpdateChannel);
                 Channels.FillChannelCollection();

@@ -292,16 +292,22 @@ namespace Paclink
                 cllOutboundQueue = new List<OutboundAGWPacket>();
                 ConnectedCall = default;
                 ConnectedCall = new ConnectedCalls();
-                try
+
+                if (objTCPPort != null)
                 {
-                    objTCPPort.Close();
-                    var dttDisconStart = DateTime.Now;
-                    while (DateTime.Now.Subtract(dttDisconStart).TotalSeconds < 10 & objTCPPort.Connected)
-                        Thread.Sleep(100);
+                    try
+                    {
+                        objTCPPort.Close();
+                        var dttDisconStart = DateTime.Now;
+                        while (DateTime.Now.Subtract(dttDisconStart).TotalSeconds < 10 & objTCPPort.Connected)
+                            Thread.Sleep(100);
+                    }
+                    catch
+                    {
+                    }
                 }
-                catch
-                {
-                }
+
+                objTCPPort = new TcpClient();
 
                 objASCIIEncoding = new ASCIIEncoding();
                 if (_dialogAgwEngine.AgwLocation == 1)
@@ -312,7 +318,7 @@ namespace Paclink
 
                 bytDataBuffer = new byte[0]; // null out the data buffer
                 Globals.queChannelDisplay.Enqueue("R*** Connecting to Packet Engine");
-                objTCPPort.ReceiveTimeout = 30;
+                //objTCPPort.ReceiveTimeout = 30;
                 //objTCPPort.KeepAlive = true;
                 objTCPPort.ConnectAsync(_dialogAgwEngine.AgwHost, _dialogAgwEngine.AgwTcpPort).ContinueWith(t =>
                 {
