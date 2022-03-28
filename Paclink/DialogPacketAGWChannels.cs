@@ -489,7 +489,7 @@ namespace Paclink
             }
             else
             {
-                var stcNewChannel = default(TChannelProperties);
+                var stcNewChannel = new ChannelProperties();
 
                 stcNewChannel.ChannelType = ChannelMode.PacketAGW;
                 stcNewChannel.ChannelName = cmbChannelName.Text;
@@ -567,7 +567,7 @@ namespace Paclink
             }
             else
             {
-                var stcUpdateChannel = default(TChannelProperties);
+                var stcUpdateChannel = new ChannelProperties();
 
                 stcUpdateChannel.ChannelType = ChannelMode.PacketAGW;
                 stcUpdateChannel.ChannelName = cmbChannelName.Text;
