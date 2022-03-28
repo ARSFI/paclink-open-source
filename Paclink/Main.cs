@@ -365,7 +365,7 @@ namespace Paclink
             {
                 for (int intPriority = 1; intPriority <= 5; intPriority++)
                 {
-                    foreach (TChannelProperties stcChannel in Channels.Entries.Values)
+                    foreach (ChannelProperties stcChannel in Channels.Entries.Values)
                     {
                         if (stcChannel.Enabled == true & stcChannel.ChannelType != ChannelMode.Winmor)
                         {
@@ -481,8 +481,7 @@ namespace Paclink
 
         public void ShowTelnetChannels()
         {
-            var dlgTelnetChannels = new DialogTelnetChannels();
-            dlgTelnetChannels.ShowDialog();
+            UserInterfaceFactory.GetUiSystem().DisplayForm(AvailableForms.TelnetChannels, new DialogTelnetChannelsViewModel());
         }
 
         public void ShowPollingInterval()

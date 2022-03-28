@@ -35,6 +35,9 @@ namespace Paclink.UI.Windows
                 case AvailableForms.TacticalAccounts:
                     window = new DialogTacticalAccounts((ITacticalAccountsBacking)backingObject);
                     break;
+                case AvailableForms.TelnetChannels:
+                    window = new DialogTelnetChannels((ITelnetChannelsBacking)backingObject);
+                    break;
                 default:
                     throw new ArgumentException(string.Format("Invalid form: {0}", form));
             }

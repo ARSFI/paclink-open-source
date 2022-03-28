@@ -38,8 +38,8 @@ namespace Paclink
         public static ArrayList AutomaticChannels = new ArrayList();
 
         // Holds all of the properties for the currently active channel...
-        public static TChannelProperties stcSelectedChannel;
-        public static TChannelProperties stcEditedSelectedChannel = default;
+        public static ChannelProperties stcSelectedChannel;
+        public static ChannelProperties stcEditedSelectedChannel = default;
 
         // Main form display components...
         public static Queue queChannelDisplay = Queue.Synchronized(new Queue());
@@ -824,8 +824,8 @@ namespace Paclink
         {
             if (Channels.Entries.Count == 0)
                 return false;
-            var stcChannel = default(TChannelProperties);
-            foreach (TChannelProperties currentStcChannel in Channels.Entries.Values)
+            var stcChannel = default(ChannelProperties);
+            foreach (ChannelProperties currentStcChannel in Channels.Entries.Values)
             {
                 stcChannel = currentStcChannel;
                 if (stcChannel.ChannelType != ChannelMode.PactorTNC & stcChannel.Enabled == true)

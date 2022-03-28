@@ -3,6 +3,7 @@ using System.IO.Ports;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using NLog;
+using Paclink.UI.Common;
 
 namespace Paclink
 {
@@ -83,7 +84,7 @@ namespace Paclink
             return false;
         }
 
-        public bool InitializeSerialPort(ref TChannelProperties stcChannel)
+        public bool InitializeSerialPort(ref ChannelProperties stcChannel)
         {
             // Opens the serial port used to control the radio. Returns true if port opens...
 
@@ -145,7 +146,7 @@ namespace Paclink
             return default;
         }   // InitializeSerialPort *
 
-        public bool SetParameters(ref TChannelProperties stcChannel)
+        public bool SetParameters(ref ChannelProperties stcChannel)
         {
             // Function to set parameters for frequency and filters, possibly other parameters later...
 

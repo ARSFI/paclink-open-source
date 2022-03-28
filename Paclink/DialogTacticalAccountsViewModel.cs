@@ -1,4 +1,5 @@
-﻿using Paclink.UI.Common;
+﻿using Paclink.Data;
+using Paclink.UI.Common;
 using System.Collections.Generic;
 using winlink;
 
@@ -78,6 +79,20 @@ namespace Paclink
         public void SaveAccountNames(string accountList)
         {
             Globals.Settings.Save("Properties", "Account Names", accountList);
+        }
+
+        public void RemoveAccount(string accountName)
+        {
+            string strAccountList = Globals.Settings.Get("Properties", "Account Names", "");
+            while (strAccountList.IndexOf(accountName + "|") != -1) // This added to delete multiples if they exist
+                strAccountList = strAccountList.Replace(accountName + "|", "");
+            Globals.Settings.Save("Properties", "Account Names", strAccountList);
+
+            var messageStore = new MessageStore(DatabaseFactory.Get());
+            messageStore.DeleteAccountEmails(accountName);
+
+            Globals.Settings.DeleteGroup(accountName);
+            Accounts.RefreshAccountsList();
         }
 
         public void SaveEmailPassword(string account, string newPassword)

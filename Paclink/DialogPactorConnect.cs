@@ -27,7 +27,7 @@ namespace Paclink
             _chkResumeDialog.Name = "chkResumeDialog";
         }
 
-        public DialogPactorConnect(IModem objSender, ref TChannelProperties Channel)
+        public DialogPactorConnect(IModem objSender, ref ChannelProperties Channel)
         {
             // This call is required by the Windows Form Designer...
             _objModem = objSender;
@@ -48,7 +48,7 @@ namespace Paclink
             _chkResumeDialog.Name = "chkResumeDialog";
         } // New
 
-        private TChannelProperties stcChannel;
+        private ChannelProperties stcChannel;
         private string[] arySelectedMBOs;
         private DateTime dttLastBusyUpdate = DateTime.Now;
         private bool blnChangesNotSaved;
@@ -421,7 +421,7 @@ namespace Paclink
             _objModem.Poll();
         } // tmrPollClient_Tick
 
-        public void UpdateChannelProperties(ref TChannelProperties Channel)
+        public void UpdateChannelProperties(ref ChannelProperties Channel)
         {
             Channel.RemoteCallsign = cmbCallSigns.Text.Trim().ToUpper();
             Channel.RDOCenterFrequency = cmbFrequencies.Text.Trim();

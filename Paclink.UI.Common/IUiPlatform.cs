@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Paclink.UI.Common
+﻿namespace Paclink.UI.Common
 {
     public enum AvailableForms
     {
@@ -12,7 +8,8 @@ namespace Paclink.UI.Common
         AgwEngine,
         ChangePassword,
         CallsignAccounts,
-        TacticalAccounts
+        TacticalAccounts,
+        TelnetChannels
     };
 
     public interface IUiPlatform

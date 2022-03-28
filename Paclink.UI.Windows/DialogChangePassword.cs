@@ -1,5 +1,7 @@
 ﻿using Paclink.UI.Common;
 using System;
+using R = Paclink.Resources.Properties.Resources;
+
 
 namespace Paclink.UI.Windows
 {
@@ -32,19 +34,13 @@ namespace Paclink.UI.Windows
         private void btnChangePassword_Click(object sender, EventArgs e)
         {
             strNewPassword = txtNewPassword.Text.Trim();
-            if (strNewPassword.Length < 6)
+            if (txtNewPassword.Text.Length < 6 || txtNewPassword.Text.Length > 12)
             {
-                UserInterfaceFactory.GetUiSystem().DisplayModalError("Entry Error", "New password must be six to twelve characters long.");
+                UserInterfaceFactory.GetUiSystem().DisplayModalError(R.Entry_Error, R.Password_Requirements);
                 txtNewPassword.Focus();
                 return;
             }
-            else if (strNewPassword.Length > 12)
-            {
-                UserInterfaceFactory.GetUiSystem().DisplayModalError("Entry Error", "New password must be six to twelve characters long.");
-                txtNewPassword.Focus();
-                return;
-            }
-
+            
             _backingObject.NewPassword = strNewPassword;
             _backingObject.DialogResult = Paclink.UI.Common.DialogFormResult.OK;
 

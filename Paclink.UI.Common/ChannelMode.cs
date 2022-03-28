@@ -1,4 +1,4 @@
-﻿namespace Paclink
+﻿namespace Paclink.UI.Common
 {
     public enum ChannelMode
     {

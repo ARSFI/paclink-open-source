@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using NLog;
+using Paclink.UI.Common;
 
 namespace Paclink
 {
@@ -47,7 +48,7 @@ namespace Paclink
             _btnHelp.Name = "btnHelp";
         }
 
-        private TChannelProperties stcSelectedChannel;
+        private ChannelProperties stcSelectedChannel;
         private TcpClient _objTCPPort;
 
         private TcpClient objTCPPort
@@ -80,7 +81,7 @@ namespace Paclink
         private void FillChannelList()
         {
             cmbChannelName.Items.Clear();
-            foreach (TChannelProperties stcChannel in Channels.Entries.Values)
+            foreach (ChannelProperties stcChannel in Channels.Entries.Values)
             {
                 if (stcChannel.ChannelType == ChannelMode.PacketAGW)
                 {
@@ -107,7 +108,7 @@ namespace Paclink
 
         private void SetEntries()
         {
-            stcSelectedChannel = (TChannelProperties)Channels.Entries[cmbChannelName.Text];
+            stcSelectedChannel = (ChannelProperties)Channels.Entries[cmbChannelName.Text];
             {
                 var withBlock = stcSelectedChannel;
                 nudPriority.Value = withBlock.Priority;

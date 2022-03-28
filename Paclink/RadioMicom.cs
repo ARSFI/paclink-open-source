@@ -24,7 +24,7 @@ namespace Paclink
         // 
         // Return true on success of false on failure
         // **********************************************************************************************************
-        public bool InitializeSerialPort(ref TChannelProperties stcTNC)
+        public bool InitializeSerialPort(ref ChannelProperties stcTNC)
         {
             int retc;
             try
@@ -126,7 +126,7 @@ namespace Paclink
             return false;
         }
 
-        public bool SetParameters(ref TChannelProperties stcTNC)
+        public bool SetParameters(ref ChannelProperties stcTNC)
         {
             bool SetParametersRet = default;
             // Function to set parameters for frequency and filters, possibly other parameters later...

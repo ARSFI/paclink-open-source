@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using NLog;
+using Paclink.UI.Common;
 
 namespace Paclink
 {
@@ -649,7 +650,7 @@ namespace Paclink
         private Queue quePortInput = Queue.Synchronized(new Queue());
 
         // Structures and Objects
-        private TChannelProperties stcChannel;
+        private ChannelProperties stcChannel;
         private SerialPort _objSerial;
 
         private SerialPort objSerial
@@ -755,7 +756,7 @@ namespace Paclink
             }
         }
 
-        public KantronicsHostPort(ref TChannelProperties stcNewChannel)
+        public KantronicsHostPort(ref ChannelProperties stcNewChannel)
         {
             stcChannel = stcNewChannel;
             Globals.ResetProgressBar();

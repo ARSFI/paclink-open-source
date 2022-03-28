@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Windows.Forms;
+using Paclink.UI.Common;
 
-namespace Paclink
+namespace Paclink.UI.Windows
 {
     public partial class DialogTelnetChannels
     {
-        public DialogTelnetChannels()
+        private ITelnetChannelsBacking _backingObject = null;
+        public ITelnetChannelsBacking BackingObject => _backingObject;
+
+        public DialogTelnetChannels(ITelnetChannelsBacking backingObject)
         {
+            _backingObject = backingObject;
+
             InitializeComponent();
             _btnAdd.Name = "btnAdd";
             _btnRemove.Name = "btnRemove";
@@ -21,20 +27,18 @@ namespace Paclink
             _Label9.Name = "Label9";
         }
 
-        private TChannelProperties stcSelectedChannel;
-
         private void TelnetChannels_Load(object sender, EventArgs e)
         {
             ClearEntries();
             FillChannelList();
-            cmbChannelName.Text = Globals.Settings.Get("Properties", "Last Telnet Channel", "");
-        } // TelnetChannels_Load
+            cmbChannelName.Text = BackingObject.GetLastUsedTelnetChannel();
+        }
 
         private void cmbChannelName_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(cmbChannelName.Text) & cmbChannelName.Text != "<Enter a new channel>")
             {
-                if (Channels.Entries.ContainsKey(cmbChannelName.Text))
+                if (BackingObject.ChannelExists(cmbChannelName.Text))
                 {
                     SetEntries();
                 }
@@ -43,7 +47,7 @@ namespace Paclink
                     ClearEntries();
                 }
             }
-        } // cmbChannelName_SelectedIndexChanged
+        }
 
         private void cmbChannelName_TextChanged(object sender, EventArgs e)
         {
@@ -59,20 +63,17 @@ namespace Paclink
                 btnRemove.Enabled = false;
                 btnUpdate.Enabled = false;
             }
-        } // cmbChannelName_TextChanged
+        }
 
         private void FillChannelList()
         {
             cmbChannelName.Items.Clear();
-            foreach (TChannelProperties stcChannel in Channels.Entries.Values)
+            var channelNames = BackingObject.GetTelnetChannelNames();
+            foreach (var channelName in channelNames)
             {
-                if (stcChannel.ChannelType == ChannelMode.Telnet)
-                {
-                    if (!string.IsNullOrEmpty(stcChannel.ChannelName.Trim()))
-                        cmbChannelName.Items.Add(stcChannel.ChannelName);
-                }
+                cmbChannelName.Items.Add(channelName);
             }
-        } // FillChannelList
+        }
 
         private void ClearEntries()
         {
@@ -82,27 +83,22 @@ namespace Paclink
             btnAdd.Enabled = true;
             btnRemove.Enabled = false;
             btnUpdate.Enabled = false;
-        } // ClearEntries
+        }
 
         private void SetEntries()
         {
-            stcSelectedChannel = (TChannelProperties)Channels.Entries[cmbChannelName.Text];
-            {
-                var withBlock = stcSelectedChannel;
-                nudPriority.Value = withBlock.Priority;
-                chkEnabled.Checked = withBlock.Enabled;
-            }
-
+            nudPriority.Value = BackingObject.GetChannelPriority(cmbChannelName.Text);
+            chkEnabled.Checked = BackingObject.IsChannelEnabled(cmbChannelName.Text);
             btnAdd.Enabled = false;
             btnRemove.Enabled = true;
             btnUpdate.Enabled = true;
-        } // SetEntries
+        }
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
             cmbChannelName.Text = cmbChannelName.Text.Trim();
             cmbChannelName.Text = cmbChannelName.Text.Replace("|", "");
-            if (!Globals.IsValidFileName(cmbChannelName.Text))
+            if (!BackingObject.IsValidChannelName(cmbChannelName.Text))
             {
                 cmbChannelName.Focus();
                 return;
@@ -115,38 +111,28 @@ namespace Paclink
                 return;
             }
 
-            if (Channels.IsAccount(cmbChannelName.Text))
+            if (BackingObject.IsAccount(cmbChannelName.Text))
             {
                 MessageBox.Show(cmbChannelName.Text + " is in use as an account name...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 cmbChannelName.Focus();
                 return;
             }
 
-            if (Channels.IsChannel(cmbChannelName.Text))
+            if (BackingObject.IsChannel(cmbChannelName.Text))
             {
                 MessageBox.Show("The channel name " + cmbChannelName.Text + " is already in use...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 cmbChannelName.Focus();
             }
             else
             {
-                var stcNewChannel = new TChannelProperties()
-                {
-                    ChannelType = ChannelMode.Telnet,
-                    ChannelName = cmbChannelName.Text,
-                    Priority = Convert.ToInt32(nudPriority.Value),
-                    Enabled = chkEnabled.Checked,
-                    EnableAutoforward = true, // Telnet Channels always enabled
-                    RemoteCallsign = "WL2K"
-                };
-
-                Channels.AddChannel(ref stcNewChannel);
-                Channels.FillChannelCollection();
+                BackingObject.AddChannel(cmbChannelName.Text, ChannelMode.Telnet, Convert.ToInt32(nudPriority.Value), chkEnabled.Checked, true, "WL2K");
+                BackingObject.FillChannelCollection();
                 FillChannelList();
                 ClearEntries();
-                Globals.Settings.Save("Properties", "Last Telnet Channel", cmbChannelName.Text);
+                BackingObject.SaveCurrentTelnetChannel(cmbChannelName.Text);
                 Close();
             }
-        } // btnAdd_Click
+        }
 
         private void btnRemove_Click(object sender, EventArgs e)
         {
@@ -158,13 +144,13 @@ namespace Paclink
                 "Confirm removal of telnet channel " + cmbChannelName.Text + "...", "Remove Channel",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                Channels.RemoveChannel(cmbChannelName.Text);
-                Channels.FillChannelCollection();
+                BackingObject.RemoveChannel(cmbChannelName.Text);
+                BackingObject.FillChannelCollection();
                 FillChannelList();
-                Globals.Settings.Save("Properties", "Last Telnet Channel", "");
+                BackingObject.SaveCurrentTelnetChannel("");
                 Close();
             }
-        } // btnRemove_Click
+        }
 
         private void btnUpdate_Click(object sender, EventArgs e)
         {
@@ -175,33 +161,22 @@ namespace Paclink
             }
             else
             {
-                var stcUpdateChannel = default(TChannelProperties);
-                {
-                    var withBlock = stcUpdateChannel;
-                    withBlock.ChannelType = ChannelMode.Telnet;
-                    withBlock.ChannelName = cmbChannelName.Text;
-                    withBlock.Priority = Convert.ToInt32(nudPriority.Value);
-                    withBlock.Enabled = chkEnabled.Checked;
-                    withBlock.EnableAutoforward = true; // Telnet Channels always enabled
-                    withBlock.RemoteCallsign = "WL2K";
-                }
-
-                Channels.UpdateChannel(ref stcUpdateChannel);
-                Channels.FillChannelCollection();
-                Globals.Settings.Save("Properties", "Last Telnet Channel", cmbChannelName.Text);
+                BackingObject.UpdateChannel(cmbChannelName.Text, ChannelMode.Telnet, Convert.ToInt32(nudPriority.Value), chkEnabled.Checked, true, "WL2K");
+                BackingObject.FillChannelCollection();
+                BackingObject.SaveCurrentTelnetChannel(cmbChannelName.Text);
                 Close();
             }
-        } // btnUpdate_Click
+        }
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            Globals.Settings.Save("Properties", "Last Telnet Channel", cmbChannelName.Text);
+            BackingObject.SaveCurrentTelnetChannel(cmbChannelName.Text);
             Close();
-        } // btnClose_Click
+        }
 
         private void btnHelp_Click(object sender, EventArgs e)
         {
-            Help.ShowHelp(this, Globals.SiteRootDirectory + @"Help\Paclink.chm", HelpNavigator.Topic, @"html\hs120.htm");
-        } // btnHelp_Click
+            Help.ShowHelp(this, BackingObject.SiteRootDirectory + @"Help\Paclink.chm", HelpNavigator.Topic, @"html\hs120.htm");
+        }
     }
-} // TelnetChannels
+}
