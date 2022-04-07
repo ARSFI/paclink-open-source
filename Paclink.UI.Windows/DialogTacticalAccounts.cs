@@ -30,8 +30,6 @@ namespace Paclink.UI.Windows
             _Label9.Name = "Label9";
         }
 
-        private bool blnNoCMSConnection = false;
-
         private void TacticalAccounts_Load(object sender, EventArgs e)
         {
             // 

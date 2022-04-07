@@ -217,7 +217,7 @@ namespace Paclink.UI.Windows
             this._SMTPDisplay.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this._SMTPDisplay.Name = "_SMTPDisplay";
             this._SMTPDisplay.ReadOnly = true;
-            this._SMTPDisplay.Size = new System.Drawing.Size(368, 271);
+            this._SMTPDisplay.Size = new System.Drawing.Size(367, 271);
             this._SMTPDisplay.TabIndex = 0;
             this._SMTPDisplay.Text = "";
             // 
@@ -352,14 +352,14 @@ namespace Paclink.UI.Windows
             // 
             this._mnuBackup.Name = "_mnuBackup";
             this._mnuBackup.Size = new System.Drawing.Size(200, 22);
-            this._mnuBackup.Text = "Backup INI file...";
+            this._mnuBackup.Text = "Backup Settings...";
             this._mnuBackup.Click += new System.EventHandler(this.mnuBackup_Click);
             // 
             // _mnuRestoreSettings
             // 
             this._mnuRestoreSettings.Name = "_mnuRestoreSettings";
             this._mnuRestoreSettings.Size = new System.Drawing.Size(200, 22);
-            this._mnuRestoreSettings.Text = "Restore INI file...";
+            this._mnuRestoreSettings.Text = "Restore Settings...";
             this._mnuRestoreSettings.Click += new System.EventHandler(this.mnuRestoreSettings_Click);
             // 
             // _ToolStripSeparator2

@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
-namespace Paclink
+namespace Paclink.UI.Windows
 {
     public partial class Terminal : Form
     {
@@ -30,150 +30,155 @@ namespace Paclink
         [DebuggerStepThrough()]
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(Terminal));
-            _txtKeyboard = new TextBox();
-            _txtKeyboard.KeyPress += new KeyPressEventHandler(txtKeyboard_KeyPress);
-            _txtKeyboard.KeyUp += new KeyEventHandler(txtKeyboard_KeyUp);
-            _mnuMain = new MenuStrip();
-            _mnuClose = new ToolStripMenuItem();
-            _mnuClose.Click += new EventHandler(mnuClose_Click);
-            _mnuProperties = new ToolStripMenuItem();
-            _mnuProperties.Click += new EventHandler(mnuProperties_Click);
-            _mnuClearDisplay = new ToolStripMenuItem();
-            _mnuClearDisplay.Click += new EventHandler(mnuClearDisplay_Click);
-            _mnuClearHost = new ToolStripMenuItem();
-            _mnuClearSCSHostMode = new ToolStripMenuItem();
-            _mnuClearSCSHostMode.Click += new EventHandler(mnuClearSCSHostMode_Click);
-            _mnuClearKantronicsHostMode = new ToolStripMenuItem();
-            _mnuClearKantronicsHostMode.Click += new EventHandler(mnuClearKantronicsHostMode_Click);
-            _mnuClearTimewaveHostMode = new ToolStripMenuItem();
-            _mnuClearTimewaveHostMode.Click += new EventHandler(mnuClearTimewaveHostMode_Click);
-            _mnuClearKiss = new ToolStripMenuItem();
-            _mnuClearKiss.Click += new EventHandler(mnuClearKiss_Click);
-            _mnuViewLog = new ToolStripMenuItem();
-            _mnuViewLog.Click += new EventHandler(mnuViewLog_Click);
-            _txtDisplay = new TextBox();
-            _txtDisplay.KeyUp += new KeyEventHandler(txtDisplay_KeyUp);
-            _txtDisplay.MouseUp += new MouseEventHandler(txtDisplay_MouseUp);
-            _tmrTerminal = new Timer(components);
-            _tmrTerminal.Tick += new EventHandler(tmrTerminal_Tick);
-            _objSerialPort = new System.IO.Ports.SerialPort(components);
-            _mnuMain.SuspendLayout();
-            SuspendLayout();
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Terminal));
+            this._txtKeyboard = new System.Windows.Forms.TextBox();
+            this._mnuMain = new System.Windows.Forms.MenuStrip();
+            this._mnuClose = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuProperties = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuClearDisplay = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuClearHost = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuClearSCSHostMode = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuClearKantronicsHostMode = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuClearTimewaveHostMode = new System.Windows.Forms.ToolStripMenuItem();
+            this._mnuClearKiss = new System.Windows.Forms.ToolStripMenuItem();
+            this._txtDisplay = new System.Windows.Forms.TextBox();
+            this._tmrTerminal = new System.Windows.Forms.Timer(this.components);
+            this._objSerialPort = new System.IO.Ports.SerialPort(components);
+            this._mnuMain.SuspendLayout();
+            this.SuspendLayout();
             // 
-            // txtKeyboard
+            // _txtKeyboard
             // 
-            _txtKeyboard.Dock = DockStyle.Bottom;
-            _txtKeyboard.Font = new Font("Courier New", 12.0F, FontStyle.Regular, GraphicsUnit.Point, Convert.ToByte(0));
-            _txtKeyboard.Location = new Point(0, 479);
-            _txtKeyboard.Name = "_txtKeyboard";
-            _txtKeyboard.Size = new Size(634, 26);
-            _txtKeyboard.TabIndex = 0;
+            this._txtKeyboard.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this._txtKeyboard.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this._txtKeyboard.Location = new System.Drawing.Point(0, 557);
+            this._txtKeyboard.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._txtKeyboard.Name = "_txtKeyboard";
+            this._txtKeyboard.Size = new System.Drawing.Size(740, 26);
+            this._txtKeyboard.TabIndex = 0;
+            this._txtKeyboard.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtKeyboard_KeyPress);
+            this._txtKeyboard.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtKeyboard_KeyUp);
             // 
-            // mnuMain
+            // _mnuMain
             // 
-            _mnuMain.Items.AddRange(new ToolStripItem[] { _mnuClose, _mnuProperties, _mnuClearDisplay, _mnuClearHost, _mnuClearKiss, _mnuViewLog });
-            _mnuMain.Location = new Point(0, 0);
-            _mnuMain.Name = "_mnuMain";
-            _mnuMain.Size = new Size(634, 24);
-            _mnuMain.TabIndex = 1;
-            _mnuMain.Text = "mnuMain";
+            this._mnuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._mnuClose,
+            this._mnuProperties,
+            this._mnuClearDisplay,
+            this._mnuClearHost,
+            this._mnuClearKiss});
+            this._mnuMain.Location = new System.Drawing.Point(0, 0);
+            this._mnuMain.Name = "_mnuMain";
+            this._mnuMain.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
+            this._mnuMain.Size = new System.Drawing.Size(740, 24);
+            this._mnuMain.TabIndex = 1;
+            this._mnuMain.Text = "mnuMain";
             // 
-            // mnuClose
+            // _mnuClose
             // 
-            _mnuClose.Name = "_mnuClose";
-            _mnuClose.Size = new Size(51, 20);
-            _mnuClose.Text = "Close";
+            this._mnuClose.Name = "_mnuClose";
+            this._mnuClose.Size = new System.Drawing.Size(48, 20);
+            this._mnuClose.Text = "Close";
+            this._mnuClose.Click += new System.EventHandler(this.mnuClose_Click);
             // 
-            // mnuProperties
+            // _mnuProperties
             // 
-            _mnuProperties.Name = "_mnuProperties";
-            _mnuProperties.Size = new Size(78, 20);
-            _mnuProperties.Text = "Settings...";
+            this._mnuProperties.Name = "_mnuProperties";
+            this._mnuProperties.Size = new System.Drawing.Size(70, 20);
+            this._mnuProperties.Text = "Settings...";
+            this._mnuProperties.Click += new System.EventHandler(this.mnuProperties_Click);
             // 
-            // mnuClearDisplay
+            // _mnuClearDisplay
             // 
-            _mnuClearDisplay.Name = "_mnuClearDisplay";
-            _mnuClearDisplay.Size = new Size(94, 20);
-            _mnuClearDisplay.Text = "Clear Display";
+            this._mnuClearDisplay.Name = "_mnuClearDisplay";
+            this._mnuClearDisplay.Size = new System.Drawing.Size(87, 20);
+            this._mnuClearDisplay.Text = "Clear Display";
+            this._mnuClearDisplay.Click += new System.EventHandler(this.mnuClearDisplay_Click);
             // 
-            // mnuClearHost
+            // _mnuClearHost
             // 
-            _mnuClearHost.DropDownItems.AddRange(new ToolStripItem[] { _mnuClearSCSHostMode, _mnuClearKantronicsHostMode, _mnuClearTimewaveHostMode });
-            _mnuClearHost.Name = "_mnuClearHost";
-            _mnuClearHost.Size = new Size(114, 20);
-            _mnuClearHost.Text = "Clear Host Mode";
+            this._mnuClearHost.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._mnuClearSCSHostMode,
+            this._mnuClearKantronicsHostMode,
+            this._mnuClearTimewaveHostMode});
+            this._mnuClearHost.Name = "_mnuClearHost";
+            this._mnuClearHost.Size = new System.Drawing.Size(108, 20);
+            this._mnuClearHost.Text = "Clear Host Mode";
             // 
-            // mnuClearSCSHostMode
+            // _mnuClearSCSHostMode
             // 
-            _mnuClearSCSHostMode.Name = "_mnuClearSCSHostMode";
-            _mnuClearSCSHostMode.Size = new Size(176, 22);
-            _mnuClearSCSHostMode.Text = "SCS";
+            this._mnuClearSCSHostMode.Name = "_mnuClearSCSHostMode";
+            this._mnuClearSCSHostMode.Size = new System.Drawing.Size(154, 22);
+            this._mnuClearSCSHostMode.Text = "SCS";
+            this._mnuClearSCSHostMode.Click += new System.EventHandler(this.mnuClearSCSHostMode_Click);
             // 
-            // mnuClearKantronicsHostMode
+            // _mnuClearKantronicsHostMode
             // 
-            _mnuClearKantronicsHostMode.Name = "_mnuClearKantronicsHostMode";
-            _mnuClearKantronicsHostMode.Size = new Size(176, 22);
-            _mnuClearKantronicsHostMode.Text = "Kantronics";
+            this._mnuClearKantronicsHostMode.Name = "_mnuClearKantronicsHostMode";
+            this._mnuClearKantronicsHostMode.Size = new System.Drawing.Size(154, 22);
+            this._mnuClearKantronicsHostMode.Text = "Kantronics";
+            this._mnuClearKantronicsHostMode.Click += new System.EventHandler(this.mnuClearKantronicsHostMode_Click);
             // 
-            // mnuClearTimewaveHostMode
+            // _mnuClearTimewaveHostMode
             // 
-            _mnuClearTimewaveHostMode.Name = "_mnuClearTimewaveHostMode";
-            _mnuClearTimewaveHostMode.Size = new Size(176, 22);
-            _mnuClearTimewaveHostMode.Text = "AEA/Timewave";
+            this._mnuClearTimewaveHostMode.Name = "_mnuClearTimewaveHostMode";
+            this._mnuClearTimewaveHostMode.Size = new System.Drawing.Size(154, 22);
+            this._mnuClearTimewaveHostMode.Text = "AEA/Timewave";
+            this._mnuClearTimewaveHostMode.Click += new System.EventHandler(this.mnuClearTimewaveHostMode_Click);
             // 
-            // mnuClearKiss
+            // _mnuClearKiss
             // 
-            _mnuClearKiss.Name = "_mnuClearKiss";
-            _mnuClearKiss.Size = new Size(111, 20);
-            _mnuClearKiss.Text = "Clear Kiss Mode";
+            this._mnuClearKiss.Name = "_mnuClearKiss";
+            this._mnuClearKiss.Size = new System.Drawing.Size(103, 20);
+            this._mnuClearKiss.Text = "Clear Kiss Mode";
+            this._mnuClearKiss.Click += new System.EventHandler(this.mnuClearKiss_Click);
             // 
-            // mnuViewLog
+            // _txtDisplay
             // 
-            _mnuViewLog.Name = "_mnuViewLog";
-            _mnuViewLog.Size = new Size(84, 20);
-            _mnuViewLog.Text = "View Log...";
+            this._txtDisplay.BackColor = System.Drawing.Color.White;
+            this._txtDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._txtDisplay.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this._txtDisplay.Location = new System.Drawing.Point(0, 24);
+            this._txtDisplay.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._txtDisplay.MaxLength = 0;
+            this._txtDisplay.Multiline = true;
+            this._txtDisplay.Name = "_txtDisplay";
+            this._txtDisplay.ReadOnly = true;
+            this._txtDisplay.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this._txtDisplay.Size = new System.Drawing.Size(740, 533);
+            this._txtDisplay.TabIndex = 2;
+            this._txtDisplay.WordWrap = false;
+            this._txtDisplay.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtDisplay_KeyUp);
+            this._txtDisplay.MouseUp += new System.Windows.Forms.MouseEventHandler(this.txtDisplay_MouseUp);
             // 
-            // txtDisplay
+            // _tmrTerminal
             // 
-            _txtDisplay.BackColor = Color.White;
-            _txtDisplay.Dock = DockStyle.Fill;
-            _txtDisplay.Font = new Font("Courier New", 12.0F, FontStyle.Regular, GraphicsUnit.Point, Convert.ToByte(0));
-            _txtDisplay.Location = new Point(0, 24);
-            _txtDisplay.MaxLength = 0;
-            _txtDisplay.Multiline = true;
-            _txtDisplay.Name = "_txtDisplay";
-            _txtDisplay.ReadOnly = true;
-            _txtDisplay.ScrollBars = ScrollBars.Both;
-            _txtDisplay.Size = new Size(634, 455);
-            _txtDisplay.TabIndex = 2;
-            _txtDisplay.WordWrap = false;
-            // 
-            // tmrTerminal
-            // 
+            this._tmrTerminal.Tick += new System.EventHandler(this.tmrTerminal_Tick);
             // 
             // Terminal
             // 
-            AutoScaleDimensions = new SizeF(6.0F, 13.0F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(634, 505);
-            Controls.Add(_txtDisplay);
-            Controls.Add(_txtKeyboard);
-            Controls.Add(_mnuMain);
-            Icon = (Icon)resources.GetObject("$this.Icon");
-            KeyPreview = true;
-            MainMenuStrip = _mnuMain;
-            Name = "Terminal";
-            Text = "Simple Terminal";
-            _mnuMain.ResumeLayout(false);
-            _mnuMain.PerformLayout();
-            Load += new EventHandler(Terminal_Load);
-            Activated += new EventHandler(Terminal_Activated);
-            FormClosed += new FormClosedEventHandler(Terminal_FormClosed);
-            KeyPress += new KeyPressEventHandler(Terminal_KeyPress);
-            ResumeLayout(false);
-            PerformLayout();
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(740, 583);
+            this.Controls.Add(this._txtDisplay);
+            this.Controls.Add(this._txtKeyboard);
+            this.Controls.Add(this._mnuMain);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
+            this.MainMenuStrip = this._mnuMain;
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.Name = "Terminal";
+            this.Text = "Simple Terminal";
+            this.Activated += new System.EventHandler(this.Terminal_Activated);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Terminal_FormClosed);
+            this.Load += new System.EventHandler(this.Terminal_Load);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Terminal_KeyPress);
+            this._mnuMain.ResumeLayout(false);
+            this._mnuMain.PerformLayout();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
 
         private TextBox _txtKeyboard;
@@ -354,32 +359,6 @@ namespace Paclink
                 _objSerialPort = value;
                 if (_objSerialPort != null)
                 {
-                }
-            }
-        }
-
-        private ToolStripMenuItem _mnuViewLog;
-
-        internal ToolStripMenuItem mnuViewLog
-        {
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            get
-            {
-                return _mnuViewLog;
-            }
-
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            set
-            {
-                if (_mnuViewLog != null)
-                {
-                    _mnuViewLog.Click -= mnuViewLog_Click;
-                }
-
-                _mnuViewLog = value;
-                if (_mnuViewLog != null)
-                {
-                    _mnuViewLog.Click += mnuViewLog_Click;
                 }
             }
         }

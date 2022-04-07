@@ -412,7 +412,7 @@ namespace Paclink
                             Globals.PollingData.DecrementMinutesRemaining();
                         }
 
-                        if (Globals.blnChannelActive == false & Terminal.blnTerminalIsOpen == false)
+                        if (Globals.blnChannelActive == false) //TODO: Is this test necessary? >>  & Terminal.blnTerminalIsOpen == false
                         {
                             if (Globals.PollingData.MinutesRemaining <= 0)
                             {
