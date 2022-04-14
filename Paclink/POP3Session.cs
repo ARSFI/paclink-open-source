@@ -97,15 +97,18 @@ namespace Paclink
                 byte[] receiveBuffer = new byte[1024];
                 connection.ReceiveAsync(new ArraySegment<byte>(receiveBuffer, 0, 1024), SocketFlags.None).ContinueWith(t =>
                 {
-                    if (t.Result > 0)
+                    if (t.Exception == null)
                     {
-                        byte[] dataIn = new byte[t.Result];
-                        Array.Copy(receiveBuffer, dataIn, t.Result);
-                        DataIn(UTF8Encoding.UTF8.GetString(dataIn));
-                    }
-                    else
-                    {
-                        Close();
+                        if (t.Result > 0)
+                        {
+                            byte[] dataIn = new byte[t.Result];
+                            Array.Copy(receiveBuffer, dataIn, t.Result);
+                            DataIn(UTF8Encoding.UTF8.GetString(dataIn));
+                        }
+                        else
+                        {
+                            Close();
+                        }
                     }
                 }).Wait(0);
             }

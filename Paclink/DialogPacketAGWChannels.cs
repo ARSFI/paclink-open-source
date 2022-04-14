@@ -148,12 +148,13 @@ namespace Paclink
                     }
 
                     string strAGWData = File.ReadAllText(strAGWIniPath);
-                    int intAGWPorts;
+                    int intAGWPorts = 0;
                     var blnMainFlag = default(bool);
                     var srdAGWData = new StringReader(strAGWData);
                     do
                     {
                         string strLine = srdAGWData.ReadLine();
+                        if (strLine == null) break;
                         if (blnMainFlag)
                         {
                             strTokens = strLine.Split('=');
@@ -387,7 +388,10 @@ namespace Paclink
                 t = objTCPPort.GetStream().ReadAsync(buffer, 0, 1024);
                 t.ContinueWith(k =>
                 {
-                    OnDataIn(buffer, k.Result);
+                    if (k.Exception == null)
+                    {
+                        OnDataIn(buffer, k.Result);
+                    }
                 });
                 t.Wait(0);
             }
@@ -416,7 +420,10 @@ namespace Paclink
                 task = objTCPPort.GetStream().ReadAsync(buffer, 0, 1024);
                 task.ContinueWith(t =>
                 {
-                    OnDataIn(buffer, t.Result);
+                    if (t.Exception == null)
+                    {
+                        OnDataIn(buffer, t.Result);
+                    }
                 });
                 task.Wait(0);
             }

@@ -87,7 +87,7 @@ namespace Paclink
                 objIPDaemon.Listen(10);
                 objIPDaemon.AcceptAsync().ContinueWith(t =>
                 {
-                    if (!t.IsFaulted) OnConnected(t.Result);
+                    if (t.Exception == null) OnConnected(t.Result);
                 }).Wait(0);
             }
         } // Listen
@@ -169,7 +169,7 @@ namespace Paclink
 
             objIPDaemon.AcceptAsync().ContinueWith(t =>
             {
-                if (!t.IsFaulted) OnConnected(t.Result);
+                if (t.Exception == null) OnConnected(t.Result);
             }).Wait(0);
         } // OnConnected
     } // SMTPPort

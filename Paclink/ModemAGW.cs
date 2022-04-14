@@ -332,7 +332,14 @@ namespace Paclink
                         task = objTCPPort.GetStream().ReadAsync(buffer, 0, 1024);
                         task.ContinueWith(t =>
                         {
-                            OnDataIn(buffer, t.Result);
+                            if (t.Exception == null)
+                            {
+                                OnDataIn(buffer, t.Result);
+                            }
+                            else
+                            {
+                                OnError(t.Exception);
+                            }
                         });
                         task.Wait(0);
                     }
@@ -784,7 +791,14 @@ namespace Paclink
                     t = objTCPPort.GetStream().ReadAsync(buffer, 0, 1024);
                     t.ContinueWith(k =>
                     {
-                        OnDataIn(buffer, k.Result);
+                        if (k.Exception == null)
+                        {
+                            OnDataIn(buffer, k.Result);
+                        }
+                        else
+                        {
+                            OnError(k.Exception);
+                        }
                     });
                     t.Wait(0);
                 }
