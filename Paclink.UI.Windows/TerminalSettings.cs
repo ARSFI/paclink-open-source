@@ -1,13 +1,19 @@
 ﻿using System;
 using System.IO.Ports;
 using System.Windows.Forms;
+using Paclink.UI.Common;
 
-namespace Paclink
+namespace Paclink.UI.Windows
 {
     public partial class TerminalSettings
     {
-        public TerminalSettings()
+        private ITerminalSettingsBacking _backingObject;
+        public ITerminalSettingsBacking BackingObject => _backingObject;
+
+        public TerminalSettings(ITerminalSettingsBacking backingObject)
         {
+            _backingObject = backingObject;
+
             InitializeComponent();
             _TableLayoutPanel1.Name = "TableLayoutPanel1";
             _OK_Button.Name = "OK_Button";
@@ -37,12 +43,12 @@ namespace Paclink
 
         private void OK_Button_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.OK;
+            BackingObject.DialogResult = DialogFormResult.OK;
             Terminal.strPort = cmbPort.Text;
             Terminal.intBaudRate = Convert.ToInt32(cmbBaudRate.Text);
             Terminal.intDataBits = Convert.ToInt32(cmbDataBits.Text);
-            var switchExpr = cmbStopBits.Text;
-            switch (switchExpr)
+
+            switch (cmbStopBits.Text)
             {
                 case "0":
                     {
@@ -69,8 +75,7 @@ namespace Paclink
                     }
             }
 
-            var switchExpr1 = cmbParity.Text;
-            switch (switchExpr1)
+            switch (cmbParity.Text)
             {
                 case "None":
                     {
@@ -103,8 +108,7 @@ namespace Paclink
                     }
             }
 
-            var switchExpr2 = cmbHandshake.Text;
-            switch (switchExpr2)
+            switch (cmbHandshake.Text)
             {
                 case "None":
                     {
@@ -136,20 +140,20 @@ namespace Paclink
             Terminal.blnLocalEcho = chkLocalEcho.Checked;
             Terminal.blnWordWrap = chkWordWrap.Checked;
             if (rdoSendLine.Checked)
-                Terminal.enmBufferType = Terminal.BufferType.Line;
+                Terminal.enmBufferType = BufferType.Line;
             if (rdoSendWord.Checked)
-                Terminal.enmBufferType = Terminal.BufferType.Word;
+                Terminal.enmBufferType = BufferType.Word;
             if (rdoSendCharacter.Checked)
-                Terminal.enmBufferType = Terminal.BufferType.Character;
+                Terminal.enmBufferType = BufferType.Character;
             Terminal.blnChanged = true;
             Close();
-        } // OK_Button_Click
+        }
 
         private void Cancel_Button_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.Cancel;
+            BackingObject.DialogResult = DialogFormResult.Cancel;
             Close();
-        } // Cancel_Button_Click
+        }
 
         private void Properties_Load(object sender, EventArgs e)
         {
@@ -160,13 +164,22 @@ namespace Paclink
             }
             else
             {
-                cmbPort.Text = cmbPort.Items[0].ToString();
+                if (cmbPort.Items.Count > 0)
+                {
+                    cmbPort.Text = cmbPort.Items[0].ToString();
+                }
+                else
+                {
+                    //no com ports found - exit
+                    MessageBox.Show("No Com ports were found. Unable to continue.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Close();
+                }
             }
 
             cmbBaudRate.Text = Terminal.intBaudRate.ToString();
             cmbDataBits.Text = Terminal.intDataBits.ToString();
-            var switchExpr = Terminal.intStopBits;
-            switch (switchExpr)
+
+            switch (Terminal.intStopBits)
             {
                 case 0:
                     {
@@ -193,8 +206,7 @@ namespace Paclink
                     }
             }
 
-            var switchExpr1 = Terminal.intParity;
-            switch (switchExpr1)
+            switch (Terminal.intParity)
             {
                 case 0:
                     {
@@ -227,8 +239,7 @@ namespace Paclink
                     }
             }
 
-            var switchExpr2 = Terminal.intHandshake;
-            switch (switchExpr2)
+            switch (Terminal.intHandshake)
             {
                 case 0:
                     {
@@ -263,78 +274,68 @@ namespace Paclink
             var switchExpr3 = Terminal.enmBufferType;
             switch (switchExpr3)
             {
-                case Terminal.BufferType.Line:
+                case BufferType.Line:
                     {
                         rdoSendLine.Checked = true;
                         break;
                     }
 
-                case Terminal.BufferType.Word:
+                case BufferType.Word:
                     {
                         rdoSendWord.Checked = true;
                         break;
                     }
 
-                case Terminal.BufferType.Character:
+                case BufferType.Character:
                     {
                         rdoSendCharacter.Checked = true;
                         break;
                     }
             }
-        } // Properties_Load
+        }
 
         private void InitializeComboBoxes()
         {
-            var strPortNames = SerialPort.GetPortNames();
+            var portNames = SerialPort.GetPortNames();
+            if (portNames.Length == 0) return;
+
             cmbPort.Sorted = true;
-            foreach (string strPort in strPortNames)
-                cmbPort.Items.Add(Globals.CleanSerialPort(strPort));
+            foreach (string port in portNames)
             {
-                var withBlock = cmbBaudRate.Items;
-                withBlock.Add(110);
-                withBlock.Add(300);
-                withBlock.Add(1200);
-                withBlock.Add(2400);
-                withBlock.Add(4800);
-                withBlock.Add(9600);
-                withBlock.Add(19200);
-                withBlock.Add(38400);
-                withBlock.Add(57600);
-                withBlock.Add(115200);
+                cmbPort.Items.Add(BackingObject.CleanSerialPort(port));
             }
 
-            {
-                var withBlock1 = cmbDataBits.Items;
-                withBlock1.Add(5);
-                withBlock1.Add(6);
-                withBlock1.Add(7);
-                withBlock1.Add(8);
-            }
+            cmbBaudRate.Items.Add(110);
+            cmbBaudRate.Items.Add(300);
+            cmbBaudRate.Items.Add(1200);
+            cmbBaudRate.Items.Add(2400);
+            cmbBaudRate.Items.Add(4800);
+            cmbBaudRate.Items.Add(9600);
+            cmbBaudRate.Items.Add(19200);
+            cmbBaudRate.Items.Add(38400);
+            cmbBaudRate.Items.Add(57600);
+            cmbBaudRate.Items.Add(115200);
 
-            {
-                var withBlock2 = cmbStopBits.Items;
-                withBlock2.Add(0);
-                withBlock2.Add(1);
-                withBlock2.Add(1.5);
-                withBlock2.Add(2);
-            }
+            cmbDataBits.Items.Add(5);
+            cmbDataBits.Items.Add(6);
+            cmbDataBits.Items.Add(7);
+            cmbDataBits.Items.Add(8);
 
-            {
-                var withBlock3 = cmbParity.Items;
-                withBlock3.Add("None");
-                withBlock3.Add("Odd");
-                withBlock3.Add("Even");
-                withBlock3.Add("Mark");
-                withBlock3.Add("Space");
-            }
+            cmbStopBits.Items.Add(0);
+            cmbStopBits.Items.Add(1);
+            cmbStopBits.Items.Add(1.5);
+            cmbStopBits.Items.Add(2);
 
-            {
-                var withBlock4 = cmbHandshake.Items;
-                withBlock4.Add("None");
-                withBlock4.Add("RTS/CTS");
-                withBlock4.Add("XOn/XOff");
-                withBlock4.Add("Both");
-            }
-        } // InitializeComboBoxes
+            cmbParity.Items.Add("None");
+            cmbParity.Items.Add("Odd");
+            cmbParity.Items.Add("Even");
+            cmbParity.Items.Add("Mark");
+            cmbParity.Items.Add("Space");
+
+            cmbHandshake.Items.Add("None");
+            cmbHandshake.Items.Add("RTS/CTS");
+            cmbHandshake.Items.Add("XOn/XOff");
+            cmbHandshake.Items.Add("Both");
+        }
     }
 }

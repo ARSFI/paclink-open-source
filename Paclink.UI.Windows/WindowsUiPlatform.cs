@@ -1,7 +1,5 @@
 ﻿using Paclink.UI.Common;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Paclink.UI.Windows
@@ -37,6 +35,12 @@ namespace Paclink.UI.Windows
                     break;
                 case AvailableForms.TelnetChannels:
                     window = new DialogTelnetChannels((ITelnetChannelsBacking)backingObject);
+                    break;
+                case AvailableForms.Terminal:
+                    window = new Terminal((ITerminalBacking)backingObject);
+                    break;
+                case AvailableForms.TerminalSettings:
+                    window = new TerminalSettings((ITerminalSettingsBacking)backingObject);
                     break;
                 default:
                     throw new ArgumentException(string.Format("Invalid form: {0}", form));

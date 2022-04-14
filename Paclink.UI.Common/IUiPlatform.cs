@@ -9,7 +9,9 @@
         ChangePassword,
         CallsignAccounts,
         TacticalAccounts,
-        TelnetChannels
+        TelnetChannels,
+        Terminal,
+        TerminalSettings
     };
 
     public interface IUiPlatform

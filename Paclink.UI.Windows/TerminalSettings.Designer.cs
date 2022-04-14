@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
-namespace Paclink
+namespace Paclink.UI.Windows
 {
     public partial class TerminalSettings : Form
     {

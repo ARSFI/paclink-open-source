@@ -121,7 +121,6 @@ namespace Paclink
         public static IModem ObjScsModem;
         public static IModem ObjSelectedModem;
         public static SMTPPort objSMTPPort;
-        public static Terminal objTerminal;
         public static DateTime objUpTime = DateTime.UtcNow;
         public static Main objMain;
 

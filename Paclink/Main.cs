@@ -89,7 +89,7 @@ namespace Paclink
         {
             get
             {
-                return Globals.objTerminal != null;
+                return true;
             }
         }
 
@@ -497,9 +497,7 @@ namespace Paclink
 
         public void ShowSimpleTerminal()
         {
-            Globals.objTerminal = new Terminal();
-            Globals.objTerminal.ShowDialog();
-            Globals.objTerminal = null;
+            UserInterfaceFactory.GetUiSystem().DisplayForm(AvailableForms.Terminal, new TerminalViewModel());
         }
 
         public void UpdateSiteCallsign(string callsign)
