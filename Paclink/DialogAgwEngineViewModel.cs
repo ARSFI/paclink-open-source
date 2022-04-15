@@ -76,7 +76,10 @@ namespace Paclink
                     task = objTCPPort.GetStream().ReadAsync(buffer, 0, 1024);
                     task.ContinueWith(t =>
                     {
-                        OnDataIn(window, buffer, t.Result);
+                        if (t.Exception == null)
+                        {
+                            OnDataIn(window, buffer, t.Result);
+                        }
                     });
                     task.Wait(0);
                 }
@@ -158,7 +161,10 @@ namespace Paclink
                 t = objTCPPort.GetStream().ReadAsync(buffer, 0, 1024);
                 t.ContinueWith(k =>
                 {
-                    OnDataIn(window, buffer, k.Result);
+                    if (k.Exception == null)
+                    {
+                        OnDataIn(window, buffer, k.Result);
+                    }
                 });
                 t.Wait(0);
             }

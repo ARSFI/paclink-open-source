@@ -168,7 +168,7 @@ namespace Paclink
                 {
                     try
                     {
-                        objTCPPort.LingerState = new LingerOption(false, 0);
+                        //objTCPPort.LingerState = new LingerOption(false, 0);
                         cancelTokenSource.Cancel(); // cancels any pending reads
                         objTCPPort.Close();
                         OnDisconnected(objTCPPort);
@@ -176,9 +176,11 @@ namespace Paclink
                     catch
                     {
                     }
-
-                    objTCPPort.Dispose();
-                    objTCPPort = null;
+                    finally
+                    {
+                        objTCPPort.Dispose();
+                        objTCPPort = null;
+                    }
                 }
 
                 if (objProtocol is object)
@@ -260,9 +262,13 @@ namespace Paclink
                             task = objTCPPort.GetStream().ReadAsync(buffer, 0, 1024, cancelTokenSource.Token);
                             task.ContinueWith(t =>
                             {
-                                if (!t.IsFaulted)
+                                if (t.Exception == null)
                                 {
                                     OnDataIn(buffer, t.Result);
+                                }
+                                else
+                                {
+                                    OnError(t.Exception);
                                 }
                             });
                             task.Wait(0);
@@ -450,9 +456,13 @@ namespace Paclink
                     t = objTCPPort.GetStream().ReadAsync(buffer, 0, 1024, cancelTokenSource.Token);
                     t.ContinueWith(k =>
                     {
-                        if (!k.IsFaulted)
+                        if (k.Exception == null)
                         {
                             OnDataIn(buffer, k.Result);
+                        }
+                        else if (k.Exception.InnerException == null || k.Exception.InnerException is not OperationCanceledException)
+                        {
+                            OnError(k.Exception);
                         }
                     });
                     t.Wait(0);
