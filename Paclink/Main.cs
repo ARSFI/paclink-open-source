@@ -89,12 +89,9 @@ namespace Paclink
         {
             get
             {
-<<<<<<< HEAD
-=======
                 //TODO: I think the old terminal was displayed modeless and this provided
                 //TODO: a way for other portions of the app to know when it was displayed.
                 //TODO: Terminal is now displayed as a modal dialog so this may not be needed.
->>>>>>> 1cb018a76929bc6e1262a6d0786ed5afae6383da
                 return false;
             }
         }
