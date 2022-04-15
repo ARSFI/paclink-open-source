@@ -144,10 +144,10 @@ namespace Paclink
                     // Go throuth the outbound queue sending packets when # of outstanding packets < max outstanding
                     if (cllOutboundQueue.Count > 0)
                     {
-                        int i = 1;
+                        int i = 0;
                         foreach (OutboundAGWPacket objQ in cllOutboundQueue)
                         {
-                            if (objQ.IsDisconnect & ConnectedCall.FramesOutstanding == 0)
+                            if (objQ.IsDisconnect && ConnectedCall.FramesOutstanding == 0)
                             {
                                 if (ConnectedCall.WaitDisconnect >= 2)
                                 {
@@ -167,7 +167,7 @@ namespace Paclink
                                     i += 1;
                                 } // advance to next packet in queue
                             }
-                            else if (ConnectedCall.FramesOutstanding < Math.Max(1, Globals.stcSelectedChannel.AGWMaxFrames) & !objQ.IsDisconnect)
+                            else if (ConnectedCall.FramesOutstanding < Math.Max(1, Globals.stcSelectedChannel.AGWMaxFrames) && !objQ.IsDisconnect)
                             {
                                 try
                                 {
@@ -375,7 +375,6 @@ namespace Paclink
         // Sub to Send byte Data or add data to the outbound Queue
         public void DataToSend(byte[] Data)
         {
-            string strTemp = Globals.GetString(Data).Replace(Globals.CR, ">>");
             if (!blnLoggedIn)
                 return;
             if (Data.Length == 0)
@@ -388,38 +387,41 @@ namespace Paclink
             {
 
                 // Provide framing to Packet length and buffering for queued packets.
-                var Packet = new byte[Globals.stcSelectedChannel.AGWPacketLength];
-                while (Data.Length > 0)
+                MemoryStream ms = new MemoryStream(Data);
+                while (ms.Position < ms.Length)
                 {
-                    if (Data.Length <= Globals.stcSelectedChannel.AGWPacketLength)
+                    var packet = new byte[Globals.stcSelectedChannel.AGWPacketLength];
+                    var amountRead = ms.Read(packet, 0, Globals.stcSelectedChannel.AGWPacketLength);
+                    if (amountRead < Globals.stcSelectedChannel.AGWPacketLength)
                     {
-                        Packet = new byte[Data.Length];
-                        Packet = Data;
-                        Data = new byte[0];
-                    }
-                    else
-                    {
-                        Array.Copy(Data, 0, Packet, 0, Packet.Length);
-                        var bytBuffer = new byte[(Data.Length - 1) - Packet.Length + 1];
-                        Array.Copy(Data, Packet.Length, bytBuffer, 0, Data.Length - Packet.Length);
-                        Data = bytBuffer;
-                        bytBuffer = null;
+                        var tempBuffer = new byte[amountRead];
+                        Array.Copy(packet, tempBuffer, amountRead);
+                        packet = tempBuffer;
                     }
 
-                    var bytTemp = new byte[36];
-                    bytTemp[0] = Convert.ToByte(ConnectedCall.Port - 1);
-                    objASCIIEncoding.GetBytes("D", 0, 1, bytTemp, 4);
-                    objASCIIEncoding.GetBytes(Globals.SiteCallsign, 0, Globals.SiteCallsign.Length, bytTemp, 8);
-                    objASCIIEncoding.GetBytes(ConnectedCall.Callsign, 0, ConnectedCall.Callsign.Length, bytTemp, 18);
-                    Array.Copy(ComputeLengthB(Packet.Length), 0, bytTemp, 28, 4);
-                    AppendBuffer(ref bytTemp, Packet);
+                    MemoryStream outputPacket = new MemoryStream();
+                    outputPacket.Write(new byte[] { Convert.ToByte(ConnectedCall.Port - 1) });
+                    outputPacket.Write(new byte[] { 0x00, 0x00, 0x00, 0x44 }); // 3 zeroes followed by 'D'.
+                    outputPacket.Write(new byte[] { 0x00, 0xF0, 0x00 }); // AX.25 Information (0xF0) as we used 'C' to start the connection
+
+                    var siteCallAsBytes = new byte[10];
+                    objASCIIEncoding.GetBytes(Globals.SiteCallsign, 0, Math.Min(9, Globals.SiteCallsign.Length), siteCallAsBytes, 0);
+                    outputPacket.Write(siteCallAsBytes);
+
+                    var connectedCallAsBytes = new byte[10];
+                    objASCIIEncoding.GetBytes(ConnectedCall.Callsign, 0, Math.Min(9, ConnectedCall.Callsign.Length), connectedCallAsBytes, 0);
+                    outputPacket.Write(connectedCallAsBytes);
+
+                    outputPacket.Write(ComputeLengthB(packet.Length));
+                    outputPacket.Write(new byte[] { 0x00, 0x00, 0x00, 0x00 }); // user field, not used.
+                    outputPacket.Write(packet);
+
                     // Always Queue ....changed from before
                     var objQ = new OutboundAGWPacket();
-                    objQ.Data = bytTemp;
+                    objQ.Data = outputPacket.ToArray();
                     objQ.Port = ConnectedCall.Port;
                     objQ.IsDisconnect = false;
                     cllOutboundQueue.Add(objQ); // add the packet to the Outbound Queue
-                    objQ = default;
                 }
             }
             catch (Exception e)
@@ -448,6 +450,7 @@ namespace Paclink
                 else // normal disconnect
                 {
                     bytTemp[0] = Convert.ToByte(ConnectedCall.Port - 1);
+                    bytTemp[6] = 0xF0; // AX.25 Information
                     objASCIIEncoding.GetBytes("d", 0, 1, bytTemp, 4);
                     objASCIIEncoding.GetBytes(Globals.SiteCallsign, 0, Globals.SiteCallsign.Length, bytTemp, 8);
                     objASCIIEncoding.GetBytes(ConnectedCall.Callsign, 0, ConnectedCall.Callsign.Length, bytTemp, 18);
@@ -860,6 +863,7 @@ namespace Paclink
             {
                 ConnectedCall.Callsign = strTarget;
                 bytTemp[0] = Convert.ToByte(intAGWPort - 1);
+                bytTemp[6] = 0xF0; // AX.25 Information
                 objASCIIEncoding.GetBytes(Globals.SiteCallsign, 0, Globals.SiteCallsign.Length, bytTemp, 8);
                 objASCIIEncoding.GetBytes(strTarget, 0, strTarget.Length, bytTemp, 18);
                 if (string.IsNullOrEmpty(strVia))

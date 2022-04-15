@@ -349,7 +349,7 @@ namespace Paclink.UI.Windows
             string strText;
             try
             {
-                if (BackingObject.ChannelActive == false & !BackingObject.HasSimpleTerminal)
+                if (BackingObject.ChannelActive == false && !BackingObject.HasSimpleTerminal)
                 {
                     mnuConnect.Enabled = true;
                 }

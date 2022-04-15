@@ -41,7 +41,7 @@ namespace Paclink
             stcChannel = strNewChannel;
             Globals.strConnectedCallsign = strNewChannel.RemoteCallsign; // Set the global callsign for use by Radar
             Globals.strConnectedGridSquare = ""; // and clear the connected Grid square
-            strSID = "[Paclink-" + Application.ProductVersion + "-" + SSIDTag() + "B2FIHM$]";
+            strSID = "[Paclink-" + Application.ProductVersion + "-B2FIHM$]";
             ProtocolStateChange(EProtocolStates.Connected);
         } // New
 
@@ -375,7 +375,7 @@ namespace Paclink
                 var strAccountNames = Globals.Settings.Get("Properties", "Account Names", "").Split('|');
                 foreach (string strAccount in strAccountNames)
                 {
-                    if ((strAccount ?? "") != (Globals.SiteCallsign ?? ""))
+                    if (!string.IsNullOrEmpty(strAccount) && strAccount != Globals.SiteCallsign)
                     {
                         string strPassword = Globals.Settings.Get(strAccount, "EMail Password", "");
                         strFW += " " + MakeFWentry(strChallengePhrase, strAccount, strPassword);
