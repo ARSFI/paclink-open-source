@@ -89,10 +89,7 @@ namespace Paclink
         {
             get
             {
-                //TODO: I think the old terminal was displayed modeless and this provided
-                //TODO: a way for other portions of the app to know when it was displayed.
-                //TODO: Terminal is now displayed as a modal dialog so this may not be needed.
-                return false;
+                return Globals.TerminalIsActive;
             }
         }
 
