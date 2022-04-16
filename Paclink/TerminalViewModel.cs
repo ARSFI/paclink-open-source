@@ -5,7 +5,13 @@ namespace Paclink
 {
     internal class TerminalViewModel : ITerminalBacking
     {
-        public int GetComCloseTime { get { return Globals.intComCloseTime; } }
+        public int GetComCloseTime => Globals.intComCloseTime;
+
+        public bool TerminalIsActive
+        {
+            get => Globals.TerminalIsActive;
+            set => Globals.TerminalIsActive = value;
+        }
 
         public bool EditTerminalProperties(TerminalProperties terminalProperties)
         {

@@ -67,7 +67,7 @@ namespace Paclink
         public static string strProductVersion;
         public static string strRMSRelayIPPath;
         // Public strExecutionDirectory As String
-        public static string strMARSServiceCode = "MARS211576";
+        public static string strMARSServiceCode = "MARS211576"; //TODO: This should be a configuration item as it can change over time
         public static string strHamServiceCode = "PUBLIC";
         public static string strNewAUVersion;
 
@@ -96,6 +96,7 @@ namespace Paclink
         public static bool blnAbortAU;
         public static bool blnEnablAutoforward = false;
         public static bool blnForceHFRouting = false;
+        public static bool TerminalIsActive = false;    // True when the simple terminal is active (com port is in use)
 
         // Global Integers...
         public static int intAutoforwardChannelIndex = 999999;

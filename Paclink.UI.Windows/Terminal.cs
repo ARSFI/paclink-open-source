@@ -60,6 +60,7 @@ namespace Paclink.UI.Windows
         private void Terminal_Activated(object sender, EventArgs e)
         {
             txtKeyboard.Focus();
+            BackingObject.TerminalIsActive = true;
         }
 
         private void Terminal_FormClosed(object sender, FormClosedEventArgs e)
@@ -67,6 +68,7 @@ namespace Paclink.UI.Windows
             objSerialPort.Close();
             Thread.Sleep(100);
             SaveCurrentProperties();
+            BackingObject.TerminalIsActive = false;
         }
 
         private void Terminal_KeyPress(object sender, KeyPressEventArgs e)
