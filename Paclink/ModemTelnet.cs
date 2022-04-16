@@ -168,7 +168,6 @@ namespace Paclink
                 {
                     try
                     {
-                        //objTCPPort.LingerState = new LingerOption(false, 0);
                         cancelTokenSource.Cancel(); // cancels any pending reads
                         objTCPPort.Close();
                         OnDisconnected(objTCPPort);
@@ -225,83 +224,71 @@ namespace Paclink
                 enmState = LinkStates.Connecting;
                 try
                 {
-                    // If objWL2KServers.IsCMSAvailable = False Then
-                    // queChannelDisplay.Enqueue("R*** No CMS Telnet server available")
-                    // objTCPPort.LingerState = new LingerOption(false, 0)
-                    // Try
-                    // objTCPPort.Disconnect()
-                    // Catch
-                    // End Try
-                    // objTCPPort.Dispose()
-                    // If objProtocol IsNot Nothing Then objProtocol.LinkStateChange(ConnectionOrigin.Disconnected)
-                    // Return False
-                    // End If
-                    objTCPPort.LingerState = new LingerOption(true, 5);
                     dttLogonStart = DateTime.Now;
-                    Task connectTask = null;
+                    string hostname = string.Empty;
+                    int port = 0;
+                    string hostType = string.Empty;
+
                     if (Globals.UseRMSRelay() == false)
                     {
-                        Globals.queChannelDisplay.Enqueue("G*** Requesting connection to " + strCMSHost);
-                        connectTask = objTCPPort.ConnectAsync(strCMSHost, 8772);
+                        hostname = strCMSHost;
+                        port = 8772;
                     }
                     else
                     {
-                        Globals.queChannelDisplay.Enqueue("G*** Requesting connection to RMS Relay at " + Globals.strRMSRelayIPPath + " port " + Globals.intRMSRelayPort.ToString());
-                        connectTask = objTCPPort.ConnectAsync(Globals.strRMSRelayIPPath, Globals.intRMSRelayPort);
+                        hostType = "RMS Relay";
+                        hostname = Globals.strRMSRelayIPPath;
+                        port = Globals.intRMSRelayPort;
                     }
 
-                    connectTask.ContinueWith(t =>
+                    Globals.queChannelDisplay.Enqueue("G*** Requesting connection to " + hostType + " at " + hostname + " port " + port);
+
+                    objTCPPort.ConnectAsync(hostname, port).ContinueWith(t =>
                     {
-                        OnConnected(objTCPPort);
-
-                        byte[] buffer = new byte[1024];
-
-                        Task<int> task = null;
-                        try
+                        if (t.Exception == null)
                         {
-                            task = objTCPPort.GetStream().ReadAsync(buffer, 0, 1024, cancelTokenSource.Token);
-                            task.ContinueWith(t =>
+                            OnConnected(objTCPPort);
+
+                            byte[] buffer = new byte[1024];
+
+                            try
                             {
-                                if (t.Exception == null)
+                                objTCPPort.GetStream().ReadAsync(buffer, 0, 1024, cancelTokenSource.Token).ContinueWith(v =>
                                 {
-                                    OnDataIn(buffer, t.Result);
-                                }
-                                else
-                                {
-                                    OnError(t.Exception);
-                                }
-                            });
-                            task.Wait(0);
-                        }
-                        catch (Exception e)
+                                    if (v.Exception == null)
+                                    {
+                                        OnDataIn(buffer, v.Result);
+                                    }
+                                    else
+                                    {
+                                        OnError(v.Exception);
+                                    }
+                                }).Wait(0);
+                            }
+                            catch (Exception e)
+                            {
+                                OnError(e);
+                            }
+                        } 
+                        else
                         {
-                            OnError(task.Exception);
+                            OnError(t.Exception);
                         }
                     }).Wait(30000);
 
                     if (enmState == LinkStates.Connected || enmState == LinkStates.Callsign || enmState == LinkStates.Password)
-
+                    {
                         return true;
+                    }
                 }
                 catch (Exception ex)
                 {
                     Globals.queChannelDisplay.Enqueue("R*** " + ex.Message);
                 }
-
-                objTCPPort.LingerState = new LingerOption(false, 0);
-                try
-                {
-                    cancelTokenSource.Cancel(); // cancels any pending reads
-                    objTCPPort.Close();
-                }
-                catch
-                {
-                }
             }
 
             Globals.queChannelDisplay.Enqueue("R*** No Connection to any CMS Telnet server");
             enmState = LinkStates.LinkFailed;
-            objTCPPort.LingerState = new LingerOption(false, 0);
             try
             {
                 cancelTokenSource.Cancel(); // cancels any pending reads
@@ -450,11 +437,9 @@ namespace Paclink
                 Array.Copy(buffer, newBuffer, bytesRead);
                 queDataBytesIn.Enqueue(newBuffer);
 
-                Task<int> t = null;
                 try
                 {
-                    t = objTCPPort.GetStream().ReadAsync(buffer, 0, 1024, cancelTokenSource.Token);
-                    t.ContinueWith(k =>
+                    objTCPPort.GetStream().ReadAsync(buffer, 0, 1024, cancelTokenSource.Token).ContinueWith(k =>
                     {
                         if (k.Exception == null)
                         {
@@ -464,12 +449,11 @@ namespace Paclink
                         {
                             OnError(k.Exception);
                         }
-                    });
-                    t.Wait(0);
+                    }).Wait(0);
                 }
                 catch (Exception e)
                 {
-                    OnError(t.Exception);
+                    OnError(e);
                 }
             }
             else
@@ -533,7 +517,6 @@ namespace Paclink
             Globals.queChannelDisplay.Enqueue("R*** Telnet Error: " + e.Message);
             try
             {
-                objTCPPort.LingerState = new LingerOption(false, 0);
                 cancelTokenSource.Cancel(); // cancels any pending reads
                 objTCPPort.Close();
             }
