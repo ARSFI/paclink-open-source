@@ -514,7 +514,7 @@ namespace Paclink
             {
             }
 
-            Globals.queChannelDisplay.Enqueue("R*** Telnet Error: " + e.Message);
+            Globals.queChannelDisplay.Enqueue("R*** Telnet Error: " + e.ToString());
             try
             {
                 cancelTokenSource.Cancel(); // cancels any pending reads
