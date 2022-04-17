@@ -22,7 +22,7 @@ namespace Paclink.Data
 
         public void AddMessageIdSeen(string messageId)
         {
-            _database.NonQuery(string.Format(@"INSERT INTO `MessageIdsSeen` (`SeenDate`, `MessageId`) VALUES (datetime('now'), '{0}')", messageId));
+            _database.NonQuery($@"INSERT INTO `MessageIdsSeen` (`SeenDate`, `MessageId`) VALUES (datetime('now'), '{messageId}')");
         }
 
         public string GetMessage(string messageId)
@@ -61,7 +61,7 @@ namespace Paclink.Data
         {
             var sql = "SELECT `MessageData` FROM `TempInboundMessage` WHERE `MessageId`='{0}'";
             var messages = _database.FillDataSet(string.Format(sql, messageId), "TempInboundMessage");
-            
+
             if (messages.Tables[0].Rows.Count == 0)
             {
                 return new byte[0];
@@ -75,7 +75,7 @@ namespace Paclink.Data
 
         public void DeleteTemporaryInboundMessage(string messageId)
         {
-            _database.NonQuery(string.Format(@"DELETE FROM `TempInboundMessage` WHERE `MessageId`='{0}'", messageId));
+            _database.NonQuery($@"DELETE FROM `TempInboundMessage` WHERE `MessageId`='{messageId}'");
         }
 
         public void SaveTemporaryInboundMessage(string messageId, byte[] message)
@@ -86,9 +86,9 @@ namespace Paclink.Data
                 DeleteTemporaryInboundMessage(messageId);
 
                 var base64String = Convert.ToBase64String(message);
-                _database.NonQuery(string.Format(@"INSERT INTO `TempInboundMessage` (`MessageId`, `Timestamp`, `MessageData`) VALUES ('{0}', datetime('now'), '{1}')", messageId, base64String));
+                _database.NonQuery($@"INSERT INTO `TempInboundMessage` (`MessageId`, `Timestamp`, `MessageData`) VALUES ('{messageId}', datetime('now'), '{base64String}')");
                 _database.NonQuery("COMMIT");
-            } 
+            }
             catch
             {
                 _database.NonQuery("ROLLBACK");
@@ -103,7 +103,7 @@ namespace Paclink.Data
 
         public void DeleteFromWinlinkMessage(string messageId)
         {
-            _database.NonQuery(string.Format(@"DELETE FROM `FromWinlinkMessage` WHERE `MessageId`='{0}'", messageId));
+            _database.NonQuery($@"DELETE FROM `FromWinlinkMessage` WHERE `MessageId`='{messageId}'");
         }
 
         public void SaveFromWinlinkMessage(string messageId, byte[] message)
@@ -114,7 +114,7 @@ namespace Paclink.Data
                 DeleteFromWinlinkMessage(messageId);
 
                 var base64String = Convert.ToBase64String(message);
-                _database.NonQuery(string.Format(@"INSERT INTO `FromWinlinkMessage` (`MessageId`, `MessageData`) VALUES ('{0}', '{1}')", messageId, base64String));
+                _database.NonQuery($@"INSERT INTO `FromWinlinkMessage` (`MessageId`, `MessageData`) VALUES ('{messageId}', '{base64String}')");
                 _database.NonQuery("COMMIT");
             }
             catch
@@ -160,7 +160,7 @@ namespace Paclink.Data
 
         public void DeleteToWinlinkMessage(string messageId)
         {
-            _database.NonQuery(string.Format(@"DELETE FROM `ToWinlinkMessage` WHERE `MessageId`='{0}'", messageId));
+            _database.NonQuery($@"DELETE FROM `ToWinlinkMessage` WHERE `MessageId`='{messageId}'");
         }
 
         public void SaveToWinlinkMessage(string messageId, byte[] message)
@@ -171,7 +171,7 @@ namespace Paclink.Data
                 DeleteToWinlinkMessage(messageId);
 
                 var base64String = Convert.ToBase64String(message);
-                _database.NonQuery(string.Format(@"INSERT INTO `ToWinlinkMessage` (`MessageId`, `MessageData`) VALUES ('{0}', '{1}')", messageId, base64String));
+                _database.NonQuery($@"INSERT INTO `ToWinlinkMessage` (`MessageId`, `MessageData`) VALUES ('{messageId}', '{base64String}')");
                 _database.NonQuery("COMMIT");
             }
             catch
@@ -202,17 +202,17 @@ namespace Paclink.Data
         public void SaveFailedMimeMessage(string messageId, byte[] message)
         {
             var base64String = Convert.ToBase64String(message);
-            _database.NonQuery(string.Format(@"INSERT INTO `FailedMimeMessage` (`MessageId`, `MessageData`) VALUES ('{0}', '{1}')", messageId, base64String));
+            _database.NonQuery($@"INSERT INTO `FailedMimeMessage` (`MessageId`, `MessageData`) VALUES ('{messageId}', '{base64String}')");
         }
 
         public void DeleteAccountEmails(string account)
         {
-            _database.NonQuery(string.Format(@"DELETE FROM `AccountMessage` WHERE `Account`='{0}'", account));
+            _database.NonQuery($@"DELETE FROM `AccountMessage` WHERE `Account`='{account}'");
         }
 
         public void DeleteAccountEmail(string account, string mId)
         {
-            _database.NonQuery(string.Format(@"DELETE FROM `AccountMessage` WHERE `Account`='{0}' AND `MessageId`='{1}'", account, mId));
+            _database.NonQuery($@"DELETE FROM `AccountMessage` WHERE `Account`='{account}' AND `MessageId`='{mId}'");
         }
 
         public List<string> GetAccountsWithEmails()
@@ -241,16 +241,16 @@ namespace Paclink.Data
         public void SaveAccountMessage(string messageId, string account, byte[] message)
         {
             var base64String = Convert.ToBase64String(message);
-            _database.NonQuery(string.Format(@"INSERT INTO `AccountMessage` (`MessageId`, `Account`, `MessageData`) VALUES ('{0}', '{1}', '{2}')", messageId, account, base64String));
+            _database.NonQuery($@"INSERT INTO `AccountMessage` (`MessageId`, `Account`, `MessageData`) VALUES ('{messageId}', '{account}', '{base64String}')");
         }
 
         public List<KeyValuePair<string, byte[]>> GetAccountEmails(string account)
         {
             var sql = "SELECT `MessageId`, `MessageData` FROM `AccountMessage` WHERE `Account`='{0}'";
             var messages = _database.FillDataSet(string.Format(sql, account), "AccountMessage");
-
+            
             var result = new List<KeyValuePair<string, byte[]>>();
-
+            
             for (var index = 0; index < messages.Tables[0].Rows.Count; index++)
             {
                 var kvp = new KeyValuePair<string, byte[]>(
@@ -258,8 +258,28 @@ namespace Paclink.Data
                     Convert.FromBase64String(messages.Tables[0].Rows[index]["MessageData"].ToString()));
                 result.Add(kvp);
             }
-
+            
             return result;
         }
+
+        public List<AccountMessage> GetMessages()
+        {
+            var sql = "SELECT `MessageId`, `Account`, `MessageData` FROM `AccountMessage`";
+            var messages = _database.FillDataSet(sql, "AccountMessage");
+            var result = new List<AccountMessage>();
+            for (var index = 0; index < messages.Tables[0].Rows.Count; index++)
+            {
+                var messageBytes = Convert.FromBase64String(messages.Tables[0].Rows[index]["MessageData"].ToString());
+                var ae = new AccountMessage
+                {
+                    Account = messages.Tables[0].Rows[index]["Account"].ToString(),
+                    MessageId = messages.Tables[0].Rows[index]["MessageId"].ToString(),
+                    MimeMessage = Encoding.UTF8.GetString(messageBytes)
+                };
+                result.Add(ae);
+            }
+            return result;
+        }
+
     }
 }
