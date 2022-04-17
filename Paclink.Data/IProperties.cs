@@ -16,5 +16,10 @@
         {
             return "";
         }
+
+        //default/optional interface member
+        void FromIniFileFormat(string iniFileContents) 
+        { 
+        }
     }
 }

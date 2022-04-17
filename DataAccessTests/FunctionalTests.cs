@@ -91,7 +91,18 @@ namespace DataAccessTests
         public void ToIniFileFormatTest()
         {
             var s = _properties.ToIniFileFormat();
+            Assert.IsTrue(!string.IsNullOrWhiteSpace(s));
             Console.WriteLine(s);
+        }
+
+        [TestMethod]
+        public void FromIniFileFormatTest()
+        {
+            var testEntry = DateTime.Now.ToString();
+            _properties.FromIniFileFormat($"[Test]\r\nTestEntry1={testEntry}\r\nTestEntry2={testEntry}");
+            var s = _properties.Get("Test", "TestEntry1", "");
+            Assert.IsTrue(testEntry == s, $"{s} should be the same as {testEntry}");
+            Console.WriteLine($"{s} should be the same as {testEntry}");
         }
 
     }
