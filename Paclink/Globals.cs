@@ -900,7 +900,10 @@ namespace Paclink
                 var ipProperties = adapter.GetIPProperties();
                 foreach (var ipAddress in ipProperties.UnicastAddresses)
                 {
-                    tempIPList.Add(ipAddress.Address.ToString());
+                    if (ipAddress.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                    {
+                        tempIPList.Add(ipAddress.Address.ToString());
+                    }
                 }
             }
             strLocalIPAddresses = tempIPList.ToArray();

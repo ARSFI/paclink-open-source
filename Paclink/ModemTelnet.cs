@@ -231,6 +231,7 @@ namespace Paclink
 
                     if (Globals.UseRMSRelay() == false)
                     {
+                        hostType = "CMS";
                         hostname = strCMSHost;
                         port = 8772;
                     }
@@ -241,7 +242,7 @@ namespace Paclink
                         port = Globals.intRMSRelayPort;
                     }
 
-                    Globals.queChannelDisplay.Enqueue("G*** Requesting connection to " + hostType + " at " + hostname + " port " + port);
+                    Globals.queChannelDisplay.Enqueue("G*** Requesting connection from " + Globals.strLocalIPAddress + " to " + hostType + " at " + hostname + " port " + port);
 
                     objTCPPort.ConnectAsync(hostname, port).ContinueWith(t =>
                     {
@@ -514,7 +515,7 @@ namespace Paclink
             {
             }
 
-            Globals.queChannelDisplay.Enqueue("R*** Telnet Error: " + e.ToString());
+            Globals.queChannelDisplay.Enqueue("R*** Telnet Error: " + e.Message);
             try
             {
                 cancelTokenSource.Cancel(); // cancels any pending reads
