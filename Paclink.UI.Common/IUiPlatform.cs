@@ -11,7 +11,8 @@
         TacticalAccounts,
         TelnetChannels,
         Terminal,
-        TerminalSettings
+        TerminalSettings,
+        Bearing
     };
 
     public interface IUiPlatform

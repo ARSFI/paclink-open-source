@@ -39,6 +39,7 @@ namespace Paclink.Data
         void DeleteAccountEmail(string account, string mId);
         List<string> GetAccountsWithEmails();
         List<KeyValuePair<string, byte[]>> GetAccountEmails(string account);
+        List<AccountMessage> GetMessages();
         int GetNumberOfAccountEmails();
         void SaveAccountMessage(string messageId, string account, byte[] message);
     }

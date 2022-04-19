@@ -2,15 +2,20 @@
 using System.Drawing;
 using System.Windows.Forms;
 using NLog;
+using Paclink.UI.Common;
 
-namespace Paclink
+namespace Paclink.UI.Windows
 {
     public partial class Bearing
     {
         private  readonly Logger _log = LogManager.GetCurrentClassLogger();
+        private IBearingBacking _backingObject;
+        public IBearingBacking BackingObject => _backingObject;
 
-        public Bearing()
+        public Bearing(IBearingBacking backingObject)
         {
+            _backingObject = backingObject;
+
             InitializeComponent();
             _pnlRadar.Name = "pnlRadar";
         }
@@ -22,23 +27,6 @@ namespace Paclink
         private void Bearing_Activated(object sender, EventArgs e)
         {
             DrawRangeBearing();
-        }
-
-        private void Bearing_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            if (WindowState == FormWindowState.Normal)
-            {
-                Globals.Settings.Save("Bearing", "Top", Top);
-                Globals.Settings.Save("Bearing", "Left", Left);
-            }
-        }
-
-        private void Bearing_Load(object sender, EventArgs e)
-        {
-            objRangeBearing.ComputeRangeAndBearing(Globals.SiteGridSquare, Globals.strConnectedGridSquare, ref dblRange, ref dblBearing);
-            Top = Globals.Settings.Get("Bearing", "Top", 100);
-            Left = Globals.Settings.Get("Bearing", "Left", 100);
-            tmrShow.Start();
         }
 
         private bool blnFirstTime = true;
@@ -53,9 +41,9 @@ namespace Paclink
                 tmrShow.Interval = 2000;
                 tmrShow.Start();
             }
-            else if (Globals.blnEndBearingDisplay == true)
+            else if (BackingObject.EndBearingDisplay == true)
             {
-                Globals.blnEndBearingDisplay = false;
+                BackingObject.EndBearingDisplay = false;
                 Close();
             }
             else
@@ -109,9 +97,9 @@ namespace Paclink
                     graRangeBearing.DrawString(dblBearing.ToString("000") + "T", fnt, Brushes.Yellow, pnlRadar.Width - 40, 5);
                 }
 
-                if (!string.IsNullOrEmpty(Globals.strConnectedCallsign)) // plot the callsign in the lower right corner
+                if (!string.IsNullOrEmpty(BackingObject.ConnectedCallsign)) // plot the callsign in the lower right corner
                 {
-                    graRangeBearing.DrawString(Globals.strConnectedCallsign, fnt, Brushes.Yellow, pnlRadar.Width - 60, pnlRadar.Height - 15);
+                    graRangeBearing.DrawString(BackingObject.ConnectedCallsign, fnt, Brushes.Yellow, pnlRadar.Width - 60, pnlRadar.Height - 15);
                 }
 
                 // Plot the UTC time in the lower left...

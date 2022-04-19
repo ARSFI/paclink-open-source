@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Text;
 using NLog;
@@ -119,6 +120,36 @@ namespace Paclink.Data
                 sb.AppendLine($"{property}={value}");
             }
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Import settings from ini file. Existing settings are overwritten. New settings are added. 
+        /// </summary>
+        public void FromIniFileFormat(string iniFileContents)
+        {
+            if (string.IsNullOrWhiteSpace(iniFileContents)) return;
+
+            // Get ini file lines
+            string[] lines = iniFileContents.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+            // Process sections and entries within sections. Empty string is the default section.
+            string section = "";
+            foreach (var line in lines)
+            {
+                if (line.StartsWith("["))
+                {
+                    // A new section/group
+                    section = line.Replace("[", "").Replace("]", "").Trim();
+                    continue;
+                }
+                if (line.Contains("="))
+                {
+                    var parts = line.Split("=");
+                    Save(section, parts[0].Trim(), parts[1].Trim());
+                    continue;
+                }
+            }
+
         }
     }
 }
