@@ -216,7 +216,7 @@ namespace Paclink
 
             if (stcChannel.Enabled)
             {
-                objTCPPort = new TcpClient();
+                objTCPPort = new TcpClient(AddressFamily.InterNetwork);
                 if (Globals.strLocalIPAddress != "Default")
                     objTCPPort.Client.Bind(new IPEndPoint(IPAddress.Parse(Globals.strLocalIPAddress), 0));
                 objTCPPort.ReceiveTimeout = 30;
