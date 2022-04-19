@@ -412,7 +412,7 @@ namespace Paclink
                             Globals.PollingData.DecrementMinutesRemaining();
                         }
 
-                        if (Globals.blnChannelActive == false  & Globals.TerminalIsActive == false)
+                        if (Globals.blnChannelActive == false & Globals.TerminalIsActive == false)
                         {
                             if (Globals.PollingData.MinutesRemaining <= 0)
                             {
@@ -468,10 +468,9 @@ namespace Paclink
         {
             if (Globals.blnManualAbort == false)
             {
-                Globals.frmBearing = new Bearing();
                 Globals.blnEndBearingDisplay = false;
-                Globals.frmBearing.ShowDialog();
-                Globals.frmBearing = null;
+                BearingViewModel vm = new BearingViewModel();
+                UserInterfaceFactory.GetUiSystem().DisplayForm(AvailableForms.Bearing, vm);
                 thrBearing = null;
             }
         } // BearingThread

@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
-namespace Paclink
+namespace Paclink.UI.Windows
 {
     public partial class Bearing : Form
     {
@@ -35,48 +35,49 @@ namespace Paclink
         [DebuggerStepThrough()]
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(Bearing));
-            _pnlRadar = new Panel();
-            _tmrShow = new Timer(components);
-            _tmrShow.Tick += new EventHandler(tmrShow_Tick);
-            SuspendLayout();
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Bearing));
+            this._pnlRadar = new System.Windows.Forms.Panel();
+            this._tmrShow = new System.Windows.Forms.Timer(this.components);
+            this.SuspendLayout();
             // 
-            // pnlRadar
+            // _pnlRadar
             // 
-            _pnlRadar.AutoSize = true;
-            _pnlRadar.BackColor = Color.Black;
-            _pnlRadar.Dock = DockStyle.Fill;
-            _pnlRadar.Enabled = false;
-            _pnlRadar.Location = new Point(0, 0);
-            _pnlRadar.Name = "_pnlRadar";
-            _pnlRadar.Size = new Size(214, 218);
-            _pnlRadar.TabIndex = 24;
+            this._pnlRadar.AutoSize = true;
+            this._pnlRadar.BackColor = System.Drawing.Color.Black;
+            this._pnlRadar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._pnlRadar.Enabled = false;
+            this._pnlRadar.Location = new System.Drawing.Point(0, 0);
+            this._pnlRadar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._pnlRadar.Name = "_pnlRadar";
+            this._pnlRadar.Size = new System.Drawing.Size(241, 243);
+            this._pnlRadar.TabIndex = 24;
             // 
-            // tmrShow
+            // _tmrShow
             // 
-            _tmrShow.Interval = 10;
+            this._tmrShow.Interval = 10;
+            this._tmrShow.Tick += new System.EventHandler(this.tmrShow_Tick);
             // 
             // Bearing
             // 
-            AutoScaleDimensions = new SizeF(6.0F, 13.0F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(214, 218);
-            ControlBox = false;
-            Controls.Add(_pnlRadar);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
-            Icon = (Icon)resources.GetObject("$this.Icon");
-            MaximizeBox = false;
-            MinimizeBox = false;
-            Name = "Bearing";
-            ShowIcon = false;
-            ShowInTaskbar = false;
-            Text = "Range and Bearing";
-            Activated += new EventHandler(Bearing_Activated);
-            FormClosed += new FormClosedEventHandler(Bearing_FormClosed);
-            Load += new EventHandler(Bearing_Load);
-            ResumeLayout(false);
-            PerformLayout();
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(241, 243);
+            this.ControlBox = false;
+            this.Controls.Add(this._pnlRadar);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "Bearing";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.Text = "Range and Bearing";
+            this.Activated += new System.EventHandler(this.Bearing_Activated);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
 
         private Panel _pnlRadar;

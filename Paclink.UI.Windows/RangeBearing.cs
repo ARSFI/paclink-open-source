@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Paclink
+namespace Paclink.UI.Windows
 {
     public class RangeBearing
     {

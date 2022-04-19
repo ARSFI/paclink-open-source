@@ -115,7 +115,6 @@ namespace Paclink
 
         // Global Objects...
         public static DialogPactorConnect dlgPactorConnect;
-        public static Bearing frmBearing;
         public static POP3Port objPOP3Port;
         public static PrimaryThread objPrimaryThread;
         public static IRadio objRadioControl;

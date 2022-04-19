@@ -42,6 +42,9 @@ namespace Paclink.UI.Windows
                 case AvailableForms.TerminalSettings:
                     window = new TerminalSettings((ITerminalSettingsBacking)backingObject);
                     break;
+                case AvailableForms.Bearing:
+                    window = new Bearing((IBearingBacking)backingObject);
+                    break;
                 default:
                     throw new ArgumentException(string.Format("Invalid form: {0}", form));
             }

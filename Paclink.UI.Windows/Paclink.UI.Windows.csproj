@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Bearing.cs" />
     <Compile Update="DialogAGWEngine.cs" />
     <Compile Update="DialogCallsignAccounts.cs" />
     <Compile Update="DialogChangePassword.cs" />
@@ -28,4 +29,4 @@
     <Compile Update="TerminalSettings.cs" />
   </ItemGroup>
 
-</Project>
+ </Project>
