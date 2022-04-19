@@ -1,13 +1,14 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using NLog;
+﻿using NLog;
 using Paclink.UI.Common;
+using System;
+using System.Drawing;
 
 namespace Paclink.UI.Windows
 {
     public partial class Bearing
     {
+        //TODO: Doubtful that this form ever worked as written
+
         private  readonly Logger _log = LogManager.GetCurrentClassLogger();
         private IBearingBacking _backingObject;
         public IBearingBacking BackingObject => _backingObject;
@@ -22,7 +23,8 @@ namespace Paclink.UI.Windows
 
         private double dblRange; // Range in statute miles
         private double dblBearing; // Bearing in degrees True Great circle
-        private RangeBearing objRangeBearing = new RangeBearing();
+
+        //TODO: Appears to be unused  >> private RangeBearing objRangeBearing = new RangeBearing();
 
         private void Bearing_Activated(object sender, EventArgs e)
         {

@@ -1,7 +1,9 @@
 ﻿using System;
 
-namespace Paclink.UI.Windows
+namespace Paclink
 {
+    //TODO: Unused - need to compare to original source - /ARSFI/Winlink_Client/Paclink AWS/Paclink/
+
     public class RangeBearing
     {
         // Subrooutine to convert 4 or 6 char gridsquare to NMEA Lat/Lon values with rounding
