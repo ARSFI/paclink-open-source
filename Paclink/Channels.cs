@@ -145,6 +145,7 @@ namespace Paclink
                                 stcChannel.PactorId = Globals.Settings.Get(strName, "Pactor 1 ID", true);
                                 stcChannel.TTLLevel = Globals.Settings.Get(strName, "PTC II TTL Level", false);
                                 stcChannel.NMEA = Globals.Settings.Get(strName, "Use NMEA Commands", false);
+                                stcChannel.PactorUseLongPath = Globals.Settings.Get(strName, "Use Long Path", false);
                                 break;
                             }
 
@@ -312,6 +313,7 @@ namespace Paclink
                 Globals.Settings.Save(strName, "Pactor 1 ID", stcChannel.PactorId);
                 Globals.Settings.Save(strName, "PTC II TTL Level", stcChannel.TTLLevel);
                 Globals.Settings.Save(strName, "Use NMEA Commands", stcChannel.NMEA);
+                Globals.Settings.Save(strName, "Use Long Path", stcChannel.PactorUseLongPath);
             }
             else if (stcChannel.ChannelType == ChannelMode.Winmor)
             {

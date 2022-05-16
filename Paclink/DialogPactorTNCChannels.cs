@@ -330,6 +330,8 @@ namespace Paclink
                 btnUpdate.Enabled = true;
                 cmbFreqs.Enabled = true;
                 cmbCallSigns.Enabled = true;
+
+                chkLongPath.Checked = withBlock.PactorUseLongPath;
             }
         } // SetEntries
 
@@ -397,6 +399,7 @@ namespace Paclink
             stcChannel.TNCFSKLevel = Convert.ToInt32(nudFSKLevel.Value);
             stcChannel.TNCPSKLevel = Convert.ToInt32(nudPSKLevel.Value);
             stcChannel.TNCBusyHold = chkBusyHold.Checked;
+            stcChannel.PactorUseLongPath = chkLongPath.Checked;
             stcChannel.PactorId = chkIDEnabled.Checked;
             stcChannel.RemoteCallsign = GetCallSign();
             // .FrequenciesScanned = cmbFreqs.Items.Count

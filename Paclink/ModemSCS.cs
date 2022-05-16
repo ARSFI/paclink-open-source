@@ -189,6 +189,11 @@ namespace Paclink
             string strVia = "";
             string strCenterFreq;
             int intIndex;
+            string longPathStr = "%";
+            if (Globals.stcSelectedChannel.PactorUseLongPath)
+            {
+                longPathStr = "!";
+            }
             string strTarget = Globals.stcSelectedChannel.RemoteCallsign;
             blnAutomaticConnect = blnAutomatic;
             if (enmState != LinkStates.Initialized)
@@ -454,7 +459,7 @@ namespace Paclink
                 {
                     Globals.queRateDisplay.Enqueue("Linking");
                     Globals.queChannelDisplay.Enqueue("G*** Calling " + Globals.stcSelectedChannel.RemoteCallsign + " on " + Globals.ExtractFreq(ref Globals.stcSelectedChannel.RDOCenterFrequency) + " KHz");
-                    strTemp = "C %" + Globals.stcSelectedChannel.RemoteCallsign;
+                    strTemp = "C " + longPathStr + Globals.stcSelectedChannel.RemoteCallsign;
                     // intConnectTimer = CInt(Math.Max(15, 7 * stcChannel.FrequenciesScanned)) ' Set for 15 seconds min or 7 sec/freq
                     intConnectTimer = 60;
                     objHostPort.blnISS = true;  // Precondition to ISS 

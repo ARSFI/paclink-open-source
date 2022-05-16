@@ -35,778 +35,922 @@ namespace Paclink
         [DebuggerStepThrough()]
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(DialogPactorTNCChannels));
-            _btnClose = new Button();
-            _btnClose.Click += new EventHandler(btnClose_Click);
-            _btnUpdate = new Button();
-            _btnUpdate.Click += new EventHandler(btnUpdate_Click);
-            _btnRemove = new Button();
-            _btnRemove.Click += new EventHandler(btnRemove_Click);
-            _btnAdd = new Button();
-            _btnAdd.Click += new EventHandler(btnAdd_Click);
-            _ToolTip1 = new ToolTip(components);
-            _cmbRadioModel = new ComboBox();
-            _cmbRadioModel.TextChanged += new EventHandler(cmbRadioModel_TextChanged);
-            _cmbRadioPort = new ComboBox();
-            _cmbRadioBaud = new ComboBox();
-            _txtAudioCenter = new TextBox();
-            _cmbTNCBaudRate = new ComboBox();
-            _cmbTNCSerialPort = new ComboBox();
-            _txtTNCConfigurationFile = new TextBox();
-            _cmbTNCType = new ComboBox();
-            _cmbTNCType.SelectedIndexChanged += new EventHandler(cmbTNCtype_SelectedIndexChanged);
-            _cmbTNCType.TextChanged += new EventHandler(cmbTNCtype_TextChanged);
-            _cmbChannelName = new ComboBox();
-            _cmbChannelName.SelectedIndexChanged += new EventHandler(cmbChannelName_SelectedIndexChanged);
-            _cmbChannelName.TextChanged += new EventHandler(cmbChannelName_TextChanged);
-            _txtRadioAddress = new TextBox();
-            _chkNarrowFilter = new CheckBox();
-            _rdoViaPTCII = new RadioButton();
-            _rdoViaPTCII.CheckedChanged += new EventHandler(rdoViaPTCII_CheckedChanged);
-            _nudFSKLevel = new NumericUpDown();
-            _nudPSKLevel = new NumericUpDown();
-            _rdoSerial = new RadioButton();
-            _rdoSerial.CheckedChanged += new EventHandler(rdoSerial_CheckedChanged);
-            _rdoManual = new RadioButton();
-            _rdoManual.CheckedChanged += new EventHandler(rdoManual_CheckedChanged);
-            _btnBrowseConfiguration = new Button();
-            _btnBrowseConfiguration.Click += new EventHandler(btnBrowseConfiguration_Click);
-            _grpChannelSetting = new GroupBox();
-            _btnUpdateChannelList = new Button();
-            _btnUpdateChannelList.Click += new EventHandler(btnUpdateChannelList_Click);
-            _chkBusyHold = new CheckBox();
-            _chkIDEnabled = new CheckBox();
-            _chkChannelEnabled = new CheckBox();
-            _chkAutoforwardEnabled = new CheckBox();
-            _chkAutoforwardEnabled.CheckedChanged += new EventHandler(chkAutoforwardEnabled_CheckedChanged);
-            _Label3 = new Label();
-            _Label10 = new Label();
-            _Label5 = new Label();
-            _cmbFreqs = new ComboBox();
-            _cmbCallSigns = new ComboBox();
-            _cmbCallSigns.SelectedIndexChanged += new EventHandler(cmbCallSigns_SelectedIndexChanged);
-            _nudPriority = new NumericUpDown();
-            _nudActivityTimeout = new NumericUpDown();
-            _Label4 = new Label();
-            _Label2 = new Label();
-            _Label1 = new Label();
-            _chkFirstUseOnly = new CheckBox();
-            _Label13 = new Label();
-            _rdoV24 = new RadioButton();
-            _rdoTTL = new RadioButton();
-            _chkNMEA = new CheckBox();
-            _grpRadioControl = new GroupBox();
-            _grpPTCLevels = new GroupBox();
-            _Label15 = new Label();
-            _lblRadioAddress = new Label();
-            _Label8 = new Label();
-            _Label9 = new Label();
-            _grpTNCSettings = new GroupBox();
-            _lblPSKLevel = new Label();
-            _lblFSKLevel = new Label();
-            _Label14 = new Label();
-            _Label18 = new Label();
-            _Label7 = new Label();
-            _Label21 = new Label();
-            _Label22 = new Label();
-            _btnHelp = new Button();
-            _btnHelp.Click += new EventHandler(btnHelp_Click);
-            _Label16 = new Label();
-            ((System.ComponentModel.ISupportInitialize)_nudFSKLevel).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)_nudPSKLevel).BeginInit();
-            _grpChannelSetting.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)_nudPriority).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)_nudActivityTimeout).BeginInit();
-            _grpRadioControl.SuspendLayout();
-            _grpPTCLevels.SuspendLayout();
-            _grpTNCSettings.SuspendLayout();
-            SuspendLayout();
-            // 
-            // btnClose
-            // 
-            _btnClose.Location = new Point(464, 381);
-            _btnClose.Name = "_btnClose";
-            _btnClose.Size = new Size(129, 30);
-            _btnClose.TabIndex = 7;
-            _btnClose.Text = "Close";
-            _btnClose.UseVisualStyleBackColor = true;
-            // 
-            // btnUpdate
-            // 
-            _btnUpdate.Location = new Point(327, 381);
-            _btnUpdate.Name = "_btnUpdate";
-            _btnUpdate.Size = new Size(129, 30);
-            _btnUpdate.TabIndex = 6;
-            _btnUpdate.Text = "Update The Channel";
-            _btnUpdate.UseVisualStyleBackColor = true;
-            // 
-            // btnRemove
-            // 
-            _btnRemove.Location = new Point(190, 381);
-            _btnRemove.Name = "_btnRemove";
-            _btnRemove.Size = new Size(129, 30);
-            _btnRemove.TabIndex = 5;
-            _btnRemove.Text = "Remove This Channel";
-            _btnRemove.UseVisualStyleBackColor = true;
-            // 
-            // btnAdd
-            // 
-            _btnAdd.Location = new Point(53, 381);
-            _btnAdd.Name = "_btnAdd";
-            _btnAdd.Size = new Size(129, 30);
-            _btnAdd.TabIndex = 4;
-            _btnAdd.Text = "Add New Channel";
-            _btnAdd.UseVisualStyleBackColor = true;
-            // 
-            // cmbRadioModel
-            // 
-            _cmbRadioModel.DropDownStyle = ComboBoxStyle.DropDownList;
-            _cmbRadioModel.FormattingEnabled = true;
-            _cmbRadioModel.Location = new Point(24, 201);
-            _cmbRadioModel.Name = "_cmbRadioModel";
-            _cmbRadioModel.Size = new Size(129, 21);
-            _cmbRadioModel.TabIndex = 5;
-            _ToolTip1.SetToolTip(_cmbRadioModel, "Select Radio type here.");
-            // 
-            // cmbRadioPort
-            // 
-            _cmbRadioPort.DropDownStyle = ComboBoxStyle.DropDownList;
-            _cmbRadioPort.FormattingEnabled = true;
-            _cmbRadioPort.Location = new Point(85, 130);
-            _cmbRadioPort.Name = "_cmbRadioPort";
-            _cmbRadioPort.Size = new Size(68, 21);
-            _cmbRadioPort.TabIndex = 3;
-            _ToolTip1.SetToolTip(_cmbRadioPort, "If you selected Direct via Serial this is where you select the radio control port" + "");
-            // 
-            // cmbRadioBaud
-            // 
-            _cmbRadioBaud.DropDownStyle = ComboBoxStyle.DropDownList;
-            _cmbRadioBaud.FormattingEnabled = true;
-            _cmbRadioBaud.Location = new Point(85, 157);
-            _cmbRadioBaud.Name = "_cmbRadioBaud";
-            _cmbRadioBaud.Size = new Size(69, 21);
-            _cmbRadioBaud.TabIndex = 4;
-            _ToolTip1.SetToolTip(_cmbRadioBaud, "Baud rate for the radio control port (8N1 assumed) ");
-            // 
-            // txtAudioCenter
-            // 
-            _txtAudioCenter.Location = new Point(211, 38);
-            _txtAudioCenter.Name = "_txtAudioCenter";
-            _txtAudioCenter.Size = new Size(104, 20);
-            _txtAudioCenter.TabIndex = 1;
-            _txtAudioCenter.Text = "1500";
-            _txtAudioCenter.TextAlign = HorizontalAlignment.Center;
-            _ToolTip1.SetToolTip(_txtAudioCenter, "Center of TNC audio tones in Hz (used to calculate dial frequencies) default = 15" + "00 ");
-            // 
-            // cmbTNCBaudRate
-            // 
-            _cmbTNCBaudRate.DropDownStyle = ComboBoxStyle.DropDownList;
-            _cmbTNCBaudRate.FormattingEnabled = true;
-            _cmbTNCBaudRate.Location = new Point(415, 37);
-            _cmbTNCBaudRate.Name = "_cmbTNCBaudRate";
-            _cmbTNCBaudRate.Size = new Size(71, 21);
-            _cmbTNCBaudRate.TabIndex = 3;
-            _ToolTip1.SetToolTip(_cmbTNCBaudRate, "Select TNC baud rate (not on air baud rate) ");
-            // 
-            // cmbTNCSerialPort
-            // 
-            _cmbTNCSerialPort.DropDownStyle = ComboBoxStyle.DropDownList;
-            _cmbTNCSerialPort.FormattingEnabled = true;
-            _cmbTNCSerialPort.Location = new Point(330, 37);
-            _cmbTNCSerialPort.Name = "_cmbTNCSerialPort";
-            _cmbTNCSerialPort.Size = new Size(71, 21);
-            _cmbTNCSerialPort.Sorted = true;
-            _cmbTNCSerialPort.TabIndex = 2;
-            _ToolTip1.SetToolTip(_cmbTNCSerialPort, "Select TNC serial port ");
-            // 
-            // txtTNCConfigurationFile
-            // 
-            _txtTNCConfigurationFile.Location = new Point(132, 123);
-            _txtTNCConfigurationFile.Name = "_txtTNCConfigurationFile";
-            _txtTNCConfigurationFile.Size = new Size(337, 20);
-            _txtTNCConfigurationFile.TabIndex = 7;
-            _txtTNCConfigurationFile.TextAlign = HorizontalAlignment.Center;
-            _ToolTip1.SetToolTip(_txtTNCConfigurationFile, "The TNC configuration (.aps) file. (see Examples for templates) ");
-            // 
-            // cmbTNCType
-            // 
-            _cmbTNCType.DropDownStyle = ComboBoxStyle.DropDownList;
-            _cmbTNCType.FormattingEnabled = true;
-            _cmbTNCType.Location = new Point(70, 37);
-            _cmbTNCType.MaxDropDownItems = 24;
-            _cmbTNCType.Name = "_cmbTNCType";
-            _cmbTNCType.Size = new Size(129, 21);
-            _cmbTNCType.TabIndex = 0;
-            _ToolTip1.SetToolTip(_cmbTNCType, "Select TNC type");
-            // 
-            // cmbChannelName
-            // 
-            _cmbChannelName.FormattingEnabled = true;
-            _cmbChannelName.Location = new Point(97, 18);
-            _cmbChannelName.MaxDropDownItems = 24;
-            _cmbChannelName.Name = "_cmbChannelName";
-            _cmbChannelName.RightToLeft = RightToLeft.No;
-            _cmbChannelName.Size = new Size(235, 21);
-            _cmbChannelName.Sorted = true;
-            _cmbChannelName.TabIndex = 0;
-            _ToolTip1.SetToolTip(_cmbChannelName, "Enter Channel Name");
-            // 
-            // txtRadioAddress
-            // 
-            _txtRadioAddress.Enabled = false;
-            _txtRadioAddress.Location = new Point(130, 231);
-            _txtRadioAddress.Name = "_txtRadioAddress";
-            _txtRadioAddress.Size = new Size(25, 20);
-            _txtRadioAddress.TabIndex = 6;
-            _txtRadioAddress.Text = "01";
-            _txtRadioAddress.TextAlign = HorizontalAlignment.Center;
-            _ToolTip1.SetToolTip(_txtRadioAddress, "Hex Address for Icom C-IV Radios");
-            // 
-            // chkNarrowFilter
-            // 
-            _chkNarrowFilter.AutoSize = true;
-            _chkNarrowFilter.Location = new Point(24, 288);
-            _chkNarrowFilter.Name = "_chkNarrowFilter";
-            _chkNarrowFilter.Size = new Size(15, 14);
-            _chkNarrowFilter.TabIndex = 8;
-            _chkNarrowFilter.TextAlign = ContentAlignment.TopRight;
-            _ToolTip1.SetToolTip(_chkNarrowFilter, "Use Narrow Filter for Pactor I or II");
-            _chkNarrowFilter.UseVisualStyleBackColor = true;
-            // 
-            // rdoViaPTCII
-            // 
-            _rdoViaPTCII.AutoSize = true;
-            _rdoViaPTCII.Location = new Point(15, 37);
-            _rdoViaPTCII.Name = "_rdoViaPTCII";
-            _rdoViaPTCII.Size = new Size(129, 17);
-            _rdoViaPTCII.TabIndex = 1;
-            _rdoViaPTCII.TabStop = true;
-            _rdoViaPTCII.Text = "Via PTC II, IIpro, IIusb";
-            _ToolTip1.SetToolTip(_rdoViaPTCII, "Use Radio control via a PTC II, IIpro or IIusb (not available in  IIe or IIex mod" + "els)");
-            _rdoViaPTCII.UseVisualStyleBackColor = true;
-            // 
-            // nudFSKLevel
-            // 
-            _nudFSKLevel.Increment = new decimal(new int[] { 10, 0, 0, 0 });
-            _nudFSKLevel.Location = new Point(199, 67);
-            _nudFSKLevel.Maximum = new decimal(new int[] { 9000, 0, 0, 0 });
-            _nudFSKLevel.Minimum = new decimal(new int[] { 10, 0, 0, 0 });
-            _nudFSKLevel.Name = "_nudFSKLevel";
-            _nudFSKLevel.Size = new Size(59, 20);
-            _nudFSKLevel.TabIndex = 4;
-            _ToolTip1.SetToolTip(_nudFSKLevel, "Set FSK level for Pactor I. Level should NOT generate ALC action.");
-            _nudFSKLevel.Value = new decimal(new int[] { 100, 0, 0, 0 });
-            // 
-            // nudPSKLevel
-            // 
-            _nudPSKLevel.Increment = new decimal(new int[] { 10, 0, 0, 0 });
-            _nudPSKLevel.Location = new Point(412, 67);
-            _nudPSKLevel.Maximum = new decimal(new int[] { 9000, 0, 0, 0 });
-            _nudPSKLevel.Minimum = new decimal(new int[] { 10, 0, 0, 0 });
-            _nudPSKLevel.Name = "_nudPSKLevel";
-            _nudPSKLevel.Size = new Size(58, 20);
-            _nudPSKLevel.TabIndex = 5;
-            _ToolTip1.SetToolTip(_nudPSKLevel, "Set PSK Level for P2 & P3. Level should NOT generate ALC action!");
-            _nudPSKLevel.Value = new decimal(new int[] { 100, 0, 0, 0 });
-            // 
-            // rdoSerial
-            // 
-            _rdoSerial.AutoSize = true;
-            _rdoSerial.Location = new Point(15, 107);
-            _rdoSerial.Name = "_rdoSerial";
-            _rdoSerial.Size = new Size(124, 17);
-            _rdoSerial.TabIndex = 2;
-            _rdoSerial.Text = "Direct via Serial Port:";
-            _ToolTip1.SetToolTip(_rdoSerial, "Select this if the Radio control is direct using a Serial or USB port.");
-            _rdoSerial.UseVisualStyleBackColor = true;
-            // 
-            // rdoManual
-            // 
-            _rdoManual.AutoSize = true;
-            _rdoManual.Checked = true;
-            _rdoManual.Location = new Point(15, 19);
-            _rdoManual.Name = "_rdoManual";
-            _rdoManual.Size = new Size(93, 17);
-            _rdoManual.TabIndex = 0;
-            _rdoManual.TabStop = true;
-            _rdoManual.Text = "Manual (none)";
-            _ToolTip1.SetToolTip(_rdoManual, "Select if manual radio control.");
-            _rdoManual.UseVisualStyleBackColor = true;
-            // 
-            // btnBrowseConfiguration
-            // 
-            _btnBrowseConfiguration.Location = new Point(475, 121);
-            _btnBrowseConfiguration.Name = "_btnBrowseConfiguration";
-            _btnBrowseConfiguration.Size = new Size(60, 23);
-            _btnBrowseConfiguration.TabIndex = 8;
-            _btnBrowseConfiguration.Text = "Browse";
-            _ToolTip1.SetToolTip(_btnBrowseConfiguration, "Browse to select custom configuration file.");
-            _btnBrowseConfiguration.UseVisualStyleBackColor = true;
-            // 
-            // grpChannelSetting
-            // 
-            _grpChannelSetting.Controls.Add(_btnUpdateChannelList);
-            _grpChannelSetting.Controls.Add(_chkBusyHold);
-            _grpChannelSetting.Controls.Add(_chkIDEnabled);
-            _grpChannelSetting.Controls.Add(_chkChannelEnabled);
-            _grpChannelSetting.Controls.Add(_chkAutoforwardEnabled);
-            _grpChannelSetting.Controls.Add(_Label3);
-            _grpChannelSetting.Controls.Add(_Label10);
-            _grpChannelSetting.Controls.Add(_Label5);
-            _grpChannelSetting.Controls.Add(_cmbFreqs);
-            _grpChannelSetting.Controls.Add(_cmbCallSigns);
-            _grpChannelSetting.Controls.Add(_nudPriority);
-            _grpChannelSetting.Controls.Add(_nudActivityTimeout);
-            _grpChannelSetting.Controls.Add(_Label4);
-            _grpChannelSetting.Controls.Add(_Label2);
-            _grpChannelSetting.Controls.Add(_cmbChannelName);
-            _grpChannelSetting.Controls.Add(_Label1);
-            _grpChannelSetting.Location = new Point(13, 33);
-            _grpChannelSetting.Name = "_grpChannelSetting";
-            _grpChannelSetting.Size = new Size(553, 163);
-            _grpChannelSetting.TabIndex = 1;
-            _grpChannelSetting.TabStop = false;
-            _grpChannelSetting.Text = "Pactor Channel Settings";
-            _ToolTip1.SetToolTip(_grpChannelSetting, "Check to enable Pactor 1 FEC ID on Disconnect.");
-            // 
-            // btnUpdateChannelList
-            // 
-            _btnUpdateChannelList.Location = new Point(209, 128);
-            _btnUpdateChannelList.Name = "_btnUpdateChannelList";
-            _btnUpdateChannelList.Size = new Size(154, 27);
-            _btnUpdateChannelList.TabIndex = 184;
-            _btnUpdateChannelList.Text = "Update Channel List";
-            _btnUpdateChannelList.UseVisualStyleBackColor = true;
-            // 
-            // chkBusyHold
-            // 
-            _chkBusyHold.AutoSize = true;
-            _chkBusyHold.CheckAlign = ContentAlignment.MiddleRight;
-            _chkBusyHold.ImageAlign = ContentAlignment.MiddleRight;
-            _chkBusyHold.Location = new Point(342, 76);
-            _chkBusyHold.Name = "_chkBusyHold";
-            _chkBusyHold.RightToLeft = RightToLeft.No;
-            _chkBusyHold.Size = new Size(151, 17);
-            _chkBusyHold.TabIndex = 183;
-            _chkBusyHold.Text = "Enable busy channel hold:";
-            _ToolTip1.SetToolTip(_chkBusyHold, "Check for autoforwarding on this HF channel (normally limited to Emergency Use ON" + "LY!)");
-            _chkBusyHold.UseVisualStyleBackColor = true;
-            // 
-            // chkIDEnabled
-            // 
-            _chkIDEnabled.AutoSize = true;
-            _chkIDEnabled.CheckAlign = ContentAlignment.MiddleRight;
-            _chkIDEnabled.Checked = true;
-            _chkIDEnabled.CheckState = CheckState.Checked;
-            _chkIDEnabled.Location = new Point(211, 76);
-            _chkIDEnabled.Name = "_chkIDEnabled";
-            _chkIDEnabled.RightToLeft = RightToLeft.No;
-            _chkIDEnabled.Size = new Size(116, 17);
-            _chkIDEnabled.TabIndex = 181;
-            _chkIDEnabled.Text = "Pactor ID Enabled:";
-            _ToolTip1.SetToolTip(_chkIDEnabled, "Check to enable Pactor 1 FEC ID ");
-            _chkIDEnabled.UseVisualStyleBackColor = true;
-            // 
-            // chkChannelEnabled
-            // 
-            _chkChannelEnabled.AutoSize = true;
-            _chkChannelEnabled.CheckAlign = ContentAlignment.MiddleRight;
-            _chkChannelEnabled.Location = new Point(83, 76);
-            _chkChannelEnabled.Name = "_chkChannelEnabled";
-            _chkChannelEnabled.RightToLeft = RightToLeft.No;
-            _chkChannelEnabled.Size = new Size(110, 17);
-            _chkChannelEnabled.TabIndex = 180;
-            _chkChannelEnabled.Text = "Channel Enabled:";
-            _ToolTip1.SetToolTip(_chkChannelEnabled, "Enable this channel ");
-            _chkChannelEnabled.UseVisualStyleBackColor = true;
-            // 
-            // chkAutoforwardEnabled
-            // 
-            _chkAutoforwardEnabled.AutoSize = true;
-            _chkAutoforwardEnabled.CheckAlign = ContentAlignment.MiddleRight;
-            _chkAutoforwardEnabled.Location = new Point(365, 100);
-            _chkAutoforwardEnabled.Name = "_chkAutoforwardEnabled";
-            _chkAutoforwardEnabled.RightToLeft = RightToLeft.No;
-            _chkAutoforwardEnabled.Size = new Size(128, 17);
-            _chkAutoforwardEnabled.TabIndex = 182;
-            _chkAutoforwardEnabled.Text = "Autoforward Enabled:";
-            _ToolTip1.SetToolTip(_chkAutoforwardEnabled, "Check for autoforwarding on this HF channel (normally limited to Emergency Use ON" + "LY!)");
-            _chkAutoforwardEnabled.UseVisualStyleBackColor = true;
-            // 
-            // Label3
-            // 
-            _Label3.AutoSize = true;
-            _Label3.Location = new Point(210, 102);
-            _Label3.Name = "_Label3";
-            _Label3.Size = new Size(44, 13);
-            _Label3.TabIndex = 179;
-            _Label3.Text = "Minutes";
-            // 
-            // Label10
-            // 
-            _Label10.AutoSize = true;
-            _Label10.Location = new Point(242, 50);
-            _Label10.Name = "_Label10";
-            _Label10.Size = new Size(107, 13);
-            _Label10.TabIndex = 178;
-            _Label10.Text = "RF Center Freq (kHz)";
-            // 
-            // Label5
-            // 
-            _Label5.AutoSize = true;
-            _Label5.Location = new Point(339, 23);
-            _Label5.Name = "_Label5";
-            _Label5.Size = new Size(86, 13);
-            _Label5.TabIndex = 177;
-            _Label5.Text = "Remote Callsign:";
-            // 
-            // cmbFreqs
-            // 
-            _cmbFreqs.FormattingEnabled = true;
-            _cmbFreqs.Location = new Point(356, 47);
-            _cmbFreqs.Name = "_cmbFreqs";
-            _cmbFreqs.Size = new Size(176, 21);
-            _cmbFreqs.TabIndex = 3;
-            _ToolTip1.SetToolTip(_cmbFreqs, "This is a list of the center frequencies for the selected remote callsign. ...Or " + "you can enter one directly (KHz).");
-            // 
-            // cmbCallSigns
-            // 
-            _cmbCallSigns.FormattingEnabled = true;
-            _cmbCallSigns.Location = new Point(432, 18);
-            _cmbCallSigns.Name = "_cmbCallSigns";
-            _cmbCallSigns.Size = new Size(100, 21);
-            _cmbCallSigns.TabIndex = 1;
-            _ToolTip1.SetToolTip(_cmbCallSigns, "You can type in a specific call or select one from the PMBO/RMS Type of freq list" + "");
-            // 
-            // nudPriority
-            // 
-            _nudPriority.Location = new Point(185, 48);
-            _nudPriority.Maximum = new decimal(new int[] { 5, 0, 0, 0 });
-            _nudPriority.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            _nudPriority.Name = "_nudPriority";
-            _nudPriority.Size = new Size(39, 20);
-            _nudPriority.TabIndex = 2;
-            _nudPriority.TextAlign = HorizontalAlignment.Center;
-            _ToolTip1.SetToolTip(_nudPriority, "Select channel priority 1-5, 1=highest (default = 5)");
-            _nudPriority.Value = new decimal(new int[] { 1, 0, 0, 0 });
-            // 
-            // nudActivityTimeout
-            // 
-            _nudActivityTimeout.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            _nudActivityTimeout.Location = new Point(172, 99);
-            _nudActivityTimeout.Maximum = new decimal(new int[] { 5, 0, 0, 0 });
-            _nudActivityTimeout.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            _nudActivityTimeout.Name = "_nudActivityTimeout";
-            _nudActivityTimeout.Size = new Size(32, 20);
-            _nudActivityTimeout.TabIndex = 9;
-            _nudActivityTimeout.TextAlign = HorizontalAlignment.Center;
-            _ToolTip1.SetToolTip(_nudActivityTimeout, "Select activity timeout 1 - 4 minutes, (default = 1)");
-            _nudActivityTimeout.Value = new decimal(new int[] { 4, 0, 0, 0 });
-            // 
-            // Label4
-            // 
-            _Label4.AutoSize = true;
-            _Label4.Location = new Point(84, 102);
-            _Label4.Name = "_Label4";
-            _Label4.Size = new Size(85, 13);
-            _Label4.TabIndex = 161;
-            _Label4.Text = "Activity Timeout:";
-            // 
-            // Label2
-            // 
-            _Label2.AutoSize = true;
-            _Label2.Location = new Point(97, 50);
-            _Label2.Name = "_Label2";
-            _Label2.Size = new Size(82, 13);
-            _Label2.TabIndex = 160;
-            _Label2.Text = "Channel priority:";
-            // 
-            // Label1
-            // 
-            _Label1.AutoSize = true;
-            _Label1.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, Convert.ToByte(0));
-            _Label1.Location = new Point(15, 21);
-            _Label1.Name = "_Label1";
-            _Label1.Size = new Size(78, 13);
-            _Label1.TabIndex = 148;
-            _Label1.Text = "Channel name:";
-            // 
-            // chkFirstUseOnly
-            // 
-            _chkFirstUseOnly.AutoSize = true;
-            _chkFirstUseOnly.CheckAlign = ContentAlignment.MiddleRight;
-            _chkFirstUseOnly.Location = new Point(160, 96);
-            _chkFirstUseOnly.Name = "_chkFirstUseOnly";
-            _chkFirstUseOnly.RightToLeft = RightToLeft.No;
-            _chkFirstUseOnly.Size = new Size(233, 17);
-            _chkFirstUseOnly.TabIndex = 6;
-            _chkFirstUseOnly.Text = "Do a full TNC configuration only on first use:";
-            _ToolTip1.SetToolTip(_chkFirstUseOnly, " ");
-            _chkFirstUseOnly.UseVisualStyleBackColor = true;
-            // 
-            // Label13
-            // 
-            _Label13.Location = new Point(45, 278);
-            _Label13.Name = "_Label13";
-            _Label13.Size = new Size(118, 39);
-            _Label13.TabIndex = 169;
-            _Label13.Text = "Enable narrow filters on Pactor 1 and 2 (when available)";
-            _ToolTip1.SetToolTip(_Label13, "Select Sideband (Default=USB)");
-            // 
-            // rdoV24
-            // 
-            _rdoV24.AutoSize = true;
-            _rdoV24.Location = new Point(67, 19);
-            _rdoV24.Name = "_rdoV24";
-            _rdoV24.Size = new Size(61, 17);
-            _rdoV24.TabIndex = 1;
-            _rdoV24.TabStop = true;
-            _rdoV24.Text = "RS-232";
-            _ToolTip1.SetToolTip(_rdoV24, "Select TTL or RS232 Levels for PTCIIpro and PTCIIusb models");
-            _rdoV24.UseVisualStyleBackColor = true;
-            // 
-            // rdoTTL
-            // 
-            _rdoTTL.AutoSize = true;
-            _rdoTTL.Location = new Point(12, 19);
-            _rdoTTL.Name = "_rdoTTL";
-            _rdoTTL.Size = new Size(45, 17);
-            _rdoTTL.TabIndex = 0;
-            _rdoTTL.TabStop = true;
-            _rdoTTL.Text = "TTL";
-            _ToolTip1.SetToolTip(_rdoTTL, "Select TTL or RS232 Levels for PTCIIpro and PTCIIusb models");
-            _rdoTTL.UseVisualStyleBackColor = true;
-            // 
-            // chkNMEA
-            // 
-            _chkNMEA.AutoSize = true;
-            _chkNMEA.CheckAlign = ContentAlignment.MiddleRight;
-            _chkNMEA.Location = new Point(24, 258);
-            _chkNMEA.Name = "_chkNMEA";
-            _chkNMEA.RightToLeft = RightToLeft.Yes;
-            _chkNMEA.Size = new Size(134, 17);
-            _chkNMEA.TabIndex = 181;
-            _chkNMEA.Text = "Use NMEA Commands";
-            _ToolTip1.SetToolTip(_chkNMEA, "Enable this channel ");
-            _chkNMEA.UseVisualStyleBackColor = true;
-            // 
-            // grpRadioControl
-            // 
-            _grpRadioControl.Controls.Add(_chkNMEA);
-            _grpRadioControl.Controls.Add(_grpPTCLevels);
-            _grpRadioControl.Controls.Add(_Label13);
-            _grpRadioControl.Controls.Add(_Label15);
-            _grpRadioControl.Controls.Add(_rdoViaPTCII);
-            _grpRadioControl.Controls.Add(_chkNarrowFilter);
-            _grpRadioControl.Controls.Add(_lblRadioAddress);
-            _grpRadioControl.Controls.Add(_txtRadioAddress);
-            _grpRadioControl.Controls.Add(_Label8);
-            _grpRadioControl.Controls.Add(_cmbRadioModel);
-            _grpRadioControl.Controls.Add(_Label9);
-            _grpRadioControl.Controls.Add(_rdoSerial);
-            _grpRadioControl.Controls.Add(_rdoManual);
-            _grpRadioControl.Controls.Add(_cmbRadioPort);
-            _grpRadioControl.Controls.Add(_cmbRadioBaud);
-            _grpRadioControl.Location = new Point(583, 45);
-            _grpRadioControl.Name = "_grpRadioControl";
-            _grpRadioControl.Size = new Size(178, 325);
-            _grpRadioControl.TabIndex = 3;
-            _grpRadioControl.TabStop = false;
-            _grpRadioControl.Text = "Optional Radio Control";
-            // 
-            // grpPTCLevels
-            // 
-            _grpPTCLevels.Controls.Add(_rdoV24);
-            _grpPTCLevels.Controls.Add(_rdoTTL);
-            _grpPTCLevels.Location = new Point(22, 60);
-            _grpPTCLevels.Name = "_grpPTCLevels";
-            _grpPTCLevels.Size = new Size(134, 41);
-            _grpPTCLevels.TabIndex = 170;
-            _grpPTCLevels.TabStop = false;
-            _grpPTCLevels.Text = "PTC Levels to Radio";
-            // 
-            // Label15
-            // 
-            _Label15.AutoSize = true;
-            _Label15.Location = new Point(21, 133);
-            _Label15.Name = "_Label15";
-            _Label15.Size = new Size(58, 13);
-            _Label15.TabIndex = 168;
-            _Label15.Text = "Serial Port:";
-            // 
-            // lblRadioAddress
-            // 
-            _lblRadioAddress.AutoSize = true;
-            _lblRadioAddress.Location = new Point(22, 234);
-            _lblRadioAddress.Name = "_lblRadioAddress";
-            _lblRadioAddress.Size = new Size(105, 13);
-            _lblRadioAddress.TabIndex = 163;
-            _lblRadioAddress.Text = "Radio Address (hex):";
-            // 
-            // Label8
-            // 
-            _Label8.AutoSize = true;
-            _Label8.Location = new Point(21, 184);
-            _Label8.Name = "_Label8";
-            _Label8.Size = new Size(70, 13);
-            _Label8.TabIndex = 12;
-            _Label8.Text = "Radio Model:";
-            // 
-            // Label9
-            // 
-            _Label9.AutoSize = true;
-            _Label9.Location = new Point(21, 160);
-            _Label9.Name = "_Label9";
-            _Label9.Size = new Size(61, 13);
-            _Label9.TabIndex = 10;
-            _Label9.Text = "Baud Rate:";
-            // 
-            // grpTNCSettings
-            // 
-            _grpTNCSettings.Controls.Add(_chkFirstUseOnly);
-            _grpTNCSettings.Controls.Add(_nudPSKLevel);
-            _grpTNCSettings.Controls.Add(_nudFSKLevel);
-            _grpTNCSettings.Controls.Add(_lblPSKLevel);
-            _grpTNCSettings.Controls.Add(_lblFSKLevel);
-            _grpTNCSettings.Controls.Add(_Label14);
-            _grpTNCSettings.Controls.Add(_cmbTNCType);
-            _grpTNCSettings.Controls.Add(_btnBrowseConfiguration);
-            _grpTNCSettings.Controls.Add(_txtTNCConfigurationFile);
-            _grpTNCSettings.Controls.Add(_Label18);
-            _grpTNCSettings.Controls.Add(_Label7);
-            _grpTNCSettings.Controls.Add(_txtAudioCenter);
-            _grpTNCSettings.Controls.Add(_cmbTNCBaudRate);
-            _grpTNCSettings.Controls.Add(_Label21);
-            _grpTNCSettings.Controls.Add(_Label22);
-            _grpTNCSettings.Controls.Add(_cmbTNCSerialPort);
-            _grpTNCSettings.Location = new Point(13, 207);
-            _grpTNCSettings.Name = "_grpTNCSettings";
-            _grpTNCSettings.Size = new Size(553, 163);
-            _grpTNCSettings.TabIndex = 2;
-            _grpTNCSettings.TabStop = false;
-            _grpTNCSettings.Text = "TNC Settings";
-            // 
-            // lblPSKLevel
-            // 
-            _lblPSKLevel.AutoSize = true;
-            _lblPSKLevel.Location = new Point(296, 69);
-            _lblPSKLevel.Name = "_lblPSKLevel";
-            _lblPSKLevel.Size = new Size(116, 13);
-            _lblPSKLevel.TabIndex = 171;
-            _lblPSKLevel.Text = "PTC II PSK Level (mv):";
-            // 
-            // lblFSKLevel
-            // 
-            _lblFSKLevel.AutoSize = true;
-            _lblFSKLevel.Location = new Point(83, 69);
-            _lblFSKLevel.Name = "_lblFSKLevel";
-            _lblFSKLevel.Size = new Size(115, 13);
-            _lblFSKLevel.TabIndex = 170;
-            _lblFSKLevel.Text = "PTC II FSK Level (mv):";
-            // 
-            // Label14
-            // 
-            _Label14.AutoSize = true;
-            _Label14.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, Convert.ToByte(0));
-            _Label14.Location = new Point(67, 22);
-            _Label14.Name = "_Label14";
-            _Label14.Size = new Size(59, 13);
-            _Label14.TabIndex = 169;
-            _Label14.Text = "TNC Type:";
-            // 
-            // Label18
-            // 
-            _Label18.AutoSize = true;
-            _Label18.Location = new Point(18, 126);
-            _Label18.Name = "_Label18";
-            _Label18.Size = new Size(116, 13);
-            _Label18.TabIndex = 164;
-            _Label18.Text = "TNC Configuration File:";
-            // 
-            // Label7
-            // 
-            _Label7.AutoSize = true;
-            _Label7.Location = new Point(211, 22);
-            _Label7.Name = "_Label7";
-            _Label7.Size = new Size(104, 13);
-            _Label7.TabIndex = 161;
-            _Label7.Text = "Audio Tones Center:";
-            // 
-            // Label21
-            // 
-            _Label21.AutoSize = true;
-            _Label21.Location = new Point(412, 22);
-            _Label21.Name = "_Label21";
-            _Label21.Size = new Size(61, 13);
-            _Label21.TabIndex = 155;
-            _Label21.Text = "Baud Rate:";
-            // 
-            // Label22
-            // 
-            _Label22.AutoSize = true;
-            _Label22.Location = new Point(327, 23);
-            _Label22.Name = "_Label22";
-            _Label22.Size = new Size(57, 13);
-            _Label22.TabIndex = 154;
-            _Label22.Text = "Serial port:";
-            // 
-            // btnHelp
-            // 
-            _btnHelp.Location = new Point(601, 381);
-            _btnHelp.Name = "_btnHelp";
-            _btnHelp.Size = new Size(129, 30);
-            _btnHelp.TabIndex = 0;
-            _btnHelp.Text = "Help";
-            _btnHelp.UseVisualStyleBackColor = true;
-            // 
-            // Label16
-            // 
-            _Label16.AutoSize = true;
-            _Label16.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, Convert.ToByte(0));
-            _Label16.Location = new Point(151, 9);
-            _Label16.Name = "_Label16";
-            _Label16.Size = new Size(481, 13);
-            _Label16.TabIndex = 145;
-            _Label16.Text = "To create a new channel type a new channel name in the Channel Name text box...";
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DialogPactorTNCChannels));
+            this._btnClose = new System.Windows.Forms.Button();
+            this._btnUpdate = new System.Windows.Forms.Button();
+            this._btnRemove = new System.Windows.Forms.Button();
+            this._btnAdd = new System.Windows.Forms.Button();
+            this._ToolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this._cmbRadioModel = new System.Windows.Forms.ComboBox();
+            this._cmbRadioPort = new System.Windows.Forms.ComboBox();
+            this._cmbRadioBaud = new System.Windows.Forms.ComboBox();
+            this._txtAudioCenter = new System.Windows.Forms.TextBox();
+            this._cmbTNCBaudRate = new System.Windows.Forms.ComboBox();
+            this._cmbTNCSerialPort = new System.Windows.Forms.ComboBox();
+            this._txtTNCConfigurationFile = new System.Windows.Forms.TextBox();
+            this._cmbTNCType = new System.Windows.Forms.ComboBox();
+            this._cmbChannelName = new System.Windows.Forms.ComboBox();
+            this._txtRadioAddress = new System.Windows.Forms.TextBox();
+            this._chkNarrowFilter = new System.Windows.Forms.CheckBox();
+            this._rdoViaPTCII = new System.Windows.Forms.RadioButton();
+            this._nudFSKLevel = new System.Windows.Forms.NumericUpDown();
+            this._nudPSKLevel = new System.Windows.Forms.NumericUpDown();
+            this._rdoSerial = new System.Windows.Forms.RadioButton();
+            this._rdoManual = new System.Windows.Forms.RadioButton();
+            this._btnBrowseConfiguration = new System.Windows.Forms.Button();
+            this._grpChannelSetting = new System.Windows.Forms.GroupBox();
+            this._btnUpdateChannelList = new System.Windows.Forms.Button();
+            this._chkBusyHold = new System.Windows.Forms.CheckBox();
+            this._chkIDEnabled = new System.Windows.Forms.CheckBox();
+            this._chkChannelEnabled = new System.Windows.Forms.CheckBox();
+            this._chkAutoforwardEnabled = new System.Windows.Forms.CheckBox();
+            this._Label3 = new System.Windows.Forms.Label();
+            this._Label10 = new System.Windows.Forms.Label();
+            this._Label5 = new System.Windows.Forms.Label();
+            this._cmbFreqs = new System.Windows.Forms.ComboBox();
+            this._cmbCallSigns = new System.Windows.Forms.ComboBox();
+            this._nudPriority = new System.Windows.Forms.NumericUpDown();
+            this._nudActivityTimeout = new System.Windows.Forms.NumericUpDown();
+            this._Label4 = new System.Windows.Forms.Label();
+            this._Label2 = new System.Windows.Forms.Label();
+            this._Label1 = new System.Windows.Forms.Label();
+            this._chkFirstUseOnly = new System.Windows.Forms.CheckBox();
+            this._Label13 = new System.Windows.Forms.Label();
+            this._rdoV24 = new System.Windows.Forms.RadioButton();
+            this._rdoTTL = new System.Windows.Forms.RadioButton();
+            this._chkNMEA = new System.Windows.Forms.CheckBox();
+            this._grpRadioControl = new System.Windows.Forms.GroupBox();
+            this._grpPTCLevels = new System.Windows.Forms.GroupBox();
+            this._Label15 = new System.Windows.Forms.Label();
+            this._lblRadioAddress = new System.Windows.Forms.Label();
+            this._Label8 = new System.Windows.Forms.Label();
+            this._Label9 = new System.Windows.Forms.Label();
+            this._grpTNCSettings = new System.Windows.Forms.GroupBox();
+            this._lblPSKLevel = new System.Windows.Forms.Label();
+            this._lblFSKLevel = new System.Windows.Forms.Label();
+            this._Label14 = new System.Windows.Forms.Label();
+            this._Label18 = new System.Windows.Forms.Label();
+            this._Label7 = new System.Windows.Forms.Label();
+            this._Label21 = new System.Windows.Forms.Label();
+            this._Label22 = new System.Windows.Forms.Label();
+            this._btnHelp = new System.Windows.Forms.Button();
+            this._Label16 = new System.Windows.Forms.Label();
+            this.chkLongPath = new System.Windows.Forms.CheckBox();
+            ((System.ComponentModel.ISupportInitialize)(this._nudFSKLevel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._nudPSKLevel)).BeginInit();
+            this._grpChannelSetting.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._nudPriority)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._nudActivityTimeout)).BeginInit();
+            this._grpRadioControl.SuspendLayout();
+            this._grpPTCLevels.SuspendLayout();
+            this._grpTNCSettings.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // _btnClose
+            // 
+            this._btnClose.Location = new System.Drawing.Point(928, 879);
+            this._btnClose.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._btnClose.Name = "_btnClose";
+            this._btnClose.Size = new System.Drawing.Size(258, 69);
+            this._btnClose.TabIndex = 7;
+            this._btnClose.Text = "Close";
+            this._btnClose.UseVisualStyleBackColor = true;
+            this._btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            // 
+            // _btnUpdate
+            // 
+            this._btnUpdate.Location = new System.Drawing.Point(654, 879);
+            this._btnUpdate.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._btnUpdate.Name = "_btnUpdate";
+            this._btnUpdate.Size = new System.Drawing.Size(258, 69);
+            this._btnUpdate.TabIndex = 6;
+            this._btnUpdate.Text = "Update The Channel";
+            this._btnUpdate.UseVisualStyleBackColor = true;
+            this._btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+            // 
+            // _btnRemove
+            // 
+            this._btnRemove.Location = new System.Drawing.Point(380, 879);
+            this._btnRemove.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._btnRemove.Name = "_btnRemove";
+            this._btnRemove.Size = new System.Drawing.Size(258, 69);
+            this._btnRemove.TabIndex = 5;
+            this._btnRemove.Text = "Remove This Channel";
+            this._btnRemove.UseVisualStyleBackColor = true;
+            this._btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
+            // 
+            // _btnAdd
+            // 
+            this._btnAdd.Location = new System.Drawing.Point(106, 879);
+            this._btnAdd.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._btnAdd.Name = "_btnAdd";
+            this._btnAdd.Size = new System.Drawing.Size(258, 69);
+            this._btnAdd.TabIndex = 4;
+            this._btnAdd.Text = "Add New Channel";
+            this._btnAdd.UseVisualStyleBackColor = true;
+            this._btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            // 
+            // _cmbRadioModel
+            // 
+            this._cmbRadioModel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._cmbRadioModel.FormattingEnabled = true;
+            this._cmbRadioModel.Location = new System.Drawing.Point(48, 464);
+            this._cmbRadioModel.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._cmbRadioModel.Name = "_cmbRadioModel";
+            this._cmbRadioModel.Size = new System.Drawing.Size(254, 38);
+            this._cmbRadioModel.TabIndex = 5;
+            this._ToolTip1.SetToolTip(this._cmbRadioModel, "Select Radio type here.");
+            this._cmbRadioModel.TextChanged += new System.EventHandler(this.cmbRadioModel_TextChanged);
+            // 
+            // _cmbRadioPort
+            // 
+            this._cmbRadioPort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._cmbRadioPort.FormattingEnabled = true;
+            this._cmbRadioPort.Location = new System.Drawing.Point(170, 300);
+            this._cmbRadioPort.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._cmbRadioPort.Name = "_cmbRadioPort";
+            this._cmbRadioPort.Size = new System.Drawing.Size(132, 38);
+            this._cmbRadioPort.TabIndex = 3;
+            this._ToolTip1.SetToolTip(this._cmbRadioPort, "If you selected Direct via Serial this is where you select the radio control port" +
+        "");
+            // 
+            // _cmbRadioBaud
+            // 
+            this._cmbRadioBaud.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._cmbRadioBaud.FormattingEnabled = true;
+            this._cmbRadioBaud.Location = new System.Drawing.Point(170, 362);
+            this._cmbRadioBaud.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._cmbRadioBaud.Name = "_cmbRadioBaud";
+            this._cmbRadioBaud.Size = new System.Drawing.Size(134, 38);
+            this._cmbRadioBaud.TabIndex = 4;
+            this._ToolTip1.SetToolTip(this._cmbRadioBaud, "Baud rate for the radio control port (8N1 assumed) ");
+            // 
+            // _txtAudioCenter
+            // 
+            this._txtAudioCenter.Location = new System.Drawing.Point(422, 88);
+            this._txtAudioCenter.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._txtAudioCenter.Name = "_txtAudioCenter";
+            this._txtAudioCenter.Size = new System.Drawing.Size(204, 35);
+            this._txtAudioCenter.TabIndex = 1;
+            this._txtAudioCenter.Text = "1500";
+            this._txtAudioCenter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this._ToolTip1.SetToolTip(this._txtAudioCenter, "Center of TNC audio tones in Hz (used to calculate dial frequencies) default = 15" +
+        "00 ");
+            // 
+            // _cmbTNCBaudRate
+            // 
+            this._cmbTNCBaudRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._cmbTNCBaudRate.FormattingEnabled = true;
+            this._cmbTNCBaudRate.Location = new System.Drawing.Point(830, 85);
+            this._cmbTNCBaudRate.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._cmbTNCBaudRate.Name = "_cmbTNCBaudRate";
+            this._cmbTNCBaudRate.Size = new System.Drawing.Size(138, 38);
+            this._cmbTNCBaudRate.TabIndex = 3;
+            this._ToolTip1.SetToolTip(this._cmbTNCBaudRate, "Select TNC baud rate (not on air baud rate) ");
+            // 
+            // _cmbTNCSerialPort
+            // 
+            this._cmbTNCSerialPort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._cmbTNCSerialPort.FormattingEnabled = true;
+            this._cmbTNCSerialPort.Location = new System.Drawing.Point(660, 85);
+            this._cmbTNCSerialPort.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._cmbTNCSerialPort.Name = "_cmbTNCSerialPort";
+            this._cmbTNCSerialPort.Size = new System.Drawing.Size(138, 38);
+            this._cmbTNCSerialPort.Sorted = true;
+            this._cmbTNCSerialPort.TabIndex = 2;
+            this._ToolTip1.SetToolTip(this._cmbTNCSerialPort, "Select TNC serial port ");
+            // 
+            // _txtTNCConfigurationFile
+            // 
+            this._txtTNCConfigurationFile.Location = new System.Drawing.Point(264, 284);
+            this._txtTNCConfigurationFile.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._txtTNCConfigurationFile.Name = "_txtTNCConfigurationFile";
+            this._txtTNCConfigurationFile.Size = new System.Drawing.Size(670, 35);
+            this._txtTNCConfigurationFile.TabIndex = 7;
+            this._txtTNCConfigurationFile.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this._ToolTip1.SetToolTip(this._txtTNCConfigurationFile, "The TNC configuration (.aps) file. (see Examples for templates) ");
+            // 
+            // _cmbTNCType
+            // 
+            this._cmbTNCType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._cmbTNCType.FormattingEnabled = true;
+            this._cmbTNCType.Location = new System.Drawing.Point(140, 85);
+            this._cmbTNCType.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._cmbTNCType.MaxDropDownItems = 24;
+            this._cmbTNCType.Name = "_cmbTNCType";
+            this._cmbTNCType.Size = new System.Drawing.Size(254, 38);
+            this._cmbTNCType.TabIndex = 0;
+            this._ToolTip1.SetToolTip(this._cmbTNCType, "Select TNC type");
+            this._cmbTNCType.SelectedIndexChanged += new System.EventHandler(this.cmbTNCtype_SelectedIndexChanged);
+            this._cmbTNCType.TextChanged += new System.EventHandler(this.cmbTNCtype_TextChanged);
+            // 
+            // _cmbChannelName
+            // 
+            this._cmbChannelName.FormattingEnabled = true;
+            this._cmbChannelName.Location = new System.Drawing.Point(194, 42);
+            this._cmbChannelName.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._cmbChannelName.MaxDropDownItems = 24;
+            this._cmbChannelName.Name = "_cmbChannelName";
+            this._cmbChannelName.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this._cmbChannelName.Size = new System.Drawing.Size(466, 38);
+            this._cmbChannelName.Sorted = true;
+            this._cmbChannelName.TabIndex = 0;
+            this._ToolTip1.SetToolTip(this._cmbChannelName, "Enter Channel Name");
+            this._cmbChannelName.SelectedIndexChanged += new System.EventHandler(this.cmbChannelName_SelectedIndexChanged);
+            this._cmbChannelName.TextChanged += new System.EventHandler(this.cmbChannelName_TextChanged);
+            // 
+            // _txtRadioAddress
+            // 
+            this._txtRadioAddress.Enabled = false;
+            this._txtRadioAddress.Location = new System.Drawing.Point(260, 533);
+            this._txtRadioAddress.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._txtRadioAddress.Name = "_txtRadioAddress";
+            this._txtRadioAddress.Size = new System.Drawing.Size(46, 35);
+            this._txtRadioAddress.TabIndex = 6;
+            this._txtRadioAddress.Text = "01";
+            this._txtRadioAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this._ToolTip1.SetToolTip(this._txtRadioAddress, "Hex Address for Icom C-IV Radios");
+            // 
+            // _chkNarrowFilter
+            // 
+            this._chkNarrowFilter.AutoSize = true;
+            this._chkNarrowFilter.Location = new System.Drawing.Point(48, 665);
+            this._chkNarrowFilter.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._chkNarrowFilter.Name = "_chkNarrowFilter";
+            this._chkNarrowFilter.Size = new System.Drawing.Size(22, 21);
+            this._chkNarrowFilter.TabIndex = 8;
+            this._chkNarrowFilter.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this._ToolTip1.SetToolTip(this._chkNarrowFilter, "Use Narrow Filter for Pactor I or II");
+            this._chkNarrowFilter.UseVisualStyleBackColor = true;
+            // 
+            // _rdoViaPTCII
+            // 
+            this._rdoViaPTCII.AutoSize = true;
+            this._rdoViaPTCII.Location = new System.Drawing.Point(30, 85);
+            this._rdoViaPTCII.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._rdoViaPTCII.Name = "_rdoViaPTCII";
+            this._rdoViaPTCII.Size = new System.Drawing.Size(236, 34);
+            this._rdoViaPTCII.TabIndex = 1;
+            this._rdoViaPTCII.TabStop = true;
+            this._rdoViaPTCII.Text = "Via PTC II, IIpro, IIusb";
+            this._ToolTip1.SetToolTip(this._rdoViaPTCII, "Use Radio control via a PTC II, IIpro or IIusb (not available in  IIe or IIex mod" +
+        "els)");
+            this._rdoViaPTCII.UseVisualStyleBackColor = true;
+            this._rdoViaPTCII.CheckedChanged += new System.EventHandler(this.rdoViaPTCII_CheckedChanged);
+            // 
+            // _nudFSKLevel
+            // 
+            this._nudFSKLevel.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this._nudFSKLevel.Location = new System.Drawing.Point(398, 155);
+            this._nudFSKLevel.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._nudFSKLevel.Maximum = new decimal(new int[] {
+            9000,
+            0,
+            0,
+            0});
+            this._nudFSKLevel.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this._nudFSKLevel.Name = "_nudFSKLevel";
+            this._nudFSKLevel.Size = new System.Drawing.Size(118, 35);
+            this._nudFSKLevel.TabIndex = 4;
+            this._ToolTip1.SetToolTip(this._nudFSKLevel, "Set FSK level for Pactor I. Level should NOT generate ALC action.");
+            this._nudFSKLevel.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // _nudPSKLevel
+            // 
+            this._nudPSKLevel.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this._nudPSKLevel.Location = new System.Drawing.Point(824, 155);
+            this._nudPSKLevel.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._nudPSKLevel.Maximum = new decimal(new int[] {
+            9000,
+            0,
+            0,
+            0});
+            this._nudPSKLevel.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this._nudPSKLevel.Name = "_nudPSKLevel";
+            this._nudPSKLevel.Size = new System.Drawing.Size(116, 35);
+            this._nudPSKLevel.TabIndex = 5;
+            this._ToolTip1.SetToolTip(this._nudPSKLevel, "Set PSK Level for P2 & P3. Level should NOT generate ALC action!");
+            this._nudPSKLevel.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // _rdoSerial
+            // 
+            this._rdoSerial.AutoSize = true;
+            this._rdoSerial.Location = new System.Drawing.Point(30, 247);
+            this._rdoSerial.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._rdoSerial.Name = "_rdoSerial";
+            this._rdoSerial.Size = new System.Drawing.Size(229, 34);
+            this._rdoSerial.TabIndex = 2;
+            this._rdoSerial.Text = "Direct via Serial Port:";
+            this._ToolTip1.SetToolTip(this._rdoSerial, "Select this if the Radio control is direct using a Serial or USB port.");
+            this._rdoSerial.UseVisualStyleBackColor = true;
+            this._rdoSerial.CheckedChanged += new System.EventHandler(this.rdoSerial_CheckedChanged);
+            // 
+            // _rdoManual
+            // 
+            this._rdoManual.AutoSize = true;
+            this._rdoManual.Checked = true;
+            this._rdoManual.Location = new System.Drawing.Point(30, 44);
+            this._rdoManual.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._rdoManual.Name = "_rdoManual";
+            this._rdoManual.Size = new System.Drawing.Size(173, 34);
+            this._rdoManual.TabIndex = 0;
+            this._rdoManual.TabStop = true;
+            this._rdoManual.Text = "Manual (none)";
+            this._ToolTip1.SetToolTip(this._rdoManual, "Select if manual radio control.");
+            this._rdoManual.UseVisualStyleBackColor = true;
+            this._rdoManual.CheckedChanged += new System.EventHandler(this.rdoManual_CheckedChanged);
+            // 
+            // _btnBrowseConfiguration
+            // 
+            this._btnBrowseConfiguration.Location = new System.Drawing.Point(950, 279);
+            this._btnBrowseConfiguration.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._btnBrowseConfiguration.Name = "_btnBrowseConfiguration";
+            this._btnBrowseConfiguration.Size = new System.Drawing.Size(120, 53);
+            this._btnBrowseConfiguration.TabIndex = 8;
+            this._btnBrowseConfiguration.Text = "Browse";
+            this._ToolTip1.SetToolTip(this._btnBrowseConfiguration, "Browse to select custom configuration file.");
+            this._btnBrowseConfiguration.UseVisualStyleBackColor = true;
+            this._btnBrowseConfiguration.Click += new System.EventHandler(this.btnBrowseConfiguration_Click);
+            // 
+            // _grpChannelSetting
+            // 
+            this._grpChannelSetting.Controls.Add(this._btnUpdateChannelList);
+            this._grpChannelSetting.Controls.Add(this._chkBusyHold);
+            this._grpChannelSetting.Controls.Add(this._chkIDEnabled);
+            this._grpChannelSetting.Controls.Add(this._chkChannelEnabled);
+            this._grpChannelSetting.Controls.Add(this._chkAutoforwardEnabled);
+            this._grpChannelSetting.Controls.Add(this._Label3);
+            this._grpChannelSetting.Controls.Add(this._Label10);
+            this._grpChannelSetting.Controls.Add(this._Label5);
+            this._grpChannelSetting.Controls.Add(this._cmbFreqs);
+            this._grpChannelSetting.Controls.Add(this._cmbCallSigns);
+            this._grpChannelSetting.Controls.Add(this._nudPriority);
+            this._grpChannelSetting.Controls.Add(this._nudActivityTimeout);
+            this._grpChannelSetting.Controls.Add(this._Label4);
+            this._grpChannelSetting.Controls.Add(this._Label2);
+            this._grpChannelSetting.Controls.Add(this._cmbChannelName);
+            this._grpChannelSetting.Controls.Add(this._Label1);
+            this._grpChannelSetting.Location = new System.Drawing.Point(26, 76);
+            this._grpChannelSetting.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._grpChannelSetting.Name = "_grpChannelSetting";
+            this._grpChannelSetting.Padding = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._grpChannelSetting.Size = new System.Drawing.Size(1106, 376);
+            this._grpChannelSetting.TabIndex = 1;
+            this._grpChannelSetting.TabStop = false;
+            this._grpChannelSetting.Text = "Pactor Channel Settings";
+            this._ToolTip1.SetToolTip(this._grpChannelSetting, "Check to enable Pactor 1 FEC ID on Disconnect.");
+            // 
+            // _btnUpdateChannelList
+            // 
+            this._btnUpdateChannelList.Location = new System.Drawing.Point(418, 295);
+            this._btnUpdateChannelList.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._btnUpdateChannelList.Name = "_btnUpdateChannelList";
+            this._btnUpdateChannelList.Size = new System.Drawing.Size(308, 62);
+            this._btnUpdateChannelList.TabIndex = 184;
+            this._btnUpdateChannelList.Text = "Update Channel List";
+            this._btnUpdateChannelList.UseVisualStyleBackColor = true;
+            this._btnUpdateChannelList.Click += new System.EventHandler(this.btnUpdateChannelList_Click);
+            // 
+            // _chkBusyHold
+            // 
+            this._chkBusyHold.AutoSize = true;
+            this._chkBusyHold.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this._chkBusyHold.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this._chkBusyHold.Location = new System.Drawing.Point(684, 175);
+            this._chkBusyHold.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._chkBusyHold.Name = "_chkBusyHold";
+            this._chkBusyHold.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this._chkBusyHold.Size = new System.Drawing.Size(281, 34);
+            this._chkBusyHold.TabIndex = 183;
+            this._chkBusyHold.Text = "Enable busy channel hold:";
+            this._ToolTip1.SetToolTip(this._chkBusyHold, "Check for autoforwarding on this HF channel (normally limited to Emergency Use ON" +
+        "LY!)");
+            this._chkBusyHold.UseVisualStyleBackColor = true;
+            // 
+            // _chkIDEnabled
+            // 
+            this._chkIDEnabled.AutoSize = true;
+            this._chkIDEnabled.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this._chkIDEnabled.Checked = true;
+            this._chkIDEnabled.CheckState = System.Windows.Forms.CheckState.Checked;
+            this._chkIDEnabled.Location = new System.Drawing.Point(422, 175);
+            this._chkIDEnabled.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._chkIDEnabled.Name = "_chkIDEnabled";
+            this._chkIDEnabled.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this._chkIDEnabled.Size = new System.Drawing.Size(209, 34);
+            this._chkIDEnabled.TabIndex = 181;
+            this._chkIDEnabled.Text = "Pactor ID Enabled:";
+            this._ToolTip1.SetToolTip(this._chkIDEnabled, "Check to enable Pactor 1 FEC ID ");
+            this._chkIDEnabled.UseVisualStyleBackColor = true;
+            // 
+            // _chkChannelEnabled
+            // 
+            this._chkChannelEnabled.AutoSize = true;
+            this._chkChannelEnabled.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this._chkChannelEnabled.Location = new System.Drawing.Point(166, 175);
+            this._chkChannelEnabled.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._chkChannelEnabled.Name = "_chkChannelEnabled";
+            this._chkChannelEnabled.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this._chkChannelEnabled.Size = new System.Drawing.Size(200, 34);
+            this._chkChannelEnabled.TabIndex = 180;
+            this._chkChannelEnabled.Text = "Channel Enabled:";
+            this._ToolTip1.SetToolTip(this._chkChannelEnabled, "Enable this channel ");
+            this._chkChannelEnabled.UseVisualStyleBackColor = true;
+            // 
+            // _chkAutoforwardEnabled
+            // 
+            this._chkAutoforwardEnabled.AutoSize = true;
+            this._chkAutoforwardEnabled.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this._chkAutoforwardEnabled.Location = new System.Drawing.Point(730, 231);
+            this._chkAutoforwardEnabled.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._chkAutoforwardEnabled.Name = "_chkAutoforwardEnabled";
+            this._chkAutoforwardEnabled.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this._chkAutoforwardEnabled.Size = new System.Drawing.Size(240, 34);
+            this._chkAutoforwardEnabled.TabIndex = 182;
+            this._chkAutoforwardEnabled.Text = "Autoforward Enabled:";
+            this._ToolTip1.SetToolTip(this._chkAutoforwardEnabled, "Check for autoforwarding on this HF channel (normally limited to Emergency Use ON" +
+        "LY!)");
+            this._chkAutoforwardEnabled.UseVisualStyleBackColor = true;
+            this._chkAutoforwardEnabled.CheckedChanged += new System.EventHandler(this.chkAutoforwardEnabled_CheckedChanged);
+            // 
+            // _Label3
+            // 
+            this._Label3.AutoSize = true;
+            this._Label3.Location = new System.Drawing.Point(420, 235);
+            this._Label3.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label3.Name = "_Label3";
+            this._Label3.Size = new System.Drawing.Size(88, 30);
+            this._Label3.TabIndex = 179;
+            this._Label3.Text = "Minutes";
+            // 
+            // _Label10
+            // 
+            this._Label10.AutoSize = true;
+            this._Label10.Location = new System.Drawing.Point(484, 115);
+            this._Label10.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label10.Name = "_Label10";
+            this._Label10.Size = new System.Drawing.Size(202, 30);
+            this._Label10.TabIndex = 178;
+            this._Label10.Text = "RF Center Freq (kHz)";
+            // 
+            // _Label5
+            // 
+            this._Label5.AutoSize = true;
+            this._Label5.Location = new System.Drawing.Point(678, 53);
+            this._Label5.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label5.Name = "_Label5";
+            this._Label5.Size = new System.Drawing.Size(167, 30);
+            this._Label5.TabIndex = 177;
+            this._Label5.Text = "Remote Callsign:";
+            // 
+            // _cmbFreqs
+            // 
+            this._cmbFreqs.FormattingEnabled = true;
+            this._cmbFreqs.Location = new System.Drawing.Point(712, 108);
+            this._cmbFreqs.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._cmbFreqs.Name = "_cmbFreqs";
+            this._cmbFreqs.Size = new System.Drawing.Size(348, 38);
+            this._cmbFreqs.TabIndex = 3;
+            this._ToolTip1.SetToolTip(this._cmbFreqs, "This is a list of the center frequencies for the selected remote callsign. ...Or " +
+        "you can enter one directly (KHz).");
+            // 
+            // _cmbCallSigns
+            // 
+            this._cmbCallSigns.FormattingEnabled = true;
+            this._cmbCallSigns.Location = new System.Drawing.Point(864, 42);
+            this._cmbCallSigns.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._cmbCallSigns.Name = "_cmbCallSigns";
+            this._cmbCallSigns.Size = new System.Drawing.Size(196, 38);
+            this._cmbCallSigns.TabIndex = 1;
+            this._ToolTip1.SetToolTip(this._cmbCallSigns, "You can type in a specific call or select one from the PMBO/RMS Type of freq list" +
+        "");
+            this._cmbCallSigns.SelectedIndexChanged += new System.EventHandler(this.cmbCallSigns_SelectedIndexChanged);
+            // 
+            // _nudPriority
+            // 
+            this._nudPriority.Location = new System.Drawing.Point(370, 111);
+            this._nudPriority.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._nudPriority.Maximum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this._nudPriority.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this._nudPriority.Name = "_nudPriority";
+            this._nudPriority.Size = new System.Drawing.Size(78, 35);
+            this._nudPriority.TabIndex = 2;
+            this._nudPriority.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this._ToolTip1.SetToolTip(this._nudPriority, "Select channel priority 1-5, 1=highest (default = 5)");
+            this._nudPriority.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // _nudActivityTimeout
+            // 
+            this._nudActivityTimeout.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this._nudActivityTimeout.Location = new System.Drawing.Point(344, 228);
+            this._nudActivityTimeout.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._nudActivityTimeout.Maximum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this._nudActivityTimeout.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this._nudActivityTimeout.Name = "_nudActivityTimeout";
+            this._nudActivityTimeout.Size = new System.Drawing.Size(64, 35);
+            this._nudActivityTimeout.TabIndex = 9;
+            this._nudActivityTimeout.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this._ToolTip1.SetToolTip(this._nudActivityTimeout, "Select activity timeout 1 - 4 minutes, (default = 1)");
+            this._nudActivityTimeout.Value = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
+            // 
+            // _Label4
+            // 
+            this._Label4.AutoSize = true;
+            this._Label4.Location = new System.Drawing.Point(168, 235);
+            this._Label4.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label4.Name = "_Label4";
+            this._Label4.Size = new System.Drawing.Size(168, 30);
+            this._Label4.TabIndex = 161;
+            this._Label4.Text = "Activity Timeout:";
+            // 
+            // _Label2
+            // 
+            this._Label2.AutoSize = true;
+            this._Label2.Location = new System.Drawing.Point(194, 115);
+            this._Label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label2.Name = "_Label2";
+            this._Label2.Size = new System.Drawing.Size(165, 30);
+            this._Label2.TabIndex = 160;
+            this._Label2.Text = "Channel priority:";
+            // 
+            // _Label1
+            // 
+            this._Label1.AutoSize = true;
+            this._Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this._Label1.Location = new System.Drawing.Point(30, 48);
+            this._Label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label1.Name = "_Label1";
+            this._Label1.Size = new System.Drawing.Size(146, 25);
+            this._Label1.TabIndex = 148;
+            this._Label1.Text = "Channel name:";
+            // 
+            // _chkFirstUseOnly
+            // 
+            this._chkFirstUseOnly.AutoSize = true;
+            this._chkFirstUseOnly.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this._chkFirstUseOnly.Location = new System.Drawing.Point(36, 221);
+            this._chkFirstUseOnly.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._chkFirstUseOnly.Name = "_chkFirstUseOnly";
+            this._chkFirstUseOnly.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this._chkFirstUseOnly.Size = new System.Drawing.Size(453, 34);
+            this._chkFirstUseOnly.TabIndex = 6;
+            this._chkFirstUseOnly.Text = "Do a full TNC configuration only on first use:";
+            this._ToolTip1.SetToolTip(this._chkFirstUseOnly, " ");
+            this._chkFirstUseOnly.UseVisualStyleBackColor = true;
+            // 
+            // _Label13
+            // 
+            this._Label13.Location = new System.Drawing.Point(90, 642);
+            this._Label13.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label13.Name = "_Label13";
+            this._Label13.Size = new System.Drawing.Size(236, 90);
+            this._Label13.TabIndex = 169;
+            this._Label13.Text = "Enable narrow filters on Pactor 1 and 2 (when available)";
+            this._ToolTip1.SetToolTip(this._Label13, "Select Sideband (Default=USB)");
+            // 
+            // _rdoV24
+            // 
+            this._rdoV24.AutoSize = true;
+            this._rdoV24.Location = new System.Drawing.Point(134, 44);
+            this._rdoV24.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._rdoV24.Name = "_rdoV24";
+            this._rdoV24.Size = new System.Drawing.Size(103, 34);
+            this._rdoV24.TabIndex = 1;
+            this._rdoV24.TabStop = true;
+            this._rdoV24.Text = "RS-232";
+            this._ToolTip1.SetToolTip(this._rdoV24, "Select TTL or RS232 Levels for PTCIIpro and PTCIIusb models");
+            this._rdoV24.UseVisualStyleBackColor = true;
+            // 
+            // _rdoTTL
+            // 
+            this._rdoTTL.AutoSize = true;
+            this._rdoTTL.Location = new System.Drawing.Point(24, 44);
+            this._rdoTTL.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._rdoTTL.Name = "_rdoTTL";
+            this._rdoTTL.Size = new System.Drawing.Size(70, 34);
+            this._rdoTTL.TabIndex = 0;
+            this._rdoTTL.TabStop = true;
+            this._rdoTTL.Text = "TTL";
+            this._ToolTip1.SetToolTip(this._rdoTTL, "Select TTL or RS232 Levels for PTCIIpro and PTCIIusb models");
+            this._rdoTTL.UseVisualStyleBackColor = true;
+            // 
+            // _chkNMEA
+            // 
+            this._chkNMEA.AutoSize = true;
+            this._chkNMEA.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this._chkNMEA.Location = new System.Drawing.Point(48, 595);
+            this._chkNMEA.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._chkNMEA.Name = "_chkNMEA";
+            this._chkNMEA.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this._chkNMEA.Size = new System.Drawing.Size(250, 34);
+            this._chkNMEA.TabIndex = 181;
+            this._chkNMEA.Text = "Use NMEA Commands";
+            this._ToolTip1.SetToolTip(this._chkNMEA, "Enable this channel ");
+            this._chkNMEA.UseVisualStyleBackColor = true;
+            // 
+            // _grpRadioControl
+            // 
+            this._grpRadioControl.Controls.Add(this._chkNMEA);
+            this._grpRadioControl.Controls.Add(this._grpPTCLevels);
+            this._grpRadioControl.Controls.Add(this._Label13);
+            this._grpRadioControl.Controls.Add(this._Label15);
+            this._grpRadioControl.Controls.Add(this._rdoViaPTCII);
+            this._grpRadioControl.Controls.Add(this._chkNarrowFilter);
+            this._grpRadioControl.Controls.Add(this._lblRadioAddress);
+            this._grpRadioControl.Controls.Add(this._txtRadioAddress);
+            this._grpRadioControl.Controls.Add(this._Label8);
+            this._grpRadioControl.Controls.Add(this._cmbRadioModel);
+            this._grpRadioControl.Controls.Add(this._Label9);
+            this._grpRadioControl.Controls.Add(this._rdoSerial);
+            this._grpRadioControl.Controls.Add(this._rdoManual);
+            this._grpRadioControl.Controls.Add(this._cmbRadioPort);
+            this._grpRadioControl.Controls.Add(this._cmbRadioBaud);
+            this._grpRadioControl.Location = new System.Drawing.Point(1166, 104);
+            this._grpRadioControl.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._grpRadioControl.Name = "_grpRadioControl";
+            this._grpRadioControl.Padding = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._grpRadioControl.Size = new System.Drawing.Size(356, 750);
+            this._grpRadioControl.TabIndex = 3;
+            this._grpRadioControl.TabStop = false;
+            this._grpRadioControl.Text = "Optional Radio Control";
+            // 
+            // _grpPTCLevels
+            // 
+            this._grpPTCLevels.Controls.Add(this._rdoV24);
+            this._grpPTCLevels.Controls.Add(this._rdoTTL);
+            this._grpPTCLevels.Location = new System.Drawing.Point(44, 138);
+            this._grpPTCLevels.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._grpPTCLevels.Name = "_grpPTCLevels";
+            this._grpPTCLevels.Padding = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._grpPTCLevels.Size = new System.Drawing.Size(268, 95);
+            this._grpPTCLevels.TabIndex = 170;
+            this._grpPTCLevels.TabStop = false;
+            this._grpPTCLevels.Text = "PTC Levels to Radio";
+            // 
+            // _Label15
+            // 
+            this._Label15.AutoSize = true;
+            this._Label15.Location = new System.Drawing.Point(42, 307);
+            this._Label15.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label15.Name = "_Label15";
+            this._Label15.Size = new System.Drawing.Size(111, 30);
+            this._Label15.TabIndex = 168;
+            this._Label15.Text = "Serial Port:";
+            // 
+            // _lblRadioAddress
+            // 
+            this._lblRadioAddress.AutoSize = true;
+            this._lblRadioAddress.Location = new System.Drawing.Point(44, 540);
+            this._lblRadioAddress.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._lblRadioAddress.Name = "_lblRadioAddress";
+            this._lblRadioAddress.Size = new System.Drawing.Size(202, 30);
+            this._lblRadioAddress.TabIndex = 163;
+            this._lblRadioAddress.Text = "Radio Address (hex):";
+            // 
+            // _Label8
+            // 
+            this._Label8.AutoSize = true;
+            this._Label8.Location = new System.Drawing.Point(42, 425);
+            this._Label8.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label8.Name = "_Label8";
+            this._Label8.Size = new System.Drawing.Size(136, 30);
+            this._Label8.TabIndex = 12;
+            this._Label8.Text = "Radio Model:";
+            // 
+            // _Label9
+            // 
+            this._Label9.AutoSize = true;
+            this._Label9.Location = new System.Drawing.Point(42, 369);
+            this._Label9.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label9.Name = "_Label9";
+            this._Label9.Size = new System.Drawing.Size(113, 30);
+            this._Label9.TabIndex = 10;
+            this._Label9.Text = "Baud Rate:";
+            // 
+            // _grpTNCSettings
+            // 
+            this._grpTNCSettings.Controls.Add(this.chkLongPath);
+            this._grpTNCSettings.Controls.Add(this._chkFirstUseOnly);
+            this._grpTNCSettings.Controls.Add(this._nudPSKLevel);
+            this._grpTNCSettings.Controls.Add(this._nudFSKLevel);
+            this._grpTNCSettings.Controls.Add(this._lblPSKLevel);
+            this._grpTNCSettings.Controls.Add(this._lblFSKLevel);
+            this._grpTNCSettings.Controls.Add(this._Label14);
+            this._grpTNCSettings.Controls.Add(this._cmbTNCType);
+            this._grpTNCSettings.Controls.Add(this._btnBrowseConfiguration);
+            this._grpTNCSettings.Controls.Add(this._txtTNCConfigurationFile);
+            this._grpTNCSettings.Controls.Add(this._Label18);
+            this._grpTNCSettings.Controls.Add(this._Label7);
+            this._grpTNCSettings.Controls.Add(this._txtAudioCenter);
+            this._grpTNCSettings.Controls.Add(this._cmbTNCBaudRate);
+            this._grpTNCSettings.Controls.Add(this._Label21);
+            this._grpTNCSettings.Controls.Add(this._Label22);
+            this._grpTNCSettings.Controls.Add(this._cmbTNCSerialPort);
+            this._grpTNCSettings.Location = new System.Drawing.Point(26, 478);
+            this._grpTNCSettings.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._grpTNCSettings.Name = "_grpTNCSettings";
+            this._grpTNCSettings.Padding = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._grpTNCSettings.Size = new System.Drawing.Size(1106, 376);
+            this._grpTNCSettings.TabIndex = 2;
+            this._grpTNCSettings.TabStop = false;
+            this._grpTNCSettings.Text = "TNC Settings";
+            // 
+            // _lblPSKLevel
+            // 
+            this._lblPSKLevel.AutoSize = true;
+            this._lblPSKLevel.Location = new System.Drawing.Point(592, 159);
+            this._lblPSKLevel.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._lblPSKLevel.Name = "_lblPSKLevel";
+            this._lblPSKLevel.Size = new System.Drawing.Size(211, 30);
+            this._lblPSKLevel.TabIndex = 171;
+            this._lblPSKLevel.Text = "PTC II PSK Level (mv):";
+            // 
+            // _lblFSKLevel
+            // 
+            this._lblFSKLevel.AutoSize = true;
+            this._lblFSKLevel.Location = new System.Drawing.Point(166, 159);
+            this._lblFSKLevel.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._lblFSKLevel.Name = "_lblFSKLevel";
+            this._lblFSKLevel.Size = new System.Drawing.Size(209, 30);
+            this._lblFSKLevel.TabIndex = 170;
+            this._lblFSKLevel.Text = "PTC II FSK Level (mv):";
+            // 
+            // _Label14
+            // 
+            this._Label14.AutoSize = true;
+            this._Label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this._Label14.Location = new System.Drawing.Point(134, 51);
+            this._Label14.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label14.Name = "_Label14";
+            this._Label14.Size = new System.Drawing.Size(110, 25);
+            this._Label14.TabIndex = 169;
+            this._Label14.Text = "TNC Type:";
+            // 
+            // _Label18
+            // 
+            this._Label18.AutoSize = true;
+            this._Label18.Location = new System.Drawing.Point(36, 291);
+            this._Label18.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label18.Name = "_Label18";
+            this._Label18.Size = new System.Drawing.Size(228, 30);
+            this._Label18.TabIndex = 164;
+            this._Label18.Text = "TNC Configuration File:";
+            // 
+            // _Label7
+            // 
+            this._Label7.AutoSize = true;
+            this._Label7.Location = new System.Drawing.Point(422, 51);
+            this._Label7.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label7.Name = "_Label7";
+            this._Label7.Size = new System.Drawing.Size(199, 30);
+            this._Label7.TabIndex = 161;
+            this._Label7.Text = "Audio Tones Center:";
+            // 
+            // _Label21
+            // 
+            this._Label21.AutoSize = true;
+            this._Label21.Location = new System.Drawing.Point(824, 51);
+            this._Label21.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label21.Name = "_Label21";
+            this._Label21.Size = new System.Drawing.Size(113, 30);
+            this._Label21.TabIndex = 155;
+            this._Label21.Text = "Baud Rate:";
+            // 
+            // _Label22
+            // 
+            this._Label22.AutoSize = true;
+            this._Label22.Location = new System.Drawing.Point(654, 53);
+            this._Label22.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label22.Name = "_Label22";
+            this._Label22.Size = new System.Drawing.Size(112, 30);
+            this._Label22.TabIndex = 154;
+            this._Label22.Text = "Serial port:";
+            // 
+            // _btnHelp
+            // 
+            this._btnHelp.Location = new System.Drawing.Point(1202, 879);
+            this._btnHelp.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._btnHelp.Name = "_btnHelp";
+            this._btnHelp.Size = new System.Drawing.Size(258, 69);
+            this._btnHelp.TabIndex = 0;
+            this._btnHelp.Text = "Help";
+            this._btnHelp.UseVisualStyleBackColor = true;
+            this._btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
+            // 
+            // _Label16
+            // 
+            this._Label16.AutoSize = true;
+            this._Label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this._Label16.Location = new System.Drawing.Point(302, 21);
+            this._Label16.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label16.Name = "_Label16";
+            this._Label16.Size = new System.Drawing.Size(808, 25);
+            this._Label16.TabIndex = 145;
+            this._Label16.Text = "To create a new channel type a new channel name in the Channel Name text box...";
+            // 
+            // chkLongPath
+            // 
+            this.chkLongPath.AutoSize = true;
+            this.chkLongPath.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkLongPath.Location = new System.Drawing.Point(607, 221);
+            this.chkLongPath.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this.chkLongPath.Name = "chkLongPath";
+            this.chkLongPath.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.chkLongPath.Size = new System.Drawing.Size(443, 34);
+            this.chkLongPath.TabIndex = 172;
+            this.chkLongPath.Text = "Use Long Path for high-latency connections";
+            this._ToolTip1.SetToolTip(this.chkLongPath, " ");
+            this.chkLongPath.UseVisualStyleBackColor = true;
             // 
             // DialogPactorTNCChannels
             // 
-            AutoScaleDimensions = new SizeF(6.0F, 13.0F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(783, 430);
-            Controls.Add(_Label16);
-            Controls.Add(_btnHelp);
-            Controls.Add(_grpChannelSetting);
-            Controls.Add(_grpTNCSettings);
-            Controls.Add(_grpRadioControl);
-            Controls.Add(_btnClose);
-            Controls.Add(_btnUpdate);
-            Controls.Add(_btnRemove);
-            Controls.Add(_btnAdd);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
-            Icon = (Icon)resources.GetObject("$this.Icon");
-            MaximizeBox = false;
-            MinimizeBox = false;
-            Name = "DialogPactorTNCChannels";
-            RightToLeft = RightToLeft.No;
-            StartPosition = FormStartPosition.CenterScreen;
-            Text = "Pactor TNC Channels";
-            ((System.ComponentModel.ISupportInitialize)_nudFSKLevel).EndInit();
-            ((System.ComponentModel.ISupportInitialize)_nudPSKLevel).EndInit();
-            _grpChannelSetting.ResumeLayout(false);
-            _grpChannelSetting.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)_nudPriority).EndInit();
-            ((System.ComponentModel.ISupportInitialize)_nudActivityTimeout).EndInit();
-            _grpRadioControl.ResumeLayout(false);
-            _grpRadioControl.PerformLayout();
-            _grpPTCLevels.ResumeLayout(false);
-            _grpPTCLevels.PerformLayout();
-            _grpTNCSettings.ResumeLayout(false);
-            _grpTNCSettings.PerformLayout();
-            Load += new EventHandler(PactorTNCChannels_Load);
-            ResumeLayout(false);
-            PerformLayout();
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 30F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1566, 992);
+            this.Controls.Add(this._Label16);
+            this.Controls.Add(this._btnHelp);
+            this.Controls.Add(this._grpChannelSetting);
+            this.Controls.Add(this._grpTNCSettings);
+            this.Controls.Add(this._grpRadioControl);
+            this.Controls.Add(this._btnClose);
+            this.Controls.Add(this._btnUpdate);
+            this.Controls.Add(this._btnRemove);
+            this.Controls.Add(this._btnAdd);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "DialogPactorTNCChannels";
+            this.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Pactor TNC Channels";
+            this.Load += new System.EventHandler(this.PactorTNCChannels_Load);
+            ((System.ComponentModel.ISupportInitialize)(this._nudFSKLevel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._nudPSKLevel)).EndInit();
+            this._grpChannelSetting.ResumeLayout(false);
+            this._grpChannelSetting.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._nudPriority)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._nudActivityTimeout)).EndInit();
+            this._grpRadioControl.ResumeLayout(false);
+            this._grpRadioControl.PerformLayout();
+            this._grpPTCLevels.ResumeLayout(false);
+            this._grpPTCLevels.PerformLayout();
+            this._grpTNCSettings.ResumeLayout(false);
+            this._grpTNCSettings.PerformLayout();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
 
         private Button _btnClose;
@@ -2234,6 +2378,7 @@ namespace Paclink
         }
 
         private Button _btnUpdateChannelList;
+        private CheckBox chkLongPath;
 
         internal Button btnUpdateChannelList
         {

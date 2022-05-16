@@ -48,6 +48,7 @@ namespace Paclink
         public int TNCPort;
         public bool TNCBusyHold;
         public int TNCOnAirBaud;
+        public bool PactorUseLongPath;
 
         // WINMOR Channel Specific Properties
         public string WMCaptureDevice;
