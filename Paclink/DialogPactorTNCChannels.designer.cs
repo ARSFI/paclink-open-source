@@ -290,7 +290,7 @@ namespace Paclink
             // 
             _nudFSKLevel.Increment = new decimal(new int[] { 10, 0, 0, 0 });
             _nudFSKLevel.Location = new Point(199, 67);
-            _nudFSKLevel.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            _nudFSKLevel.Maximum = new decimal(new int[] { 9000, 0, 0, 0 });
             _nudFSKLevel.Minimum = new decimal(new int[] { 10, 0, 0, 0 });
             _nudFSKLevel.Name = "_nudFSKLevel";
             _nudFSKLevel.Size = new Size(59, 20);
@@ -302,7 +302,7 @@ namespace Paclink
             // 
             _nudPSKLevel.Increment = new decimal(new int[] { 10, 0, 0, 0 });
             _nudPSKLevel.Location = new Point(412, 67);
-            _nudPSKLevel.Maximum = new decimal(new int[] { 1009, 0, 0, 0 });
+            _nudPSKLevel.Maximum = new decimal(new int[] { 9000, 0, 0, 0 });
             _nudPSKLevel.Minimum = new decimal(new int[] { 10, 0, 0, 0 });
             _nudPSKLevel.Name = "_nudPSKLevel";
             _nudPSKLevel.Size = new Size(58, 20);

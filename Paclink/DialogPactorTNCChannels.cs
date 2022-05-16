@@ -685,7 +685,7 @@ namespace Paclink
                 lblFSKLevel.Text = "PTC II FSK Level (mv):";
                 lblPSKLevel.Enabled = true;
                 nudFSKLevel.Enabled = true;
-                nudFSKLevel.Maximum = 1000;
+                nudFSKLevel.Maximum = 9000;
                 nudFSKLevel.Minimum = 10;
                 nudFSKLevel.Increment = 10;
                 nudPSKLevel.Enabled = true;
