@@ -21,6 +21,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_195A23288B0442D8960A76C088329A3F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_266B29345A384A12B17D77234DC573AE"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -254,6 +260,26 @@
             "TargetName" = "8:ExampleKAM+.aps"
             "Tag" = "8:"
             "Folder" = "8:_7D296E86DDC740E6BB4BBE11AC4C13F2"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_195A23288B0442D8960A76C088329A3F"
+            {
+            "SourcePath" = "8:..\\Support Source\\Paclink.chm"
+            "TargetName" = "8:Paclink.chm"
+            "Tag" = "8:"
+            "Folder" = "8:_08BD8AF29F1842ADBDB40903DE2ABE83"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"

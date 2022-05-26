@@ -619,7 +619,7 @@ namespace Paclink.UI.Windows
         {
             try
             {
-                Help.ShowHelp(this, BackingObject.SiteRootDirectory + @"Help\Paclink.chm");
+                Help.ShowHelp(this, BackingObject.SiteRootDirectory + @"\Paclink.chm");
             }
             catch (Exception ex)
             {

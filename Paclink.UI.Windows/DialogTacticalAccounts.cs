@@ -332,7 +332,7 @@ namespace Paclink.UI.Windows
         {
             try
             {
-                Help.ShowHelp(this, BackingObject.SiteRootDirectory + @"Help\Paclink.chm", HelpNavigator.Topic, @"html\hs100.htm");
+                Help.ShowHelp(this, BackingObject.SiteRootDirectory + @"\Paclink.chm", HelpNavigator.Topic, @"html\hs100.htm");
             }
             catch (Exception ex)
             {

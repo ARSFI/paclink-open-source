@@ -176,7 +176,7 @@ namespace Paclink.UI.Windows
 
         private void btnHelp_Click(object sender, EventArgs e)
         {
-            Help.ShowHelp(this, BackingObject.SiteRootDirectory + @"Help\Paclink.chm", HelpNavigator.Topic, @"html\hs120.htm");
+            Help.ShowHelp(this, BackingObject.SiteRootDirectory + @"\Paclink.chm", HelpNavigator.Topic, @"html\hs120.htm");
         }
     }
 }

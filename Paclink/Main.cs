@@ -188,6 +188,10 @@ namespace Paclink
                 {
                     Globals.SiteRootDirectory = Globals.SiteBinDirectory.Substring(0, intDirPtr);
                 }
+                else
+                {
+                    Globals.SiteRootDirectory = Globals.SiteBinDirectory + @"\";
+                }
             }
             else
             {

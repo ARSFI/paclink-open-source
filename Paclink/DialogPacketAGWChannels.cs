@@ -603,7 +603,7 @@ namespace Paclink
 
         private void btnHelp_Click(object sender, EventArgs e)
         {
-            Help.ShowHelp(this, Globals.SiteRootDirectory + @"Help\Paclink.chm", HelpNavigator.Topic, @"html\hs140.htm");
+            Help.ShowHelp(this, Globals.SiteRootDirectory + @"\Paclink.chm", HelpNavigator.Topic, @"html\hs140.htm");
         } // btnHelp_Click
     }
 } // PacketAGWChannels
