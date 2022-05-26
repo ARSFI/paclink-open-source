@@ -650,12 +650,26 @@ namespace Paclink.UI.Windows
 
         public void RefreshWindow()
         {
-            Refresh();
+            if (InvokeRequired)
+            {
+                Invoke(() => RefreshWindow());
+            }
+            else
+            {
+                Refresh();
+            }
         }
 
         public void CloseWindow()
         {
-            Close();
+            if (InvokeRequired)
+            {
+                Invoke(() => CloseWindow());
+            }
+            else
+            {
+                Close();
+            }
         }
 
         public void EnableMainWindowInterface()

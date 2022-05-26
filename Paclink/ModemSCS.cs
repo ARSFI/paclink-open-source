@@ -370,7 +370,7 @@ namespace Paclink
                     {
 
                         // This handles manual pactor connections or unspecified automatic channels...
-                        if (Globals.dlgPactorConnect is object)
+                        if (Globals.dlgPactorConnect != null)
                         {
                             Globals.dlgPactorConnect.Close();
                             Globals.dlgPactorConnect = null;
@@ -639,7 +639,7 @@ namespace Paclink
             // Wait for reply?
             while (DateTime.Now.Subtract(dttStart).TotalMilliseconds < 1200 & !blnCommandReply)
             {
-                if (objHostPort is object)
+                if (objHostPort != null)
                     objHostPort.Poll();
                 Thread.Sleep(50);
             }
