@@ -198,7 +198,7 @@ namespace Paclink
             {
                 return;
             }
-            else if (intHz < 1800000 | intHz > 54000000)
+            else if (intHz < 1800000 || intHz > 54000000)
             {
                 lblUSB.Text = "USB Dial: -----";
             }
@@ -235,7 +235,7 @@ namespace Paclink
             {
                 return;
             }
-            else if (intHz < 1800000 | intHz > 54000000)
+            else if (intHz < 1800000 || intHz > 54000000)
             {
                 lblUSB.Text = "USB Dial: -----";
             }
@@ -246,7 +246,10 @@ namespace Paclink
                     intHz -= Convert.ToInt32(stcChannel.AudioToneCenter);
                     lblUSB.Text = "USB Dial: " + (intHz / (double)1000).ToString("##0000.000") + " KHz";
                     stcChannel.RDOCenterFrequency = strCenterFreq;
-                    Globals.objRadioControl.SetParameters(ref stcChannel);
+                    if (Globals.objRadioControl != null)
+                    {
+                        Globals.objRadioControl.SetParameters(ref stcChannel);
+                    }
                 }
                 catch
                 {
