@@ -179,7 +179,7 @@ namespace Paclink
             Globals.strProductVersion = typeof(Main).Assembly.GetName().Version.ToString();
             Globals.blnRunningInTestMode = false;
 
-            var startupPath = typeof(Main).Assembly.Location;
+            var startupPath = Path.GetDirectoryName(typeof(Main).Assembly.Location);
             if (startupPath.IndexOf("Source") == -1)
             {
                 Globals.SiteBinDirectory = startupPath + @"\";
