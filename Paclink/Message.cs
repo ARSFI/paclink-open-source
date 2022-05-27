@@ -382,7 +382,7 @@ namespace Paclink
                     var loopTo = cllToAddresses.Count;
                     for (intIndex = 0; intIndex < loopTo; intIndex++)
                     {
-                        if (intIndex == 1)
+                        if (intIndex == 0)
                         {
                             sbdHeader.Append("To: " + cllToAddresses[0].SMTPAddress + "," + Globals.CRLF);
                         }
