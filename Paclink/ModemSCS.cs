@@ -1813,8 +1813,8 @@ namespace Paclink
 
         // Queues...
         private Queue quePortInput = Queue.Synchronized(new Queue()); // Holds raw byte received from serial port
-        private Queue queDataOutbound = new Queue();      // Holds complete data host frames queued for the serial port
-        private Queue queCommandOutbound = new Queue();   // Holds complete command host frames queued for the serial port
+        private Queue queDataOutbound = Queue.Synchronized(new Queue());      // Holds complete data host frames queued for the serial port
+        private Queue queCommandOutbound = Queue.Synchronized(new Queue());   // Holds complete command host frames queued for the serial port
 
         // Structures and enumerations...
         private HostModeState enmHostState;     // Holds the current host port state     
