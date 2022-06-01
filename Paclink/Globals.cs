@@ -134,8 +134,8 @@ namespace Paclink
 #else
             var host = Globals.Settings.Get("System", "WebServices API Domain", "https://api.winlink.org");
 #endif
-            //initialize api static class with our access key
-            WinlinkWebServices.SetConfiguration(new WinlinkWebServiceConfiguration { WebServicesHost = host, WebServiceAccessKey = "CC5E139204DA41A3B544A5F2CEB21051" });
+            //initialize api static class with our access key 
+            WinlinkWebServices.SetConfiguration(new WinlinkWebServiceConfiguration { WebServicesHost = host, WebServiceAccessKey = "3EBF46286B3D4A049929F1FB999F4FD1" });
         }
 
         public class Proposal
