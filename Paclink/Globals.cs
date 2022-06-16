@@ -1261,9 +1261,9 @@ namespace Paclink
             {
                 // Check the mode versus TNC type.
                 intMode = Convert.ToInt32(strFreqTokens[2]);
-                if (intMode == 21 | intMode == 22)
+                if (intMode >= 21)
                 {
-                    // We don't support Winmor
+                    // We don't support ARDOP or VARA -- TBD
                     return false;
                 }
 
