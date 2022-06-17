@@ -155,6 +155,8 @@ namespace Paclink
         {
             string strFreqEntry;
             int intIndex;
+            string tncName = stcChannel.TNCType;
+
             cmbCallSigns.Refresh();
             for (int i = 0, loopTo = arySelectedMBOs.Length - 1; i <= loopTo; i++)
             {
@@ -169,7 +171,7 @@ namespace Paclink
                         for (int j = 0, loopTo1 = aryFrequencies.Length - 1; j <= loopTo1; j++)
                         {
                             strFreqEntry = aryFrequencies[j].ToString();
-                            if (Globals.CanUseFrequency(strFreqEntry, ""))
+                            if (Globals.CanUseFrequency(strFreqEntry, tncName))
                             {
                                 cmbFrequencies.Items.Add(Globals.FormatFrequency(strFreqEntry));
                                 intIndex += 1;
