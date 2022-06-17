@@ -189,13 +189,13 @@ namespace Paclink
 
         private void cmbFrequencies_SelectedIndexChanged(object sender, EventArgs e)
         {
-            cmbFrequencies.Refresh();
+            //cmbFrequencies.Refresh();
             if (blnLoading)
                 return;
             var intHz = default(int);
             string argstrChannel = cmbFrequencies.Text;
             string strCenterFreq = Globals.ExtractFreq(ref argstrChannel);
-            cmbFrequencies.Text = argstrChannel;
+            //cmbFrequencies.Text = argstrChannel;
             if (!Globals.IsValidFrequency(strCenterFreq, ref intHz))
             {
                 return;
@@ -232,7 +232,7 @@ namespace Paclink
             var intHz = default(int);
             string argstrChannel = cmbFrequencies.Text;
             string strCenterFreq = Globals.ExtractFreq(ref argstrChannel);
-            cmbFrequencies.Text = argstrChannel;
+            //cmbFrequencies.Text = argstrChannel;
             if (!Globals.IsValidFrequency(strCenterFreq, ref intHz))
             {
                 return;
