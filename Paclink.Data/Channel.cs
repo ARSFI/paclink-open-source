@@ -41,7 +41,7 @@ namespace Paclink.Data
 
         public void ClearChannelList(bool isPacket)
         {
-            var sql = "DELETE FROM `Channel` WHERE `IsPacket`= {0}";
+            var sql = "DELETE FROM `Channel` WHERE `IsPacket`='{0}'";
             _database.NonQuery(string.Format(sql, isPacket));
         }
 
