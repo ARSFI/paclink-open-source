@@ -315,7 +315,7 @@ namespace Paclink
                                     {
                                         if (Globals.stcSelectedChannel.EnableAutoforward == false)
                                         {
-                                            if (Globals.blnPactorDialogResume & !Globals.blnPactorDialogClosing)
+                                            if (Globals.blnPactorDialogResume)
                                             {
                                                 strChannelName = Globals.stcSelectedChannel.ChannelName;
                                             }
