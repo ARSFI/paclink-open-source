@@ -177,7 +177,7 @@ namespace Paclink
 
                             case "PASS": // Accept the password to verify account...
                                 {
-                                    strPassword = strParameter.ToUpper();
+                                    strPassword = strParameter;
                                     authorized = Authorize(strAccountName, strPassword);
                                     if (authorized)
                                     {

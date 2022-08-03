@@ -315,7 +315,7 @@ namespace Paclink
                             default:
                                 {
                                     // Decode the Base64 Client reply for password...
-                                    strPassword = Base64Decode(strInputStream).ToUpper();
+                                    strPassword = Base64Decode(strInputStream);
 
                                     // Return to the ready state on Authorization success or faiure...
                                     SMTPState = SessionState.Ready;
