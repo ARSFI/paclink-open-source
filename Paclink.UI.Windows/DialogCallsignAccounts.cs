@@ -32,17 +32,16 @@ namespace Paclink.UI.Windows
         private void CallsignAccounts_Load(object sender, EventArgs e)
         {
             FillAccountSelection();
-        } // CallsignAccounts_Load
+        }
 
         private void cmbAccount_TextChanged(object sender, EventArgs e)
         {
-            txtPassword.Text = BackingObject.GetEmailPassword(cmbAccount.Text);
+            txtPassword.Text = BackingObject.GetAccountPassword(cmbAccount.Text);
             strOldPassword = txtPassword.Text;
-        } // cmbAccount_TextChanged
+        }
 
         private void btnInstructions_Click(object sender, EventArgs e)
         {
-            // Displays instructions for entering a callsign address...
             MessageBox.Show(
                 "A callsign account name must consist of a valid ham or MARS radio callsign.\r\n" +
                 "examples:  W1ABC, WA9DEF-12\r\n\r\n" +
@@ -50,7 +49,7 @@ namespace Paclink.UI.Windows
                 "If the account name uses a -ssid extension then you must also enter the \r\n" +
                 "password of the base callsign in the field provided.\r\n\r\n" +
                 "To enter a tactical account use the Tactical Accounts dialog box.");
-        } // btnInstructions_Click
+        }
 
         private void btnAdd_Click(object s, EventArgs e)
         {
@@ -130,7 +129,7 @@ namespace Paclink.UI.Windows
             strOldPassword = strPassword;
             btnAdd.Enabled = true;
             FillAccountSelection();
-        } // btnAdd_Click
+        }
 
         private void btnRemove_Click(object sender, EventArgs e)
         {
@@ -155,7 +154,7 @@ namespace Paclink.UI.Windows
 
             BackingObject.RemoveAccount(strAccount);
             FillAccountSelection();
-        } // btnRemove_Click
+        }
 
         private void btnClose_Click(object sender, EventArgs e)
         {
@@ -167,12 +166,12 @@ namespace Paclink.UI.Windows
             if (strCallsign != "<Add new account>" && string.Compare(password, strOldPassword, false) != 0)
             {
                 // Update the password for this callsign.
-                BackingObject.SaveEmailPassword(strCallsign, password);
+                BackingObject.SaveAccountPassword(strCallsign, password);
             }
 
             BackingObject.UpdateAccountDirectories();
             Close();
-        } // btnClose_Click
+        }
 
         private void FillAccountSelection()
         {
@@ -186,8 +185,10 @@ namespace Paclink.UI.Windows
 
             cmbAccount.Items.Add("<Add new account>");
             cmbAccount.Text = Convert.ToString(cmbAccount.Items[0]);
+            txtPassword.Text = "";
+
             cmbAccount.Focus();
-        } // FillAccountSelection
+        }
 
         private void EntryErrorMessage()
         {
@@ -199,7 +200,7 @@ namespace Paclink.UI.Windows
                 "Error",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
-        } // EntryErrorMessage
+        }
 
         public bool IsValidAccountName(string strCallsign)
         {
@@ -222,7 +223,7 @@ namespace Paclink.UI.Windows
             {
                 return false;
             }
-        } // IsValidAccountName
+        }
 
         private bool AddNewAccount()
         {
@@ -241,23 +242,27 @@ namespace Paclink.UI.Windows
             btnRemove.Enabled = true;
             FillAccountSelection();
             return blnReturn;
-        } // AddNewAccount
+        }
 
         private void cmbAccount_Leave(object sender, EventArgs e)
         {
             if (cmbAccount.Text == "<Add new account>")
                 return;
-            if (!BackingObject.IsValidFileName(cmbAccount.Text))
-                cmbAccount.Focus();
-        } // cmbAccount_Leave
+            if (!IsValidAccountName(cmbAccount.Text))
+                txtPassword.Focus();
+        }
 
         private void btnHelp_Click(object sender, EventArgs e)
         {
             Help.ShowHelp(this, BackingObject.SiteRootDirectory + @"\Paclink.chm", HelpNavigator.Topic, @"html\hs90.htm");
-        } // btnHelp_Click
+        }
 
         private void cmbAccount_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (cmbAccount.Text == "<Add new account>")
+                return;
+            txtPassword.Text = BackingObject.GetAccountPassword(cmbAccount.Text);
+            strOldPassword = txtPassword.Text;
         }
 
         public void RefreshWindow()
@@ -270,4 +275,4 @@ namespace Paclink.UI.Windows
             // empty
         }
     }
-} // CallsignAccounts
+}

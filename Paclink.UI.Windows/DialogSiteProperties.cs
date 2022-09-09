@@ -24,11 +24,11 @@ namespace Paclink.UI.Windows
             _Label23.Name = "Label23";
             _txtSMTPPortNumber.Name = "txtSMTPPortNumber";
             _Label21.Name = "Label21";
-            _txtSecureLoginPassword.Name = "txtSecureLoginPassword";
+            txtSecureLoginPassword.Name = "txtSecureLoginPassword";
             _Label2.Name = "Label2";
             _Label3.Name = "Label3";
             _txtGridSquare.Name = "txtGridSquare";
-            _txtSiteCallsign.Name = "txtSiteCallsign";
+            txtSiteCallsign.Name = "txtSiteCallsign";
             _chkLANAccessable.Name = "chkLANAccessable";
             _Label1.Name = "Label1";
             _Label11.Name = "Label11";
@@ -40,7 +40,7 @@ namespace Paclink.UI.Windows
             _Label8.Name = "Label8";
             _cmbLocalIPAddress.Name = "cmbLocalIPAddress";
             _chkEnableRadar.Name = "chkEnableRadar";
-            _txtPOP3Password.Name = "txtPOP3Password";
+            _txtMailSystemPassword.Name = "txtMailSystemPassword";
             _txtRMSRelayIPPath.Name = "txtRMSRelayIPPath";
             _btnHelp.Name = "btnHelp";
             _Label4.Name = "Label4";
@@ -79,7 +79,7 @@ namespace Paclink.UI.Windows
             txtSiteCallsign.Text = BackingObject.SiteCallsign;
             txtServiceCodes.Text = BackingObject.ServiceCodes;
             txtSecureLoginPassword.Text = BackingObject.SecureLoginPassword;
-            txtPOP3Password.Text = BackingObject.POP3Password;
+            txtMailSystemPassword.Text = BackingObject.MailSystemPassword;
             txtGridSquare.Text = BackingObject.GridSquare;
             txtSMTPPortNumber.Text = BackingObject.SMTPPortNumber.ToString();
             txtPOP3PortNumber.Text = BackingObject.POP3PortNumber.ToString();
@@ -131,7 +131,7 @@ namespace Paclink.UI.Windows
 
             txtSiteCallsign.Text = txtSiteCallsign.Text.ToUpper().Trim();
             txtSecureLoginPassword.Text = txtSecureLoginPassword.Text.Trim();
-            txtPOP3Password.Text = txtPOP3Password.Text.Trim();
+            txtMailSystemPassword.Text = txtMailSystemPassword.Text.Trim();
             txtGridSquare.Text = txtGridSquare.Text.ToUpper().Trim();
             txtServiceCodes.Text = txtServiceCodes.Text.ToUpper().Trim();
             bool blnValidSSID = true;
@@ -177,10 +177,10 @@ namespace Paclink.UI.Windows
                 return;
             }
 
-            if (txtPOP3Password.Text.Length < 4)
+            if (txtMailSystemPassword.Text.Length < 4)
             {
                 MessageBox.Show("A valid POP3/SMTP password is required...");
-                txtPOP3Password.Focus();
+                txtMailSystemPassword.Focus();
                 return;
             }
 
@@ -217,7 +217,7 @@ namespace Paclink.UI.Windows
             }
 
             BackingObject.UpdateSiteCallsign(txtSiteCallsign.Text, txtSecureLoginPassword.Text.Trim());
-            BackingObject.UpdatePOP3Password(txtPOP3Password.Text.ToUpper().Trim());
+            BackingObject.UpdateMailPassword(txtMailSystemPassword.Text.Trim());
             BackingObject.UpdateGridSquare(txtGridSquare.Text.Trim());
             BackingObject.UpdateServiceCode(txtServiceCodes.Text.ToUpper().Trim());
             BackingObject.UpdatePop3PortNumber(Convert.ToInt32(txtPOP3PortNumber.Text));

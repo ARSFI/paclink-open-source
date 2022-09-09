@@ -54,7 +54,7 @@ namespace Paclink.UI.Windows
             this._ToolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this._cmbLocalIPAddress = new System.Windows.Forms.ComboBox();
             this._chkEnableRadar = new System.Windows.Forms.CheckBox();
-            this._txtPOP3Password = new System.Windows.Forms.TextBox();
+            this._txtMailSystemPassword = new System.Windows.Forms.TextBox();
             this._txtRMSRelayIPPath = new System.Windows.Forms.TextBox();
             this._btnHelp = new System.Windows.Forms.Button();
             this._Label4 = new System.Windows.Forms.Label();
@@ -299,15 +299,15 @@ namespace Paclink.UI.Windows
             this._ToolTip1.SetToolTip(this._chkEnableRadar, "Check to enable range & Bearing \"Radar\" display upon connect");
             this._chkEnableRadar.UseVisualStyleBackColor = true;
             // 
-            // _txtPOP3Password
+            // _txtMailSystemPassword
             // 
-            this._txtPOP3Password.Location = new System.Drawing.Point(203, 106);
-            this._txtPOP3Password.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this._txtPOP3Password.Name = "_txtPOP3Password";
-            this._txtPOP3Password.Size = new System.Drawing.Size(129, 23);
-            this._txtPOP3Password.TabIndex = 2;
-            this._txtPOP3Password.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this._ToolTip1.SetToolTip(this._txtPOP3Password, "Grid square location (6 character) ");
+            this._txtMailSystemPassword.Location = new System.Drawing.Point(203, 106);
+            this._txtMailSystemPassword.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._txtMailSystemPassword.Name = "_txtMailSystemPassword";
+            this._txtMailSystemPassword.Size = new System.Drawing.Size(129, 23);
+            this._txtMailSystemPassword.TabIndex = 2;
+            this._txtMailSystemPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this._ToolTip1.SetToolTip(this._txtMailSystemPassword, "Grid square location (6 character) ");
             // 
             // _txtRMSRelayIPPath
             // 
@@ -346,12 +346,12 @@ namespace Paclink.UI.Windows
             // _Label5
             // 
             this._Label5.AutoSize = true;
-            this._Label5.Location = new System.Drawing.Point(31, 114);
+            this._Label5.Location = new System.Drawing.Point(42, 114);
             this._Label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._Label5.Name = "_Label5";
-            this._Label5.Size = new System.Drawing.Size(153, 15);
+            this._Label5.Size = new System.Drawing.Size(146, 15);
             this._Label5.TabIndex = 125;
-            this._Label5.Text = "Password (for POP3/SMTP):";
+            this._Label5.Text = "Password (for mail server):";
             // 
             // _GroupBox1
             // 
@@ -473,9 +473,9 @@ namespace Paclink.UI.Windows
             this._Label14.Location = new System.Drawing.Point(107, 80);
             this._Label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._Label14.Name = "_Label14";
-            this._Label14.Size = new System.Drawing.Size(88, 15);
+            this._Label14.Size = new System.Drawing.Size(86, 15);
             this._Label14.TabIndex = 321;
-            this._Label14.Text = "(Case sensitive)";
+            this._Label14.Text = "(case sensitive)";
             // 
             // DialogSiteProperties
             // 
@@ -489,7 +489,7 @@ namespace Paclink.UI.Windows
             this.Controls.Add(this._Label7);
             this.Controls.Add(this._GroupBox1);
             this.Controls.Add(this._Label5);
-            this.Controls.Add(this._txtPOP3Password);
+            this.Controls.Add(this._txtMailSystemPassword);
             this.Controls.Add(this._chkEnableRadar);
             this.Controls.Add(this._Label4);
             this.Controls.Add(this._cmbLocalIPAddress);
@@ -1135,25 +1135,25 @@ namespace Paclink.UI.Windows
             }
         }
 
-        private TextBox _txtPOP3Password;
+        private TextBox _txtMailSystemPassword;
 
-        internal TextBox txtPOP3Password
+        internal TextBox txtMailSystemPassword
         {
             [MethodImpl(MethodImplOptions.Synchronized)]
             get
             {
-                return _txtPOP3Password;
+                return _txtMailSystemPassword;
             }
 
             [MethodImpl(MethodImplOptions.Synchronized)]
             set
             {
-                if (_txtPOP3Password != null)
+                if (_txtMailSystemPassword != null)
                 {
                 }
 
-                _txtPOP3Password = value;
-                if (_txtPOP3Password != null)
+                _txtMailSystemPassword = value;
+                if (_txtMailSystemPassword != null)
                 {
                 }
             }

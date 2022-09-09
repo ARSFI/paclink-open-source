@@ -51,7 +51,7 @@ namespace Paclink
         public static Queue queStatusDisplay = Queue.Synchronized(new Queue());
 
         // Global Strings...
-        public static string POP3Password = "";
+        public static string MailSystemPassword = "";
         public static string SecureLoginPassword = "";
         public static string SiteBinDirectory = "";
         public static string SiteCallsign = "";
@@ -592,7 +592,7 @@ namespace Paclink
                     }
                 }
 
-                // Extract address from < > boundries if they exist...
+                // Extract address from < > boundaries if they exist...
                 strLine = strLine.Trim();
                 intStart = strLine.IndexOf("<");
                 if (intStart != -1)
@@ -1859,5 +1859,15 @@ namespace Paclink
             }
             return converted;
         }
-    } // Globals
+
+        public static string GetMailSystemPassword(string secureLoginPassword)
+        {
+            return Globals.Settings.Get("Properties", "EMail Password", SecureLoginPassword);
+        }
+
+        public static void SaveMailSystemPassword(string mailSystemPassword)
+        {
+            Globals.Settings.Save("Properties", "EMail Password", mailSystemPassword);
+        }
+    } 
 }

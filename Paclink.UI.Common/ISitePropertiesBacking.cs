@@ -20,7 +20,7 @@ namespace Paclink.UI.Common
 
         string SecureLoginPassword { get; }
 
-        string POP3Password { get; }
+        string MailSystemPassword { get; }
 
         string GridSquare { get; }
 
@@ -52,7 +52,7 @@ namespace Paclink.UI.Common
 
         void UpdateSiteCallsign(string callsign, string password);
 
-        void UpdatePOP3Password(string password);
+        void UpdateMailPassword(string password);
 
         void UpdateGridSquare(string gridSquare);
 

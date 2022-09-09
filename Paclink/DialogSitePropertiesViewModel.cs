@@ -25,7 +25,7 @@ namespace Paclink
 
         public string SecureLoginPassword => Globals.SecureLoginPassword;
 
-        public string POP3Password => Globals.POP3Password;
+        public string MailSystemPassword => Globals.MailSystemPassword;
 
         public string GridSquare => Globals.SiteGridSquare;
 
@@ -66,10 +66,9 @@ namespace Paclink
             string strAccountList = Globals.Settings.Get("Properties", "Account Names", "");
             strAccountList = strAccountList + strCallsign + "|";
             Globals.Settings.Save("Properties", "Site Callsign", strCallsign);
-            Globals.Settings.Save("Properties", "Site Password", "");
             Globals.Settings.Save("Properties", "Secure Login Password", Globals.SecureLoginPassword);
             Globals.Settings.Save("Properties", "Account Names", strAccountList);
-            Globals.Settings.Save(strCallsign, "EMail Password", Globals.POP3Password);
+            Globals.Settings.Save(strCallsign, "EMail Password", strPassword);
             Accounts.RefreshAccountsList();
         } // AddRadioAccount
 
@@ -78,7 +77,6 @@ namespace Paclink
             string strAccountList = Globals.Settings.Get("Properties", "Account Names", "");
             strAccountList = strAccountList.Replace(strCallsign + "|", "");
             Globals.Settings.Save("Properties", "Site Callsign", "");
-            Globals.Settings.Save("Properties", "Site Password", "");
             Globals.Settings.Save("Properties", "Secure Login Password", "");
             Globals.Settings.Save("Properties", "EMail Password", "");
             Globals.Settings.Save("Properties", "Account Names", strAccountList);
@@ -113,7 +111,6 @@ namespace Paclink
             Globals.SiteCallsign = callsign;
             Globals.SecureLoginPassword = password;
             Globals.Settings.Save("Properties", "Site Callsign", Globals.SiteCallsign);
-            Globals.Settings.Save("Properties", "Site Password", "");
             Globals.Settings.Save("Properties", "Secure Login Password", Globals.SecureLoginPassword);
 
             AddRadioAccount(Globals.SiteCallsign, Globals.SecureLoginPassword);
@@ -125,10 +122,10 @@ namespace Paclink
             Globals.Settings.Save(Globals.strProductName, "Start Minimized", Globals.blnStartMinimized);
         }
 
-        public void UpdatePOP3Password(string password)
+        public void UpdateMailPassword(string password)
         {
-            Globals.POP3Password = password;
-            Globals.Settings.Save("Properties", "EMail Password", Globals.POP3Password);
+            Globals.MailSystemPassword = password;
+            Globals.Settings.Save("Properties", "EMail Password", Globals.MailSystemPassword);
         }
 
         public void UpdateGridSquare(string gridSquare)

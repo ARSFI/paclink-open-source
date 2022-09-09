@@ -51,10 +51,17 @@ namespace Paclink
 
                 Globals.Settings.Save("Properties", "ServiceCodes", Globals.strServiceCodes);
             }
-            string strSitePassword = Globals.Settings.Get("Properties", "Site Password", "");
-            Globals.POP3Password = Globals.Settings.Get("Properties", "EMail Password", strSitePassword);
-            Globals.Settings.Save("Properties", "EMail Password", Globals.POP3Password);
-            Globals.Settings.Save("Properties", "Site Password", "");
+
+            //!!! add Global methods for below
+            Globals.MailSystemPassword = Globals.GetMailSystemPassword(Globals.SecureLoginPassword);
+            Globals.SaveMailSystemPassword(Globals.MailSystemPassword);
+
+            
+            Globals.Settings.Save("Properties", "EMail Password", Globals.MailSystemPassword);
+
+
+
+
             Globals.SecureLoginPassword = Globals.Settings.Get("Properties", "Secure Login Password", "");
             Channels.FillChannelCollection();
             try

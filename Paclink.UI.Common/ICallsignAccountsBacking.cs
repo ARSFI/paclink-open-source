@@ -17,7 +17,7 @@ namespace Paclink.UI.Common
         void RemoveAccount(string strAccount);
         bool IsValidRadioCallsign(string callsign);
         void UpdateAccountDirectories();
-        string GetEmailPassword(string account);
-        void SaveEmailPassword(string callsign, string v);
+        string GetAccountPassword(string account);
+        void SaveAccountPassword(string account, string v);
     }
 }

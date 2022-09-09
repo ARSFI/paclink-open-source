@@ -61,7 +61,7 @@ namespace Paclink
             return accountNames;
         }
 
-        public string GetEmailPassword(string accountName)
+        public string GetAccountPassword(string accountName)
         {
             return Globals.Settings.Get(accountName, "EMail Password", "");
         }
@@ -125,7 +125,7 @@ namespace Paclink
             Accounts.RefreshAccountsList();
         }
 
-        public void SaveEmailPassword(string callsign, string password)
+        public void SaveAccountPassword(string callsign, string password)
         {
             Globals.Settings.Save(callsign, "EMail Password", password);
         }
