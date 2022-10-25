@@ -473,8 +473,9 @@ namespace Paclink
 
         public void ShowPacketAGWChannels()
         {
-            var dlgPacketAGWChannels = new DialogPacketAGWChannels();
-            dlgPacketAGWChannels.ShowDialog();
+            UserInterfaceFactory.GetUiSystem().DisplayForm(
+                AvailableForms.AgwChannels, 
+                new DialogPacketAGWChannelsViewModel(new DialogAgwEngineViewModel()));
         }
 
         public void ShowPacketTNCChannels()

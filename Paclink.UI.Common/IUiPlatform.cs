@@ -5,6 +5,7 @@
         MainWindow,
         SiteProperties,
         Polling,
+        AgwChannels,
         AgwEngine,
         ChangePassword,
         CallsignAccounts,

@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
-namespace Paclink
+namespace Paclink.UI.Windows
 {
     public partial class DialogPacketAGWChannels : Form
     {
@@ -69,8 +69,6 @@ namespace Paclink
             _nudActivityTimeout = new NumericUpDown();
             _nudPriority = new NumericUpDown();
             _nudScriptTimeout = new NumericUpDown();
-            _tmrTimer10sec = new Timer(components);
-            _tmrTimer10sec.Tick += new EventHandler(tmrTimer10sec_Tick);
             _btnRetryRemote = new Button();
             _btnRetryRemote.Click += new EventHandler(btnRetryRemote_Click);
             _nudPacketLength = new NumericUpDown();
@@ -328,10 +326,6 @@ namespace Paclink
             _nudScriptTimeout.TextAlign = HorizontalAlignment.Center;
             _ToolTip1.SetToolTip(_nudScriptTimeout, "Sets the timeout for scrips or simple connects.");
             _nudScriptTimeout.Value = new decimal(new int[] { 60, 0, 0, 0 });
-            // 
-            // tmrTimer10sec
-            // 
-            _tmrTimer10sec.Interval = 10000;
             // 
             // btnRetryRemote
             // 
@@ -926,32 +920,6 @@ namespace Paclink
                 _ToolTip1 = value;
                 if (_ToolTip1 != null)
                 {
-                }
-            }
-        }
-
-        private Timer _tmrTimer10sec;
-
-        internal Timer tmrTimer10sec
-        {
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            get
-            {
-                return _tmrTimer10sec;
-            }
-
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            set
-            {
-                if (_tmrTimer10sec != null)
-                {
-                    _tmrTimer10sec.Tick -= tmrTimer10sec_Tick;
-                }
-
-                _tmrTimer10sec = value;
-                if (_tmrTimer10sec != null)
-                {
-                    _tmrTimer10sec.Tick += tmrTimer10sec_Tick;
                 }
             }
         }

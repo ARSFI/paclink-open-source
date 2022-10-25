@@ -21,6 +21,9 @@ namespace Paclink.UI.Windows
                 case AvailableForms.Polling:
                     window = new DialogPolling((IPollingBacking)backingObject);
                     break;
+                case AvailableForms.AgwChannels:
+                    window = new DialogPacketAGWChannels((IPacketAGWChannelBacking)backingObject);
+                    break;
                 case AvailableForms.AgwEngine:
                     window = new DialogAGWEngine((IAGWEngineBacking)backingObject);
                     break;
