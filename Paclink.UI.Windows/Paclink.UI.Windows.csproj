@@ -21,6 +21,7 @@
     <Compile Update="DialogCallsignAccounts.cs" />
     <Compile Update="DialogChangePassword.cs" />
     <Compile Update="DialogPacketAGWChannels.cs" />
+    <Compile Update="DialogPacketTNCChannels.cs" />
     <Compile Update="DialogPolling.cs" />
     <Compile Update="DialogSiteProperties.cs" />
     <Compile Update="DialogTacticalAccounts.cs" />

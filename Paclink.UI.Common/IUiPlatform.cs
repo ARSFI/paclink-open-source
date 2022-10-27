@@ -6,6 +6,7 @@
         SiteProperties,
         Polling,
         AgwChannels,
+        TncChannels,
         AgwEngine,
         ChangePassword,
         CallsignAccounts,

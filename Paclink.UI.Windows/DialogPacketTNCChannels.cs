@@ -2,12 +2,17 @@
 using System;
 using System.IO.Ports;
 using System.Windows.Forms;
+using System.Linq;
 
-namespace Paclink
+namespace Paclink.UI.Windows
 {
-    public partial class DialogPacketTNCChannels
+    public partial class DialogPacketTNCChannels : IPacketTNCChannelWindow
     {
-        public DialogPacketTNCChannels()
+        private string _remoteCallsign;
+        private string _radioCenterFrequency;
+        private string _tncBaudRate;
+
+        public DialogPacketTNCChannels(IPacketTNCChannelBacking backingObject)
         {
             InitializeComponent();
             _Label8.Name = "Label8";
@@ -64,20 +69,27 @@ namespace Paclink
             _cmbRemoteCallsign.Name = "cmbRemoteCallsign";
             _lblFrequency.Name = "lblFrequency";
             _cmbFreqs.Name = "cmbFreqs";
+
+            _remoteCallsign = string.Empty;
+            _radioCenterFrequency = string.Empty;
+            _tncBaudRate = string.Empty;
+
+            BackingObject = backingObject;
         }
 
-        private ChannelProperties stcSelectedChannel;
         private string[] arySelectedMBOs;
+
+        public IPacketTNCChannelBacking BackingObject { get; private set; }
 
         private void PacketTNCChannels_Load(object sender, EventArgs e)
         {
             InitializeControls();
             ClearEntries();
             FillChannelList();
-            cmbChannelName.Text = Globals.Settings.Get("Properties", "Last Packet TNC Channel", "");
-            if (!string.IsNullOrEmpty(cmbChannelName.Text) & cmbChannelName.Text != "<Enter a new channel>")
+            cmbChannelName.Text = BackingObject.LastPacketChannel;
+            if (!string.IsNullOrEmpty(cmbChannelName.Text) && cmbChannelName.Text != "<Enter a new channel>")
             {
-                if (Channels.Entries.ContainsKey(cmbChannelName.Text))
+                if (BackingObject.ContainsChannel(cmbChannelName.Text))
                 {
                     SetEntries();
                     SetRMSList();
@@ -113,14 +125,11 @@ namespace Paclink
             cmbTNCType.Items.Add("TM-D72");
             cmbTNCType.Items.Add("ALINCO int");
             cmbTNCType.Items.Add("Generic KISS");
-            var strPorts = SerialPort.GetPortNames();
-            if (strPorts.Length > 0)
+
+            foreach (var port in BackingObject.SerialPorts)
             {
-                foreach (string strPort in strPorts)
-                {
-                    cmbTNCSerialPort.Items.Add(Globals.CleanSerialPort(strPort));
-                    cmbRadioPort.Items.Add(Globals.CleanSerialPort(strPort));
-                }
+                cmbTNCSerialPort.Items.Add(port);
+                cmbRadioPort.Items.Add(port);
             }
 
             cmbRadioBaud.Items.Add("4800");
@@ -153,13 +162,13 @@ namespace Paclink
 
         private bool SetRMSList()
         {
-            if (!Channels.HasChannelList(true))
+            if (!BackingObject.HasChannelList)
             {
                 MessageBox.Show("Click 'Update Channel List' to download the list of available channels");
                 return false;
             }
 
-            var aryResults = Channels.ParseChannelList(true);
+            var aryResults = BackingObject.ChannelList.ToArray();
             int intIndex;
             string strFreqList;
             string strStationCall;
@@ -174,36 +183,35 @@ namespace Paclink
                 {
                     intIndex = station.IndexOf(":");
                     strFreqList = station.Substring(intIndex + 1);
-                    if (Globals.AnyUseableFrequency(strFreqList, cmbTNCType.Text) & Globals.CanUseBaud(strFreqList, cmbOnAirBaud.Text))
+                    if (BackingObject.CanUseBaudAndFrequency(strFreqList, cmbTNCType.Text, cmbOnAirBaud.Text))
                     {
                         var strItems = strFreqList.Split('|');
-                        // cmbRemoteCallsign.Items.Add(station.Substring(0, intIndex) & " (" & FormatBaud(strItems(2)) & ")")
                         cmbRemoteCallsign.Items.Add(station.Substring(0, intIndex));
                         strStationCall = station.Substring(0, intIndex);
-                        if ((strStationCall ?? "") == (stcSelectedChannel.RemoteCallsign ?? ""))
+                        if ((strStationCall ?? "") == (_remoteCallsign ?? ""))
                             blnFoundCallsign = true;
                     }
                 }
 
                 if (blnFoundCallsign)
                 {
-                    cmbRemoteCallsign.Text = stcSelectedChannel.RemoteCallsign;
-                    cmbFreqs.Text = stcSelectedChannel.RDOCenterFrequency;
+                    cmbRemoteCallsign.Text = _remoteCallsign;
+                    cmbFreqs.Text = _radioCenterFrequency;
                 }
                 else
                 {
                     cmbRemoteCallsign.Text = "";
                     cmbFreqs.Text = "";
-                    stcSelectedChannel.RemoteCallsign = "";
-                    cmbFreqs.Text = stcSelectedChannel.RDOCenterFrequency;
+                    _remoteCallsign = "";
+                    cmbFreqs.Text = _radioCenterFrequency;
                 }
             }
             else
             {
                 cmbRemoteCallsign.Items.Clear();
-                cmbRemoteCallsign.Text = stcSelectedChannel.RemoteCallsign;
+                cmbRemoteCallsign.Text = _remoteCallsign;
                 cmbFreqs.Items.Clear();
-                cmbFreqs.Text = stcSelectedChannel.RDOCenterFrequency;
+                cmbFreqs.Text = _radioCenterFrequency;
             }
 
             return true;
@@ -212,13 +220,9 @@ namespace Paclink
         private void FillChannelList()
         {
             cmbChannelName.Items.Clear();
-            foreach (ChannelProperties stcChannel in Channels.Entries.Values)
+            foreach (var name in BackingObject.ChannelNames)
             {
-                if (stcChannel.ChannelType == ChannelMode.PacketTNC)
-                {
-                    if (!string.IsNullOrEmpty(stcChannel.ChannelName.Trim()))
-                        cmbChannelName.Items.Add(stcChannel.ChannelName);
-                }
+                cmbChannelName.Items.Add(name);
             }
         } // FillChannelList
 
@@ -247,63 +251,90 @@ namespace Paclink
 
         private void SetEntries()
         {
-            stcSelectedChannel = (ChannelProperties)Channels.Entries[cmbChannelName.Text];
+            string centerFrequency;
+            int priority;
+            int activityTimeout;
+            int scriptTimeout;
+            string script;
+            bool enabled;
+            string serialPort;
+            string tncType;
+            int tncPort;
+            string tncConfigurationFile;
+            bool tncConfigureOnFirstUseOnly;
+            string radioControlBaud;
+            string radioControlPort;
+            string radioModel;
+            int onAirBaud;
+            string civAddress;
+            bool radioControlSerial;
+            bool radioControlPTC;
+            bool radioControlManual;
+            bool radioTTLLevel;
+            string freqMHZ;
+            string tncBaudRate;
+            string remoteCallsign;
+
+            BackingObject.GetChannelInfo(
+                cmbChannelName.Text, out centerFrequency, out priority, out activityTimeout,
+                out scriptTimeout, out script, out enabled, out serialPort,
+                out tncType, out tncPort, out tncConfigurationFile,
+                out tncConfigureOnFirstUseOnly, out radioControlBaud, out radioControlPort,
+                out radioModel, out onAirBaud, out civAddress,
+                out radioControlSerial, out radioControlPTC, out radioControlManual,
+                out radioTTLLevel, out freqMHZ, out tncBaudRate, out remoteCallsign);
+
+            cmbFreqs.Text = centerFrequency;
+            cmbRemoteCallsign.Text = remoteCallsign;
+            nudPriority.Value = priority;
+            nudActivityTimeout.Value = activityTimeout;
+            nudScriptTimeout.Value = scriptTimeout;
+            txtScript.Text = script;
+            chkEnabled.Checked = enabled;
+            cmbTNCSerialPort.Text = serialPort;
+            cmbTNCType.Text = tncType;
+            nudTNCPort.Value = tncPort;
+            txtTNCConfigurationFile.Text = tncConfigurationFile;
+            chkFirstUseOnly.Checked = tncConfigureOnFirstUseOnly;
+
+            // Radio Type
+            cmbRadioBaud.Text = radioControlBaud;
+            cmbRadioPort.Text = radioControlPort;
+            cmbRadioModel.Text = radioModel;
+            cmbOnAirBaud.Text = onAirBaud.ToString();
+            txtRadioAdd.Text = civAddress;
+            rdoSerial.Checked = radioControlSerial;
+            rdoViaPTCII.Checked = radioControlPTC;
+            rdoManual.Checked = radioControlManual;
+            rdoTTL.Checked = radioTTLLevel;
+            rdoV24.Checked = !radioTTLLevel;
+
+            txtFreqMHz.Text = freqMHZ;
+
+            cmbTNCBaudRate.Items.Clear();
+            if (cmbTNCType.Text.StartsWith("PTC II") | cmbTNCType.Text.IndexOf("DR-7800") != -1)
             {
-                var withBlock = stcSelectedChannel;
-                string strPhsFreq = withBlock.RDOCenterFrequency;
-                cmbFreqs.Text = withBlock.RDOCenterFrequency;
-                nudPriority.Value = withBlock.Priority;
-                // cmbRemoteCallsign.Text = .RemoteCallsign
-                nudActivityTimeout.Value = Math.Max(10, withBlock.TNCTimeout);
-                nudScriptTimeout.Value = withBlock.TNCScriptTimeout;
-                txtScript.Text = withBlock.TNCScript;
-                chkEnabled.Checked = withBlock.Enabled;
-                cmbTNCSerialPort.Text = withBlock.TNCSerialPort;
-                cmbTNCType.Text = withBlock.TNCType;
-                nudTNCPort.Value = withBlock.TNCPort;
-                txtTNCConfigurationFile.Text = withBlock.TNCConfigurationFile;
-                chkFirstUseOnly.Checked = withBlock.TNCConfigureOnFirstUseOnly;
-
-                // Radio Type
-                cmbRadioBaud.Text = stcSelectedChannel.RDOControlBaud;
-                cmbRadioPort.Text = stcSelectedChannel.RDOControlPort;
-                cmbRadioModel.Text = stcSelectedChannel.RDOModel;
-                cmbOnAirBaud.Text = stcSelectedChannel.TNCOnAirBaud.ToString();
-                txtRadioAdd.Text = stcSelectedChannel.CIVAddress;
-                rdoSerial.Checked = stcSelectedChannel.RDOControl == "Serial";
-                rdoViaPTCII.Checked = stcSelectedChannel.RDOControl == "Via PTCII";
-                rdoManual.Checked = stcSelectedChannel.RDOControl == "Manual";
-                rdoTTL.Checked = stcSelectedChannel.TTLLevel;
-                rdoV24.Checked = !stcSelectedChannel.TTLLevel;
-                try
-                {
-                    txtFreqMHz.Text = (0.001 * double.Parse(stcSelectedChannel.RDOCenterFrequency, System.Globalization.NumberStyles.AllowDecimalPoint)).ToString("##00.000");
-                }
-                catch
-                {
-                }
-
-                cmbTNCBaudRate.Items.Clear();
-                if (cmbTNCType.Text.StartsWith("PTC II") | cmbTNCType.Text.IndexOf("DR-7800") != -1)
-                {
-                    cmbTNCBaudRate.Items.Add("38400");
-                    cmbTNCBaudRate.Items.Add("57600");
-                    cmbTNCBaudRate.Items.Add("115200");
-                    if (Convert.ToInt32(withBlock.TNCBaudRate) < 38400)
-                        withBlock.TNCBaudRate = "38400";
-                }
-                else
-                {
-                    cmbTNCBaudRate.Items.Add("4800");
-                    cmbTNCBaudRate.Items.Add("9600");
-                    cmbTNCBaudRate.Items.Add("19200");
-                    cmbTNCBaudRate.Items.Add("38400");
-                    cmbTNCBaudRate.Items.Add("57600");
-                    cmbTNCBaudRate.Items.Add("115200");
-                }
-
-                cmbTNCBaudRate.Text = withBlock.TNCBaudRate;
+                cmbTNCBaudRate.Items.Add("38400");
+                cmbTNCBaudRate.Items.Add("57600");
+                cmbTNCBaudRate.Items.Add("115200");
+                if (Convert.ToInt32(tncBaudRate) < 38400)
+                    tncBaudRate = "38400";
             }
+            else
+            {
+                cmbTNCBaudRate.Items.Add("4800");
+                cmbTNCBaudRate.Items.Add("9600");
+                cmbTNCBaudRate.Items.Add("19200");
+                cmbTNCBaudRate.Items.Add("38400");
+                cmbTNCBaudRate.Items.Add("57600");
+                cmbTNCBaudRate.Items.Add("115200");
+            }
+
+            cmbTNCBaudRate.Text = tncBaudRate;
+
+            _remoteCallsign = remoteCallsign;
+            _radioCenterFrequency = centerFrequency;
+            _tncBaudRate = cmbTNCBaudRate.Text;
 
             btnAdd.Enabled = false;
             btnRemove.Enabled = true;
@@ -311,55 +342,11 @@ namespace Paclink
             cmbFreqs.Enabled = true;
         } // SetEntries
 
-        private void UpdateChannelProperties(ref ChannelProperties stcChannel)
-        {
-            stcChannel.ChannelType = ChannelMode.PacketTNC;
-            stcChannel.ChannelName = cmbChannelName.Text;
-            stcChannel.Priority = Convert.ToInt32(nudPriority.Value);
-            stcChannel.RemoteCallsign = CleanupCallSign(cmbRemoteCallsign.Text);
-            stcChannel.RDOCenterFrequency = cmbFreqs.Text;
-            stcChannel.Enabled = chkEnabled.Checked;
-            stcChannel.TNCTimeout = Convert.ToInt32(nudActivityTimeout.Value);
-            stcChannel.TNCScript = txtScript.Text;
-            stcChannel.TNCScriptTimeout = Convert.ToInt32(nudScriptTimeout.Value);
-            stcChannel.TNCSerialPort = cmbTNCSerialPort.Text;
-            stcChannel.TNCBaudRate = cmbTNCBaudRate.Text;
-            stcChannel.TNCConfigurationFile = txtTNCConfigurationFile.Text;
-            stcChannel.TNCConfigureOnFirstUseOnly = chkFirstUseOnly.Checked;
-            stcChannel.TNCPort = Convert.ToInt32(nudTNCPort.Value);
-            stcChannel.TNCType = cmbTNCType.Text;
-            stcChannel.TNCOnAirBaud = Convert.ToInt32(cmbOnAirBaud.Text);
-            stcChannel.EnableAutoforward = true; // Packet Channels always enabled
-            if (!rdoManual.Checked)
-            {
-                stcChannel.RDOCenterFrequency = (1000 * double.Parse(txtFreqMHz.Text, System.Globalization.NumberStyles.AllowDecimalPoint)).ToString("##00000.0");
-            }
-
-            stcChannel.RDOControlBaud = cmbRadioBaud.Text;
-            stcChannel.RDOControlPort = cmbRadioPort.Text;
-            stcChannel.RDOModel = cmbRadioModel.Text;
-            stcChannel.CIVAddress = txtRadioAdd.Text.Trim().ToUpper();
-            if (rdoViaPTCII.Checked)
-            {
-                stcChannel.RDOControl = "Via PTCII";
-            }
-            else if (rdoSerial.Checked)
-            {
-                stcChannel.RDOControl = "Serial";
-            }
-            else
-            {
-                stcChannel.RDOControl = "Manual";
-            }
-
-            stcChannel.TTLLevel = rdoTTL.Checked;
-        } // UpdateProperties
-
         private void cmbChannelName_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(cmbChannelName.Text) & cmbChannelName.Text != "<Enter a new channel>")
+            if (!string.IsNullOrEmpty(cmbChannelName.Text) && cmbChannelName.Text != "<Enter a new channel>")
             {
-                if (Channels.Entries.ContainsKey(cmbChannelName.Text))
+                if (BackingObject.ContainsChannel(cmbChannelName.Text))
                 {
                     SetEntries();
                     SetRMSList();
@@ -422,7 +409,7 @@ namespace Paclink
             {
                 case "KAM98":
                     {
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExampleKAM98.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExampleKAM98.aps";
                         lblTNCPort.Enabled = false;
                         nudTNCPort.Enabled = false;
                         cmbOnAirBaud.Text = "1200";
@@ -432,7 +419,7 @@ namespace Paclink
 
                 case "KAM/+":
                     {
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExampleKAM+.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExampleKAM+.aps";
                         lblTNCPort.Enabled = false;
                         nudTNCPort.Enabled = false;
                         cmbOnAirBaud.Text = "1200";
@@ -442,7 +429,7 @@ namespace Paclink
 
                 case "KAMXL":
                     {
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExampleKAMXL.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExampleKAMXL.aps";
                         cmbOnAirBaud.Enabled = true;
                         break;
                     }
@@ -450,7 +437,7 @@ namespace Paclink
                 case "PTC II":
                 case "PTC IIpro":
                     {
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExamplePTCII_pro.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExamplePTCII_pro.aps";
                         cmbOnAirBaud.Enabled = true;
                         break;
                     }
@@ -459,35 +446,35 @@ namespace Paclink
                 case "PTC IIex":
                 case "PTC IIusb":
                     {
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExamplePTCII_e.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExamplePTCII_e.aps";
                         cmbOnAirBaud.Enabled = true;
                         break;
                     }
 
                 case "PTC DR-7800":
                     {
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExamplePTC_DR7800.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExamplePTC_DR7800.aps";
                         cmbOnAirBaud.Enabled = true;
                         break;
                     }
 
                 case "KPC9612":
                     {
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExampleKPC9612.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExampleKPC9612.aps";
                         cmbOnAirBaud.Enabled = true;
                         break;
                     }
 
                 case "KPC9612+":
                     {
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExampleKPC9612+.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExampleKPC9612+.aps";
                         cmbOnAirBaud.Enabled = true;
                         break;
                     }
 
                 case "KPC3":
                     {
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExampleKPC3.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExampleKPC3.aps";
                         cmbOnAirBaud.Text = "1200";
                         cmbOnAirBaud.Enabled = false;
                         break;
@@ -495,7 +482,7 @@ namespace Paclink
 
                 case "KPC3+":
                     {
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExampleKPC3+.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExampleKPC3+.aps";
                         cmbOnAirBaud.Text = "1200";
                         cmbOnAirBaud.Enabled = false;
                         break;
@@ -503,7 +490,7 @@ namespace Paclink
 
                 case "KPC4":
                     {
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExampleKPC4.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExampleKPC4.aps";
                         cmbOnAirBaud.Text = "1200";
                         cmbOnAirBaud.Enabled = false;
                         break;
@@ -511,28 +498,28 @@ namespace Paclink
 
                 case "PK-88":
                     {
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExamplePK88.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExamplePK88.aps";
                         cmbOnAirBaud.Enabled = true;
                         break;
                     }
 
                 case "PK-96":
                     {
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExamplePK96.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExamplePK96.aps";
                         cmbOnAirBaud.Enabled = true;
                         break;
                     }
 
                 case "PK-232":
                     {
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExamplePK232.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExamplePK232.aps";
                         cmbOnAirBaud.Enabled = true;
                         break;
                     }
 
                 case "PK-900":
                     {
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExamplePK900.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExamplePK900.aps";
                         cmbOnAirBaud.Enabled = true;
                         break;
                     }
@@ -541,21 +528,21 @@ namespace Paclink
                 case "TM-D700 int":
                     {
                         cmbOnAirBaud.Enabled = true;
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExampleKenwoodKISSD700.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExampleKenwoodKISSD700.aps";
                         break;
                     }
 
                 case "TM-D710 int":
                     {
                         cmbOnAirBaud.Enabled = true;
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExampleKenwoodKISSD710.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExampleKenwoodKISSD710.aps";
                         break;
                     }
 
                 case "TM-D72":
                     {
                         cmbOnAirBaud.Enabled = true;
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExampleKenwoodTMD72.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExampleKenwoodTMD72.aps";
                         break;
                     }
 
@@ -564,14 +551,14 @@ namespace Paclink
                 case "TH-D7 int":
                     {
                         cmbOnAirBaud.Enabled = true;
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExampleTascoKISS.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExampleTascoKISS.aps";
                         break;
                     }
 
                 case "Generic KISS":
                     {
                         cmbOnAirBaud.Enabled = true;
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExampleNativeKISS.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExampleNativeKISS.aps";
                         break;
                     }
             }
@@ -586,13 +573,13 @@ namespace Paclink
             }
 
             cmbTNCBaudRate.Items.Clear();
-            if (cmbTNCType.Text.StartsWith("PTC II") | cmbTNCType.Text.IndexOf("DR-7800") != -1)
+            if (cmbTNCType.Text.StartsWith("PTC II") || cmbTNCType.Text.IndexOf("DR-7800") != -1)
             {
                 cmbTNCBaudRate.Items.Add("38400");
                 cmbTNCBaudRate.Items.Add("57600");
                 cmbTNCBaudRate.Items.Add("115200");
-                if (Convert.ToInt32(stcSelectedChannel.TNCBaudRate) < 38400)
-                    stcSelectedChannel.TNCBaudRate = "38400";
+                if (Convert.ToInt32(_tncBaudRate) < 38400)
+                    _tncBaudRate = "38400";
             }
             else
             {
@@ -604,13 +591,13 @@ namespace Paclink
                 cmbTNCBaudRate.Items.Add("115200");
             }
 
-            cmbTNCBaudRate.Text = stcSelectedChannel.TNCBaudRate;
+            cmbTNCBaudRate.Text = _tncBaudRate;
         } // cmbTNCtype_SelectedIndexChanged
 
         private void btnBrowseConfiguration_Click(object sender, EventArgs e)
         {
             var openFileDialog1 = new OpenFileDialog();
-            openFileDialog1.InitialDirectory = Globals.SiteRootDirectory + "Data";
+            openFileDialog1.InitialDirectory = BackingObject.SiteRootDirectory + "Data";
             openFileDialog1.Filter = "aps files |*.aps";
             openFileDialog1.RestoreDirectory = true;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -624,7 +611,7 @@ namespace Paclink
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            if (!Globals.IsValidFileName(cmbChannelName.Text))
+            if (!BackingObject.IsValidChannelName(cmbChannelName.Text))
             {
                 cmbChannelName.Focus();
                 return;
@@ -644,7 +631,7 @@ namespace Paclink
                 return;
             }
 
-            if (Channels.IsAccount(cmbChannelName.Text))
+            if (BackingObject.IsAccount(cmbChannelName.Text))
             {
                 MessageBox.Show(cmbChannelName.Text + " is in use as an account name...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 cmbChannelName.Focus();
@@ -653,7 +640,7 @@ namespace Paclink
 
             if (rdoManual.Checked == false)
             {
-                if (string.IsNullOrEmpty(cmbRadioModel.Text.Trim()) | string.IsNullOrEmpty(cmbRadioBaud.Text.Trim()) | string.IsNullOrEmpty(cmbRadioPort.Text.Trim()))
+                if (string.IsNullOrEmpty(cmbRadioModel.Text.Trim()) || string.IsNullOrEmpty(cmbRadioBaud.Text.Trim()) || string.IsNullOrEmpty(cmbRadioPort.Text.Trim()))
 
                 {
                     MessageBox.Show("The parameters for Radio control are not complete!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -661,7 +648,7 @@ namespace Paclink
                 }
             }
 
-            if (Channels.IsChannel(cmbChannelName.Text))
+            if (BackingObject.IsChannel(cmbChannelName.Text))
             {
                 MessageBox.Show("The channel name " + cmbChannelName.Text + " is already in use...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 cmbChannelName.Focus();
@@ -677,7 +664,7 @@ namespace Paclink
 
                 if (!rdoManual.Checked)
                 {
-                    if (!Globals.WithinLimits(txtFreqMHz.Text, 2400, 29))
+                    if (!BackingObject.IsFreqInLimits(txtFreqMHz.Text))
                     {
                         MessageBox.Show("Frequency must be in MHz between 29.0 and 2400", "Frequency Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         txtFreqMHz.Focus();
@@ -695,12 +682,22 @@ namespace Paclink
                     }
                 }
 
-                var stcNewChannel = default(ChannelProperties);
-                UpdateChannelProperties(ref stcNewChannel);
-                Channels.AddChannel(ref stcNewChannel);
-                Channels.FillChannelCollection();
+                _remoteCallsign = cmbRemoteCallsign.Text;
+                _radioCenterFrequency = (1000 * double.Parse(txtFreqMHz.Text, System.Globalization.NumberStyles.AllowDecimalPoint)).ToString("##00000.0");
+                _tncBaudRate = cmbTNCBaudRate.Text;
+
+                BackingObject.AddChannel(
+                    cmbChannelName.Text, cmbFreqs.Text, Convert.ToInt32(nudPriority.Value), cmbRemoteCallsign.Text,
+                    Convert.ToInt32(nudActivityTimeout.Value), Convert.ToInt32(nudScriptTimeout.Value), txtScript.Text, chkEnabled.Checked,
+                    cmbTNCSerialPort.Text, cmbTNCType.Text, Convert.ToInt32(nudTNCPort.Value), txtTNCConfigurationFile.Text,
+                    chkFirstUseOnly.Checked, cmbRadioBaud.Text, cmbRadioPort.Text, cmbRadioModel.Text,
+                    Convert.ToInt32(cmbOnAirBaud.Text), txtRadioAdd.Text, rdoSerial.Checked, rdoViaPTCII.Checked, rdoManual.Checked,
+                    rdoTTL.Checked, _radioCenterFrequency,
+                    cmbTNCBaudRate.Text);
+
                 FillChannelList();
-                Globals.Settings.Save("Properties", "Last Packet TNC Channel", cmbChannelName.Text);
+
+                BackingObject.LastPacketChannel = cmbChannelName.Text;
             }
 
             btnAdd.Enabled = false;
@@ -717,15 +714,14 @@ namespace Paclink
             }
             else if (MessageBox.Show("Confirm removal of packet channel " + cmbChannelName.Text + "...", "Remove Channel", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                Channels.RemoveChannel(cmbChannelName.Text);
-                Channels.FillChannelCollection();
+                BackingObject.RemoveChannel(cmbChannelName.Text);
                 FillChannelList();
-                if (Globals.cllFastStart.Contains(cmbChannelName.Text))
-                {
-                    Globals.cllFastStart.Remove(cmbChannelName.Text);
-                }
 
-                Globals.Settings.Save("Properties", "Last Packet TNC Channel", "");
+                BackingObject.LastPacketChannel = "";
+                _remoteCallsign = string.Empty;
+                _radioCenterFrequency = string.Empty;
+                _tncBaudRate = string.Empty;
+
                 ClearEntries();
                 // Me.Close()
             }
@@ -748,7 +744,7 @@ namespace Paclink
 
                 if (!rdoManual.Checked)
                 {
-                    if (!Globals.WithinLimits(txtFreqMHz.Text, 2400, 29))
+                    if (!BackingObject.IsFreqInLimits(txtFreqMHz.Text))
                     {
                         MessageBox.Show("Frequency must be in MHz between 29.0 and 2400", "Frequency Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         txtFreqMHz.Focus();
@@ -768,29 +764,35 @@ namespace Paclink
                     }
                 }
 
-                var stcUpdateChannel = default(ChannelProperties);
-                UpdateChannelProperties(ref stcUpdateChannel);
-                Channels.UpdateChannel(ref stcUpdateChannel);
-                Channels.FillChannelCollection();
+                _remoteCallsign = cmbRemoteCallsign.Text;
+                _radioCenterFrequency = (1000 * double.Parse(txtFreqMHz.Text, System.Globalization.NumberStyles.AllowDecimalPoint)).ToString("##00000.0");
+                _tncBaudRate = cmbTNCBaudRate.Text;
+
+                BackingObject.UpdateChannel(
+                    cmbChannelName.Text, cmbFreqs.Text, Convert.ToInt32(nudPriority.Value), cmbRemoteCallsign.Text,
+                    Convert.ToInt32(nudActivityTimeout.Value), Convert.ToInt32(nudScriptTimeout.Value), txtScript.Text, chkEnabled.Checked,
+                    cmbTNCSerialPort.Text, cmbTNCType.Text, Convert.ToInt32(nudTNCPort.Value), txtTNCConfigurationFile.Text,
+                    chkFirstUseOnly.Checked, cmbRadioBaud.Text, cmbRadioPort.Text, cmbRadioModel.Text,
+                    Convert.ToInt32(cmbOnAirBaud.Text), txtRadioAdd.Text, rdoSerial.Checked, rdoViaPTCII.Checked, rdoManual.Checked,
+                    rdoTTL.Checked, _radioCenterFrequency,
+                    cmbTNCBaudRate.Text);
+
                 FillChannelList();
 
-                // Clear channel name from the fast start list...
-                if (Globals.cllFastStart.Contains(cmbChannelName.Text))
-                    Globals.cllFastStart.Remove(cmbChannelName.Text);
-                Globals.Settings.Save("Properties", "Last Packet TNC Channel", cmbChannelName.Text);
+                BackingObject.LastPacketChannel = cmbChannelName.Text;
                 // Me.Close()
             }
         } // btnUpdate_Click
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            Globals.Settings.Save("Properties", "Last Packet TNC Channel", cmbChannelName.Text);
+            BackingObject.LastPacketChannel = cmbChannelName.Text;
             Close();
         } // btnClose_Click
 
         private void btnHelp_Click(object sender, EventArgs e)
         {
-            Help.ShowHelp(this, Globals.SiteRootDirectory + @"\Paclink.chm", HelpNavigator.Topic, @"html\hs130.htm");
+            Help.ShowHelp(this, BackingObject.SiteRootDirectory + @"\Paclink.chm", HelpNavigator.Topic, @"html\hs130.htm");
         } // btnHelp_Click
 
         private void rdoManual_CheckedChanged(object sender, EventArgs e)
@@ -870,7 +872,7 @@ namespace Paclink
             try
             {
                 Cursor = Cursors.WaitCursor;
-                strError = Channels.GetChannelRecords(true, Globals.strServiceCodes);
+                strError = BackingObject.DownloadChannelList();
             }
             finally
             {
@@ -896,9 +898,8 @@ namespace Paclink
             // 
             string strFreqEntry;
             string[] strStation;
-            string strCallsign = CleanupCallSign(cmbRemoteCallsign.Text);
+            string strCallsign = BackingObject.CleanupCallSign(cmbRemoteCallsign.Text);
             cmbRemoteCallsign.Text = strCallsign;
-            stcSelectedChannel.RemoteCallsign = strCallsign;
             for (int i = 0, loopTo = arySelectedMBOs.Length - 1; i <= loopTo; i++)
             {
                 strStation = arySelectedMBOs[i].Split(':');
@@ -911,23 +912,21 @@ namespace Paclink
                     {
                         cmbFreqs.Items.Clear();
                         cmbFreqs.Text = "";
-                        for (int j = 0, loopTo1 = aryFreqs.Length - 1; j <= loopTo1; j++)
+
+                        foreach (var freq in BackingObject.GetUsableFreqs(aryFreqs, cmbTNCType.Text))
                         {
-                            strFreqEntry = aryFreqs[j];
-                            if (Globals.CanUseFrequency(strFreqEntry, cmbTNCType.Text))
-                            {
-                                cmbFreqs.Items.Add(Globals.FormatFrequency(strFreqEntry));
-                            }
+                            cmbFreqs.Items.Add(freq);
                         }
 
-                        cmbFreqs.Text = Globals.FormatFrequency(aryFreqs[0]);
+                        if (cmbFreqs.Items.Count > 0)
+                        {
+                            cmbFreqs.Text = cmbFreqs.Items[0].ToString();
+                        }
                     }
 
                     return;
                 }
             }
-
-            stcSelectedChannel.RemoteCallsign = cmbRemoteCallsign.Text;
         } // cmbCallSigns_SelectedIndexChanged
         /* TODO ERROR: Skipped ElseDirectiveTrivia *//* TODO ERROR: Skipped DisabledTextTrivia *//* TODO ERROR: Skipped EndIfDirectiveTrivia */
         private void cmbOnAirBaud_SelectedIndexChanged(object sender, EventArgs e)
@@ -938,22 +937,21 @@ namespace Paclink
             SetRMSList();
         }
 
-        private string CleanupCallSign(string strCallsign)
-        {
-            // 
-            // Remove the baud rate indicator.
-            // 
-            var strTokens = strCallsign.Split(' ');
-            if (strTokens.Length < 1)
-                return "";
-            return strTokens[0].Trim().ToUpper();
-        }
-
         private void cmbFreqs_SelectedIndexChanged(object sender, EventArgs e)
         {
             // 
             // An entry in the frequency list has been selected.
             // 
+        }
+
+        public void RefreshWindow()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CloseWindow()
+        {
+            throw new NotImplementedException();
         }
     }
 } // DialogPacketTNCChannels

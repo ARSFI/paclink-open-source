@@ -480,8 +480,9 @@ namespace Paclink
 
         public void ShowPacketTNCChannels()
         {
-            var dlgPacketTNCChannels = new DialogPacketTNCChannels();
-            dlgPacketTNCChannels.ShowDialog();
+            UserInterfaceFactory.GetUiSystem().DisplayForm(
+                AvailableForms.TncChannels,
+                new DialogPacketTNCChannelViewModel());
         }
 
         public void ShowTelnetChannels()
