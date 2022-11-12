@@ -2,9 +2,8 @@
 using System.Collections;
 using System.IO;
 using System.Text;
-using System.Windows.Forms;
-using Microsoft.VisualBasic;
 using MimeKit;
+using Paclink.UI.Common;
 
 namespace Paclink
 {
@@ -60,7 +59,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                MessageBox.Show("[5003] " + ex.Message);
+                UserInterfaceFactory.GetUiSystem().DisplayModalError("[5003] " + ex.Message, "MimeDecoder");
                 AttachmentFileNameRet = "";
             }
 
@@ -77,7 +76,7 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                MessageBox.Show("[5004] " + ex.Message);
+                UserInterfaceFactory.GetUiSystem().DisplayModalError("[5004] " + ex.Message, "MimeDecoder");
                 return null;
             }
 

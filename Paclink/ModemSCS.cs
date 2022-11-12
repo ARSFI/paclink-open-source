@@ -5,7 +5,6 @@ using System.IO.Ports;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
-using System.Windows.Forms;
 using NLog;
 using Paclink.UI.Common;
 
@@ -395,7 +394,7 @@ namespace Paclink
                         blnWaitingForManualConnect = false;
                         if (Globals.dlgPactorConnect.ShowModal() == UiDialogResult.Cancel)
                         {
-                            MyApplication.Forms.Main.RefreshWindow();
+                            UserInterfaceFactory.GetUiSystem().GetMainForm().RefreshWindow();
                             blnNoIdentification = true;
                             if (objProtocol != null)
                             {

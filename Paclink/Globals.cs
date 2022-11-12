@@ -5,12 +5,12 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
-using System.Windows.Forms;
 using NLog;
 using Paclink.Data;
 using Paclink.UI.Common;
@@ -633,11 +633,9 @@ namespace Paclink
             {
                 if (strInvalidCharacters.IndexOf(chr) != -1)
                 {
-                    MessageBox.Show(
+                    UserInterfaceFactory.GetUiSystem().DisplayModalError(
                         "The characters " + strInvalidCharacters + " are not allowed in file, account, or channel names...",
-                        "Error",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
+                        "Error");
                     return false;
                 }
             }
@@ -936,7 +934,7 @@ namespace Paclink
         {
             try
             {
-                WinlinkWebServices.AddProgramVersion(SiteCallsign, Application.ProductName, Application.ProductVersion, "");
+                WinlinkWebServices.AddProgramVersion(SiteCallsign, strProductName, strProductVersion, "");
             }
             catch (Exception ex)
             {
@@ -1597,7 +1595,7 @@ namespace Paclink
             while (blnFinishedGettingChannels == false)
             {
                 Thread.Sleep(100);
-                Application.DoEvents();
+                UserInterfaceFactory.GetUiSystem().Yield();
             }
             // 
             // Finished

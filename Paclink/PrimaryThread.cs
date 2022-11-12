@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
-using System.Windows.Forms;
 using NLog;
 using Paclink.Data;
 using Paclink.UI.Common;
@@ -82,8 +82,10 @@ namespace Paclink
                     UserInterfaceFactory.GetUiSystem().DisplayForm(AvailableForms.SiteProperties, vm);
                     if (vm.IsCallsignAndGridSquareValid() == false)
                     {
-                        MessageBox.Show("Paclink must have a valid initial configuration to continue...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        MyApplication.Forms.Main.CloseWindow();
+                        UserInterfaceFactory.GetUiSystem().DisplayModalError(
+                            "Paclink must have a valid initial configuration to continue...", 
+                            "Error");
+                        UserInterfaceFactory.GetUiSystem().GetMainForm().CloseWindow();
                         return;
                     }
                 }
@@ -104,14 +106,14 @@ namespace Paclink
 
             try
             {
-                MyApplication.Forms.Main.UpdateChannelList();
+                UserInterfaceFactory.GetUiSystem().GetMainForm().UpdateChannelList();
             }
             catch (Exception ex)
             {
                 _log.Error("[Main.Startup G] " + ex.Message);
             }
 
-            MyApplication.Forms.Main.UpdateSiteCallsign(Globals.SiteCallsign);
+            UserInterfaceFactory.GetUiSystem().GetMainForm().UpdateSiteCallsign(Globals.SiteCallsign);
             if (Globals.UseRMSRelay())
             {
                 Globals.queChannelDisplay.Enqueue("G*** Paclink is set to connect to RMS Relay.");
@@ -122,8 +124,8 @@ namespace Paclink
                 Globals.queChannelDisplay.Enqueue("G*** Paclink is set to send messages via radio-only forwarding.");
             }
 
-            Globals.queChannelDisplay.Enqueue("G*** Paclink " + Application.ProductVersion + " ready...");
-            MyApplication.Forms.Main.EnableMainWindowInterface();
+            Globals.queChannelDisplay.Enqueue("G*** Paclink " + Globals.strProductVersion + " ready...");
+            UserInterfaceFactory.GetUiSystem().GetMainForm().EnableMainWindowInterface();
             if (thrSMTP != null)
             {
                 _abortSMTPThread = true;
@@ -194,11 +196,11 @@ namespace Paclink
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
+                UserInterfaceFactory.GetUiSystem().DisplayModalError(
                     ex.Message + Globals.CRLF +
                     "There may be a SMTP/POP3 confilct due to another program/service listening on the POP3/SMTP Ports." +
                     " Terminate that service or change POP3/SMTP ports in Paclink and your mail client." +
-                    " Check the Paclink Errors.log for details of the error.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    " Check the Paclink Errors.log for details of the error.", "Error");
 
                 _log.Error("[SMTPThread] SMTP/POP3 Port Setup: " + ex.Message);
             }

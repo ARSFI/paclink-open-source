@@ -5,7 +5,6 @@ using System.IO.Ports;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
-using System.Windows.Forms;
 using NLog;
 using Paclink.UI.Common;
 
@@ -961,7 +960,7 @@ namespace Paclink
                     }
                 }
 
-                Application.DoEvents();
+                UserInterfaceFactory.GetUiSystem().Yield();
                 Poll();
             }
             while (true);

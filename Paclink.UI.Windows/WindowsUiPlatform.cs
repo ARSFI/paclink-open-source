@@ -6,6 +6,13 @@ namespace Paclink.UI.Windows
 {
     public class WindowsUiPlatform : IUiPlatform
     {
+        private IMainWindow _mainWindow;
+
+        public IMainWindow GetMainForm()
+        {
+            return _mainWindow;
+        }
+
         public IWindowBase CreateForm(AvailableForms form, IFormBacking backingObject)
         {
             IWindowBase window = null;
@@ -85,12 +92,18 @@ namespace Paclink.UI.Windows
 
         public void DisplayMainForm(IMainFormBacking backingObject)
         {
-            Application.Run(new Main(backingObject));
+            _mainWindow = new Main(backingObject);
+            Application.Run((Form)_mainWindow);
         }
 
         public void RunUiEventLoop()
         {
             Application.Run();
+        }
+
+        public void Yield()
+        {
+            Application.DoEvents();
         }
     }
 }

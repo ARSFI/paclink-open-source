@@ -1,9 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
+    <TargetFramework>net6.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
@@ -17,7 +15,6 @@
     <ProjectReference Include="..\Libraries\winlink-webservices\WinlinkWebServices\WinlinkWebServices.csproj" />
     <ProjectReference Include="..\Paclink.Data\Paclink.Data.csproj" />
     <ProjectReference Include="..\Paclink.UI.Common\Paclink.UI.Common.csproj" />
-    <ProjectReference Include="..\Paclink.UI.Windows\Paclink.UI.Windows.csproj" />
     <ProjectReference Include="..\TNC.Middleware\TNC.Middleware.csproj" />
     <ProjectReference Include="..\TNCKissInterface\TNCKissInterface\TNCKissInterface.csproj" />
   </ItemGroup>

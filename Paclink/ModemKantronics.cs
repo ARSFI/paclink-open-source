@@ -5,7 +5,6 @@ using System.IO.Ports;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
-using System.Windows.Forms;
 using NLog;
 using Paclink.UI.Common;
 
@@ -1619,7 +1618,7 @@ namespace Paclink
                         }
 
                         Thread.Sleep(1);
-                        Application.DoEvents();
+                        UserInterfaceFactory.GetUiSystem().Yield();
                         if (blnClosing | Globals.blnProgramClosing)
                             break;
                     }

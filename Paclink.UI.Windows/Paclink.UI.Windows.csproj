@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
@@ -13,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Paclink.Resources\Paclink.Resources.csproj" />
     <ProjectReference Include="..\Paclink.UI.Common\Paclink.UI.Common.csproj" />
+    <ProjectReference Include="..\Paclink\Paclink.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,8 +31,20 @@
     <Compile Update="DialogTacticalAccounts.cs" />
     <Compile Update="DialogTelnetChannels.cs" />
     <Compile Update="Main.cs" />
+    <Compile Update="Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <AutoGen>True</AutoGen>
+    </Compile>
     <Compile Update="Terminal.cs" />
     <Compile Update="TerminalSettings.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Settings.settings">
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      <Generator>SettingsSingleFileGenerator</Generator>
+    </None>
   </ItemGroup>
 
  </Project>

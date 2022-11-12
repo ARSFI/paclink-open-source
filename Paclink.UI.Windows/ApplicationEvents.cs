@@ -19,24 +19,26 @@ namespace Paclink
     {
         private static readonly Logger _log = LogManager.GetCurrentClassLogger();
 
-        public static class Forms
-        {
-            public static Main Main;
-        }
-
         [STAThread]
         static void Main()
         {
             Application.ThreadException += Application_ThreadException;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Forms.Main = new Main();
-            UserInterfaceFactory.GetUiSystem().DisplayMainForm(Forms.Main);
+            UserInterfaceFactory.GetUiSystem().DisplayMainForm(new Paclink.Main());
         }
 
         private static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
-            string strUnhandledException = Globals.TimestampEx() + " [" + Globals.strProductVersion + "] " + sender.ToString() + ": " + Globals.CRLF + e.Exception.Message.Trim() + Globals.CRLF + e.Exception.StackTrace + Globals.CRLF + e.Exception.TargetSite.ToString() + Globals.CRLF;
+            string version = typeof(Main).Assembly.GetName().Version.ToString();
+            string time = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+
+            string strUnhandledException = 
+                time + " [" + version + "] " + 
+                sender.ToString() + ": " + "\r\n" + e.Exception.Message.Trim() + 
+                "\r\n" + e.Exception.StackTrace + "\r\n" + 
+                e.Exception.TargetSite.ToString() + "\r\n";
+
             _log.Fatal(strUnhandledException);
             MessageBox.Show(strUnhandledException, "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             Environment.Exit(0);

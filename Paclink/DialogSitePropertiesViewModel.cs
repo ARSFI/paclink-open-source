@@ -114,7 +114,7 @@ namespace Paclink
             Globals.Settings.Save("Properties", "Secure Login Password", Globals.SecureLoginPassword);
 
             AddRadioAccount(Globals.SiteCallsign, Globals.SecureLoginPassword);
-            MyApplication.Forms.Main.UpdateSiteCallsign(Globals.SiteCallsign);
+            UserInterfaceFactory.GetUiSystem().GetMainForm().UpdateSiteCallsign(Globals.SiteCallsign);
             Globals.UpdateAccountDirectories();
 
             // TBD: why are we re-saving these when they're not touched?

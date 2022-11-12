@@ -5,8 +5,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using NLog;
+using Paclink.UI.Common;
 
 namespace Paclink
 {
@@ -342,7 +342,7 @@ namespace Paclink
                         }
 
                         Thread.Sleep(1000);
-                        Application.DoEvents();
+                        UserInterfaceFactory.GetUiSystem().Yield();
                         intTries += 1;
                         continue;
                     }

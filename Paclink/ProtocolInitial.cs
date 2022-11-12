@@ -2,9 +2,9 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Timers;
-using System.Windows.Forms;
 
 namespace Paclink
 {
@@ -41,7 +41,8 @@ namespace Paclink
             stcChannel = strNewChannel;
             Globals.strConnectedCallsign = strNewChannel.RemoteCallsign; // Set the global callsign for use by Radar
             Globals.strConnectedGridSquare = ""; // and clear the connected Grid square
-            strSID = "[Paclink-" + Application.ProductVersion + "-B2FIHM$]";
+
+            strSID = "[Paclink-" + Globals.strProductVersion + "-B2FIHM$]";
             ProtocolStateChange(EProtocolStates.Connected);
         } // New
 

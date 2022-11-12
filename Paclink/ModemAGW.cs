@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,8 +8,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using NLog;
+using Paclink.UI.Common;
 
 namespace Paclink
 {
@@ -238,7 +237,7 @@ namespace Paclink
             }
             catch (Exception e)
             {
-                MessageBox.Show("[Release] " + e.Message);
+                UserInterfaceFactory.GetUiSystem().DisplayModalError("[Release] " + e.Message, "ModemAGW");
             }
 
             try

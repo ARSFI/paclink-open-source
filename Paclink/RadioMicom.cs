@@ -3,8 +3,8 @@ using System.IO.Ports;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Timers;
-using System.Windows.Forms;
 using NLog;
+using Paclink.UI.Common;
 
 namespace Paclink
 {
@@ -59,7 +59,8 @@ namespace Paclink
                         retc = MICOMRptSSBState();
                         if (retc != 2)
                         {
-                            MessageBox.Show("Radio must be in USB mode...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            UserInterfaceFactory.GetUiSystem().DisplayModalError(
+                                "Radio must be in USB mode...", "Error");
                             _log.Error("[RadioMicom.InitializeSerialPort] " + "MICOM not in USB mode");
                             return false;
                         }
@@ -913,8 +914,9 @@ namespace Paclink
                 MiTimer.Interval = NRBytes * 40; // This assumes a character time of 1 ms.
                 MiTimer.Start();                 // Start the timer, runs in background.
                 do
-                    Application.DoEvents(); // Give up control to Op sys temporarily
-                while (!(objSerial.BytesToRead >= NRBytes | Timer2Popped == true));
+                {
+                    UserInterfaceFactory.GetUiSystem().Yield(); // Give up control to Op sys temporarily
+                } while (!(objSerial.BytesToRead >= NRBytes | Timer2Popped == true));
                 if (Timer2Popped == true)
                 {
                     GetMICOMDataRet = 0; // failed!
