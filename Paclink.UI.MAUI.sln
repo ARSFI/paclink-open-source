@@ -1,0 +1,106 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 17.0.31611.283
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{10CAA29E-E49D-4539-87F3-6346E05733A0}"
+	ProjectSection(SolutionItems) = preProject
+		Help Source\About.bmp = Help Source\About.bmp
+		Help Source\AGW Engine Properties.bmp = Help Source\AGW Engine Properties.bmp
+		Help Source\arsfi logo.bmp = Help Source\arsfi logo.bmp
+		Help Source\Documentation.bmp = Help Source\Documentation.bmp
+		Paclink\DoPostbuild.bat = Paclink\DoPostbuild.bat
+		Support Source\ExampleDSP232.aps = Support Source\ExampleDSP232.aps
+		Support Source\ExampleKAM+.aps = Support Source\ExampleKAM+.aps
+		Support Source\ExampleKAM98.aps = Support Source\ExampleKAM98.aps
+		Support Source\ExampleKAMXL.aps = Support Source\ExampleKAMXL.aps
+		Support Source\ExampleKenwoodKISSD700.aps = Support Source\ExampleKenwoodKISSD700.aps
+		Support Source\ExampleKenwoodKISSD710.aps = Support Source\ExampleKenwoodKISSD710.aps
+		Support Source\ExampleKPC3+.aps = Support Source\ExampleKPC3+.aps
+		Support Source\ExampleKPC3.aps = Support Source\ExampleKPC3.aps
+		Support Source\ExampleKPC9612+.aps = Support Source\ExampleKPC9612+.aps
+		Support Source\ExampleKPC9612.aps = Support Source\ExampleKPC9612.aps
+		Support Source\ExampleNativeKISS.aps = Support Source\ExampleNativeKISS.aps
+		Support Source\ExamplePK232.aps = Support Source\ExamplePK232.aps
+		Support Source\ExamplePK88.aps = Support Source\ExamplePK88.aps
+		Support Source\ExamplePK900.aps = Support Source\ExamplePK900.aps
+		Support Source\ExamplePK96.aps = Support Source\ExamplePK96.aps
+		Support Source\ExamplePTCII_pro.aps = Support Source\ExamplePTCII_pro.aps
+		Support Source\ExampleTascoKISS.aps = Support Source\ExampleTascoKISS.aps
+		Help Source\Main Display.bmp = Help Source\Main Display.bmp
+		Help Source\Manage Callsign Accounts.bmp = Help Source\Manage Callsign Accounts.bmp
+		Help Source\Manage Tactical Accounts.bmp = Help Source\Manage Tactical Accounts.bmp
+		Help Source\Packet AGW Channels.bmp = Help Source\Packet AGW Channels.bmp
+		Help Source\Packet TNC Channels.bmp = Help Source\Packet TNC Channels.bmp
+		Support Source\Paclink Revision History.txt = Support Source\Paclink Revision History.txt
+		Help Source\Paclink.hsc = Help Source\Paclink.hsc
+		Help Source\Pactor Connect.bmp = Help Source\Pactor Connect.bmp
+		Help Source\Pactor TNC Channels.bmp = Help Source\Pactor TNC Channels.bmp
+		Help Source\Polling Intervals.bmp = Help Source\Polling Intervals.bmp
+		Help Source\PTCII_AGWPE.bmp = Help Source\PTCII_AGWPE.bmp
+		Help Source\Simple Terminal.bmp = Help Source\Simple Terminal.bmp
+		Help Source\Site Properties.bmp = Help Source\Site Properties.bmp
+		Help Source\Telnet Channels.bmp = Help Source\Telnet Channels.bmp
+		Help Source\WINMOR Channels.bmp = Help Source\WINMOR Channels.bmp
+		Help Source\WINMOR Connect.bmp = Help Source\WINMOR Connect.bmp
+		Help Source\WINMOR Display.bmp = Help Source\WINMOR Display.bmp
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".tests", ".tests", "{B8229C6C-34E7-40A4-8833-1509F3BF8F95}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessTests", "DataAccessTests\DataAccessTests.csproj", "{FAB7B3C7-B5A8-4208-8ABC-6081A16EDA7E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paclink.Data", "Paclink.Data\Paclink.Data.csproj", "{2812E63C-BA22-4B61-AE4F-751361D2BF9C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinlinkWebServices", "Libraries\winlink-webservices\WinlinkWebServices\WinlinkWebServices.csproj", "{0346CC1F-5DA6-4F46-9E73-51B6003AC857}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TNC.Middleware", "TNC.Middleware\TNC.Middleware.csproj", "{66416857-0106-419D-AA7B-0C3D6F286787}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TNCKissInterface", "TNCKissInterface\TNCKissInterface\TNCKissInterface.csproj", "{A63067BC-6BFC-430F-801F-F6F289311E90}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paclink.UI.Common", "Paclink.UI.Common\Paclink.UI.Common.csproj", "{9F808E90-1708-4054-8AD8-7DF7C6857FD4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paclink.Resources", "Paclink.Resources\Paclink.Resources.csproj", "{D9CEF973-8E39-4E25-BFAF-589478E5BD25}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paclink.UI.MAUI", "Paclink.UI.MAUI\Paclink.UI.MAUI.csproj", "{0B09EEFD-0F7A-4CC4-BCB5-B0F3DE3D50BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paclink", "Paclink\Paclink.csproj", "{25F944A4-CD17-4AFA-9E85-643176A0AFBE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0B09EEFD-0F7A-4CC4-BCB5-B0F3DE3D50BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B09EEFD-0F7A-4CC4-BCB5-B0F3DE3D50BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B09EEFD-0F7A-4CC4-BCB5-B0F3DE3D50BF}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{0B09EEFD-0F7A-4CC4-BCB5-B0F3DE3D50BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B09EEFD-0F7A-4CC4-BCB5-B0F3DE3D50BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B09EEFD-0F7A-4CC4-BCB5-B0F3DE3D50BF}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{25F944A4-CD17-4AFA-9E85-643176A0AFBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25F944A4-CD17-4AFA-9E85-643176A0AFBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25F944A4-CD17-4AFA-9E85-643176A0AFBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25F944A4-CD17-4AFA-9E85-643176A0AFBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAB7B3C7-B5A8-4208-8ABC-6081A16EDA7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAB7B3C7-B5A8-4208-8ABC-6081A16EDA7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2812E63C-BA22-4B61-AE4F-751361D2BF9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2812E63C-BA22-4B61-AE4F-751361D2BF9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0346CC1F-5DA6-4F46-9E73-51B6003AC857}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0346CC1F-5DA6-4F46-9E73-51B6003AC857}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66416857-0106-419D-AA7B-0C3D6F286787}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66416857-0106-419D-AA7B-0C3D6F286787}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A63067BC-6BFC-430F-801F-F6F289311E90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A63067BC-6BFC-430F-801F-F6F289311E90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F808E90-1708-4054-8AD8-7DF7C6857FD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F808E90-1708-4054-8AD8-7DF7C6857FD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9CEF973-8E39-4E25-BFAF-589478E5BD25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9CEF973-8E39-4E25-BFAF-589478E5BD25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {61F7FB11-1E47-470C-91E2-47F8143E1572}
+	EndGlobalSection
+EndGlobal
