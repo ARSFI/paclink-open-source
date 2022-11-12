@@ -291,5 +291,10 @@ namespace Paclink.UI.Windows
         {
             Close();
         }
+
+        public UiDialogResult ShowModal()
+        {
+            throw new NotImplementedException();
+        }
     }
 } // SiteDialogProperties

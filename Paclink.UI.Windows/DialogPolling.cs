@@ -92,5 +92,10 @@ namespace Paclink.UI.Windows
         {
             throw new NotImplementedException();
         }
+
+        public UiDialogResult ShowModal()
+        {
+            throw new NotImplementedException();
+        }
     }
 } // Polling

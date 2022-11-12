@@ -6,9 +6,9 @@ namespace Paclink.UI.Windows
 {
     public class WindowsUiPlatform : IUiPlatform
     {
-        public void DisplayForm(AvailableForms form, IFormBacking backingObject)
+        public IWindowBase CreateForm(AvailableForms form, IFormBacking backingObject)
         {
-            Form window = null;
+            IWindowBase window = null;
 
             switch (form)
             {
@@ -26,6 +26,9 @@ namespace Paclink.UI.Windows
                     break;
                 case AvailableForms.PactorChannels:
                     window = new DialogPactorTNCChannels((IPactorTNCChannelBacking)backingObject);
+                    break;
+                case AvailableForms.PactorConnect:
+                    window = new DialogPactorConnect((IPactorConnectBacking)backingObject);
                     break;
                 case AvailableForms.TncChannels:
                     window = new DialogPacketTNCChannels((IPacketTNCChannelBacking)backingObject);
@@ -57,6 +60,13 @@ namespace Paclink.UI.Windows
                 default:
                     throw new ArgumentException(string.Format("Invalid form: {0}", form));
             }
+
+            return window;
+        }
+
+        public void DisplayForm(AvailableForms form, IFormBacking backingObject)
+        {
+            Form window = (Form)CreateForm(form, backingObject);
 
             if (form == AvailableForms.MainWindow)
             {

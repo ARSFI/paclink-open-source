@@ -256,36 +256,38 @@ namespace Paclink
             {
                 // This handles manual Pactor connections or unspecified automatic channels...
                 float tmpVal = 0.0F;
-                if (!float.TryParse(Globals.ExtractFreq(ref Globals.stcSelectedChannel.RDOCenterFrequency), out tmpVal) || string.IsNullOrEmpty(Globals.stcSelectedChannel.RemoteCallsign.Trim()) || !blnAutomatic)
+                if (!float.TryParse(Globals.ExtractFreq(Globals.stcSelectedChannel.RDOCenterFrequency), out tmpVal) || string.IsNullOrEmpty(Globals.stcSelectedChannel.RemoteCallsign.Trim()) || !blnAutomatic)
                 {
                     if (Globals.dlgPactorConnect is object)
                     {
-                        Globals.dlgPactorConnect.Close();
+                        Globals.dlgPactorConnect.CloseWindow();
                         Globals.dlgPactorConnect = null;
                     }
 
+                    DialogPactorConnectViewModel vm = null;
                     if (!string.IsNullOrEmpty(Globals.stcEditedSelectedChannel.RemoteCallsign))
                     {
-                        Globals.dlgPactorConnect = new DialogPactorConnect(this, ref Globals.stcEditedSelectedChannel);
+                        vm = new DialogPactorConnectViewModel(this, ref Globals.stcEditedSelectedChannel);
+                        Globals.dlgPactorConnect = (IPactorConnectWindow)UserInterfaceFactory.GetUiSystem().CreateForm(AvailableForms.PactorConnect, vm);
                     }
                     else
                     {
-                        Globals.dlgPactorConnect = new DialogPactorConnect(this, ref Globals.stcSelectedChannel);
+                        vm = new DialogPactorConnectViewModel(this, ref Globals.stcSelectedChannel);
+                        Globals.dlgPactorConnect = (IPactorConnectWindow)UserInterfaceFactory.GetUiSystem().CreateForm(AvailableForms.PactorConnect, vm);
                     }
 
-                    Globals.dlgPactorConnect.ShowDialog();
-                    if (Globals.dlgPactorConnect.DialogResult == DialogResult.Cancel)
+                    if (Globals.dlgPactorConnect.ShowModal() == UiDialogResult.Cancel)
                     {
                         enmState = LinkStates.Disconnected;
-                        Globals.dlgPactorConnect.Close();
+                        Globals.dlgPactorConnect.CloseWindow();
                         Globals.dlgPactorConnect = null;
                         Close();
                         return false;
                     }
 
                     // This updates the channel parameters...
-                    Globals.dlgPactorConnect.UpdateChannelProperties(ref Globals.stcSelectedChannel);
-                    Globals.dlgPactorConnect.Close();
+                    Globals.dlgPactorConnect.UpdateChannelProperties();
+                    Globals.dlgPactorConnect.CloseWindow();
                     Globals.dlgPactorConnect = null;
                     if (!Globals.blnPactorDialogResuming)
                         Globals.stcEditedSelectedChannel = default;

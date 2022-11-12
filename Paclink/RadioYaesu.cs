@@ -176,12 +176,12 @@ namespace Paclink
             {
                 if (Channel.ChannelType == ChannelMode.PacketTNC)
                 {
-                    SetVHFFrequency(Globals.ExtractFreq(ref Channel.RDOCenterFrequency), Channel.RDOModel);
+                    SetVHFFrequency(Globals.ExtractFreq(Channel.RDOCenterFrequency), Channel.RDOModel);
                 }
                 else
                 {
-                    SetHFFrequency(Globals.ExtractFreq(ref Channel.RDOCenterFrequency), Channel.AudioToneCenter, Channel.RDOModel);
-                    SetFilter(Channel.NarrowFilter, Globals.ExtractFreq(ref Channel.RDOCenterFrequency), Channel.RDOModel, Channel.AudioToneCenter);
+                    SetHFFrequency(Globals.ExtractFreq(Channel.RDOCenterFrequency), Channel.AudioToneCenter, Channel.RDOModel);
+                    SetFilter(Channel.NarrowFilter, Globals.ExtractFreq(Channel.RDOCenterFrequency), Channel.RDOModel, Channel.AudioToneCenter);
                 }
 
                 return true;

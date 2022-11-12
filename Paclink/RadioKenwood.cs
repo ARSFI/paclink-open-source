@@ -154,7 +154,7 @@ namespace Paclink
             {
                 try
                 {
-                    if (!SetFMModeFrequency("A", Globals.ExtractFreq(ref stcChannel.RDOCenterFrequency), stcChannel.RDOModel))
+                    if (!SetFMModeFrequency("A", Globals.ExtractFreq(stcChannel.RDOCenterFrequency), stcChannel.RDOModel))
                         return false;
                     strTrace = "";
                 }
@@ -168,8 +168,8 @@ namespace Paclink
             {
                 try
                 {
-                    SetFrequency("A", Globals.ExtractFreq(ref stcChannel.RDOCenterFrequency), stcChannel.AudioToneCenter, stcChannel.RDOModel);
-                    if (!SetFilter(stcChannel.NarrowFilter, Globals.ExtractFreq(ref stcChannel.RDOCenterFrequency), stcChannel.RDOModel, stcChannel.AudioToneCenter))
+                    SetFrequency("A", Globals.ExtractFreq(stcChannel.RDOCenterFrequency), stcChannel.AudioToneCenter, stcChannel.RDOModel);
+                    if (!SetFilter(stcChannel.NarrowFilter, Globals.ExtractFreq(stcChannel.RDOCenterFrequency), stcChannel.RDOModel, stcChannel.AudioToneCenter))
                         return false;
                     strTrace = "";
                 }

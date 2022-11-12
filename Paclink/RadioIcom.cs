@@ -169,11 +169,11 @@ namespace Paclink
             SetParametersRet = true;
             if (Channel.ChannelType == ChannelMode.PacketTNC)
             {
-                SetParametersRet = SetVHFFrequency(Globals.ExtractFreq(ref Channel.RDOCenterFrequency), Channel.CIVAddress, Channel.RDOModel);
+                SetParametersRet = SetVHFFrequency(Globals.ExtractFreq(Channel.RDOCenterFrequency), Channel.CIVAddress, Channel.RDOModel);
             }
             else
             {
-                SetHFFrequency(Globals.ExtractFreq(ref Channel.RDOCenterFrequency), Channel.AudioToneCenter, Channel.CIVAddress, Channel.RDOModel, Channel.NarrowFilter);
+                SetHFFrequency(Globals.ExtractFreq(Channel.RDOCenterFrequency), Channel.AudioToneCenter, Channel.CIVAddress, Channel.RDOModel, Channel.NarrowFilter);
             }
 
             return SetParametersRet;

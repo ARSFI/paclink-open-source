@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace Paclink.UI.Windows
 {
-    public partial class Bearing
+    public partial class Bearing : IWindow<IBearingBacking>
     {
         //TODO: Doubtful that this form ever worked as written
 
@@ -114,6 +114,21 @@ namespace Paclink.UI.Windows
             {
                 _log.Error("[Radar.DrawRangeBearing] " + e.Message);
             }
-        } 
+        }
+
+        public UiDialogResult ShowModal()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RefreshWindow()
+        {
+            // empty
+        }
+
+        public void CloseWindow()
+        {
+            // empty
+        }
     }
 }

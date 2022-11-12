@@ -4,7 +4,7 @@ using Paclink.UI.Common;
 
 namespace Paclink.UI.Windows
 {
-    public partial class DialogTelnetChannels
+    public partial class DialogTelnetChannels : IWindow<ITelnetChannelsBacking>
     {
         private ITelnetChannelsBacking _backingObject = null;
         public ITelnetChannelsBacking BackingObject => _backingObject;
@@ -177,6 +177,21 @@ namespace Paclink.UI.Windows
         private void btnHelp_Click(object sender, EventArgs e)
         {
             Help.ShowHelp(this, BackingObject.SiteRootDirectory + @"\Paclink.chm", HelpNavigator.Topic, @"html\hs120.htm");
+        }
+
+        public UiDialogResult ShowModal()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RefreshWindow()
+        {
+            // empty
+        }
+
+        public void CloseWindow()
+        {
+            // empty
         }
     }
 }

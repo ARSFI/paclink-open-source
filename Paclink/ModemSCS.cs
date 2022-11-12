@@ -358,7 +358,7 @@ namespace Paclink
             {
                 try
                 {
-                    strCenterFreq = Globals.ExtractFreq(ref Globals.stcSelectedChannel.RDOCenterFrequency);
+                    strCenterFreq = Globals.ExtractFreq(Globals.stcSelectedChannel.RDOCenterFrequency);
                     intIndex = strCenterFreq.IndexOf('(');
                     if (intIndex > 0)
                     {
@@ -372,26 +372,28 @@ namespace Paclink
                         // This handles manual pactor connections or unspecified automatic channels...
                         if (Globals.dlgPactorConnect != null)
                         {
-                            Globals.dlgPactorConnect.Close();
+                            Globals.dlgPactorConnect.CloseWindow();
                             Globals.dlgPactorConnect = null;
                         }
 
                         blnWaitingForManualConnect = true;
+                        DialogPactorConnectViewModel vm = null;
                         if (Globals.dlgPactorConnect == null)
                         {
                             if (!string.IsNullOrEmpty(Globals.stcEditedSelectedChannel.RemoteCallsign))
                             {
-                                Globals.dlgPactorConnect = new DialogPactorConnect(this, ref Globals.stcEditedSelectedChannel);
+                                vm = new DialogPactorConnectViewModel(this, ref Globals.stcEditedSelectedChannel);
                             }
                             else
                             {
-                                Globals.dlgPactorConnect = new DialogPactorConnect(this, ref Globals.stcSelectedChannel);
+                                vm = new DialogPactorConnectViewModel(this, ref Globals.stcSelectedChannel);
                             }
                         }
 
-                        Globals.dlgPactorConnect.ShowDialog();
+                        Globals.dlgPactorConnect = (IPactorConnectWindow)UserInterfaceFactory.GetUiSystem().CreateForm(AvailableForms.PactorConnect, vm);
+
                         blnWaitingForManualConnect = false;
-                        if (Globals.dlgPactorConnect.DialogResult == DialogResult.Cancel)
+                        if (Globals.dlgPactorConnect.ShowModal() == UiDialogResult.Cancel)
                         {
                             MyApplication.Forms.Main.RefreshWindow();
                             blnNoIdentification = true;
@@ -401,7 +403,7 @@ namespace Paclink
                                 objProtocol = null;
                             }
 
-                            Globals.dlgPactorConnect.Close();
+                            Globals.dlgPactorConnect.CloseWindow();
                             Globals.dlgPactorConnect = null;
                             blnNoIdentification = true;
                             enmState = LinkStates.LinkFailed;
@@ -409,8 +411,8 @@ namespace Paclink
                         }
 
                         // This updates the channel parameters...
-                        Globals.dlgPactorConnect.UpdateChannelProperties(ref Globals.stcSelectedChannel);
-                        Globals.dlgPactorConnect.Close();
+                        Globals.dlgPactorConnect.UpdateChannelProperties();
+                        Globals.dlgPactorConnect.CloseWindow();
                         Globals.dlgPactorConnect = null;
                         if (!Globals.blnPactorDialogResuming)
                             Globals.stcEditedSelectedChannel = default;
@@ -458,7 +460,7 @@ namespace Paclink
                 try
                 {
                     Globals.queRateDisplay.Enqueue("Linking");
-                    Globals.queChannelDisplay.Enqueue("G*** Calling " + Globals.stcSelectedChannel.RemoteCallsign + " on " + Globals.ExtractFreq(ref Globals.stcSelectedChannel.RDOCenterFrequency) + " KHz");
+                    Globals.queChannelDisplay.Enqueue("G*** Calling " + Globals.stcSelectedChannel.RemoteCallsign + " on " + Globals.ExtractFreq(Globals.stcSelectedChannel.RDOCenterFrequency) + " KHz");
                     strTemp = "C " + longPathStr + Globals.stcSelectedChannel.RemoteCallsign;
                     // intConnectTimer = CInt(Math.Max(15, 7 * stcChannel.FrequenciesScanned)) ' Set for 15 seconds min or 7 sec/freq
                     intConnectTimer = 60;

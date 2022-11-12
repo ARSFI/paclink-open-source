@@ -64,5 +64,9 @@ namespace Paclink.UI.Windows
             // empty
         }
 
+        public UiDialogResult ShowModal()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

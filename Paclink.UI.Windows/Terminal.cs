@@ -10,7 +10,7 @@ using NLog;
 
 namespace Paclink.UI.Windows
 {
-    public partial class Terminal
+    public partial class Terminal : IWindow<ITerminalBacking>
     {
         private static readonly Logger _log = LogManager.GetCurrentClassLogger();
 
@@ -449,6 +449,21 @@ namespace Paclink.UI.Windows
         private void mnuClose_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        public UiDialogResult ShowModal()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RefreshWindow()
+        {
+            // empty
+        }
+
+        public void CloseWindow()
+        {
+            // empty
         }
     }
 }

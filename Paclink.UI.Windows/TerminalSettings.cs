@@ -5,7 +5,7 @@ using Paclink.UI.Common;
 
 namespace Paclink.UI.Windows
 {
-    public partial class TerminalSettings
+    public partial class TerminalSettings : IWindow<ITerminalSettingsBacking>
     {
         private ITerminalSettingsBacking _backingObject;
         public ITerminalSettingsBacking BackingObject => _backingObject;
@@ -336,6 +336,21 @@ namespace Paclink.UI.Windows
             cmbHandshake.Items.Add("RTS/CTS");
             cmbHandshake.Items.Add("XOn/XOff");
             cmbHandshake.Items.Add("Both");
+        }
+
+        public UiDialogResult ShowModal()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RefreshWindow()
+        {
+            // empty
+        }
+
+        public void CloseWindow()
+        {
+            // empty
         }
     }
 }

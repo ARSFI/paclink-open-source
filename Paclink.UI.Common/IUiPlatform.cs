@@ -7,6 +7,7 @@
         Polling,
         AgwChannels,
         PactorChannels,
+        PactorConnect,
         TncChannels,
         AgwEngine,
         ChangePassword,
@@ -20,7 +21,10 @@
 
     public interface IUiPlatform
     {
+        IWindowBase CreateForm(AvailableForms form, IFormBacking backingObject);
+
         void DisplayForm(AvailableForms form, IFormBacking backingObject);
+
         void DisplayMainForm(IMainFormBacking backingObject);
 
         void DisplayModalError(string message, string title);

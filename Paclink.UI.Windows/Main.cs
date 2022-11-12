@@ -677,5 +677,9 @@ namespace Paclink.UI.Windows
             mnuMain.Enabled = true;
         }
 
+        public UiDialogResult ShowModal()
+        {
+            throw new NotImplementedException();
+        }
     } // Main
 }

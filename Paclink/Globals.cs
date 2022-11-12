@@ -114,7 +114,7 @@ namespace Paclink
         public static List<string> cllFastStart = new List<string>();
 
         // Global Objects...
-        public static DialogPactorConnect dlgPactorConnect;
+        public static IPactorConnectWindow dlgPactorConnect;
         public static POP3Port objPOP3Port;
         public static PrimaryThread objPrimaryThread;
         public static IRadio objRadioControl;
@@ -955,7 +955,7 @@ namespace Paclink
         public static int KHzToHz(string strKHz)
         {
             var intFrequency = default(int);
-            strKHz = ExtractFreq(ref strKHz);
+            strKHz = ExtractFreq(strKHz);
             try
             {
                 var strTokens = strKHz.Split('.');
@@ -1558,7 +1558,7 @@ namespace Paclink
             }
         }
 
-        public static string ExtractFreq(ref string strChannel)
+        public static string ExtractFreq(string strChannel)
         {
             // 
             // Extract the frequency from a full channel description such as 1234.000 (P1,P2,P3)
