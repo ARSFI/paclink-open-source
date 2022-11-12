@@ -1,14 +1,21 @@
 ﻿using Paclink.UI.Common;
 using System;
+using System.Linq;
 using System.IO;
 using System.IO.Ports;
 using System.Windows.Forms;
 
-namespace Paclink
+namespace Paclink.UI.Windows
 {
-    public partial class DialogPactorTNCChannels
+    public partial class DialogPactorTNCChannels : IPactorTNCChannelWindow
     {
-        public DialogPactorTNCChannels()
+        public IPactorTNCChannelBacking BackingObject
+        {
+            get;
+            private set;
+        }
+
+        public DialogPactorTNCChannels(IPactorTNCChannelBacking backingObject)
         {
             InitializeComponent();
             _btnClose.Name = "btnClose";
@@ -69,9 +76,10 @@ namespace Paclink
             _Label22.Name = "Label22";
             _btnHelp.Name = "btnHelp";
             _Label16.Name = "Label16";
-        }
 
-        private ChannelProperties stcSelectedChannel;
+            BackingObject = backingObject;
+        }
+        
         private string[] arySelectedMBOs;
 
         private void PactorTNCChannels_Load(object sender, EventArgs e)
@@ -79,103 +87,34 @@ namespace Paclink
             InitializeControls();
             ClearEntries();
             FillChannelList();
-            cmbChannelName.Text = Globals.Settings.Get("Properties", "Last Pactor Channel", "");
+            cmbChannelName.Text = BackingObject.LastPactorChannel;
+
+            if (!string.IsNullOrEmpty(cmbChannelName.Text) && cmbChannelName.Text != "<Enter a new channel>")
+            {
+                if (BackingObject.ChannelExists(cmbChannelName.Text))
+                {
+                    SetEntries();
+                }
+                else
+                {
+                    ClearEntries();
+                }
+            }
         } // PactorTNCChannels_Load
 
         private void InitializeControls()
         {
             SetRMSList();
-            cmbTNCType.Items.Add("KAM98");
-            cmbTNCType.Items.Add("KAM/+");
-            cmbTNCType.Items.Add("KAMXL");
-            cmbTNCType.Items.Add("DSP-232");
-            cmbTNCType.Items.Add("PK-232");
-            cmbTNCType.Items.Add("PTC II");
-            cmbTNCType.Items.Add("PTC IIe");
-            cmbTNCType.Items.Add("PTC IIex");
-            cmbTNCType.Items.Add("PTC IIpro");
-            cmbTNCType.Items.Add("PTC IIusb");
-            cmbTNCType.Items.Add("PTC DR-7800");
-            var strPorts = SerialPort.GetPortNames();
-            if (strPorts.Length > 0)
-            {
-                foreach (string strPort in strPorts)
-                    cmbTNCSerialPort.Items.Add(Globals.CleanSerialPort(strPort));
-            }
 
-            cmbTNCBaudRate.Items.Add("4800");
-            cmbTNCBaudRate.Items.Add("9600");
-            cmbTNCBaudRate.Items.Add("19200");
-            cmbTNCBaudRate.Items.Add("38400");
-            cmbTNCBaudRate.Items.Add("57600");
-            cmbTNCBaudRate.Items.Add("115200");
-
-            // Radio control baud rate
-            cmbRadioBaud.Items.Add("1200");
-            cmbRadioBaud.Items.Add("2400");
-            cmbRadioBaud.Items.Add("4800");
-            cmbRadioBaud.Items.Add("9600");
-            cmbRadioBaud.Items.Add("19200");
-            cmbRadioBaud.Items.Add("38400");
-            cmbRadioBaud.Items.Add("57600");
-            cmbRadioBaud.Items.Add("115200");
-            cmbRadioBaud.Text = stcSelectedChannel.RDOControlBaud;
-
-            // Serial Ports
-            var strRadioPorts = SerialPort.GetPortNames();
-            if (strRadioPorts.Length > 0)
-            {
-                foreach (string strRadioPort in strPorts)
-                    cmbRadioPort.Items.Add(Globals.CleanSerialPort(strRadioPort));
-            }
-
-            cmbRadioPort.Text = stcSelectedChannel.RDOControlPort;
-
-            // Radio Type
-            cmbRadioModel.Items.Add("Kenwood TS-450");
-            cmbRadioModel.Items.Add("Kenwood TS-480");
-            cmbRadioModel.Items.Add("Kenwood TS-690");
-            cmbRadioModel.Items.Add("Kenwood TS-2000");
-            cmbRadioModel.Items.Add("Kenwood (other)");
-            cmbRadioModel.Items.Add("Icom IC-706");
-            cmbRadioModel.Items.Add("Icom IC-7000");
-            cmbRadioModel.Items.Add("Icom IC-7200");
-            cmbRadioModel.Items.Add("Icom IC-746");
-            cmbRadioModel.Items.Add("Icom IC-746pro");
-            cmbRadioModel.Items.Add("Icom IC-756pro");
-            cmbRadioModel.Items.Add("Icom (other CI-V)");
-            cmbRadioModel.Items.Add("Icom IC-M700Pro");
-            cmbRadioModel.Items.Add("Icom IC-M710");
-            cmbRadioModel.Items.Add("Icom IC-M710RT");
-            cmbRadioModel.Items.Add("Icom IC-M802");
-            cmbRadioModel.Items.Add("Icom (other NMEA)");
-            cmbRadioModel.Items.Add("Micom 3F");
-            cmbRadioModel.Items.Add("Yaesu FT-450");
-            cmbRadioModel.Items.Add("Yaesu FT-847");
-            cmbRadioModel.Items.Add("Yaesu FT-857");
-            cmbRadioModel.Items.Add("Yaesu FT-857D");
-            cmbRadioModel.Items.Add("Yaesu FT-897");
-            cmbRadioModel.Items.Add("Yaesu FT-920");
-            cmbRadioModel.Items.Add("Yaesu FT-950");
-            cmbRadioModel.Items.Add("Yaesu FT-1000");
-            cmbRadioModel.Items.Add("Yaesu FT-2000");
-            cmbRadioModel.Items.Add("Yaesu (other)");
-            cmbRadioModel.Text = stcSelectedChannel.RDOModel;
-            txtRadioAddress.Text = stcSelectedChannel.CIVAddress;
-            chkNarrowFilter.Checked = stcSelectedChannel.NarrowFilter;
-            rdoManual.Checked = stcSelectedChannel.RDOControl == "Manual";
-            rdoSerial.Checked = stcSelectedChannel.RDOControl == "Serial";
-            rdoViaPTCII.Checked = stcSelectedChannel.RDOControl == "Via PTCII";
-            rdoTTL.Checked = stcSelectedChannel.TTLLevel;
-            rdoV24.Checked = !stcSelectedChannel.TTLLevel;
-            chkNMEA.Checked = stcSelectedChannel.NMEA;
-            chkIDEnabled.Checked = stcSelectedChannel.PactorId;
-            chkBusyHold.Checked = stcSelectedChannel.TNCBusyHold;
-            chkChannelEnabled.Checked = stcSelectedChannel.Enabled;
-            if (Globals.IsAutoforwardEnabled())
+            cmbTNCType.Items.AddRange(BackingObject.TncTypes.ToArray());
+            cmbTNCSerialPort.Items.AddRange(BackingObject.SerialPorts.ToArray());
+            cmbTNCBaudRate.Items.AddRange(BackingObject.BaudRates.ToArray());
+            cmbRadioBaud.Items.AddRange(BackingObject.BaudRates.ToArray());
+            cmbRadioPort.Items.AddRange(BackingObject.SerialPorts.ToArray());
+            cmbRadioModel.Items.AddRange(BackingObject.RadioModels.ToArray());
+            if (BackingObject.IsAutoforwardEnabled)
             {
                 chkAutoforwardEnabled.Visible = true;
-                chkAutoforwardEnabled.Checked = stcSelectedChannel.EnableAutoforward;
             }
             else
             {
@@ -187,14 +126,7 @@ namespace Paclink
         private void FillChannelList()
         {
             cmbChannelName.Items.Clear();
-            foreach (ChannelProperties stcChannel in Channels.Entries.Values)
-            {
-                if (stcChannel.ChannelType == ChannelMode.PactorTNC)
-                {
-                    if (!string.IsNullOrEmpty(stcChannel.ChannelName.Trim()))
-                        cmbChannelName.Items.Add(stcChannel.ChannelName);
-                }
-            }
+            cmbChannelName.Items.AddRange(BackingObject.ChannelNames.ToArray());
         } // FillChannelList
 
         private void ClearEntries()
@@ -233,180 +165,146 @@ namespace Paclink
 
         private void SetEntries()
         {
-            stcSelectedChannel = (ChannelProperties)Channels.Entries[cmbChannelName.Text];
-            // chkFirstUseOnly.Enabled = False
+            bool firstUseOnly;
+            int priority;
+            int activityTimeout;
+            bool enabled;
+            bool autoForward;
+            bool busyHold;
+            string tncSerialPort;
+            string tncBaudRate;
+            string tncType;
+            string tncConfigurationFile;
+            string audioToneCenter;
+            string radioModel;
+            string civAddress;
+            bool narrowFilter;
+            string radioBaud;
+            string radioPort;
+            bool radioManual;
+            bool radioSerial;
+            bool viaPTCII;
+            int fskLevel;
+            int pskLevel;
+            bool pactorIdEnabled;
+            bool ttlLevel;
+            bool nmea;
+            string remoteCallsign;
+            string centerFrequency;
+            bool longPath;
+
+            BackingObject.GetChannelInfo(
+                cmbChannelName.Text, out firstUseOnly, out priority,
+                out activityTimeout, out enabled, out autoForward,
+                out busyHold, out tncSerialPort, out tncBaudRate,
+                out tncType, out tncConfigurationFile, out audioToneCenter,
+                out radioModel, out civAddress, out narrowFilter,
+                out radioBaud, out radioPort, out radioManual,
+                out radioSerial, out viaPTCII, out fskLevel,
+                out pskLevel, out pactorIdEnabled, out ttlLevel,
+                out nmea, out remoteCallsign, out centerFrequency,
+                out longPath);
+
             chkFirstUseOnly.Checked = true;
+            nudPriority.Value = priority;
+            nudActivityTimeout.Value = activityTimeout;
+            chkChannelEnabled.Checked = enabled;
+
+            if (BackingObject.IsAutoforwardEnabled)
             {
-                var withBlock = stcSelectedChannel;
-                nudPriority.Value = withBlock.Priority;
-                nudActivityTimeout.Value = withBlock.TNCTimeout;
-                chkChannelEnabled.Checked = withBlock.Enabled;
-                if (Globals.IsAutoforwardEnabled())
-                {
-                    chkAutoforwardEnabled.Checked = withBlock.EnableAutoforward;
-                }
-                else
-                {
-                    chkAutoforwardEnabled.Checked = false;
-                }
-
-                if (stcSelectedChannel.TNCType.StartsWith("PTC"))
-                {
-                    chkBusyHold.Visible = true;
-                }
-                else
-                {
-                    chkBusyHold.Visible = false;
-                    chkBusyHold.Checked = false;
-                }
-
-                cmbTNCSerialPort.Text = withBlock.TNCSerialPort;
-                cmbTNCBaudRate.Text = withBlock.TNCBaudRate;
-                cmbTNCType.Text = withBlock.TNCType;
-
-                // If (cmbTNCType.Text = "PK-232") Or (cmbTNCType.Text = "PK-900") Then txtAudioCenter.Enabled = False
-                if (cmbTNCType.Text == "PK-232" | cmbTNCType.Text == "DSP-232")
-                    txtAudioCenter.Enabled = false;
-                txtTNCConfigurationFile.Text = withBlock.TNCConfigurationFile;
-                chkFirstUseOnly.Checked = withBlock.TNCConfigureOnFirstUseOnly;
-                txtAudioCenter.Text = withBlock.AudioToneCenter;
-                cmbRadioModel.Text = withBlock.RDOModel;
-                txtRadioAddress.Text = withBlock.CIVAddress;
-                chkNarrowFilter.Checked = withBlock.NarrowFilter;
-                cmbRadioBaud.Text = withBlock.RDOControlBaud;
-                cmbRadioPort.Text = withBlock.RDOControlPort;
-                rdoManual.Checked = withBlock.RDOControl == "Manual";
-                rdoSerial.Checked = withBlock.RDOControl == "Serial";
-                rdoViaPTCII.Checked = withBlock.RDOControl == "Via PTCII";
-                nudFSKLevel.Value = withBlock.TNCFSKLevel;
-                nudPSKLevel.Value = withBlock.TNCPSKLevel;
-                chkIDEnabled.Checked = withBlock.PactorId;
-                chkBusyHold.Checked = withBlock.TNCBusyHold;
-                rdoTTL.Checked = withBlock.TTLLevel;
-                rdoV24.Checked = !withBlock.TTLLevel;
-                chkNMEA.Checked = withBlock.NMEA;
-                if (cmbRadioModel.Text.IndexOf("Icom") != -1)
-                {
-                    chkNMEA.Enabled = true;
-                    lblRadioAddress.Enabled = true;
-                    txtRadioAddress.Enabled = true;
-                }
-                else
-                {
-                    chkNMEA.Enabled = false;
-                    chkNMEA.Checked = false;
-                    lblRadioAddress.Enabled = false;
-                    txtRadioAddress.Enabled = false;
-                    txtRadioAddress.Text = "";
-                }
-
-                // Remote Call signs...
-                cmbCallSigns.Text = withBlock.RemoteCallsign;
-
-                // Frequencies...
-                cmbFreqs.Text = withBlock.RDOCenterFrequency;
-                cmbTNCBaudRate.Items.Clear();
-                if (cmbTNCType.Text.StartsWith("PTC II") | cmbTNCType.Text == "PTC DR-7800")
-                {
-                    cmbTNCBaudRate.Items.Add("38400");
-                    cmbTNCBaudRate.Items.Add("57600");
-                    cmbTNCBaudRate.Items.Add("115200");
-                    if (Convert.ToInt32(withBlock.TNCBaudRate) < 38400)
-                        withBlock.TNCBaudRate = "38400";
-                }
-                else
-                {
-                    cmbTNCBaudRate.Items.Add("4800");
-                    cmbTNCBaudRate.Items.Add("9600");
-                    cmbTNCBaudRate.Items.Add("19200");
-                    cmbTNCBaudRate.Items.Add("38400");
-                    cmbTNCBaudRate.Items.Add("57600");
-                    cmbTNCBaudRate.Items.Add("115200");
-                }
-
-                cmbTNCBaudRate.Text = withBlock.TNCBaudRate;
-                btnAdd.Enabled = false;
-                btnRemove.Enabled = true;
-                btnUpdate.Enabled = true;
-                cmbFreqs.Enabled = true;
-                cmbCallSigns.Enabled = true;
-
-                chkLongPath.Checked = withBlock.PactorUseLongPath;
-            }
-        } // SetEntries
-
-        private void UpdateChannelProperties(ref ChannelProperties stcChannel)
-        {
-            stcChannel.ChannelType = ChannelMode.PactorTNC; // TODO: Needs error checking for some parameters
-            stcChannel.ChannelName = cmbChannelName.Text;
-            stcChannel.Priority = Convert.ToInt32(nudPriority.Value);
-            stcChannel.Enabled = chkChannelEnabled.Checked;
-            stcChannel.TNCTimeout = Convert.ToInt32(nudActivityTimeout.Value);
-            stcChannel.TNCSerialPort = cmbTNCSerialPort.Text;
-            stcChannel.TNCBaudRate = cmbTNCBaudRate.Text;
-            stcChannel.TNCConfigurationFile = txtTNCConfigurationFile.Text;
-            stcChannel.TNCConfigureOnFirstUseOnly = chkFirstUseOnly.Checked;
-            stcChannel.TNCType = cmbTNCType.Text;
-            var switchExpr = cmbTNCType.Text;
-            switch (switchExpr)
-            {
-                case "KAM/+":
-                case "KAMXL":
-                    {
-                        stcChannel.TNCPort = 2;
-                        break;
-                    }
-
-                case "KAM98":
-                case "PK-232": // , "PK-900"
-                    {
-                        stcChannel.TNCPort = 1;  // TODO: needs verification, not sure of correct port for XL  and 98
-                        break;
-                    }
-
-                case "PTC II":
-                case "PTC IIe":
-                case "PTC IIex":
-                case "PTC IIpro":
-                case "PTC IIusb":
-                case "PTC DR-7800":
-                    {
-                        stcChannel.TNCPort = 31; // port 31 for SCS Pactor 
-                        break;
-                    }
-            }
-
-            stcChannel.EnableAutoforward = chkAutoforwardEnabled.Checked;
-            stcChannel.AudioToneCenter = txtAudioCenter.Text.Trim();
-            stcChannel.RDOControlBaud = cmbRadioBaud.Text;
-            stcChannel.RDOControlPort = cmbRadioPort.Text;
-            stcChannel.RDOModel = cmbRadioModel.Text;
-            stcChannel.CIVAddress = txtRadioAddress.Text.Trim().ToUpper();
-            stcChannel.NarrowFilter = chkNarrowFilter.Checked;
-            if (rdoViaPTCII.Checked)
-            {
-                stcChannel.RDOControl = "Via PTCII";
-            }
-            else if (rdoSerial.Checked)
-            {
-                stcChannel.RDOControl = "Serial";
+                chkAutoforwardEnabled.Checked = autoForward;
             }
             else
             {
-                stcChannel.RDOControl = "Manual";
+                chkAutoforwardEnabled.Checked = false;
             }
 
-            stcChannel.TNCFSKLevel = Convert.ToInt32(nudFSKLevel.Value);
-            stcChannel.TNCPSKLevel = Convert.ToInt32(nudPSKLevel.Value);
-            stcChannel.TNCBusyHold = chkBusyHold.Checked;
-            stcChannel.PactorUseLongPath = chkLongPath.Checked;
-            stcChannel.PactorId = chkIDEnabled.Checked;
-            stcChannel.RemoteCallsign = GetCallSign();
-            // .FrequenciesScanned = cmbFreqs.Items.Count
-            stcChannel.RDOCenterFrequency = cmbFreqs.Text;
-            stcChannel.TTLLevel = rdoTTL.Checked;
-            stcChannel.NMEA = chkNMEA.Checked;
-        } // UpdateProperties
+            if (tncType.StartsWith("PTC"))
+            {
+                chkBusyHold.Visible = true;
+            }
+            else
+            {
+                chkBusyHold.Visible = false;
+                chkBusyHold.Checked = false;
+            }
+
+            cmbTNCSerialPort.Text = tncSerialPort;
+            cmbTNCBaudRate.Text = tncBaudRate;
+            cmbTNCType.Text = tncType;
+
+            if (cmbTNCType.Text == "PK-232" || cmbTNCType.Text == "DSP-232")
+            {
+                txtAudioCenter.Enabled = false;
+            }
+
+            txtTNCConfigurationFile.Text = tncConfigurationFile;
+            chkFirstUseOnly.Checked = firstUseOnly;
+            txtAudioCenter.Text = audioToneCenter;
+            cmbRadioModel.Text = radioModel;
+            txtRadioAddress.Text = civAddress;
+            chkNarrowFilter.Checked = narrowFilter;
+            cmbRadioBaud.Text = radioBaud;
+            cmbRadioPort.Text = radioPort;
+            rdoManual.Checked = radioManual;
+            rdoSerial.Checked = radioSerial;
+            rdoViaPTCII.Checked = viaPTCII;
+            nudFSKLevel.Value = fskLevel;
+            nudPSKLevel.Value = pskLevel;
+            chkIDEnabled.Checked = pactorIdEnabled;
+            chkBusyHold.Checked = busyHold;
+            rdoTTL.Checked = ttlLevel;
+            rdoV24.Checked = !ttlLevel;
+            chkNMEA.Checked = nmea;
+
+            if (cmbRadioModel.Text.IndexOf("Icom") != -1)
+            {
+                chkNMEA.Enabled = true;
+                lblRadioAddress.Enabled = true;
+                txtRadioAddress.Enabled = true;
+            }
+            else
+            {
+                chkNMEA.Enabled = false;
+                chkNMEA.Checked = false;
+                lblRadioAddress.Enabled = false;
+                txtRadioAddress.Enabled = false;
+                txtRadioAddress.Text = "";
+            }
+
+            // Remote Call signs...
+            cmbCallSigns.Text = remoteCallsign;
+
+            // Frequencies...
+            cmbFreqs.Text = centerFrequency;
+            cmbTNCBaudRate.Items.Clear();
+            if (cmbTNCType.Text.StartsWith("PTC II") | cmbTNCType.Text == "PTC DR-7800")
+            {
+                cmbTNCBaudRate.Items.Add("38400");
+                cmbTNCBaudRate.Items.Add("57600");
+                cmbTNCBaudRate.Items.Add("115200");
+                if (Convert.ToInt32(tncBaudRate) < 38400)
+                    tncBaudRate = "38400";
+            }
+            else
+            {
+                cmbTNCBaudRate.Items.Add("4800");
+                cmbTNCBaudRate.Items.Add("9600");
+                cmbTNCBaudRate.Items.Add("19200");
+                cmbTNCBaudRate.Items.Add("38400");
+                cmbTNCBaudRate.Items.Add("57600");
+                cmbTNCBaudRate.Items.Add("115200");
+            }
+
+            cmbTNCBaudRate.Text = tncBaudRate;
+            btnAdd.Enabled = false;
+            btnRemove.Enabled = true;
+            btnUpdate.Enabled = true;
+            cmbFreqs.Enabled = true;
+            cmbCallSigns.Enabled = true;
+
+            chkLongPath.Checked = longPath;
+        } // SetEntries
 
         private void rdoSerial_CheckedChanged(object sender, EventArgs e)
         {
@@ -424,9 +322,9 @@ namespace Paclink
 
         private void cmbChannelName_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(cmbChannelName.Text) & cmbChannelName.Text != "<Enter a new channel>")
+            if (!string.IsNullOrEmpty(cmbChannelName.Text) && cmbChannelName.Text != "<Enter a new channel>")
             {
-                if (Channels.Entries.ContainsKey(cmbChannelName.Text))
+                if (BackingObject.ChannelExists(cmbChannelName.Text))
                 {
                     SetEntries();
                 }
@@ -440,7 +338,7 @@ namespace Paclink
         private void btnBrowseConfiguration_Click(object sender, EventArgs e)
         {
             var openFileDialog1 = new OpenFileDialog();
-            openFileDialog1.InitialDirectory = Globals.SiteRootDirectory + "Data";
+            openFileDialog1.InitialDirectory = BackingObject.SiteRootDirectory + "Data";
             openFileDialog1.Filter = "aps files |*.aps";
             openFileDialog1.RestoreDirectory = true;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -549,7 +447,7 @@ namespace Paclink
 
         private void ConfirmAutoforward()
         {
-            if (chkAutoforwardEnabled.Checked & !Globals.IsAutoforwardEnabled())
+            if (chkAutoforwardEnabled.Checked && !BackingObject.IsAutoforwardEnabled)
             {
                 if (cmbTNCType.Text.StartsWith("PTC ") == false)
                 {
@@ -568,29 +466,29 @@ namespace Paclink
             {
                 case "KAM98":
                     {
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExampleKAM98.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExampleKAM98.aps";
                         break;
                     }
 
                 case "KAM/+":
                     {
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExampleKAM+.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExampleKAM+.aps";
                         break;
                     }
 
                 case "KAMXL":
                     {
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExampleKAMXL.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExampleKAMXL.aps";
                         break;
                     }
 
                 case "PTC II":
                 case "PTC IIpro":
                     {
-                        if (Globals.IsAutoforwardEnabled())
+                        if (BackingObject.IsAutoforwardEnabled)
                             chkAutoforwardEnabled.Visible = true;
                         chkBusyHold.Visible = true;
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExamplePTCII_pro.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExamplePTCII_pro.aps";
                         if (cmbTNCType.Text == "PTC II")
                         {
                             rdoTTL.Checked = true;
@@ -609,10 +507,10 @@ namespace Paclink
                 case "PTC IIex":
                 case "PTC IIusb":
                     {
-                        if (Globals.IsAutoforwardEnabled())
+                        if (BackingObject.IsAutoforwardEnabled)
                             chkAutoforwardEnabled.Visible = true;
                         chkBusyHold.Visible = true;
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExamplePTCII_e.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExamplePTCII_e.aps";
                         if (cmbTNCType.Text == "PTC IIusb")
                         {
                             rdoTTL.Enabled = true;
@@ -629,10 +527,10 @@ namespace Paclink
 
                 case "PTC DR-7800":
                     {
-                        if (Globals.IsAutoforwardEnabled())
+                        if (BackingObject.IsAutoforwardEnabled)
                             chkAutoforwardEnabled.Visible = true;
                         chkBusyHold.Visible = true;
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExamplePTC_DR7800.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExamplePTC_DR7800.aps";
                         rdoTTL.Enabled = true;
                         rdoV24.Enabled = true;
                         break;
@@ -640,13 +538,13 @@ namespace Paclink
 
                 case "DSP-232":
                     {
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExampleDSP232.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExampleDSP232.aps";
                         break;
                     }
 
                 case "PK-232":
                     {
-                        strFilename = Globals.SiteRootDirectory + @"Data\ExamplePK232.aps";
+                        strFilename = BackingObject.SiteRootDirectory + @"Data\ExamplePK232.aps";
                         break;
                     }
                     // Case "PK-900"
@@ -702,14 +600,15 @@ namespace Paclink
             }
 
             rdoViaPTCII.Enabled = cmbTNCType.Text == "PTC II" | cmbTNCType.Text == "PTC IIpro" | cmbTNCType.Text == "PTC IIusb" | cmbTNCType.Text == "PTC DR-7800";
+            string baudRate = cmbTNCBaudRate.Text;
             cmbTNCBaudRate.Items.Clear();
             if (cmbTNCType.Text.StartsWith("PTC II") | cmbTNCType.Text == "PTC DR-7800")
             {
                 cmbTNCBaudRate.Items.Add("38400");
                 cmbTNCBaudRate.Items.Add("57600");
                 cmbTNCBaudRate.Items.Add("115200");
-                if (Convert.ToInt32(stcSelectedChannel.TNCBaudRate) < 38400)
-                    stcSelectedChannel.TNCBaudRate = "38400";
+                if (Convert.ToInt32(baudRate) < 38400)
+                    baudRate = "38400";
             }
             else
             {
@@ -721,12 +620,12 @@ namespace Paclink
                 cmbTNCBaudRate.Items.Add("115200");
             }
 
-            cmbTNCBaudRate.Text = stcSelectedChannel.TNCBaudRate;
+            cmbTNCBaudRate.Text = baudRate;
         } // cmbTNCtype_TextChanged
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            if (!Globals.IsValidFileName(cmbChannelName.Text))
+            if (!BackingObject.IsValidChannelName(cmbChannelName.Text))
             {
                 cmbChannelName.Focus();
                 return;
@@ -736,7 +635,7 @@ namespace Paclink
             cmbChannelName.Text = cmbChannelName.Text.Replace("|", "");
             if (chkAutoforwardEnabled.Checked)
                 ConfirmAutoforward();
-            if (Channels.IsAccount(cmbChannelName.Text))
+            if (BackingObject.IsAccount(cmbChannelName.Text))
             {
                 MessageBox.Show(cmbChannelName.Text + " is in use as an account name...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 cmbChannelName.Focus();
@@ -769,25 +668,30 @@ namespace Paclink
                 }
             }
 
-            if (rdoSerial.Checked & (cmbRadioPort.Text ?? "") == (cmbTNCSerialPort.Text ?? ""))
+            if (rdoSerial.Checked && (cmbRadioPort.Text ?? "") == (cmbTNCSerialPort.Text ?? ""))
             {
                 MessageBox.Show("Radio Control and TNC must use different serial ports.", "Serial Port Conflict", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            if (Channels.IsChannel(cmbChannelName.Text))
+            if (BackingObject.IsChannel(cmbChannelName.Text))
             {
                 MessageBox.Show("The channel name " + cmbChannelName.Text + " is already in use...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 cmbChannelName.Focus();
             }
             else
             {
-                var stcNewChannel = default(ChannelProperties);
-                UpdateChannelProperties(ref stcNewChannel);
-                Channels.AddChannel(ref stcNewChannel);
-                Channels.FillChannelCollection();
+                BackingObject.AddChannel(
+                    cmbChannelName.Text, Convert.ToInt32(nudPriority.Value), chkChannelEnabled.Checked,
+                    Convert.ToInt32(nudActivityTimeout.Value), cmbTNCSerialPort.Text, cmbTNCBaudRate.Text,
+                    txtTNCConfigurationFile.Text, chkFirstUseOnly.Checked, cmbTNCType.Text, chkAutoforwardEnabled.Checked,
+                    txtAudioCenter.Text.Trim(), cmbRadioBaud.Text, cmbRadioPort.Text, cmbRadioModel.Text,
+                    txtRadioAddress.Text.Trim().ToUpper(), chkNarrowFilter.Checked, rdoViaPTCII.Checked,
+                    rdoSerial.Checked, Convert.ToInt32(nudFSKLevel.Value), Convert.ToInt32(nudPSKLevel.Value),
+                    chkBusyHold.Checked, chkLongPath.Checked, chkIDEnabled.Checked, GetCallSign(),
+                    cmbFreqs.Text, rdoTTL.Checked, chkNMEA.Checked);
+
                 FillChannelList();
-                Globals.Settings.Save("Properties", "Last Pactor Channel", cmbChannelName.Text);
                 btnAdd.Enabled = false;
                 btnRemove.Enabled = true;
                 btnUpdate.Enabled = true;
@@ -803,17 +707,10 @@ namespace Paclink
             }
             else if (MessageBox.Show("Confirm removal of pactor channel " + cmbChannelName.Text + "...", "Remove Channel", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                Channels.RemoveChannel(cmbChannelName.Text);
-                Channels.FillChannelCollection();
-                FillChannelList();
-                Globals.Settings.Save("Properties", "Last Pactor Channel", "");
-                if (Globals.cllFastStart.Contains(cmbChannelName.Text))
-                {
-                    Globals.cllFastStart.Remove(cmbChannelName.Text);
-                }
+                BackingObject.RemoveChannel(cmbChannelName.Text);
 
+                FillChannelList();
                 ClearEntries();
-                // Me.Close()
             }
         } // btnRemove_Click
 
@@ -847,7 +744,7 @@ namespace Paclink
                 }
             }
 
-            if (rdoSerial.Checked & (cmbRadioPort.Text ?? "") == (cmbTNCSerialPort.Text ?? ""))
+            if (rdoSerial.Checked && (cmbRadioPort.Text ?? "") == (cmbTNCSerialPort.Text ?? ""))
             {
                 MessageBox.Show("Radio Control and TNC must use different serial ports.", "Serial Port Conflict", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
@@ -859,40 +756,44 @@ namespace Paclink
             }
             else
             {
-                var stcUpdateChannel = default(ChannelProperties);
-                UpdateChannelProperties(ref stcUpdateChannel);
-                Channels.UpdateChannel(ref stcUpdateChannel);
-                Channels.FillChannelCollection();
-                FillChannelList();
+                BackingObject.UpdateChannel(
+                    cmbChannelName.Text, Convert.ToInt32(nudPriority.Value), chkChannelEnabled.Checked,
+                    Convert.ToInt32(nudActivityTimeout.Value), cmbTNCSerialPort.Text, cmbTNCBaudRate.Text,
+                    txtTNCConfigurationFile.Text, chkFirstUseOnly.Checked, cmbTNCType.Text, chkAutoforwardEnabled.Checked,
+                    txtAudioCenter.Text.Trim(), cmbRadioBaud.Text, cmbRadioPort.Text, cmbRadioModel.Text,
+                    txtRadioAddress.Text.Trim().ToUpper(), chkNarrowFilter.Checked, rdoViaPTCII.Checked,
+                    rdoSerial.Checked, Convert.ToInt32(nudFSKLevel.Value), Convert.ToInt32(nudPSKLevel.Value),
+                    chkBusyHold.Checked, chkLongPath.Checked, chkIDEnabled.Checked, GetCallSign(),
+                    cmbFreqs.Text, rdoTTL.Checked, chkNMEA.Checked);
 
-                // Clear channel name from the fast start list...
-                if (Globals.cllFastStart.Contains(cmbChannelName.Text))
-                    Globals.cllFastStart.Remove(cmbChannelName.Text);
-                Globals.Settings.Save("Properties", "Last Pactor Channel", cmbChannelName.Text);
-                // Me.Close()
+                FillChannelList();
             }
         } // btnUpdate_Click
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            Globals.Settings.Save("Properties", "Last Pactor Channel", cmbChannelName.Text);
+            BackingObject.LastPactorChannel = cmbChannelName.Text;
             Close();
         } // btnClose_Click
 
         private void btnHelp_Click(object sender, EventArgs e)
         {
-            Help.ShowHelp(this, Globals.SiteRootDirectory + @"\Paclink.chm", HelpNavigator.Topic, @"html\hs150.htm");
+            Help.ShowHelp(this, BackingObject.SiteRootDirectory + @"\Paclink.chm", HelpNavigator.Topic, @"html\hs150.htm");
         } // btnHelp_Click
 
         private bool SetRMSList()
         {
-            if (!Channels.HasChannelList(false))
+            if (!BackingObject.HasChannelList)
             {
                 MessageBox.Show("Click 'Update Channel List' to download the list of available channels");
                 return false;
             }
 
-            var aryResults = Channels.ParseChannelList(false);
+            // Save old values for restore later.
+            string remoteCallsign = cmbCallSigns.Text;
+            string freq = cmbFreqs.Text;
+
+            var aryResults = BackingObject.GetChannelList();
             int intIndex;
             string strFreqList;
 
@@ -904,109 +805,31 @@ namespace Paclink
                 {
                     intIndex = station.IndexOf(":");
                     strFreqList = station.Substring(intIndex + 1);
-                    if (Globals.AnyUseableFrequency(strFreqList, cmbTNCType.Text))
+                    if (BackingObject.ContainsUsableFrequency(strFreqList, cmbTNCType.Text))
                     {
                         cmbCallSigns.Items.Add(station.Substring(0, intIndex));
                     }
                 }
 
-                cmbCallSigns.Text = stcSelectedChannel.RemoteCallsign;
-                cmbFreqs.Text = stcSelectedChannel.RDOCenterFrequency;
+                cmbCallSigns.Text = remoteCallsign;
+                cmbFreqs.Text = freq;
             }
             else
             {
                 cmbCallSigns.Items.Clear();
-                cmbCallSigns.Text = stcSelectedChannel.RemoteCallsign;
+                cmbCallSigns.Text = remoteCallsign;
                 cmbFreqs.Items.Clear();
-                cmbFreqs.Text = stcSelectedChannel.RDOCenterFrequency;
+                cmbFreqs.Text = freq;
             }
 
             return true;
         } // SetRMSList
 
-        public string[] ParsePMBOList(string strFilename)
-        {
-            // 
-            // Function to parse the PMBO freq list (used for Public, EMComm and MARS
-            // Returns an empty string array if error or file not found...
-            // 
-            var aryResult = new string[0];
-            if (!File.Exists(strFilename))
-                return aryResult;
-            try
-            {
-                var strLines = File.ReadAllLines(strFilename);
-                var blnSeparatorFound = default(bool);
-                var blnNewCallsign = default(bool);
-                string strCallsign = "";
-                string strFrequencies = "";
-                foreach (string line in strLines)
-                {
-                    if (blnSeparatorFound)
-                    {
-                        if (string.IsNullOrEmpty(line.Trim()) & !string.IsNullOrEmpty(strCallsign)) // blank line at end of station record
-                        {
-                            if (!string.IsNullOrEmpty(strFrequencies)) // only put in list if freq available
-                            {
-                                Array.Resize(ref aryResult, aryResult.Length + 1); // make one larger
-                                string strTemp = strCallsign + "," + strFrequencies;
-                                if (strTemp.EndsWith(","))
-                                    strTemp = strTemp.Substring(0, strTemp.Length - 1);
-                                aryResult[aryResult.Length - 1] = strTemp;
-                            }
-
-                            blnNewCallsign = false;
-                            strCallsign = "";
-                        }
-                        else if (blnNewCallsign & line.Trim().Length > 2)
-                        {
-                            if ("P E H T A S ".IndexOf(line.Trim().Substring(0, 2)) == -1)
-                            {
-                                var strTemp1 = line.Split(' ');
-                                foreach (string token in strTemp1)
-                                {
-                                    float num = 0.0F;
-                                    if (float.TryParse(token.Replace("#", ""), out num))
-                                    {
-                                        int intFrequency = Globals.KHzToHz(token.Replace("#", ""));
-                                        if (intFrequency > 1800000 & intFrequency < 54000000)
-                                        {
-                                            strFrequencies += token.Trim() + ",";
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else if (!blnNewCallsign & !string.IsNullOrEmpty(line.Trim()))
-                        {
-                            var strFirstLineTokens = line.Split(',');
-                            strCallsign = strFirstLineTokens[0].Trim();
-                            if (strCallsign.IndexOf(".") != -1)
-                                strCallsign = strCallsign.Substring(0, strCallsign.IndexOf(".")).Trim();
-                            if (strCallsign.IndexOf("/") != -1)
-                                strCallsign = strCallsign.Substring(1 + strCallsign.IndexOf("/")).Trim();
-                            blnNewCallsign = true;
-                            strFrequencies = "";
-                        }
-                    }
-                    else
-                    {
-                        blnSeparatorFound = line.IndexOf("------------------------") != -1;
-                    }
-                }
-            }
-            catch
-            {
-                return aryResult;
-            }
-
-            return aryResult;
-        } // ParsePMBOList
-
         private void cmbCallSigns_SelectedIndexChanged(object sender, EventArgs e)
         {
             string strFreqEntry;
             string[] strStation;
+
             for (int i = 0, loopTo = arySelectedMBOs.Length - 1; i <= loopTo; i++)
             {
                 strStation = arySelectedMBOs[i].Split(':');
@@ -1022,20 +845,18 @@ namespace Paclink
                         for (int j = 0, loopTo1 = aryFreqs.Length - 1; j <= loopTo1; j++)
                         {
                             strFreqEntry = aryFreqs[j];
-                            if (Globals.CanUseFrequency(strFreqEntry, cmbTNCType.Text))
+                            if (BackingObject.CanUseFrequency(strFreqEntry, cmbTNCType.Text))
                             {
-                                cmbFreqs.Items.Add(Globals.FormatFrequency(strFreqEntry));
+                                cmbFreqs.Items.Add(BackingObject.FormatFrequency(strFreqEntry));
                             }
                         }
 
-                        cmbFreqs.Text = Globals.FormatFrequency(aryFreqs[0]);
+                        cmbFreqs.Text = BackingObject.FormatFrequency(aryFreqs[0]);
                     }
 
                     return;
                 }
             }
-
-            stcSelectedChannel.RemoteCallsign = cmbCallSigns.Text;
         } // cmbCallSigns_SelectedIndexChanged
 
         private void chkAutoforwardEnabled_CheckedChanged(object sender, EventArgs e)
@@ -1061,7 +882,7 @@ namespace Paclink
             try
             {
                 Cursor = Cursors.WaitCursor;
-                strError = Channels.GetChannelRecords(false, Globals.strServiceCodes);
+                strError = BackingObject.DownloadChannelList();
             }
             finally
             {
@@ -1085,6 +906,16 @@ namespace Paclink
             // Get the call sign from the call sign field and clean it up.
             // 
             return cmbCallSigns.Text.Trim().ToUpper();
+        }
+
+        public void RefreshWindow()
+        {
+            Refresh();
+        }
+
+        public void CloseWindow()
+        {
+            Close();
         }
     }
 }

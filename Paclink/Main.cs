@@ -497,8 +497,7 @@ namespace Paclink
 
         public void ShowPactorChannels()
         {
-            var dlgPactorTNCChannels = new DialogPactorTNCChannels();
-            dlgPactorTNCChannels.ShowDialog();
+            UserInterfaceFactory.GetUiSystem().DisplayForm(AvailableForms.PactorChannels, new DialogPactorTNCChannelViewModel());
         }
 
         public void ShowSimpleTerminal()

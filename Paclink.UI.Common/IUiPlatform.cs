@@ -6,6 +6,7 @@
         SiteProperties,
         Polling,
         AgwChannels,
+        PactorChannels,
         TncChannels,
         AgwEngine,
         ChangePassword,

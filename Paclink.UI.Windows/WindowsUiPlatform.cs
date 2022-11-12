@@ -24,6 +24,9 @@ namespace Paclink.UI.Windows
                 case AvailableForms.AgwChannels:
                     window = new DialogPacketAGWChannels((IPacketAGWChannelBacking)backingObject);
                     break;
+                case AvailableForms.PactorChannels:
+                    window = new DialogPactorTNCChannels((IPactorTNCChannelBacking)backingObject);
+                    break;
                 case AvailableForms.TncChannels:
                     window = new DialogPacketTNCChannels((IPacketTNCChannelBacking)backingObject);
                     break;
