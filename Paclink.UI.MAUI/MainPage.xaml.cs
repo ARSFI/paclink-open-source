@@ -1,25 +1,67 @@
-﻿namespace Paclink.UI.MAUI;
+﻿using Paclink.UI.Common;
 
-public partial class MainPage : ContentPage
+namespace Paclink.UI.MAUI;
+
+public partial class MainPage : ContentPage, IMainWindow, IQueryAttributable
 {
-	int count = 0;
-
 	public MainPage()
 	{
 		InitializeComponent();
 	}
 
-	private void OnCounterClicked(object sender, EventArgs e)
-	{
-		count++;
+    public IMainFormBacking BackingObject
+    {
+        get;
+        set;
+    }
 
-		if (count == 1)
-			CounterBtn.Text = $"Clicked {count} time";
-		else
-			CounterBtn.Text = $"Clicked {count} times";
+    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    {
+        BackingObject = (IMainFormBacking)query["backing"];
+        BackingObject.FormLoading();
+        BackingObject.MainWindow = this;
+        BackingObject.FormLoaded();
+    }
 
-		SemanticScreenReader.Announce(CounterBtn.Text);
-	}
+    public void CloseWindow()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DisableWaitDisplay()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void EnableMainWindowInterface()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void EnableWaitDisplay()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void RefreshWindow()
+    {
+        // empty
+    }
+
+    public UiDialogResult ShowModal()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void UpdateChannelList()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void UpdateSiteCallsign(string callsign)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 

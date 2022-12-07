@@ -11,6 +11,15 @@ namespace Paclink.UI.Common
         private static object _lockObject = new object();
         private static IUiPlatform _platform;
 
+        // Set-only property for non-Windows platform to initialize itself.
+        public static IUiPlatform Platform
+        {
+            set
+            {
+                _platform = value;
+            }
+        }
+
         public static IUiPlatform GetUiSystem()
         {
             lock (_lockObject)
