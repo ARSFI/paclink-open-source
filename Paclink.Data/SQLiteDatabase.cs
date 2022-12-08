@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using System.Data.SQLite;
+using Microsoft.Data.Sqlite;
 using System.Diagnostics;
 using System.IO;
 using NLog;
@@ -15,7 +15,7 @@ namespace Paclink.Data
         private const string DatabaseName = "paclink.db";
         private readonly Version _databaseVersion = new Version("1.0.0");
         private readonly string _connectionString;
-        private SQLiteConnection _connection;
+        private SqliteConnection _connection;
 
         public const string SchemaVersionProperty = "Schema Version";
 
@@ -32,7 +32,7 @@ namespace Paclink.Data
 
                 //update connection string
                 var filepath = Path.Combine(path, DatabaseName);
-                _connectionString = $"URI=file:{filepath}";
+                _connectionString = $"Data Source={filepath}";
                 _log.Trace($"Database connection string: {_connectionString}");
 
                 //create the database if it does not already exist
@@ -51,12 +51,13 @@ namespace Paclink.Data
             {
                 if (_connection == null)
                 {
-                    _connection = new SQLiteConnection(_connectionString);
+                    _connection = new SqliteConnection(_connectionString);
+                    SQLitePCL.raw.SetProvider(new SQLitePCL.SQLite3Provider_e_sqlite3());
                     _connection.Open();
                 }
 
                 var sql = "CREATE TABLE IF NOT EXISTS Properties (`Timestamp` TEXT,`Group` TEXT DEFAULT '',`Property` TEXT NOT NULL,`Value` TEXT DEFAULT '',PRIMARY KEY(`Group`,`Property`))";
-                using var cmd = new SQLiteCommand(sql, _connection);
+                using var cmd = new SqliteCommand(sql, _connection);
                 cmd.ExecuteNonQuery();
 
                 cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Accounts(`Callsign` STRING PRIMARY KEY, `Password` STRING, `Tactical` BOOLEAN)";
@@ -115,12 +116,12 @@ namespace Paclink.Data
             {
                 if (_connection == null)
                 {
-                    _connection = new SQLiteConnection(_connectionString);
+                    _connection = new SqliteConnection(_connectionString);
                     _connection.Open();
                 }
 
-                using var cmd = new SQLiteCommand(sql, _connection);
-                using SQLiteDataReader reader = cmd.ExecuteReader();
+                using var cmd = new SqliteCommand(sql, _connection);
+                using SqliteDataReader reader = cmd.ExecuteReader();
                 reader.Read();
                 bool result = reader.HasRows;
                 _log.Trace($"Query: {sql} Returned one or more rows: {result}");
@@ -141,13 +142,20 @@ namespace Paclink.Data
             {
                 if (_connection == null)
                 {
-                    _connection = new SQLiteConnection(_connectionString);
+                    _connection = new SqliteConnection(_connectionString);
                     _connection.Open();
                 }
 
-                using SQLiteDataAdapter adapter = new SQLiteDataAdapter(sql, _connection);
+                var command = _connection.CreateCommand();
+                command.CommandText = sql;
+
                 DataSet ds = new DataSet();
-                var count = adapter.Fill(ds, tableName);
+                using (var reader = command.ExecuteReader())
+                {
+                    ds.Load(reader, LoadOption.OverwriteChanges, "result");
+                }
+
+                var count = ds.Tables[0].Rows.Count;
                 _log.Trace($"Loaded {count} rows from table: {tableName} using query: {sql}");
                 return ds;
             }
@@ -165,11 +173,11 @@ namespace Paclink.Data
             {
                 if (_connection == null)
                 {
-                    _connection = new SQLiteConnection(_connectionString);
+                    _connection = new SqliteConnection(_connectionString);
                     _connection.Open();
                 }
 
-                using var cmd = new SQLiteCommand(sql, _connection);
+                using var cmd = new SqliteCommand(sql, _connection);
                 var value = cmd.ExecuteScalar();
                 if (value == null) return string.Empty;
                 var stringValue = Convert.ToString(value);
@@ -190,12 +198,12 @@ namespace Paclink.Data
             {
                 if (_connection == null)
                 {
-                    _connection = new SQLiteConnection(_connectionString);
+                    _connection = new SqliteConnection(_connectionString);
                     _connection.Open();
                 }
 
-                using var cmd = new SQLiteCommand(sql, _connection);
-                using SQLiteDataReader reader = cmd.ExecuteReader();
+                using var cmd = new SqliteCommand(sql, _connection);
+                using SqliteDataReader reader = cmd.ExecuteReader();
                 reader.Read();
                 if (!reader.HasRows) return DateTime.MinValue;
                 var value = reader.GetDateTime(0);
@@ -216,12 +224,12 @@ namespace Paclink.Data
             {
                 if (_connection == null)
                 {
-                    _connection = new SQLiteConnection(_connectionString);
+                    _connection = new SqliteConnection(_connectionString);
                     _connection.Open();
                 }
 
-                using var cmd = new SQLiteCommand(sql, _connection);
-                using SQLiteDataReader reader = cmd.ExecuteReader();
+                using var cmd = new SqliteCommand(sql, _connection);
+                using SqliteDataReader reader = cmd.ExecuteReader();
                 reader.Read();
                 if (!reader.HasRows) return long.MinValue;
                 var value = reader.GetInt64(0);
@@ -242,11 +250,11 @@ namespace Paclink.Data
             {
                 if (_connection == null)
                 {
-                    _connection = new SQLiteConnection(_connectionString);
+                    _connection = new SqliteConnection(_connectionString);
                     _connection.Open();
                 }
 
-                using var cmd = new SQLiteCommand(sql, _connection);
+                using var cmd = new SqliteCommand(sql, _connection);
                 var count = cmd.ExecuteNonQuery();
                 _log.Trace($"{count} records were inserted/updated running script: {sql}");
             }

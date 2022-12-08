@@ -27,37 +27,41 @@ public partial class App : Application, IUiPlatform
         throw new System.NotImplementedException();
     }
 
-    public async void DisplayMainForm(IMainFormBacking backingObject)
+    public void DisplayMainForm(IMainFormBacking backingObject)
     {
-        var dict = new Dictionary<string, object>();
+        MainPage.Navigation.PushAsync(new MainPage(backingObject)).Wait();
+        /*var dict = new Dictionary<string, object>();
         dict["backing"] = backingObject;
 
-        await Shell.Current.GoToAsync("//Home", false, dict);
+        Shell.Current.GoToAsync("//Home", false, dict).Wait();*/
     }
 
     public void DisplayModalError(string message, string title)
     {
-        var popup = new Popup()
+        MainThread.InvokeOnMainThreadAsync(() =>
         {
-            Content = new VerticalStackLayout
+            var popup = new Popup()
             {
-                Children =
+                Content = new VerticalStackLayout
+                {
+                    Children =
                 {
                     new Label
                     {
                         Text = message
                     }
                 }
-            }
-        };
+                }
+            };
 
-        MainPage.ShowPopup(popup);
+            ((MainPage)GetMainForm()).ShowPopup(popup);
+        }).Wait();
     }
 
     public IMainWindow GetMainForm()
     {
-        //throw new System.NotImplementedException();
-        return null;
+        var navStack = Shell.Current.Navigation.NavigationStack;
+        return (IMainWindow)navStack[navStack.Count - 1];
     }
 
     public void RunUiEventLoop()

@@ -62,6 +62,8 @@
 	<ItemGroup>
 	  <None Remove="Resources\Images\" />
 	  <None Remove="CommunityToolkit.Maui" />
+	  <None Remove="SQLite" />
+	  <None Remove="Microsoft.Data.Sqlite.Core" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Resources\Images\" />

@@ -2,11 +2,12 @@
 
 namespace Paclink.UI.MAUI;
 
-public partial class MainPage : ContentPage, IMainWindow, IQueryAttributable
+public partial class MainPage : ContentPage, IMainWindow /*, IQueryAttributable*/
 {
-	public MainPage()
+	public MainPage(IMainFormBacking backing)
 	{
 		InitializeComponent();
+        BackingObject = backing;
 	}
 
     public IMainFormBacking BackingObject
@@ -15,32 +16,31 @@ public partial class MainPage : ContentPage, IMainWindow, IQueryAttributable
         set;
     }
 
-    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    /*public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
         BackingObject = (IMainFormBacking)query["backing"];
-        BackingObject.FormLoading();
         BackingObject.MainWindow = this;
-        BackingObject.FormLoaded();
-    }
+        BackingObject.FormLoading();
+    }*/
 
     public void CloseWindow()
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 
     public void DisableWaitDisplay()
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 
     public void EnableMainWindowInterface()
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 
     public void EnableWaitDisplay()
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 
     public void RefreshWindow()
@@ -50,17 +50,26 @@ public partial class MainPage : ContentPage, IMainWindow, IQueryAttributable
 
     public UiDialogResult ShowModal()
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
+        return UiDialogResult.OK;
     }
 
     public void UpdateChannelList()
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 
     public void UpdateSiteCallsign(string callsign)
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
+    }
+
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+        BackingObject.FormLoading();
+        BackingObject.MainWindow = this;
+        BackingObject.FormLoaded();
     }
 }
 
