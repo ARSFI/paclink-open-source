@@ -35,7 +35,9 @@ namespace Paclink.UI.Common
                     }
                     else
                     {
-                        throw new InvalidOperationException(string.Format("Paclink does not currently support non-Windows platforms."));
+                        // Use Avalonia for all non-Windows platforms.
+                        // TBD: eventually deprecate WinForms.
+                        requiredAssembly = Assembly.LoadFrom("Paclink.UI.Avalonia.dll");
                     }
 
                     var type = typeof(IUiPlatform);

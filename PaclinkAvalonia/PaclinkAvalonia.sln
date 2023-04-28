@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paclink.UI.Avalonia", "Paclink.UI.Avalonia.csproj", "{DC72F2FA-AE6D-413D-BCBF-4FF98B45799B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paclink.UI.Common", "..\Paclink.UI.Common\Paclink.UI.Common.csproj", "{5959DB87-1DF1-474F-8E66-4A2AE7B656A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paclink", "..\Paclink\Paclink.csproj", "{17E94D9D-7136-488F-9D5F-B813577A757B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paclink.Data", "..\Paclink.Data\Paclink.Data.csproj", "{89899851-B663-45CD-8225-1596CD23E532}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TNC.Middleware", "..\TNC.Middleware\TNC.Middleware.csproj", "{0ADB9027-12E3-4EE4-9218-C77C5E3F7552}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TNCKissInterface", "..\TNCKissInterface\TNCKissInterface\TNCKissInterface.csproj", "{667CB6CD-8527-4D9F-9255-31D0A796D9F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paclink.Resources", "..\Paclink.Resources\Paclink.Resources.csproj", "{CD8EBAE4-B144-4BCF-803C-B03926A3E560}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DC72F2FA-AE6D-413D-BCBF-4FF98B45799B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC72F2FA-AE6D-413D-BCBF-4FF98B45799B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC72F2FA-AE6D-413D-BCBF-4FF98B45799B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC72F2FA-AE6D-413D-BCBF-4FF98B45799B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5959DB87-1DF1-474F-8E66-4A2AE7B656A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5959DB87-1DF1-474F-8E66-4A2AE7B656A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5959DB87-1DF1-474F-8E66-4A2AE7B656A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5959DB87-1DF1-474F-8E66-4A2AE7B656A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17E94D9D-7136-488F-9D5F-B813577A757B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17E94D9D-7136-488F-9D5F-B813577A757B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17E94D9D-7136-488F-9D5F-B813577A757B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17E94D9D-7136-488F-9D5F-B813577A757B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89899851-B663-45CD-8225-1596CD23E532}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89899851-B663-45CD-8225-1596CD23E532}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89899851-B663-45CD-8225-1596CD23E532}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89899851-B663-45CD-8225-1596CD23E532}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0ADB9027-12E3-4EE4-9218-C77C5E3F7552}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0ADB9027-12E3-4EE4-9218-C77C5E3F7552}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0ADB9027-12E3-4EE4-9218-C77C5E3F7552}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0ADB9027-12E3-4EE4-9218-C77C5E3F7552}.Release|Any CPU.Build.0 = Release|Any CPU
+		{667CB6CD-8527-4D9F-9255-31D0A796D9F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{667CB6CD-8527-4D9F-9255-31D0A796D9F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{667CB6CD-8527-4D9F-9255-31D0A796D9F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{667CB6CD-8527-4D9F-9255-31D0A796D9F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD8EBAE4-B144-4BCF-803C-B03926A3E560}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD8EBAE4-B144-4BCF-803C-B03926A3E560}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD8EBAE4-B144-4BCF-803C-B03926A3E560}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD8EBAE4-B144-4BCF-803C-B03926A3E560}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
