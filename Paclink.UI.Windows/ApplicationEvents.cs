@@ -22,8 +22,9 @@ namespace Paclink
         [STAThread]
         static void Main()
         {
-            Application.ThreadException += Application_ThreadException;
+            Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
             Application.EnableVisualStyles();
+            Application.ThreadException += Application_ThreadException;
             Application.SetCompatibleTextRenderingDefault(false);
             UserInterfaceFactory.GetUiSystem().DisplayMainForm(new Paclink.Main());
         }
