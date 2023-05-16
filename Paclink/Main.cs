@@ -182,26 +182,26 @@ namespace Paclink
             var startupPath = Path.GetDirectoryName(typeof(Main).Assembly.Location);
             if (startupPath.IndexOf("Source") == -1)
             {
-                Globals.SiteBinDirectory = startupPath + @"\";
-                int intDirPtr = Globals.SiteBinDirectory.ToLower().IndexOf(@"bin\");
+                Globals.SiteBinDirectory = startupPath + Path.PathSeparator.ToString();
+                int intDirPtr = Globals.SiteBinDirectory.ToLower().IndexOf("bin" + Path.PathSeparator.ToString());
                 if (intDirPtr != -1)
                 {
                     Globals.SiteRootDirectory = Globals.SiteBinDirectory.Substring(0, intDirPtr);
                 }
                 else
                 {
-                    Globals.SiteRootDirectory = Globals.SiteBinDirectory + @"\";
+                    Globals.SiteRootDirectory = Globals.SiteBinDirectory + Path.PathSeparator.ToString();
                 }
             }
             else
             {
                 Globals.blnRunningInTestMode = true;
                 string strProgramFiles = Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
-                Globals.SiteRootDirectory = Path.Combine(strProgramFiles, @"Paclink\");
-                Globals.SiteBinDirectory = Globals.SiteRootDirectory + @"Bin\";
+                Globals.SiteRootDirectory = Path.Combine(strProgramFiles, "Paclink" + Path.PathSeparator.ToString());
+                Globals.SiteBinDirectory = Globals.SiteRootDirectory + "Bin" + Path.PathSeparator.ToString();
             }
 
-            Globals.SiteDataDirectory = Globals.SiteRootDirectory + @"Data\";
+            Globals.SiteDataDirectory = Globals.SiteRootDirectory + "Data" + Path.PathSeparator.ToString();
 
             Globals.Settings.Save("Main", "Program Version", Globals.strProductVersion);
             Globals.blnUseRMSRelay = Globals.Settings.Get("Properties", "Use RMS Relay", false);
