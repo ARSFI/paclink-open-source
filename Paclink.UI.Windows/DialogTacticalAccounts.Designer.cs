@@ -155,8 +155,8 @@ namespace Paclink.UI.Windows
             // 
             // DialogTacticalAccounts
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(660, 285);
             this.Controls.Add(this._Label9);
             this.Controls.Add(this._btnHelp);

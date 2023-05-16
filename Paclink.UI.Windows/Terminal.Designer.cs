@@ -44,7 +44,7 @@ namespace Paclink.UI.Windows
             this._mnuClearKiss = new System.Windows.Forms.ToolStripMenuItem();
             this._txtDisplay = new System.Windows.Forms.TextBox();
             this._tmrTerminal = new System.Windows.Forms.Timer(this.components);
-            this._objSerialPort = new System.IO.Ports.SerialPort(components);
+            this._objSerialPort = new System.IO.Ports.SerialPort(this.components);
             this._mnuMain.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -158,8 +158,8 @@ namespace Paclink.UI.Windows
             // 
             // Terminal
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(740, 583);
             this.Controls.Add(this._txtDisplay);
             this.Controls.Add(this._txtKeyboard);

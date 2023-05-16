@@ -30,308 +30,334 @@ namespace Paclink.UI.Windows
         [DebuggerStepThrough()]
         private void InitializeComponent()
         {
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(TerminalSettings));
-            _TableLayoutPanel1 = new TableLayoutPanel();
-            _OK_Button = new Button();
-            _OK_Button.Click += new EventHandler(OK_Button_Click);
-            _Cancel_Button = new Button();
-            _Cancel_Button.Click += new EventHandler(Cancel_Button_Click);
-            _Label1 = new Label();
-            _Label2 = new Label();
-            _Label3 = new Label();
-            _Label4 = new Label();
-            _Label5 = new Label();
-            _Label6 = new Label();
-            _chkRTSEnable = new CheckBox();
-            _chkDTREnable = new CheckBox();
-            _chkLocalEcho = new CheckBox();
-            _cmbHandshake = new ComboBox();
-            _cmbPort = new ComboBox();
-            _cmbDataBits = new ComboBox();
-            _cmbStopBits = new ComboBox();
-            _cmbParity = new ComboBox();
-            _txtWriteTimeout = new TextBox();
-            _cmbBaudRate = new ComboBox();
-            _Label7 = new Label();
-            _rdoSendLine = new RadioButton();
-            _rdoSendWord = new RadioButton();
-            _rdoSendCharacter = new RadioButton();
-            _chkWordWrap = new CheckBox();
-            _TableLayoutPanel1.SuspendLayout();
-            SuspendLayout();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TerminalSettings));
+            this._TableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this._OK_Button = new System.Windows.Forms.Button();
+            this._Cancel_Button = new System.Windows.Forms.Button();
+            this._Label1 = new System.Windows.Forms.Label();
+            this._Label2 = new System.Windows.Forms.Label();
+            this._Label3 = new System.Windows.Forms.Label();
+            this._Label4 = new System.Windows.Forms.Label();
+            this._Label5 = new System.Windows.Forms.Label();
+            this._Label6 = new System.Windows.Forms.Label();
+            this._chkRTSEnable = new System.Windows.Forms.CheckBox();
+            this._chkDTREnable = new System.Windows.Forms.CheckBox();
+            this._chkLocalEcho = new System.Windows.Forms.CheckBox();
+            this._cmbHandshake = new System.Windows.Forms.ComboBox();
+            this._cmbPort = new System.Windows.Forms.ComboBox();
+            this._cmbDataBits = new System.Windows.Forms.ComboBox();
+            this._cmbStopBits = new System.Windows.Forms.ComboBox();
+            this._cmbParity = new System.Windows.Forms.ComboBox();
+            this._txtWriteTimeout = new System.Windows.Forms.TextBox();
+            this._cmbBaudRate = new System.Windows.Forms.ComboBox();
+            this._Label7 = new System.Windows.Forms.Label();
+            this._rdoSendLine = new System.Windows.Forms.RadioButton();
+            this._rdoSendWord = new System.Windows.Forms.RadioButton();
+            this._rdoSendCharacter = new System.Windows.Forms.RadioButton();
+            this._chkWordWrap = new System.Windows.Forms.CheckBox();
+            this._TableLayoutPanel1.SuspendLayout();
+            this.SuspendLayout();
             // 
-            // TableLayoutPanel1
+            // _TableLayoutPanel1
             // 
-            _TableLayoutPanel1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            _TableLayoutPanel1.ColumnCount = 2;
-            _TableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50.0F));
-            _TableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50.0F));
-            _TableLayoutPanel1.Controls.Add(_OK_Button, 0, 0);
-            _TableLayoutPanel1.Controls.Add(_Cancel_Button, 1, 0);
-            _TableLayoutPanel1.Location = new Point(224, 214);
-            _TableLayoutPanel1.Name = "_TableLayoutPanel1";
-            _TableLayoutPanel1.RowCount = 1;
-            _TableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50.0F));
-            _TableLayoutPanel1.Size = new Size(146, 29);
-            _TableLayoutPanel1.TabIndex = 0;
+            this._TableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this._TableLayoutPanel1.ColumnCount = 2;
+            this._TableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this._TableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this._TableLayoutPanel1.Controls.Add(this._OK_Button, 0, 0);
+            this._TableLayoutPanel1.Controls.Add(this._Cancel_Button, 1, 0);
+            this._TableLayoutPanel1.Location = new System.Drawing.Point(261, 247);
+            this._TableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._TableLayoutPanel1.Name = "_TableLayoutPanel1";
+            this._TableLayoutPanel1.RowCount = 1;
+            this._TableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this._TableLayoutPanel1.Size = new System.Drawing.Size(170, 33);
+            this._TableLayoutPanel1.TabIndex = 0;
             // 
-            // OK_Button
+            // _OK_Button
             // 
-            _OK_Button.Anchor = AnchorStyles.None;
-            _OK_Button.Location = new Point(3, 3);
-            _OK_Button.Name = "_OK_Button";
-            _OK_Button.Size = new Size(67, 23);
-            _OK_Button.TabIndex = 0;
-            _OK_Button.Text = "OK";
+            this._OK_Button.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this._OK_Button.Location = new System.Drawing.Point(4, 3);
+            this._OK_Button.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._OK_Button.Name = "_OK_Button";
+            this._OK_Button.Size = new System.Drawing.Size(77, 27);
+            this._OK_Button.TabIndex = 0;
+            this._OK_Button.Text = "OK";
+            this._OK_Button.Click += new System.EventHandler(this.OK_Button_Click);
             // 
-            // Cancel_Button
+            // _Cancel_Button
             // 
-            _Cancel_Button.Anchor = AnchorStyles.None;
-            _Cancel_Button.DialogResult = DialogResult.Cancel;
-            _Cancel_Button.Location = new Point(76, 3);
-            _Cancel_Button.Name = "_Cancel_Button";
-            _Cancel_Button.Size = new Size(67, 23);
-            _Cancel_Button.TabIndex = 1;
-            _Cancel_Button.Text = "Cancel";
+            this._Cancel_Button.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this._Cancel_Button.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this._Cancel_Button.Location = new System.Drawing.Point(89, 3);
+            this._Cancel_Button.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._Cancel_Button.Name = "_Cancel_Button";
+            this._Cancel_Button.Size = new System.Drawing.Size(77, 27);
+            this._Cancel_Button.TabIndex = 1;
+            this._Cancel_Button.Text = "Cancel";
+            this._Cancel_Button.Click += new System.EventHandler(this.Cancel_Button_Click);
             // 
-            // Label1
+            // _Label1
             // 
-            _Label1.AutoSize = true;
-            _Label1.Location = new Point(69, 17);
-            _Label1.Name = "_Label1";
-            _Label1.Size = new Size(29, 13);
-            _Label1.TabIndex = 1;
-            _Label1.Text = "Port:";
+            this._Label1.AutoSize = true;
+            this._Label1.Location = new System.Drawing.Point(80, 20);
+            this._Label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._Label1.Name = "_Label1";
+            this._Label1.Size = new System.Drawing.Size(32, 15);
+            this._Label1.TabIndex = 1;
+            this._Label1.Text = "Port:";
             // 
-            // Label2
+            // _Label2
             // 
-            _Label2.AutoSize = true;
-            _Label2.Location = new Point(46, 85);
-            _Label2.Name = "_Label2";
-            _Label2.Size = new Size(53, 13);
-            _Label2.TabIndex = 2;
-            _Label2.Text = "Data Bits:";
+            this._Label2.AutoSize = true;
+            this._Label2.Location = new System.Drawing.Point(54, 98);
+            this._Label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._Label2.Name = "_Label2";
+            this._Label2.Size = new System.Drawing.Size(56, 15);
+            this._Label2.TabIndex = 2;
+            this._Label2.Text = "Data Bits:";
             // 
-            // Label3
+            // _Label3
             // 
-            _Label3.AutoSize = true;
-            _Label3.Location = new Point(46, 119);
-            _Label3.Name = "_Label3";
-            _Label3.Size = new Size(52, 13);
-            _Label3.TabIndex = 3;
-            _Label3.Text = "Stop Bits:";
+            this._Label3.AutoSize = true;
+            this._Label3.Location = new System.Drawing.Point(54, 137);
+            this._Label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._Label3.Name = "_Label3";
+            this._Label3.Size = new System.Drawing.Size(56, 15);
+            this._Label3.TabIndex = 3;
+            this._Label3.Text = "Stop Bits:";
             // 
-            // Label4
+            // _Label4
             // 
-            _Label4.AutoSize = true;
-            _Label4.Location = new Point(62, 153);
-            _Label4.Name = "_Label4";
-            _Label4.Size = new Size(36, 13);
-            _Label4.TabIndex = 4;
-            _Label4.Text = "Parity:";
+            this._Label4.AutoSize = true;
+            this._Label4.Location = new System.Drawing.Point(72, 177);
+            this._Label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._Label4.Name = "_Label4";
+            this._Label4.Size = new System.Drawing.Size(40, 15);
+            this._Label4.TabIndex = 4;
+            this._Label4.Text = "Parity:";
             // 
-            // Label5
+            // _Label5
             // 
-            _Label5.AutoSize = true;
-            _Label5.Location = new Point(33, 187);
-            _Label5.Name = "_Label5";
-            _Label5.Size = new Size(65, 13);
-            _Label5.TabIndex = 5;
-            _Label5.Text = "Handshake:";
+            this._Label5.AutoSize = true;
+            this._Label5.Location = new System.Drawing.Point(38, 216);
+            this._Label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._Label5.Name = "_Label5";
+            this._Label5.Size = new System.Drawing.Size(69, 15);
+            this._Label5.TabIndex = 5;
+            this._Label5.Text = "Handshake:";
             // 
-            // Label6
+            // _Label6
             // 
-            _Label6.AutoSize = true;
-            _Label6.Location = new Point(23, 220);
-            _Label6.Name = "_Label6";
-            _Label6.Size = new Size(76, 13);
-            _Label6.TabIndex = 6;
-            _Label6.Text = "Write Timeout:";
+            this._Label6.AutoSize = true;
+            this._Label6.Location = new System.Drawing.Point(27, 254);
+            this._Label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._Label6.Name = "_Label6";
+            this._Label6.Size = new System.Drawing.Size(85, 15);
+            this._Label6.TabIndex = 6;
+            this._Label6.Text = "Write Timeout:";
             // 
-            // chkRTSEnable
+            // _chkRTSEnable
             // 
-            _chkRTSEnable.AutoSize = true;
-            _chkRTSEnable.Checked = true;
-            _chkRTSEnable.CheckState = CheckState.Checked;
-            _chkRTSEnable.Location = new Point(246, 24);
-            _chkRTSEnable.Name = "_chkRTSEnable";
-            _chkRTSEnable.Size = new Size(84, 17);
-            _chkRTSEnable.TabIndex = 7;
-            _chkRTSEnable.Text = "RTS Enable";
-            _chkRTSEnable.UseVisualStyleBackColor = true;
+            this._chkRTSEnable.AutoSize = true;
+            this._chkRTSEnable.Checked = true;
+            this._chkRTSEnable.CheckState = System.Windows.Forms.CheckState.Checked;
+            this._chkRTSEnable.Location = new System.Drawing.Point(287, 28);
+            this._chkRTSEnable.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._chkRTSEnable.Name = "_chkRTSEnable";
+            this._chkRTSEnable.Size = new System.Drawing.Size(82, 19);
+            this._chkRTSEnable.TabIndex = 7;
+            this._chkRTSEnable.Text = "RTS Enable";
+            this._chkRTSEnable.UseVisualStyleBackColor = true;
             // 
-            // chkDTREnable
+            // _chkDTREnable
             // 
-            _chkDTREnable.AutoSize = true;
-            _chkDTREnable.Checked = true;
-            _chkDTREnable.CheckState = CheckState.Checked;
-            _chkDTREnable.Location = new Point(246, 47);
-            _chkDTREnable.Name = "_chkDTREnable";
-            _chkDTREnable.Size = new Size(85, 17);
-            _chkDTREnable.TabIndex = 8;
-            _chkDTREnable.Text = "DTR Enable";
-            _chkDTREnable.UseVisualStyleBackColor = true;
+            this._chkDTREnable.AutoSize = true;
+            this._chkDTREnable.Checked = true;
+            this._chkDTREnable.CheckState = System.Windows.Forms.CheckState.Checked;
+            this._chkDTREnable.Location = new System.Drawing.Point(287, 54);
+            this._chkDTREnable.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._chkDTREnable.Name = "_chkDTREnable";
+            this._chkDTREnable.Size = new System.Drawing.Size(84, 19);
+            this._chkDTREnable.TabIndex = 8;
+            this._chkDTREnable.Text = "DTR Enable";
+            this._chkDTREnable.UseVisualStyleBackColor = true;
             // 
-            // chkLocalEcho
+            // _chkLocalEcho
             // 
-            _chkLocalEcho.AutoSize = true;
-            _chkLocalEcho.Checked = true;
-            _chkLocalEcho.CheckState = CheckState.Checked;
-            _chkLocalEcho.Location = new Point(246, 70);
-            _chkLocalEcho.Name = "_chkLocalEcho";
-            _chkLocalEcho.Size = new Size(80, 17);
-            _chkLocalEcho.TabIndex = 9;
-            _chkLocalEcho.Text = "Local Echo";
-            _chkLocalEcho.UseVisualStyleBackColor = true;
+            this._chkLocalEcho.AutoSize = true;
+            this._chkLocalEcho.Checked = true;
+            this._chkLocalEcho.CheckState = System.Windows.Forms.CheckState.Checked;
+            this._chkLocalEcho.Location = new System.Drawing.Point(287, 81);
+            this._chkLocalEcho.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._chkLocalEcho.Name = "_chkLocalEcho";
+            this._chkLocalEcho.Size = new System.Drawing.Size(83, 19);
+            this._chkLocalEcho.TabIndex = 9;
+            this._chkLocalEcho.Text = "Local Echo";
+            this._chkLocalEcho.UseVisualStyleBackColor = true;
             // 
-            // cmbHandshake
+            // _cmbHandshake
             // 
-            _cmbHandshake.FormattingEnabled = true;
-            _cmbHandshake.Location = new Point(105, 184);
-            _cmbHandshake.Name = "_cmbHandshake";
-            _cmbHandshake.Size = new Size(94, 21);
-            _cmbHandshake.TabIndex = 10;
+            this._cmbHandshake.FormattingEnabled = true;
+            this._cmbHandshake.Location = new System.Drawing.Point(122, 212);
+            this._cmbHandshake.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._cmbHandshake.Name = "_cmbHandshake";
+            this._cmbHandshake.Size = new System.Drawing.Size(109, 23);
+            this._cmbHandshake.TabIndex = 10;
             // 
-            // cmbPort
+            // _cmbPort
             // 
-            _cmbPort.FormattingEnabled = true;
-            _cmbPort.Location = new Point(105, 14);
-            _cmbPort.Name = "_cmbPort";
-            _cmbPort.Size = new Size(94, 21);
-            _cmbPort.TabIndex = 11;
+            this._cmbPort.FormattingEnabled = true;
+            this._cmbPort.Location = new System.Drawing.Point(122, 16);
+            this._cmbPort.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._cmbPort.Name = "_cmbPort";
+            this._cmbPort.Size = new System.Drawing.Size(109, 23);
+            this._cmbPort.TabIndex = 11;
             // 
-            // cmbDataBits
+            // _cmbDataBits
             // 
-            _cmbDataBits.FormattingEnabled = true;
-            _cmbDataBits.Location = new Point(105, 82);
-            _cmbDataBits.Name = "_cmbDataBits";
-            _cmbDataBits.Size = new Size(94, 21);
-            _cmbDataBits.TabIndex = 12;
+            this._cmbDataBits.FormattingEnabled = true;
+            this._cmbDataBits.Location = new System.Drawing.Point(122, 95);
+            this._cmbDataBits.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._cmbDataBits.Name = "_cmbDataBits";
+            this._cmbDataBits.Size = new System.Drawing.Size(109, 23);
+            this._cmbDataBits.TabIndex = 12;
             // 
-            // cmbStopBits
+            // _cmbStopBits
             // 
-            _cmbStopBits.FormattingEnabled = true;
-            _cmbStopBits.Location = new Point(105, 116);
-            _cmbStopBits.Name = "_cmbStopBits";
-            _cmbStopBits.Size = new Size(94, 21);
-            _cmbStopBits.TabIndex = 13;
+            this._cmbStopBits.FormattingEnabled = true;
+            this._cmbStopBits.Location = new System.Drawing.Point(122, 134);
+            this._cmbStopBits.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._cmbStopBits.Name = "_cmbStopBits";
+            this._cmbStopBits.Size = new System.Drawing.Size(109, 23);
+            this._cmbStopBits.TabIndex = 13;
             // 
-            // cmbParity
+            // _cmbParity
             // 
-            _cmbParity.FormattingEnabled = true;
-            _cmbParity.Location = new Point(105, 150);
-            _cmbParity.Name = "_cmbParity";
-            _cmbParity.Size = new Size(94, 21);
-            _cmbParity.TabIndex = 14;
+            this._cmbParity.FormattingEnabled = true;
+            this._cmbParity.Location = new System.Drawing.Point(122, 173);
+            this._cmbParity.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._cmbParity.Name = "_cmbParity";
+            this._cmbParity.Size = new System.Drawing.Size(109, 23);
+            this._cmbParity.TabIndex = 14;
             // 
-            // txtWriteTimeout
+            // _txtWriteTimeout
             // 
-            _txtWriteTimeout.Location = new Point(105, 218);
-            _txtWriteTimeout.Name = "_txtWriteTimeout";
-            _txtWriteTimeout.Size = new Size(63, 20);
-            _txtWriteTimeout.TabIndex = 15;
+            this._txtWriteTimeout.Location = new System.Drawing.Point(122, 252);
+            this._txtWriteTimeout.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._txtWriteTimeout.Name = "_txtWriteTimeout";
+            this._txtWriteTimeout.Size = new System.Drawing.Size(73, 23);
+            this._txtWriteTimeout.TabIndex = 15;
             // 
-            // cmbBaudRate
+            // _cmbBaudRate
             // 
-            _cmbBaudRate.FormattingEnabled = true;
-            _cmbBaudRate.Location = new Point(105, 48);
-            _cmbBaudRate.Name = "_cmbBaudRate";
-            _cmbBaudRate.Size = new Size(94, 21);
-            _cmbBaudRate.TabIndex = 17;
+            this._cmbBaudRate.FormattingEnabled = true;
+            this._cmbBaudRate.Location = new System.Drawing.Point(122, 55);
+            this._cmbBaudRate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._cmbBaudRate.Name = "_cmbBaudRate";
+            this._cmbBaudRate.Size = new System.Drawing.Size(109, 23);
+            this._cmbBaudRate.TabIndex = 17;
             // 
-            // Label7
+            // _Label7
             // 
-            _Label7.AutoSize = true;
-            _Label7.Location = new Point(38, 48);
-            _Label7.Name = "_Label7";
-            _Label7.Size = new Size(61, 13);
-            _Label7.TabIndex = 16;
-            _Label7.Text = "Baud Rate:";
+            this._Label7.AutoSize = true;
+            this._Label7.Location = new System.Drawing.Point(44, 55);
+            this._Label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._Label7.Name = "_Label7";
+            this._Label7.Size = new System.Drawing.Size(63, 15);
+            this._Label7.TabIndex = 16;
+            this._Label7.Text = "Baud Rate:";
             // 
-            // rdoSendLine
+            // _rdoSendLine
             // 
-            _rdoSendLine.AutoSize = true;
-            _rdoSendLine.Checked = true;
-            _rdoSendLine.Location = new Point(246, 135);
-            _rdoSendLine.Name = "_rdoSendLine";
-            _rdoSendLine.Size = new Size(73, 17);
-            _rdoSendLine.TabIndex = 18;
-            _rdoSendLine.TabStop = true;
-            _rdoSendLine.Text = "Send Line";
-            _rdoSendLine.UseVisualStyleBackColor = true;
+            this._rdoSendLine.AutoSize = true;
+            this._rdoSendLine.Checked = true;
+            this._rdoSendLine.Location = new System.Drawing.Point(287, 156);
+            this._rdoSendLine.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._rdoSendLine.Name = "_rdoSendLine";
+            this._rdoSendLine.Size = new System.Drawing.Size(76, 19);
+            this._rdoSendLine.TabIndex = 18;
+            this._rdoSendLine.TabStop = true;
+            this._rdoSendLine.Text = "Send Line";
+            this._rdoSendLine.UseVisualStyleBackColor = true;
             // 
-            // rdoSendWord
+            // _rdoSendWord
             // 
-            _rdoSendWord.AutoSize = true;
-            _rdoSendWord.Location = new Point(246, 158);
-            _rdoSendWord.Name = "_rdoSendWord";
-            _rdoSendWord.Size = new Size(79, 17);
-            _rdoSendWord.TabIndex = 19;
-            _rdoSendWord.TabStop = true;
-            _rdoSendWord.Text = "Send Word";
-            _rdoSendWord.UseVisualStyleBackColor = true;
+            this._rdoSendWord.AutoSize = true;
+            this._rdoSendWord.Location = new System.Drawing.Point(287, 182);
+            this._rdoSendWord.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._rdoSendWord.Name = "_rdoSendWord";
+            this._rdoSendWord.Size = new System.Drawing.Size(83, 19);
+            this._rdoSendWord.TabIndex = 19;
+            this._rdoSendWord.TabStop = true;
+            this._rdoSendWord.Text = "Send Word";
+            this._rdoSendWord.UseVisualStyleBackColor = true;
             // 
-            // rdoSendCharacter
+            // _rdoSendCharacter
             // 
-            _rdoSendCharacter.AutoSize = true;
-            _rdoSendCharacter.Location = new Point(246, 181);
-            _rdoSendCharacter.Name = "_rdoSendCharacter";
-            _rdoSendCharacter.Size = new Size(99, 17);
-            _rdoSendCharacter.TabIndex = 20;
-            _rdoSendCharacter.TabStop = true;
-            _rdoSendCharacter.Text = "Send Character";
-            _rdoSendCharacter.UseVisualStyleBackColor = true;
+            this._rdoSendCharacter.AutoSize = true;
+            this._rdoSendCharacter.Location = new System.Drawing.Point(287, 209);
+            this._rdoSendCharacter.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._rdoSendCharacter.Name = "_rdoSendCharacter";
+            this._rdoSendCharacter.Size = new System.Drawing.Size(105, 19);
+            this._rdoSendCharacter.TabIndex = 20;
+            this._rdoSendCharacter.TabStop = true;
+            this._rdoSendCharacter.Text = "Send Character";
+            this._rdoSendCharacter.UseVisualStyleBackColor = true;
             // 
-            // chkWordWrap
+            // _chkWordWrap
             // 
-            _chkWordWrap.AutoSize = true;
-            _chkWordWrap.Location = new Point(246, 93);
-            _chkWordWrap.Name = "_chkWordWrap";
-            _chkWordWrap.Size = new Size(81, 17);
-            _chkWordWrap.TabIndex = 21;
-            _chkWordWrap.Text = "Word Wrap";
-            _chkWordWrap.UseVisualStyleBackColor = true;
+            this._chkWordWrap.AutoSize = true;
+            this._chkWordWrap.Location = new System.Drawing.Point(287, 107);
+            this._chkWordWrap.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._chkWordWrap.Name = "_chkWordWrap";
+            this._chkWordWrap.Size = new System.Drawing.Size(86, 19);
+            this._chkWordWrap.TabIndex = 21;
+            this._chkWordWrap.Text = "Word Wrap";
+            this._chkWordWrap.UseVisualStyleBackColor = true;
             // 
             // TerminalSettings
             // 
-            AcceptButton = _OK_Button;
-            AutoScaleDimensions = new SizeF(6.0F, 13.0F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(382, 255);
-            Controls.Add(_chkWordWrap);
-            Controls.Add(_rdoSendCharacter);
-            Controls.Add(_rdoSendWord);
-            Controls.Add(_rdoSendLine);
-            Controls.Add(_cmbBaudRate);
-            Controls.Add(_Label7);
-            Controls.Add(_txtWriteTimeout);
-            Controls.Add(_cmbParity);
-            Controls.Add(_cmbStopBits);
-            Controls.Add(_cmbDataBits);
-            Controls.Add(_cmbPort);
-            Controls.Add(_cmbHandshake);
-            Controls.Add(_chkLocalEcho);
-            Controls.Add(_chkDTREnable);
-            Controls.Add(_chkRTSEnable);
-            Controls.Add(_Label6);
-            Controls.Add(_Label5);
-            Controls.Add(_Label4);
-            Controls.Add(_Label3);
-            Controls.Add(_Label2);
-            Controls.Add(_Label1);
-            Controls.Add(_TableLayoutPanel1);
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            Icon = (Icon)resources.GetObject("$this.Icon");
-            MaximizeBox = false;
-            MinimizeBox = false;
-            Name = "TerminalSettings";
-            ShowInTaskbar = false;
-            StartPosition = FormStartPosition.CenterParent;
-            Text = "Simple Terminal  Settings";
-            _TableLayoutPanel1.ResumeLayout(false);
-            Load += new EventHandler(Properties_Load);
-            ResumeLayout(false);
-            PerformLayout();
+            this.AcceptButton = this._OK_Button;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(446, 294);
+            this.Controls.Add(this._chkWordWrap);
+            this.Controls.Add(this._rdoSendCharacter);
+            this.Controls.Add(this._rdoSendWord);
+            this.Controls.Add(this._rdoSendLine);
+            this.Controls.Add(this._cmbBaudRate);
+            this.Controls.Add(this._Label7);
+            this.Controls.Add(this._txtWriteTimeout);
+            this.Controls.Add(this._cmbParity);
+            this.Controls.Add(this._cmbStopBits);
+            this.Controls.Add(this._cmbDataBits);
+            this.Controls.Add(this._cmbPort);
+            this.Controls.Add(this._cmbHandshake);
+            this.Controls.Add(this._chkLocalEcho);
+            this.Controls.Add(this._chkDTREnable);
+            this.Controls.Add(this._chkRTSEnable);
+            this.Controls.Add(this._Label6);
+            this.Controls.Add(this._Label5);
+            this.Controls.Add(this._Label4);
+            this.Controls.Add(this._Label3);
+            this.Controls.Add(this._Label2);
+            this.Controls.Add(this._Label1);
+            this.Controls.Add(this._TableLayoutPanel1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "TerminalSettings";
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Simple Terminal  Settings";
+            this.Load += new System.EventHandler(this.Properties_Load);
+            this._TableLayoutPanel1.ResumeLayout(false);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
 
         private TableLayoutPanel _TableLayoutPanel1;

@@ -30,186 +30,203 @@ namespace Paclink.UI.Windows
         [DebuggerStepThrough()]
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(DialogPactorConnect));
-            _cmbCallSigns = new ComboBox();
-            _cmbCallSigns.SelectedIndexChanged += new EventHandler(cmbCallSigns_SelectedIndexChanged);
-            _cmbFrequencies = new ComboBox();
-            _cmbFrequencies.SelectedIndexChanged += new EventHandler(cmbFrequencies_SelectedIndexChanged);
-            _cmbFrequencies.TextChanged += new EventHandler(cmbFrequencies_TextChanged);
-            _Label1 = new Label();
-            _Label2 = new Label();
-            _lblUSB = new Label();
-            _ToolTip1 = new ToolTip(components);
-            _lblBusy = new Label();
-            _Label4 = new Label();
-            _btnConnect = new Button();
-            _btnConnect.Click += new EventHandler(btnConnect_Click);
-            _btnCancel = new Button();
-            _btnCancel.Click += new EventHandler(btnCancel_Click);
-            _btnHelp = new Button();
-            _btnHelp.Click += new EventHandler(btnHelp_Click);
-            _tmrPollClient = new Timer(components);
-            _tmrPollClient.Tick += new EventHandler(tmrPollClient_Tick);
-            _lblPMBOType = new Label();
-            _chkResumeDialog = new CheckBox();
-            _chkResumeDialog.CheckedChanged += new EventHandler(chkResumeDialog_CheckedChanged);
-            SuspendLayout();
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DialogPactorConnect));
+            this._cmbCallSigns = new System.Windows.Forms.ComboBox();
+            this._cmbFrequencies = new System.Windows.Forms.ComboBox();
+            this._Label1 = new System.Windows.Forms.Label();
+            this._Label2 = new System.Windows.Forms.Label();
+            this._lblUSB = new System.Windows.Forms.Label();
+            this._ToolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this._lblBusy = new System.Windows.Forms.Label();
+            this._Label4 = new System.Windows.Forms.Label();
+            this._btnConnect = new System.Windows.Forms.Button();
+            this._btnCancel = new System.Windows.Forms.Button();
+            this._btnHelp = new System.Windows.Forms.Button();
+            this._tmrPollClient = new System.Windows.Forms.Timer(this.components);
+            this._lblPMBOType = new System.Windows.Forms.Label();
+            this._chkResumeDialog = new System.Windows.Forms.CheckBox();
+            this.SuspendLayout();
             // 
-            // cmbCallSigns
+            // _cmbCallSigns
             // 
-            _cmbCallSigns.FormattingEnabled = true;
-            _cmbCallSigns.Location = new Point(68, 88);
-            _cmbCallSigns.Name = "_cmbCallSigns";
-            _cmbCallSigns.Size = new Size(100, 21);
-            _cmbCallSigns.TabIndex = 2;
-            _ToolTip1.SetToolTip(_cmbCallSigns, "You can type in a specific call or select one from the PMBO/RMS Type of freq list" + "");
+            this._cmbCallSigns.FormattingEnabled = true;
+            this._cmbCallSigns.Location = new System.Drawing.Point(79, 102);
+            this._cmbCallSigns.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._cmbCallSigns.Name = "_cmbCallSigns";
+            this._cmbCallSigns.Size = new System.Drawing.Size(116, 23);
+            this._cmbCallSigns.TabIndex = 2;
+            this._ToolTip1.SetToolTip(this._cmbCallSigns, "You can type in a specific call or select one from the PMBO/RMS Type of freq list" +
+        "");
+            this._cmbCallSigns.SelectedIndexChanged += new System.EventHandler(this.cmbCallSigns_SelectedIndexChanged);
             // 
-            // cmbFrequencies
+            // _cmbFrequencies
             // 
-            _cmbFrequencies.FormattingEnabled = true;
-            _cmbFrequencies.Location = new Point(199, 88);
-            _cmbFrequencies.Name = "_cmbFrequencies";
-            _cmbFrequencies.Size = new Size(148, 21);
-            _cmbFrequencies.TabIndex = 3;
-            _ToolTip1.SetToolTip(_cmbFrequencies, "This is a list of the center frequencies for the selected remote callsign. ...Or " + "you can enter one directly (KHz).");
+            this._cmbFrequencies.FormattingEnabled = true;
+            this._cmbFrequencies.Location = new System.Drawing.Point(232, 102);
+            this._cmbFrequencies.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._cmbFrequencies.Name = "_cmbFrequencies";
+            this._cmbFrequencies.Size = new System.Drawing.Size(172, 23);
+            this._cmbFrequencies.TabIndex = 3;
+            this._ToolTip1.SetToolTip(this._cmbFrequencies, "This is a list of the center frequencies for the selected remote callsign. ...Or " +
+        "you can enter one directly (KHz).");
+            this._cmbFrequencies.SelectedIndexChanged += new System.EventHandler(this.cmbFrequencies_SelectedIndexChanged);
+            this._cmbFrequencies.TextChanged += new System.EventHandler(this.cmbFrequencies_TextChanged);
             // 
-            // Label1
+            // _Label1
             // 
-            _Label1.AutoSize = true;
-            _Label1.Location = new Point(68, 72);
-            _Label1.Name = "_Label1";
-            _Label1.Size = new Size(83, 13);
-            _Label1.TabIndex = 6;
-            _Label1.Text = "Remote Callsign";
+            this._Label1.AutoSize = true;
+            this._Label1.Location = new System.Drawing.Point(79, 83);
+            this._Label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._Label1.Name = "_Label1";
+            this._Label1.Size = new System.Drawing.Size(93, 15);
+            this._Label1.TabIndex = 6;
+            this._Label1.Text = "Remote Callsign";
             // 
-            // Label2
+            // _Label2
             // 
-            _Label2.AutoSize = true;
-            _Label2.Location = new Point(199, 72);
-            _Label2.Name = "_Label2";
-            _Label2.Size = new Size(107, 13);
-            _Label2.TabIndex = 7;
-            _Label2.Text = "RF Center Freq (kHz)";
+            this._Label2.AutoSize = true;
+            this._Label2.Location = new System.Drawing.Point(232, 83);
+            this._Label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._Label2.Name = "_Label2";
+            this._Label2.Size = new System.Drawing.Size(115, 15);
+            this._Label2.TabIndex = 7;
+            this._Label2.Text = "RF Center Freq (kHz)";
             // 
-            // lblUSB
+            // _lblUSB
             // 
-            _lblUSB.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point, Convert.ToByte(0));
-            _lblUSB.Location = new Point(28, 122);
-            _lblUSB.Name = "_lblUSB";
-            _lblUSB.Size = new Size(359, 16);
-            _lblUSB.TabIndex = 9;
-            _lblUSB.Text = "USB Dial: --------";
-            _lblUSB.TextAlign = ContentAlignment.MiddleCenter;
-            _ToolTip1.SetToolTip(_lblUSB, "Calculated Dial freq for USB operation.");
+            this._lblUSB.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this._lblUSB.Location = new System.Drawing.Point(33, 141);
+            this._lblUSB.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._lblUSB.Name = "_lblUSB";
+            this._lblUSB.Size = new System.Drawing.Size(419, 18);
+            this._lblUSB.TabIndex = 9;
+            this._lblUSB.Text = "USB Dial: --------";
+            this._lblUSB.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this._ToolTip1.SetToolTip(this._lblUSB, "Calculated Dial freq for USB operation.");
             // 
-            // lblBusy
+            // _lblBusy
             // 
-            _lblBusy.BackColor = Color.Yellow;
-            _lblBusy.BorderStyle = BorderStyle.FixedSingle;
-            _lblBusy.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, Convert.ToByte(0));
-            _lblBusy.Location = new Point(45, 9);
-            _lblBusy.Name = "_lblBusy";
-            _lblBusy.Size = new Size(324, 24);
-            _lblBusy.TabIndex = 15;
-            _lblBusy.Text = "Channel  Status";
-            _lblBusy.TextAlign = ContentAlignment.MiddleCenter;
-            _ToolTip1.SetToolTip(_lblBusy, "A guide to detect activity in the channel. (Green = channel clear, Yellow = waiti" + "ng for status, Red = channel busy)...PTC II models only!");
+            this._lblBusy.BackColor = System.Drawing.Color.Yellow;
+            this._lblBusy.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this._lblBusy.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this._lblBusy.Location = new System.Drawing.Point(52, 10);
+            this._lblBusy.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._lblBusy.Name = "_lblBusy";
+            this._lblBusy.Size = new System.Drawing.Size(378, 27);
+            this._lblBusy.TabIndex = 15;
+            this._lblBusy.Text = "Channel  Status";
+            this._lblBusy.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this._ToolTip1.SetToolTip(this._lblBusy, "A guide to detect activity in the channel. (Green = channel clear, Yellow = waiti" +
+        "ng for status, Red = channel busy)...PTC II models only!");
             // 
-            // Label4
+            // _Label4
             // 
-            _Label4.AutoSize = true;
-            _Label4.Font = new Font("Microsoft Sans Serif", 12.0F, FontStyle.Bold, GraphicsUnit.Point, Convert.ToByte(0));
-            _Label4.Location = new Point(31, 148);
-            _Label4.Name = "_Label4";
-            _Label4.Size = new Size(352, 20);
-            _Label4.TabIndex = 16;
-            _Label4.Text = "Listen for clear channel before connecting!";
+            this._Label4.AutoSize = true;
+            this._Label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this._Label4.Location = new System.Drawing.Point(36, 171);
+            this._Label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._Label4.Name = "_Label4";
+            this._Label4.Size = new System.Drawing.Size(352, 20);
+            this._Label4.TabIndex = 16;
+            this._Label4.Text = "Listen for clear channel before connecting!";
             // 
-            // btnConnect
+            // _btnConnect
             // 
-            _btnConnect.Location = new Point(33, 214);
-            _btnConnect.Name = "_btnConnect";
-            _btnConnect.Size = new Size(100, 29);
-            _btnConnect.TabIndex = 17;
-            _btnConnect.Text = "C&onnect";
-            _btnConnect.UseVisualStyleBackColor = true;
+            this._btnConnect.Location = new System.Drawing.Point(38, 247);
+            this._btnConnect.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._btnConnect.Name = "_btnConnect";
+            this._btnConnect.Size = new System.Drawing.Size(117, 33);
+            this._btnConnect.TabIndex = 17;
+            this._btnConnect.Text = "C&onnect";
+            this._btnConnect.UseVisualStyleBackColor = true;
+            this._btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
-            // btnCancel
+            // _btnCancel
             // 
-            _btnCancel.Location = new Point(157, 214);
-            _btnCancel.Name = "_btnCancel";
-            _btnCancel.Size = new Size(100, 29);
-            _btnCancel.TabIndex = 18;
-            _btnCancel.Text = "&Close";
-            _btnCancel.UseVisualStyleBackColor = true;
+            this._btnCancel.Location = new System.Drawing.Point(183, 247);
+            this._btnCancel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._btnCancel.Name = "_btnCancel";
+            this._btnCancel.Size = new System.Drawing.Size(117, 33);
+            this._btnCancel.TabIndex = 18;
+            this._btnCancel.Text = "&Close";
+            this._btnCancel.UseVisualStyleBackColor = true;
+            this._btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // btnHelp
+            // _btnHelp
             // 
-            _btnHelp.Location = new Point(281, 214);
-            _btnHelp.Name = "_btnHelp";
-            _btnHelp.Size = new Size(100, 29);
-            _btnHelp.TabIndex = 19;
-            _btnHelp.Text = "&Help";
-            _btnHelp.UseVisualStyleBackColor = true;
+            this._btnHelp.Location = new System.Drawing.Point(328, 247);
+            this._btnHelp.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._btnHelp.Name = "_btnHelp";
+            this._btnHelp.Size = new System.Drawing.Size(117, 33);
+            this._btnHelp.TabIndex = 19;
+            this._btnHelp.Text = "&Help";
+            this._btnHelp.UseVisualStyleBackColor = true;
+            this._btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
-            // tmrPollClient
+            // _tmrPollClient
             // 
-            _tmrPollClient.Enabled = true;
-            _tmrPollClient.Interval = 300;
+            this._tmrPollClient.Enabled = true;
+            this._tmrPollClient.Interval = 300;
+            this._tmrPollClient.Tick += new System.EventHandler(this.tmrPollClient_Tick);
             // 
-            // lblPMBOType
+            // _lblPMBOType
             // 
-            _lblPMBOType.BorderStyle = BorderStyle.Fixed3D;
-            _lblPMBOType.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point, Convert.ToByte(0));
-            _lblPMBOType.Location = new Point(92, 43);
-            _lblPMBOType.Name = "_lblPMBOType";
-            _lblPMBOType.Size = new Size(231, 22);
-            _lblPMBOType.TabIndex = 20;
-            _lblPMBOType.Text = "Public HF RMS Pactor";
-            _lblPMBOType.TextAlign = ContentAlignment.MiddleCenter;
+            this._lblPMBOType.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this._lblPMBOType.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this._lblPMBOType.Location = new System.Drawing.Point(107, 50);
+            this._lblPMBOType.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._lblPMBOType.Name = "_lblPMBOType";
+            this._lblPMBOType.Size = new System.Drawing.Size(270, 25);
+            this._lblPMBOType.TabIndex = 20;
+            this._lblPMBOType.Text = "Public HF RMS Pactor";
+            this._lblPMBOType.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // chkResumeDialog
+            // _chkResumeDialog
             // 
-            _chkResumeDialog.AutoSize = true;
-            _chkResumeDialog.CheckAlign = ContentAlignment.MiddleRight;
-            _chkResumeDialog.Location = new Point(106, 182);
-            _chkResumeDialog.Name = "_chkResumeDialog";
-            _chkResumeDialog.Size = new Size(203, 17);
-            _chkResumeDialog.TabIndex = 21;
-            _chkResumeDialog.Text = "Return to this dialog after connection:";
-            _chkResumeDialog.UseVisualStyleBackColor = true;
+            this._chkResumeDialog.AutoSize = true;
+            this._chkResumeDialog.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this._chkResumeDialog.Location = new System.Drawing.Point(124, 210);
+            this._chkResumeDialog.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._chkResumeDialog.Name = "_chkResumeDialog";
+            this._chkResumeDialog.Size = new System.Drawing.Size(226, 19);
+            this._chkResumeDialog.TabIndex = 21;
+            this._chkResumeDialog.Text = "Return to this dialog after connection:";
+            this._chkResumeDialog.UseVisualStyleBackColor = true;
+            this._chkResumeDialog.CheckedChanged += new System.EventHandler(this.chkResumeDialog_CheckedChanged);
             // 
             // DialogPactorConnect
             // 
-            AutoScaleDimensions = new SizeF(6.0F, 13.0F);
-            AutoScaleMode = AutoScaleMode.Font;
-            AutoSize = true;
-            ClientSize = new Size(414, 269);
-            ControlBox = false;
-            Controls.Add(_chkResumeDialog);
-            Controls.Add(_lblPMBOType);
-            Controls.Add(_btnHelp);
-            Controls.Add(_btnCancel);
-            Controls.Add(_btnConnect);
-            Controls.Add(_Label4);
-            Controls.Add(_lblBusy);
-            Controls.Add(_lblUSB);
-            Controls.Add(_Label2);
-            Controls.Add(_Label1);
-            Controls.Add(_cmbFrequencies);
-            Controls.Add(_cmbCallSigns);
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            Icon = (Icon)resources.GetObject("$this.Icon");
-            MaximizeBox = false;
-            MinimizeBox = false;
-            Name = "DialogPactorConnect";
-            StartPosition = FormStartPosition.CenterScreen;
-            Text = "Pactor Connect";
-            FormClosing += new FormClosingEventHandler(DialogPactorConnect_FormClosing);
-            Load += new EventHandler(PactorConnect_Load);
-            ResumeLayout(false);
-            PerformLayout();
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoSize = true;
+            this.ClientSize = new System.Drawing.Size(483, 310);
+            this.ControlBox = false;
+            this.Controls.Add(this._chkResumeDialog);
+            this.Controls.Add(this._lblPMBOType);
+            this.Controls.Add(this._btnHelp);
+            this.Controls.Add(this._btnCancel);
+            this.Controls.Add(this._btnConnect);
+            this.Controls.Add(this._Label4);
+            this.Controls.Add(this._lblBusy);
+            this.Controls.Add(this._lblUSB);
+            this.Controls.Add(this._Label2);
+            this.Controls.Add(this._Label1);
+            this.Controls.Add(this._cmbFrequencies);
+            this.Controls.Add(this._cmbCallSigns);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "DialogPactorConnect";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Pactor Connect";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DialogPactorConnect_FormClosing);
+            this.Load += new System.EventHandler(this.PactorConnect_Load);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
 
         private ComboBox _cmbCallSigns;

@@ -80,6 +80,7 @@ namespace Paclink.UI.Windows
             this._rdoV24 = new System.Windows.Forms.RadioButton();
             this._rdoTTL = new System.Windows.Forms.RadioButton();
             this._chkNMEA = new System.Windows.Forms.CheckBox();
+            this.chkLongPath = new System.Windows.Forms.CheckBox();
             this._grpRadioControl = new System.Windows.Forms.GroupBox();
             this._grpPTCLevels = new System.Windows.Forms.GroupBox();
             this._Label15 = new System.Windows.Forms.Label();
@@ -96,7 +97,6 @@ namespace Paclink.UI.Windows
             this._Label22 = new System.Windows.Forms.Label();
             this._btnHelp = new System.Windows.Forms.Button();
             this._Label16 = new System.Windows.Forms.Label();
-            this.chkLongPath = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this._nudFSKLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._nudPSKLevel)).BeginInit();
             this._grpChannelSetting.SuspendLayout();
@@ -109,10 +109,10 @@ namespace Paclink.UI.Windows
             // 
             // _btnClose
             // 
-            this._btnClose.Location = new System.Drawing.Point(928, 879);
-            this._btnClose.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._btnClose.Location = new System.Drawing.Point(541, 440);
+            this._btnClose.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._btnClose.Name = "_btnClose";
-            this._btnClose.Size = new System.Drawing.Size(258, 69);
+            this._btnClose.Size = new System.Drawing.Size(150, 34);
             this._btnClose.TabIndex = 7;
             this._btnClose.Text = "Close";
             this._btnClose.UseVisualStyleBackColor = true;
@@ -120,10 +120,10 @@ namespace Paclink.UI.Windows
             // 
             // _btnUpdate
             // 
-            this._btnUpdate.Location = new System.Drawing.Point(654, 879);
-            this._btnUpdate.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._btnUpdate.Location = new System.Drawing.Point(382, 440);
+            this._btnUpdate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._btnUpdate.Name = "_btnUpdate";
-            this._btnUpdate.Size = new System.Drawing.Size(258, 69);
+            this._btnUpdate.Size = new System.Drawing.Size(150, 34);
             this._btnUpdate.TabIndex = 6;
             this._btnUpdate.Text = "Update The Channel";
             this._btnUpdate.UseVisualStyleBackColor = true;
@@ -131,10 +131,10 @@ namespace Paclink.UI.Windows
             // 
             // _btnRemove
             // 
-            this._btnRemove.Location = new System.Drawing.Point(380, 879);
-            this._btnRemove.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._btnRemove.Location = new System.Drawing.Point(222, 440);
+            this._btnRemove.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._btnRemove.Name = "_btnRemove";
-            this._btnRemove.Size = new System.Drawing.Size(258, 69);
+            this._btnRemove.Size = new System.Drawing.Size(150, 34);
             this._btnRemove.TabIndex = 5;
             this._btnRemove.Text = "Remove This Channel";
             this._btnRemove.UseVisualStyleBackColor = true;
@@ -142,10 +142,10 @@ namespace Paclink.UI.Windows
             // 
             // _btnAdd
             // 
-            this._btnAdd.Location = new System.Drawing.Point(106, 879);
-            this._btnAdd.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._btnAdd.Location = new System.Drawing.Point(62, 440);
+            this._btnAdd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._btnAdd.Name = "_btnAdd";
-            this._btnAdd.Size = new System.Drawing.Size(258, 69);
+            this._btnAdd.Size = new System.Drawing.Size(150, 34);
             this._btnAdd.TabIndex = 4;
             this._btnAdd.Text = "Add New Channel";
             this._btnAdd.UseVisualStyleBackColor = true;
@@ -155,10 +155,10 @@ namespace Paclink.UI.Windows
             // 
             this._cmbRadioModel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._cmbRadioModel.FormattingEnabled = true;
-            this._cmbRadioModel.Location = new System.Drawing.Point(48, 464);
-            this._cmbRadioModel.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._cmbRadioModel.Location = new System.Drawing.Point(28, 232);
+            this._cmbRadioModel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._cmbRadioModel.Name = "_cmbRadioModel";
-            this._cmbRadioModel.Size = new System.Drawing.Size(254, 38);
+            this._cmbRadioModel.Size = new System.Drawing.Size(150, 23);
             this._cmbRadioModel.TabIndex = 5;
             this._ToolTip1.SetToolTip(this._cmbRadioModel, "Select Radio type here.");
             this._cmbRadioModel.TextChanged += new System.EventHandler(this.cmbRadioModel_TextChanged);
@@ -167,10 +167,10 @@ namespace Paclink.UI.Windows
             // 
             this._cmbRadioPort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._cmbRadioPort.FormattingEnabled = true;
-            this._cmbRadioPort.Location = new System.Drawing.Point(170, 300);
-            this._cmbRadioPort.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._cmbRadioPort.Location = new System.Drawing.Point(99, 150);
+            this._cmbRadioPort.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._cmbRadioPort.Name = "_cmbRadioPort";
-            this._cmbRadioPort.Size = new System.Drawing.Size(132, 38);
+            this._cmbRadioPort.Size = new System.Drawing.Size(79, 23);
             this._cmbRadioPort.TabIndex = 3;
             this._ToolTip1.SetToolTip(this._cmbRadioPort, "If you selected Direct via Serial this is where you select the radio control port" +
         "");
@@ -179,19 +179,19 @@ namespace Paclink.UI.Windows
             // 
             this._cmbRadioBaud.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._cmbRadioBaud.FormattingEnabled = true;
-            this._cmbRadioBaud.Location = new System.Drawing.Point(170, 362);
-            this._cmbRadioBaud.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._cmbRadioBaud.Location = new System.Drawing.Point(99, 181);
+            this._cmbRadioBaud.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._cmbRadioBaud.Name = "_cmbRadioBaud";
-            this._cmbRadioBaud.Size = new System.Drawing.Size(134, 38);
+            this._cmbRadioBaud.Size = new System.Drawing.Size(80, 23);
             this._cmbRadioBaud.TabIndex = 4;
             this._ToolTip1.SetToolTip(this._cmbRadioBaud, "Baud rate for the radio control port (8N1 assumed) ");
             // 
             // _txtAudioCenter
             // 
-            this._txtAudioCenter.Location = new System.Drawing.Point(422, 88);
-            this._txtAudioCenter.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._txtAudioCenter.Location = new System.Drawing.Point(246, 44);
+            this._txtAudioCenter.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._txtAudioCenter.Name = "_txtAudioCenter";
-            this._txtAudioCenter.Size = new System.Drawing.Size(204, 35);
+            this._txtAudioCenter.Size = new System.Drawing.Size(121, 23);
             this._txtAudioCenter.TabIndex = 1;
             this._txtAudioCenter.Text = "1500";
             this._txtAudioCenter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -202,10 +202,10 @@ namespace Paclink.UI.Windows
             // 
             this._cmbTNCBaudRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._cmbTNCBaudRate.FormattingEnabled = true;
-            this._cmbTNCBaudRate.Location = new System.Drawing.Point(830, 85);
-            this._cmbTNCBaudRate.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._cmbTNCBaudRate.Location = new System.Drawing.Point(484, 42);
+            this._cmbTNCBaudRate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._cmbTNCBaudRate.Name = "_cmbTNCBaudRate";
-            this._cmbTNCBaudRate.Size = new System.Drawing.Size(138, 38);
+            this._cmbTNCBaudRate.Size = new System.Drawing.Size(82, 23);
             this._cmbTNCBaudRate.TabIndex = 3;
             this._ToolTip1.SetToolTip(this._cmbTNCBaudRate, "Select TNC baud rate (not on air baud rate) ");
             // 
@@ -213,20 +213,20 @@ namespace Paclink.UI.Windows
             // 
             this._cmbTNCSerialPort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._cmbTNCSerialPort.FormattingEnabled = true;
-            this._cmbTNCSerialPort.Location = new System.Drawing.Point(660, 85);
-            this._cmbTNCSerialPort.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._cmbTNCSerialPort.Location = new System.Drawing.Point(385, 42);
+            this._cmbTNCSerialPort.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._cmbTNCSerialPort.Name = "_cmbTNCSerialPort";
-            this._cmbTNCSerialPort.Size = new System.Drawing.Size(138, 38);
+            this._cmbTNCSerialPort.Size = new System.Drawing.Size(82, 23);
             this._cmbTNCSerialPort.Sorted = true;
             this._cmbTNCSerialPort.TabIndex = 2;
             this._ToolTip1.SetToolTip(this._cmbTNCSerialPort, "Select TNC serial port ");
             // 
             // _txtTNCConfigurationFile
             // 
-            this._txtTNCConfigurationFile.Location = new System.Drawing.Point(264, 284);
-            this._txtTNCConfigurationFile.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._txtTNCConfigurationFile.Location = new System.Drawing.Point(154, 142);
+            this._txtTNCConfigurationFile.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._txtTNCConfigurationFile.Name = "_txtTNCConfigurationFile";
-            this._txtTNCConfigurationFile.Size = new System.Drawing.Size(670, 35);
+            this._txtTNCConfigurationFile.Size = new System.Drawing.Size(392, 23);
             this._txtTNCConfigurationFile.TabIndex = 7;
             this._txtTNCConfigurationFile.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this._ToolTip1.SetToolTip(this._txtTNCConfigurationFile, "The TNC configuration (.aps) file. (see Examples for templates) ");
@@ -235,11 +235,11 @@ namespace Paclink.UI.Windows
             // 
             this._cmbTNCType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._cmbTNCType.FormattingEnabled = true;
-            this._cmbTNCType.Location = new System.Drawing.Point(140, 85);
-            this._cmbTNCType.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._cmbTNCType.Location = new System.Drawing.Point(82, 42);
+            this._cmbTNCType.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._cmbTNCType.MaxDropDownItems = 24;
             this._cmbTNCType.Name = "_cmbTNCType";
-            this._cmbTNCType.Size = new System.Drawing.Size(254, 38);
+            this._cmbTNCType.Size = new System.Drawing.Size(150, 23);
             this._cmbTNCType.TabIndex = 0;
             this._ToolTip1.SetToolTip(this._cmbTNCType, "Select TNC type");
             this._cmbTNCType.SelectedIndexChanged += new System.EventHandler(this.cmbTNCtype_SelectedIndexChanged);
@@ -248,12 +248,12 @@ namespace Paclink.UI.Windows
             // _cmbChannelName
             // 
             this._cmbChannelName.FormattingEnabled = true;
-            this._cmbChannelName.Location = new System.Drawing.Point(194, 42);
-            this._cmbChannelName.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._cmbChannelName.Location = new System.Drawing.Point(113, 21);
+            this._cmbChannelName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._cmbChannelName.MaxDropDownItems = 24;
             this._cmbChannelName.Name = "_cmbChannelName";
             this._cmbChannelName.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this._cmbChannelName.Size = new System.Drawing.Size(466, 38);
+            this._cmbChannelName.Size = new System.Drawing.Size(274, 23);
             this._cmbChannelName.Sorted = true;
             this._cmbChannelName.TabIndex = 0;
             this._ToolTip1.SetToolTip(this._cmbChannelName, "Enter Channel Name");
@@ -263,10 +263,10 @@ namespace Paclink.UI.Windows
             // _txtRadioAddress
             // 
             this._txtRadioAddress.Enabled = false;
-            this._txtRadioAddress.Location = new System.Drawing.Point(260, 533);
-            this._txtRadioAddress.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._txtRadioAddress.Location = new System.Drawing.Point(152, 266);
+            this._txtRadioAddress.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._txtRadioAddress.Name = "_txtRadioAddress";
-            this._txtRadioAddress.Size = new System.Drawing.Size(46, 35);
+            this._txtRadioAddress.Size = new System.Drawing.Size(28, 23);
             this._txtRadioAddress.TabIndex = 6;
             this._txtRadioAddress.Text = "01";
             this._txtRadioAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -275,10 +275,10 @@ namespace Paclink.UI.Windows
             // _chkNarrowFilter
             // 
             this._chkNarrowFilter.AutoSize = true;
-            this._chkNarrowFilter.Location = new System.Drawing.Point(48, 665);
-            this._chkNarrowFilter.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._chkNarrowFilter.Location = new System.Drawing.Point(28, 332);
+            this._chkNarrowFilter.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._chkNarrowFilter.Name = "_chkNarrowFilter";
-            this._chkNarrowFilter.Size = new System.Drawing.Size(22, 21);
+            this._chkNarrowFilter.Size = new System.Drawing.Size(15, 14);
             this._chkNarrowFilter.TabIndex = 8;
             this._chkNarrowFilter.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this._ToolTip1.SetToolTip(this._chkNarrowFilter, "Use Narrow Filter for Pactor I or II");
@@ -287,10 +287,10 @@ namespace Paclink.UI.Windows
             // _rdoViaPTCII
             // 
             this._rdoViaPTCII.AutoSize = true;
-            this._rdoViaPTCII.Location = new System.Drawing.Point(30, 85);
-            this._rdoViaPTCII.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._rdoViaPTCII.Location = new System.Drawing.Point(18, 42);
+            this._rdoViaPTCII.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._rdoViaPTCII.Name = "_rdoViaPTCII";
-            this._rdoViaPTCII.Size = new System.Drawing.Size(236, 34);
+            this._rdoViaPTCII.Size = new System.Drawing.Size(134, 19);
             this._rdoViaPTCII.TabIndex = 1;
             this._rdoViaPTCII.TabStop = true;
             this._rdoViaPTCII.Text = "Via PTC II, IIpro, IIusb";
@@ -306,8 +306,8 @@ namespace Paclink.UI.Windows
             0,
             0,
             0});
-            this._nudFSKLevel.Location = new System.Drawing.Point(398, 155);
-            this._nudFSKLevel.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._nudFSKLevel.Location = new System.Drawing.Point(232, 78);
+            this._nudFSKLevel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._nudFSKLevel.Maximum = new decimal(new int[] {
             9000,
             0,
@@ -319,7 +319,7 @@ namespace Paclink.UI.Windows
             0,
             0});
             this._nudFSKLevel.Name = "_nudFSKLevel";
-            this._nudFSKLevel.Size = new System.Drawing.Size(118, 35);
+            this._nudFSKLevel.Size = new System.Drawing.Size(69, 23);
             this._nudFSKLevel.TabIndex = 4;
             this._ToolTip1.SetToolTip(this._nudFSKLevel, "Set FSK level for Pactor I. Level should NOT generate ALC action.");
             this._nudFSKLevel.Value = new decimal(new int[] {
@@ -335,8 +335,8 @@ namespace Paclink.UI.Windows
             0,
             0,
             0});
-            this._nudPSKLevel.Location = new System.Drawing.Point(824, 155);
-            this._nudPSKLevel.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._nudPSKLevel.Location = new System.Drawing.Point(481, 78);
+            this._nudPSKLevel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._nudPSKLevel.Maximum = new decimal(new int[] {
             9000,
             0,
@@ -348,7 +348,7 @@ namespace Paclink.UI.Windows
             0,
             0});
             this._nudPSKLevel.Name = "_nudPSKLevel";
-            this._nudPSKLevel.Size = new System.Drawing.Size(116, 35);
+            this._nudPSKLevel.Size = new System.Drawing.Size(68, 23);
             this._nudPSKLevel.TabIndex = 5;
             this._ToolTip1.SetToolTip(this._nudPSKLevel, "Set PSK Level for P2 & P3. Level should NOT generate ALC action!");
             this._nudPSKLevel.Value = new decimal(new int[] {
@@ -360,10 +360,10 @@ namespace Paclink.UI.Windows
             // _rdoSerial
             // 
             this._rdoSerial.AutoSize = true;
-            this._rdoSerial.Location = new System.Drawing.Point(30, 247);
-            this._rdoSerial.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._rdoSerial.Location = new System.Drawing.Point(18, 124);
+            this._rdoSerial.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._rdoSerial.Name = "_rdoSerial";
-            this._rdoSerial.Size = new System.Drawing.Size(229, 34);
+            this._rdoSerial.Size = new System.Drawing.Size(133, 19);
             this._rdoSerial.TabIndex = 2;
             this._rdoSerial.Text = "Direct via Serial Port:";
             this._ToolTip1.SetToolTip(this._rdoSerial, "Select this if the Radio control is direct using a Serial or USB port.");
@@ -374,10 +374,10 @@ namespace Paclink.UI.Windows
             // 
             this._rdoManual.AutoSize = true;
             this._rdoManual.Checked = true;
-            this._rdoManual.Location = new System.Drawing.Point(30, 44);
-            this._rdoManual.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._rdoManual.Location = new System.Drawing.Point(18, 22);
+            this._rdoManual.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._rdoManual.Name = "_rdoManual";
-            this._rdoManual.Size = new System.Drawing.Size(173, 34);
+            this._rdoManual.Size = new System.Drawing.Size(103, 19);
             this._rdoManual.TabIndex = 0;
             this._rdoManual.TabStop = true;
             this._rdoManual.Text = "Manual (none)";
@@ -387,10 +387,10 @@ namespace Paclink.UI.Windows
             // 
             // _btnBrowseConfiguration
             // 
-            this._btnBrowseConfiguration.Location = new System.Drawing.Point(950, 279);
-            this._btnBrowseConfiguration.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._btnBrowseConfiguration.Location = new System.Drawing.Point(554, 140);
+            this._btnBrowseConfiguration.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._btnBrowseConfiguration.Name = "_btnBrowseConfiguration";
-            this._btnBrowseConfiguration.Size = new System.Drawing.Size(120, 53);
+            this._btnBrowseConfiguration.Size = new System.Drawing.Size(70, 26);
             this._btnBrowseConfiguration.TabIndex = 8;
             this._btnBrowseConfiguration.Text = "Browse";
             this._ToolTip1.SetToolTip(this._btnBrowseConfiguration, "Browse to select custom configuration file.");
@@ -415,11 +415,11 @@ namespace Paclink.UI.Windows
             this._grpChannelSetting.Controls.Add(this._Label2);
             this._grpChannelSetting.Controls.Add(this._cmbChannelName);
             this._grpChannelSetting.Controls.Add(this._Label1);
-            this._grpChannelSetting.Location = new System.Drawing.Point(26, 76);
-            this._grpChannelSetting.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._grpChannelSetting.Location = new System.Drawing.Point(15, 38);
+            this._grpChannelSetting.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._grpChannelSetting.Name = "_grpChannelSetting";
-            this._grpChannelSetting.Padding = new System.Windows.Forms.Padding(6, 7, 6, 7);
-            this._grpChannelSetting.Size = new System.Drawing.Size(1106, 376);
+            this._grpChannelSetting.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this._grpChannelSetting.Size = new System.Drawing.Size(645, 188);
             this._grpChannelSetting.TabIndex = 1;
             this._grpChannelSetting.TabStop = false;
             this._grpChannelSetting.Text = "Pactor Channel Settings";
@@ -427,10 +427,10 @@ namespace Paclink.UI.Windows
             // 
             // _btnUpdateChannelList
             // 
-            this._btnUpdateChannelList.Location = new System.Drawing.Point(418, 295);
-            this._btnUpdateChannelList.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._btnUpdateChannelList.Location = new System.Drawing.Point(244, 148);
+            this._btnUpdateChannelList.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._btnUpdateChannelList.Name = "_btnUpdateChannelList";
-            this._btnUpdateChannelList.Size = new System.Drawing.Size(308, 62);
+            this._btnUpdateChannelList.Size = new System.Drawing.Size(180, 31);
             this._btnUpdateChannelList.TabIndex = 184;
             this._btnUpdateChannelList.Text = "Update Channel List";
             this._btnUpdateChannelList.UseVisualStyleBackColor = true;
@@ -441,11 +441,11 @@ namespace Paclink.UI.Windows
             this._chkBusyHold.AutoSize = true;
             this._chkBusyHold.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this._chkBusyHold.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this._chkBusyHold.Location = new System.Drawing.Point(684, 175);
-            this._chkBusyHold.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._chkBusyHold.Location = new System.Drawing.Point(399, 88);
+            this._chkBusyHold.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._chkBusyHold.Name = "_chkBusyHold";
             this._chkBusyHold.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this._chkBusyHold.Size = new System.Drawing.Size(281, 34);
+            this._chkBusyHold.Size = new System.Drawing.Size(164, 19);
             this._chkBusyHold.TabIndex = 183;
             this._chkBusyHold.Text = "Enable busy channel hold:";
             this._ToolTip1.SetToolTip(this._chkBusyHold, "Check for autoforwarding on this HF channel (normally limited to Emergency Use ON" +
@@ -458,11 +458,11 @@ namespace Paclink.UI.Windows
             this._chkIDEnabled.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this._chkIDEnabled.Checked = true;
             this._chkIDEnabled.CheckState = System.Windows.Forms.CheckState.Checked;
-            this._chkIDEnabled.Location = new System.Drawing.Point(422, 175);
-            this._chkIDEnabled.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._chkIDEnabled.Location = new System.Drawing.Point(246, 88);
+            this._chkIDEnabled.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._chkIDEnabled.Name = "_chkIDEnabled";
             this._chkIDEnabled.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this._chkIDEnabled.Size = new System.Drawing.Size(209, 34);
+            this._chkIDEnabled.Size = new System.Drawing.Size(122, 19);
             this._chkIDEnabled.TabIndex = 181;
             this._chkIDEnabled.Text = "Pactor ID Enabled:";
             this._ToolTip1.SetToolTip(this._chkIDEnabled, "Check to enable Pactor 1 FEC ID ");
@@ -472,11 +472,11 @@ namespace Paclink.UI.Windows
             // 
             this._chkChannelEnabled.AutoSize = true;
             this._chkChannelEnabled.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this._chkChannelEnabled.Location = new System.Drawing.Point(166, 175);
-            this._chkChannelEnabled.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._chkChannelEnabled.Location = new System.Drawing.Point(97, 88);
+            this._chkChannelEnabled.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._chkChannelEnabled.Name = "_chkChannelEnabled";
             this._chkChannelEnabled.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this._chkChannelEnabled.Size = new System.Drawing.Size(200, 34);
+            this._chkChannelEnabled.Size = new System.Drawing.Size(118, 19);
             this._chkChannelEnabled.TabIndex = 180;
             this._chkChannelEnabled.Text = "Channel Enabled:";
             this._ToolTip1.SetToolTip(this._chkChannelEnabled, "Enable this channel ");
@@ -486,11 +486,11 @@ namespace Paclink.UI.Windows
             // 
             this._chkAutoforwardEnabled.AutoSize = true;
             this._chkAutoforwardEnabled.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this._chkAutoforwardEnabled.Location = new System.Drawing.Point(730, 231);
-            this._chkAutoforwardEnabled.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._chkAutoforwardEnabled.Location = new System.Drawing.Point(426, 116);
+            this._chkAutoforwardEnabled.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._chkAutoforwardEnabled.Name = "_chkAutoforwardEnabled";
             this._chkAutoforwardEnabled.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this._chkAutoforwardEnabled.Size = new System.Drawing.Size(240, 34);
+            this._chkAutoforwardEnabled.Size = new System.Drawing.Size(141, 19);
             this._chkAutoforwardEnabled.TabIndex = 182;
             this._chkAutoforwardEnabled.Text = "Autoforward Enabled:";
             this._ToolTip1.SetToolTip(this._chkAutoforwardEnabled, "Check for autoforwarding on this HF channel (normally limited to Emergency Use ON" +
@@ -501,40 +501,40 @@ namespace Paclink.UI.Windows
             // _Label3
             // 
             this._Label3.AutoSize = true;
-            this._Label3.Location = new System.Drawing.Point(420, 235);
-            this._Label3.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label3.Location = new System.Drawing.Point(245, 118);
+            this._Label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._Label3.Name = "_Label3";
-            this._Label3.Size = new System.Drawing.Size(88, 30);
+            this._Label3.Size = new System.Drawing.Size(50, 15);
             this._Label3.TabIndex = 179;
             this._Label3.Text = "Minutes";
             // 
             // _Label10
             // 
             this._Label10.AutoSize = true;
-            this._Label10.Location = new System.Drawing.Point(484, 115);
-            this._Label10.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label10.Location = new System.Drawing.Point(282, 58);
+            this._Label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._Label10.Name = "_Label10";
-            this._Label10.Size = new System.Drawing.Size(202, 30);
+            this._Label10.Size = new System.Drawing.Size(115, 15);
             this._Label10.TabIndex = 178;
             this._Label10.Text = "RF Center Freq (kHz)";
             // 
             // _Label5
             // 
             this._Label5.AutoSize = true;
-            this._Label5.Location = new System.Drawing.Point(678, 53);
-            this._Label5.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label5.Location = new System.Drawing.Point(396, 26);
+            this._Label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._Label5.Name = "_Label5";
-            this._Label5.Size = new System.Drawing.Size(167, 30);
+            this._Label5.Size = new System.Drawing.Size(96, 15);
             this._Label5.TabIndex = 177;
             this._Label5.Text = "Remote Callsign:";
             // 
             // _cmbFreqs
             // 
             this._cmbFreqs.FormattingEnabled = true;
-            this._cmbFreqs.Location = new System.Drawing.Point(712, 108);
-            this._cmbFreqs.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._cmbFreqs.Location = new System.Drawing.Point(415, 54);
+            this._cmbFreqs.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._cmbFreqs.Name = "_cmbFreqs";
-            this._cmbFreqs.Size = new System.Drawing.Size(348, 38);
+            this._cmbFreqs.Size = new System.Drawing.Size(205, 23);
             this._cmbFreqs.TabIndex = 3;
             this._ToolTip1.SetToolTip(this._cmbFreqs, "This is a list of the center frequencies for the selected remote callsign. ...Or " +
         "you can enter one directly (KHz).");
@@ -542,10 +542,10 @@ namespace Paclink.UI.Windows
             // _cmbCallSigns
             // 
             this._cmbCallSigns.FormattingEnabled = true;
-            this._cmbCallSigns.Location = new System.Drawing.Point(864, 42);
-            this._cmbCallSigns.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._cmbCallSigns.Location = new System.Drawing.Point(504, 21);
+            this._cmbCallSigns.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._cmbCallSigns.Name = "_cmbCallSigns";
-            this._cmbCallSigns.Size = new System.Drawing.Size(196, 38);
+            this._cmbCallSigns.Size = new System.Drawing.Size(116, 23);
             this._cmbCallSigns.TabIndex = 1;
             this._ToolTip1.SetToolTip(this._cmbCallSigns, "You can type in a specific call or select one from the PMBO/RMS Type of freq list" +
         "");
@@ -553,8 +553,8 @@ namespace Paclink.UI.Windows
             // 
             // _nudPriority
             // 
-            this._nudPriority.Location = new System.Drawing.Point(370, 111);
-            this._nudPriority.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._nudPriority.Location = new System.Drawing.Point(216, 56);
+            this._nudPriority.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._nudPriority.Maximum = new decimal(new int[] {
             5,
             0,
@@ -566,7 +566,7 @@ namespace Paclink.UI.Windows
             0,
             0});
             this._nudPriority.Name = "_nudPriority";
-            this._nudPriority.Size = new System.Drawing.Size(78, 35);
+            this._nudPriority.Size = new System.Drawing.Size(46, 23);
             this._nudPriority.TabIndex = 2;
             this._nudPriority.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this._ToolTip1.SetToolTip(this._nudPriority, "Select channel priority 1-5, 1=highest (default = 5)");
@@ -580,8 +580,8 @@ namespace Paclink.UI.Windows
             // 
             this._nudActivityTimeout.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._nudActivityTimeout.Location = new System.Drawing.Point(344, 228);
-            this._nudActivityTimeout.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._nudActivityTimeout.Location = new System.Drawing.Point(201, 114);
+            this._nudActivityTimeout.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._nudActivityTimeout.Maximum = new decimal(new int[] {
             5,
             0,
@@ -593,7 +593,7 @@ namespace Paclink.UI.Windows
             0,
             0});
             this._nudActivityTimeout.Name = "_nudActivityTimeout";
-            this._nudActivityTimeout.Size = new System.Drawing.Size(64, 35);
+            this._nudActivityTimeout.Size = new System.Drawing.Size(37, 23);
             this._nudActivityTimeout.TabIndex = 9;
             this._nudActivityTimeout.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this._ToolTip1.SetToolTip(this._nudActivityTimeout, "Select activity timeout 1 - 4 minutes, (default = 1)");
@@ -606,20 +606,20 @@ namespace Paclink.UI.Windows
             // _Label4
             // 
             this._Label4.AutoSize = true;
-            this._Label4.Location = new System.Drawing.Point(168, 235);
-            this._Label4.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label4.Location = new System.Drawing.Point(98, 118);
+            this._Label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._Label4.Name = "_Label4";
-            this._Label4.Size = new System.Drawing.Size(168, 30);
+            this._Label4.Size = new System.Drawing.Size(97, 15);
             this._Label4.TabIndex = 161;
             this._Label4.Text = "Activity Timeout:";
             // 
             // _Label2
             // 
             this._Label2.AutoSize = true;
-            this._Label2.Location = new System.Drawing.Point(194, 115);
-            this._Label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label2.Location = new System.Drawing.Point(113, 58);
+            this._Label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._Label2.Name = "_Label2";
-            this._Label2.Size = new System.Drawing.Size(165, 30);
+            this._Label2.Size = new System.Drawing.Size(95, 15);
             this._Label2.TabIndex = 160;
             this._Label2.Text = "Channel priority:";
             // 
@@ -627,10 +627,10 @@ namespace Paclink.UI.Windows
             // 
             this._Label1.AutoSize = true;
             this._Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this._Label1.Location = new System.Drawing.Point(30, 48);
-            this._Label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label1.Location = new System.Drawing.Point(18, 24);
+            this._Label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._Label1.Name = "_Label1";
-            this._Label1.Size = new System.Drawing.Size(146, 25);
+            this._Label1.Size = new System.Drawing.Size(78, 13);
             this._Label1.TabIndex = 148;
             this._Label1.Text = "Channel name:";
             // 
@@ -638,11 +638,11 @@ namespace Paclink.UI.Windows
             // 
             this._chkFirstUseOnly.AutoSize = true;
             this._chkFirstUseOnly.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this._chkFirstUseOnly.Location = new System.Drawing.Point(36, 221);
-            this._chkFirstUseOnly.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._chkFirstUseOnly.Location = new System.Drawing.Point(21, 110);
+            this._chkFirstUseOnly.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._chkFirstUseOnly.Name = "_chkFirstUseOnly";
             this._chkFirstUseOnly.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this._chkFirstUseOnly.Size = new System.Drawing.Size(453, 34);
+            this._chkFirstUseOnly.Size = new System.Drawing.Size(261, 19);
             this._chkFirstUseOnly.TabIndex = 6;
             this._chkFirstUseOnly.Text = "Do a full TNC configuration only on first use:";
             this._ToolTip1.SetToolTip(this._chkFirstUseOnly, " ");
@@ -650,10 +650,10 @@ namespace Paclink.UI.Windows
             // 
             // _Label13
             // 
-            this._Label13.Location = new System.Drawing.Point(90, 642);
-            this._Label13.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label13.Location = new System.Drawing.Point(52, 321);
+            this._Label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._Label13.Name = "_Label13";
-            this._Label13.Size = new System.Drawing.Size(236, 90);
+            this._Label13.Size = new System.Drawing.Size(138, 45);
             this._Label13.TabIndex = 169;
             this._Label13.Text = "Enable narrow filters on Pactor 1 and 2 (when available)";
             this._ToolTip1.SetToolTip(this._Label13, "Select Sideband (Default=USB)");
@@ -661,10 +661,10 @@ namespace Paclink.UI.Windows
             // _rdoV24
             // 
             this._rdoV24.AutoSize = true;
-            this._rdoV24.Location = new System.Drawing.Point(134, 44);
-            this._rdoV24.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._rdoV24.Location = new System.Drawing.Point(78, 22);
+            this._rdoV24.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._rdoV24.Name = "_rdoV24";
-            this._rdoV24.Size = new System.Drawing.Size(103, 34);
+            this._rdoV24.Size = new System.Drawing.Size(61, 19);
             this._rdoV24.TabIndex = 1;
             this._rdoV24.TabStop = true;
             this._rdoV24.Text = "RS-232";
@@ -674,10 +674,10 @@ namespace Paclink.UI.Windows
             // _rdoTTL
             // 
             this._rdoTTL.AutoSize = true;
-            this._rdoTTL.Location = new System.Drawing.Point(24, 44);
-            this._rdoTTL.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._rdoTTL.Location = new System.Drawing.Point(14, 22);
+            this._rdoTTL.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._rdoTTL.Name = "_rdoTTL";
-            this._rdoTTL.Size = new System.Drawing.Size(70, 34);
+            this._rdoTTL.Size = new System.Drawing.Size(43, 19);
             this._rdoTTL.TabIndex = 0;
             this._rdoTTL.TabStop = true;
             this._rdoTTL.Text = "TTL";
@@ -688,15 +688,29 @@ namespace Paclink.UI.Windows
             // 
             this._chkNMEA.AutoSize = true;
             this._chkNMEA.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this._chkNMEA.Location = new System.Drawing.Point(48, 595);
-            this._chkNMEA.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._chkNMEA.Location = new System.Drawing.Point(28, 298);
+            this._chkNMEA.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._chkNMEA.Name = "_chkNMEA";
             this._chkNMEA.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this._chkNMEA.Size = new System.Drawing.Size(250, 34);
+            this._chkNMEA.Size = new System.Drawing.Size(147, 19);
             this._chkNMEA.TabIndex = 181;
             this._chkNMEA.Text = "Use NMEA Commands";
             this._ToolTip1.SetToolTip(this._chkNMEA, "Enable this channel ");
             this._chkNMEA.UseVisualStyleBackColor = true;
+            // 
+            // chkLongPath
+            // 
+            this.chkLongPath.AutoSize = true;
+            this.chkLongPath.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkLongPath.Location = new System.Drawing.Point(354, 110);
+            this.chkLongPath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkLongPath.Name = "chkLongPath";
+            this.chkLongPath.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.chkLongPath.Size = new System.Drawing.Size(258, 19);
+            this.chkLongPath.TabIndex = 172;
+            this.chkLongPath.Text = "Use Long Path for high-latency connections";
+            this._ToolTip1.SetToolTip(this.chkLongPath, " ");
+            this.chkLongPath.UseVisualStyleBackColor = true;
             // 
             // _grpRadioControl
             // 
@@ -715,11 +729,11 @@ namespace Paclink.UI.Windows
             this._grpRadioControl.Controls.Add(this._rdoManual);
             this._grpRadioControl.Controls.Add(this._cmbRadioPort);
             this._grpRadioControl.Controls.Add(this._cmbRadioBaud);
-            this._grpRadioControl.Location = new System.Drawing.Point(1166, 104);
-            this._grpRadioControl.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._grpRadioControl.Location = new System.Drawing.Point(680, 52);
+            this._grpRadioControl.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._grpRadioControl.Name = "_grpRadioControl";
-            this._grpRadioControl.Padding = new System.Windows.Forms.Padding(6, 7, 6, 7);
-            this._grpRadioControl.Size = new System.Drawing.Size(356, 750);
+            this._grpRadioControl.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this._grpRadioControl.Size = new System.Drawing.Size(208, 375);
             this._grpRadioControl.TabIndex = 3;
             this._grpRadioControl.TabStop = false;
             this._grpRadioControl.Text = "Optional Radio Control";
@@ -728,11 +742,11 @@ namespace Paclink.UI.Windows
             // 
             this._grpPTCLevels.Controls.Add(this._rdoV24);
             this._grpPTCLevels.Controls.Add(this._rdoTTL);
-            this._grpPTCLevels.Location = new System.Drawing.Point(44, 138);
-            this._grpPTCLevels.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._grpPTCLevels.Location = new System.Drawing.Point(26, 69);
+            this._grpPTCLevels.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._grpPTCLevels.Name = "_grpPTCLevels";
-            this._grpPTCLevels.Padding = new System.Windows.Forms.Padding(6, 7, 6, 7);
-            this._grpPTCLevels.Size = new System.Drawing.Size(268, 95);
+            this._grpPTCLevels.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this._grpPTCLevels.Size = new System.Drawing.Size(156, 48);
             this._grpPTCLevels.TabIndex = 170;
             this._grpPTCLevels.TabStop = false;
             this._grpPTCLevels.Text = "PTC Levels to Radio";
@@ -740,40 +754,40 @@ namespace Paclink.UI.Windows
             // _Label15
             // 
             this._Label15.AutoSize = true;
-            this._Label15.Location = new System.Drawing.Point(42, 307);
-            this._Label15.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label15.Location = new System.Drawing.Point(24, 154);
+            this._Label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._Label15.Name = "_Label15";
-            this._Label15.Size = new System.Drawing.Size(111, 30);
+            this._Label15.Size = new System.Drawing.Size(63, 15);
             this._Label15.TabIndex = 168;
             this._Label15.Text = "Serial Port:";
             // 
             // _lblRadioAddress
             // 
             this._lblRadioAddress.AutoSize = true;
-            this._lblRadioAddress.Location = new System.Drawing.Point(44, 540);
-            this._lblRadioAddress.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._lblRadioAddress.Location = new System.Drawing.Point(26, 270);
+            this._lblRadioAddress.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._lblRadioAddress.Name = "_lblRadioAddress";
-            this._lblRadioAddress.Size = new System.Drawing.Size(202, 30);
+            this._lblRadioAddress.Size = new System.Drawing.Size(115, 15);
             this._lblRadioAddress.TabIndex = 163;
             this._lblRadioAddress.Text = "Radio Address (hex):";
             // 
             // _Label8
             // 
             this._Label8.AutoSize = true;
-            this._Label8.Location = new System.Drawing.Point(42, 425);
-            this._Label8.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label8.Location = new System.Drawing.Point(24, 212);
+            this._Label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._Label8.Name = "_Label8";
-            this._Label8.Size = new System.Drawing.Size(136, 30);
+            this._Label8.Size = new System.Drawing.Size(77, 15);
             this._Label8.TabIndex = 12;
             this._Label8.Text = "Radio Model:";
             // 
             // _Label9
             // 
             this._Label9.AutoSize = true;
-            this._Label9.Location = new System.Drawing.Point(42, 369);
-            this._Label9.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label9.Location = new System.Drawing.Point(24, 184);
+            this._Label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._Label9.Name = "_Label9";
-            this._Label9.Size = new System.Drawing.Size(113, 30);
+            this._Label9.Size = new System.Drawing.Size(63, 15);
             this._Label9.TabIndex = 10;
             this._Label9.Text = "Baud Rate:";
             // 
@@ -796,11 +810,11 @@ namespace Paclink.UI.Windows
             this._grpTNCSettings.Controls.Add(this._Label21);
             this._grpTNCSettings.Controls.Add(this._Label22);
             this._grpTNCSettings.Controls.Add(this._cmbTNCSerialPort);
-            this._grpTNCSettings.Location = new System.Drawing.Point(26, 478);
-            this._grpTNCSettings.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._grpTNCSettings.Location = new System.Drawing.Point(15, 239);
+            this._grpTNCSettings.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._grpTNCSettings.Name = "_grpTNCSettings";
-            this._grpTNCSettings.Padding = new System.Windows.Forms.Padding(6, 7, 6, 7);
-            this._grpTNCSettings.Size = new System.Drawing.Size(1106, 376);
+            this._grpTNCSettings.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this._grpTNCSettings.Size = new System.Drawing.Size(645, 188);
             this._grpTNCSettings.TabIndex = 2;
             this._grpTNCSettings.TabStop = false;
             this._grpTNCSettings.Text = "TNC Settings";
@@ -808,20 +822,20 @@ namespace Paclink.UI.Windows
             // _lblPSKLevel
             // 
             this._lblPSKLevel.AutoSize = true;
-            this._lblPSKLevel.Location = new System.Drawing.Point(592, 159);
-            this._lblPSKLevel.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._lblPSKLevel.Location = new System.Drawing.Point(345, 80);
+            this._lblPSKLevel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._lblPSKLevel.Name = "_lblPSKLevel";
-            this._lblPSKLevel.Size = new System.Drawing.Size(211, 30);
+            this._lblPSKLevel.Size = new System.Drawing.Size(120, 15);
             this._lblPSKLevel.TabIndex = 171;
             this._lblPSKLevel.Text = "PTC II PSK Level (mv):";
             // 
             // _lblFSKLevel
             // 
             this._lblFSKLevel.AutoSize = true;
-            this._lblFSKLevel.Location = new System.Drawing.Point(166, 159);
-            this._lblFSKLevel.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._lblFSKLevel.Location = new System.Drawing.Point(97, 80);
+            this._lblFSKLevel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._lblFSKLevel.Name = "_lblFSKLevel";
-            this._lblFSKLevel.Size = new System.Drawing.Size(209, 30);
+            this._lblFSKLevel.Size = new System.Drawing.Size(119, 15);
             this._lblFSKLevel.TabIndex = 170;
             this._lblFSKLevel.Text = "PTC II FSK Level (mv):";
             // 
@@ -829,59 +843,59 @@ namespace Paclink.UI.Windows
             // 
             this._Label14.AutoSize = true;
             this._Label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this._Label14.Location = new System.Drawing.Point(134, 51);
-            this._Label14.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label14.Location = new System.Drawing.Point(78, 26);
+            this._Label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._Label14.Name = "_Label14";
-            this._Label14.Size = new System.Drawing.Size(110, 25);
+            this._Label14.Size = new System.Drawing.Size(59, 13);
             this._Label14.TabIndex = 169;
             this._Label14.Text = "TNC Type:";
             // 
             // _Label18
             // 
             this._Label18.AutoSize = true;
-            this._Label18.Location = new System.Drawing.Point(36, 291);
-            this._Label18.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label18.Location = new System.Drawing.Point(21, 146);
+            this._Label18.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._Label18.Name = "_Label18";
-            this._Label18.Size = new System.Drawing.Size(228, 30);
+            this._Label18.Size = new System.Drawing.Size(131, 15);
             this._Label18.TabIndex = 164;
             this._Label18.Text = "TNC Configuration File:";
             // 
             // _Label7
             // 
             this._Label7.AutoSize = true;
-            this._Label7.Location = new System.Drawing.Point(422, 51);
-            this._Label7.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label7.Location = new System.Drawing.Point(246, 26);
+            this._Label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._Label7.Name = "_Label7";
-            this._Label7.Size = new System.Drawing.Size(199, 30);
+            this._Label7.Size = new System.Drawing.Size(113, 15);
             this._Label7.TabIndex = 161;
             this._Label7.Text = "Audio Tones Center:";
             // 
             // _Label21
             // 
             this._Label21.AutoSize = true;
-            this._Label21.Location = new System.Drawing.Point(824, 51);
-            this._Label21.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label21.Location = new System.Drawing.Point(481, 26);
+            this._Label21.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._Label21.Name = "_Label21";
-            this._Label21.Size = new System.Drawing.Size(113, 30);
+            this._Label21.Size = new System.Drawing.Size(63, 15);
             this._Label21.TabIndex = 155;
             this._Label21.Text = "Baud Rate:";
             // 
             // _Label22
             // 
             this._Label22.AutoSize = true;
-            this._Label22.Location = new System.Drawing.Point(654, 53);
-            this._Label22.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label22.Location = new System.Drawing.Point(382, 26);
+            this._Label22.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._Label22.Name = "_Label22";
-            this._Label22.Size = new System.Drawing.Size(112, 30);
+            this._Label22.Size = new System.Drawing.Size(63, 15);
             this._Label22.TabIndex = 154;
             this._Label22.Text = "Serial port:";
             // 
             // _btnHelp
             // 
-            this._btnHelp.Location = new System.Drawing.Point(1202, 879);
-            this._btnHelp.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this._btnHelp.Location = new System.Drawing.Point(701, 440);
+            this._btnHelp.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._btnHelp.Name = "_btnHelp";
-            this._btnHelp.Size = new System.Drawing.Size(258, 69);
+            this._btnHelp.Size = new System.Drawing.Size(150, 34);
             this._btnHelp.TabIndex = 0;
             this._btnHelp.Text = "Help";
             this._btnHelp.UseVisualStyleBackColor = true;
@@ -891,32 +905,18 @@ namespace Paclink.UI.Windows
             // 
             this._Label16.AutoSize = true;
             this._Label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this._Label16.Location = new System.Drawing.Point(302, 21);
-            this._Label16.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this._Label16.Location = new System.Drawing.Point(176, 10);
+            this._Label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this._Label16.Name = "_Label16";
-            this._Label16.Size = new System.Drawing.Size(808, 25);
+            this._Label16.Size = new System.Drawing.Size(481, 13);
             this._Label16.TabIndex = 145;
             this._Label16.Text = "To create a new channel type a new channel name in the Channel Name text box...";
             // 
-            // chkLongPath
-            // 
-            this.chkLongPath.AutoSize = true;
-            this.chkLongPath.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkLongPath.Location = new System.Drawing.Point(607, 221);
-            this.chkLongPath.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
-            this.chkLongPath.Name = "chkLongPath";
-            this.chkLongPath.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.chkLongPath.Size = new System.Drawing.Size(443, 34);
-            this.chkLongPath.TabIndex = 172;
-            this.chkLongPath.Text = "Use Long Path for high-latency connections";
-            this._ToolTip1.SetToolTip(this.chkLongPath, " ");
-            this.chkLongPath.UseVisualStyleBackColor = true;
-            // 
             // DialogPactorTNCChannels
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 30F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1566, 992);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(913, 496);
             this.Controls.Add(this._Label16);
             this.Controls.Add(this._btnHelp);
             this.Controls.Add(this._grpChannelSetting);
@@ -928,7 +928,7 @@ namespace Paclink.UI.Windows
             this.Controls.Add(this._btnAdd);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DialogPactorTNCChannels";

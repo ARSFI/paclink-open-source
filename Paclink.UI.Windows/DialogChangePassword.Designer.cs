@@ -35,85 +35,93 @@ namespace Paclink.UI.Windows
         [DebuggerStepThrough()]
         private void InitializeComponent()
         {
-            _Label1 = new Label();
-            _txtOldPassword = new TextBox();
-            _Label2 = new Label();
-            _txtNewPassword = new TextBox();
-            _btnChangePassword = new Button();
-            _btnChangePassword.Click += new EventHandler(btnChangePassword_Click);
-            _btnCancel = new Button();
-            _btnCancel.Click += new EventHandler(btnCancel_Click);
-            SuspendLayout();
+            this._Label1 = new System.Windows.Forms.Label();
+            this._txtOldPassword = new System.Windows.Forms.TextBox();
+            this._Label2 = new System.Windows.Forms.Label();
+            this._txtNewPassword = new System.Windows.Forms.TextBox();
+            this._btnChangePassword = new System.Windows.Forms.Button();
+            this._btnCancel = new System.Windows.Forms.Button();
+            this.SuspendLayout();
             // 
-            // Label1
+            // _Label1
             // 
-            _Label1.AutoSize = true;
-            _Label1.Location = new Point(25, 24);
-            _Label1.Name = "_Label1";
-            _Label1.Size = new Size(74, 13);
-            _Label1.TabIndex = 0;
-            _Label1.Text = "Old password:";
+            this._Label1.AutoSize = true;
+            this._Label1.Location = new System.Drawing.Point(29, 28);
+            this._Label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._Label1.Name = "_Label1";
+            this._Label1.Size = new System.Drawing.Size(82, 15);
+            this._Label1.TabIndex = 0;
+            this._Label1.Text = "Old password:";
             // 
-            // txtOldPassword
+            // _txtOldPassword
             // 
-            _txtOldPassword.Location = new Point(100, 23);
-            _txtOldPassword.Name = "_txtOldPassword";
-            _txtOldPassword.Size = new Size(172, 20);
-            _txtOldPassword.TabIndex = 1;
+            this._txtOldPassword.Location = new System.Drawing.Point(117, 27);
+            this._txtOldPassword.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._txtOldPassword.Name = "_txtOldPassword";
+            this._txtOldPassword.Size = new System.Drawing.Size(200, 23);
+            this._txtOldPassword.TabIndex = 1;
             // 
-            // Label2
+            // _Label2
             // 
-            _Label2.AutoSize = true;
-            _Label2.Location = new Point(19, 59);
-            _Label2.Name = "_Label2";
-            _Label2.Size = new Size(80, 13);
-            _Label2.TabIndex = 2;
-            _Label2.Text = "New password:";
+            this._Label2.AutoSize = true;
+            this._Label2.Location = new System.Drawing.Point(22, 68);
+            this._Label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._Label2.Name = "_Label2";
+            this._Label2.Size = new System.Drawing.Size(87, 15);
+            this._Label2.TabIndex = 2;
+            this._Label2.Text = "New password:";
             // 
-            // txtNewPassword
+            // _txtNewPassword
             // 
-            _txtNewPassword.Location = new Point(100, 57);
-            _txtNewPassword.Name = "_txtNewPassword";
-            _txtNewPassword.Size = new Size(172, 20);
-            _txtNewPassword.TabIndex = 3;
+            this._txtNewPassword.Location = new System.Drawing.Point(117, 66);
+            this._txtNewPassword.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._txtNewPassword.Name = "_txtNewPassword";
+            this._txtNewPassword.Size = new System.Drawing.Size(200, 23);
+            this._txtNewPassword.TabIndex = 3;
             // 
-            // btnChangePassword
+            // _btnChangePassword
             // 
-            _btnChangePassword.Location = new Point(28, 96);
-            _btnChangePassword.Name = "_btnChangePassword";
-            _btnChangePassword.Size = new Size(117, 24);
-            _btnChangePassword.TabIndex = 4;
-            _btnChangePassword.Text = "Change Password";
-            _btnChangePassword.UseVisualStyleBackColor = true;
+            this._btnChangePassword.Location = new System.Drawing.Point(33, 111);
+            this._btnChangePassword.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._btnChangePassword.Name = "_btnChangePassword";
+            this._btnChangePassword.Size = new System.Drawing.Size(136, 28);
+            this._btnChangePassword.TabIndex = 4;
+            this._btnChangePassword.Text = "Change Password";
+            this._btnChangePassword.UseVisualStyleBackColor = true;
+            this._btnChangePassword.Click += new System.EventHandler(this.btnChangePassword_Click);
             // 
-            // btnCancel
+            // _btnCancel
             // 
-            _btnCancel.Location = new Point(169, 96);
-            _btnCancel.Name = "_btnCancel";
-            _btnCancel.Size = new Size(117, 24);
-            _btnCancel.TabIndex = 5;
-            _btnCancel.Text = "Cancel";
-            _btnCancel.UseVisualStyleBackColor = true;
+            this._btnCancel.Location = new System.Drawing.Point(197, 111);
+            this._btnCancel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._btnCancel.Name = "_btnCancel";
+            this._btnCancel.Size = new System.Drawing.Size(136, 28);
+            this._btnCancel.TabIndex = 5;
+            this._btnCancel.Text = "Cancel";
+            this._btnCancel.UseVisualStyleBackColor = true;
+            this._btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // DialogChangePassword
             // 
-            AutoScaleDimensions = new SizeF(6.0F, 13.0F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(314, 133);
-            Controls.Add(_btnCancel);
-            Controls.Add(_btnChangePassword);
-            Controls.Add(_txtNewPassword);
-            Controls.Add(_Label2);
-            Controls.Add(_txtOldPassword);
-            Controls.Add(_Label1);
-            MaximizeBox = false;
-            MinimizeBox = false;
-            Name = "DialogChangePassword";
-            StartPosition = FormStartPosition.CenterParent;
-            Text = "Change Password";
-            Load += new EventHandler(DialogChangePassword_Load);
-            ResumeLayout(false);
-            PerformLayout();
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(366, 153);
+            this.Controls.Add(this._btnCancel);
+            this.Controls.Add(this._btnChangePassword);
+            this.Controls.Add(this._txtNewPassword);
+            this.Controls.Add(this._Label2);
+            this.Controls.Add(this._txtOldPassword);
+            this.Controls.Add(this._Label1);
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "DialogChangePassword";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Change Password";
+            this.Load += new System.EventHandler(this.DialogChangePassword_Load);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
 
         private Label _Label1;

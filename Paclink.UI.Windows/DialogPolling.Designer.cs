@@ -35,112 +35,121 @@ namespace Paclink.UI.Windows
         [DebuggerStepThrough()]
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(DialogPolling));
-            _chkAutoPoll = new CheckBox();
-            _chkAutoPoll.CheckedChanged += new EventHandler(chkAutoPoll_CheckedChanged);
-            _chkAutoSend = new CheckBox();
-            _txtInterval = new TextBox();
-            _Label1 = new Label();
-            _btnUpdate = new Button();
-            _btnUpdate.Click += new EventHandler(btnUpdate_Click);
-            _btnCancel = new Button();
-            _btnCancel.Click += new EventHandler(btnCancel_Click);
-            _ToolTip1 = new ToolTip(components);
-            _btnHelp = new Button();
-            _btnHelp.Click += new EventHandler(btnHelp_Click);
-            SuspendLayout();
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DialogPolling));
+            this._chkAutoPoll = new System.Windows.Forms.CheckBox();
+            this._chkAutoSend = new System.Windows.Forms.CheckBox();
+            this._txtInterval = new System.Windows.Forms.TextBox();
+            this._Label1 = new System.Windows.Forms.Label();
+            this._btnUpdate = new System.Windows.Forms.Button();
+            this._btnCancel = new System.Windows.Forms.Button();
+            this._ToolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this._btnHelp = new System.Windows.Forms.Button();
+            this.SuspendLayout();
             // 
-            // chkAutoPoll
+            // _chkAutoPoll
             // 
-            _chkAutoPoll.AutoSize = true;
-            _chkAutoPoll.Location = new Point(26, 17);
-            _chkAutoPoll.Name = "_chkAutoPoll";
-            _chkAutoPoll.Size = new Size(136, 17);
-            _chkAutoPoll.TabIndex = 0;
-            _chkAutoPoll.Text = "Automatically poll every";
-            _ToolTip1.SetToolTip(_chkAutoPoll, "Check to poll on a schedule");
-            _chkAutoPoll.UseVisualStyleBackColor = true;
+            this._chkAutoPoll.AutoSize = true;
+            this._chkAutoPoll.Location = new System.Drawing.Point(30, 20);
+            this._chkAutoPoll.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._chkAutoPoll.Name = "_chkAutoPoll";
+            this._chkAutoPoll.Size = new System.Drawing.Size(154, 19);
+            this._chkAutoPoll.TabIndex = 0;
+            this._chkAutoPoll.Text = "Automatically poll every";
+            this._ToolTip1.SetToolTip(this._chkAutoPoll, "Check to poll on a schedule");
+            this._chkAutoPoll.UseVisualStyleBackColor = true;
+            this._chkAutoPoll.CheckedChanged += new System.EventHandler(this.chkAutoPoll_CheckedChanged);
             // 
-            // chkAutoSend
+            // _chkAutoSend
             // 
-            _chkAutoSend.AutoSize = true;
-            _chkAutoSend.Location = new Point(26, 41);
-            _chkAutoSend.Name = "_chkAutoSend";
-            _chkAutoSend.Size = new Size(332, 17);
-            _chkAutoSend.TabIndex = 2;
-            _chkAutoSend.Text = "Automatically send any pending messages without waiting for poll";
-            _ToolTip1.SetToolTip(_chkAutoSend, "Check to poll immediately upon receiving any pending outbound messages.");
-            _chkAutoSend.UseVisualStyleBackColor = true;
+            this._chkAutoSend.AutoSize = true;
+            this._chkAutoSend.Location = new System.Drawing.Point(30, 47);
+            this._chkAutoSend.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._chkAutoSend.Name = "_chkAutoSend";
+            this._chkAutoSend.Size = new System.Drawing.Size(378, 19);
+            this._chkAutoSend.TabIndex = 2;
+            this._chkAutoSend.Text = "Automatically send any pending messages without waiting for poll";
+            this._ToolTip1.SetToolTip(this._chkAutoSend, "Check to poll immediately upon receiving any pending outbound messages.");
+            this._chkAutoSend.UseVisualStyleBackColor = true;
             // 
-            // txtInterval
+            // _txtInterval
             // 
-            _txtInterval.Location = new Point(168, 15);
-            _txtInterval.Name = "_txtInterval";
-            _txtInterval.Size = new Size(26, 20);
-            _txtInterval.TabIndex = 1;
-            _txtInterval.Text = "60";
-            _txtInterval.TextAlign = HorizontalAlignment.Center;
-            _ToolTip1.SetToolTip(_txtInterval, "polling interval (default = 60)");
+            this._txtInterval.Location = new System.Drawing.Point(196, 17);
+            this._txtInterval.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._txtInterval.Name = "_txtInterval";
+            this._txtInterval.Size = new System.Drawing.Size(30, 23);
+            this._txtInterval.TabIndex = 1;
+            this._txtInterval.Text = "60";
+            this._txtInterval.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this._ToolTip1.SetToolTip(this._txtInterval, "polling interval (default = 60)");
             // 
-            // Label1
+            // _Label1
             // 
-            _Label1.AutoSize = true;
-            _Label1.Location = new Point(200, 18);
-            _Label1.Name = "_Label1";
-            _Label1.Size = new Size(43, 13);
-            _Label1.TabIndex = 3;
-            _Label1.Text = "minutes";
+            this._Label1.AutoSize = true;
+            this._Label1.Location = new System.Drawing.Point(233, 21);
+            this._Label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._Label1.Name = "_Label1";
+            this._Label1.Size = new System.Drawing.Size(50, 15);
+            this._Label1.TabIndex = 3;
+            this._Label1.Text = "minutes";
             // 
-            // btnUpdate
+            // _btnUpdate
             // 
-            _btnUpdate.Location = new Point(27, 73);
-            _btnUpdate.Name = "_btnUpdate";
-            _btnUpdate.Size = new Size(107, 28);
-            _btnUpdate.TabIndex = 3;
-            _btnUpdate.Text = "Update";
-            _btnUpdate.UseVisualStyleBackColor = true;
+            this._btnUpdate.Location = new System.Drawing.Point(31, 84);
+            this._btnUpdate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._btnUpdate.Name = "_btnUpdate";
+            this._btnUpdate.Size = new System.Drawing.Size(125, 32);
+            this._btnUpdate.TabIndex = 3;
+            this._btnUpdate.Text = "Update";
+            this._btnUpdate.UseVisualStyleBackColor = true;
+            this._btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
-            // btnCancel
+            // _btnCancel
             // 
-            _btnCancel.Location = new Point(140, 73);
-            _btnCancel.Name = "_btnCancel";
-            _btnCancel.Size = new Size(107, 28);
-            _btnCancel.TabIndex = 4;
-            _btnCancel.Text = "Cancel";
-            _btnCancel.UseVisualStyleBackColor = true;
+            this._btnCancel.Location = new System.Drawing.Point(163, 84);
+            this._btnCancel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._btnCancel.Name = "_btnCancel";
+            this._btnCancel.Size = new System.Drawing.Size(125, 32);
+            this._btnCancel.TabIndex = 4;
+            this._btnCancel.Text = "Cancel";
+            this._btnCancel.UseVisualStyleBackColor = true;
+            this._btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // btnHelp
+            // _btnHelp
             // 
-            _btnHelp.Location = new Point(253, 73);
-            _btnHelp.Name = "_btnHelp";
-            _btnHelp.Size = new Size(107, 28);
-            _btnHelp.TabIndex = 5;
-            _btnHelp.Text = "Help";
-            _btnHelp.UseVisualStyleBackColor = true;
+            this._btnHelp.Location = new System.Drawing.Point(295, 84);
+            this._btnHelp.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._btnHelp.Name = "_btnHelp";
+            this._btnHelp.Size = new System.Drawing.Size(125, 32);
+            this._btnHelp.TabIndex = 5;
+            this._btnHelp.Text = "Help";
+            this._btnHelp.UseVisualStyleBackColor = true;
+            this._btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
             // DialogPolling
             // 
-            AutoScaleDimensions = new SizeF(6.0F, 13.0F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(386, 121);
-            Controls.Add(_btnHelp);
-            Controls.Add(_btnCancel);
-            Controls.Add(_btnUpdate);
-            Controls.Add(_Label1);
-            Controls.Add(_txtInterval);
-            Controls.Add(_chkAutoSend);
-            Controls.Add(_chkAutoPoll);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
-            Icon = (Icon)resources.GetObject("$this.Icon");
-            MaximizeBox = false;
-            MinimizeBox = false;
-            Name = "DialogPolling";
-            StartPosition = FormStartPosition.CenterParent;
-            Text = "Polling Intervals";
-            Load += new EventHandler(Properties_Load);
-            ResumeLayout(false);
-            PerformLayout();
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(450, 140);
+            this.Controls.Add(this._btnHelp);
+            this.Controls.Add(this._btnCancel);
+            this.Controls.Add(this._btnUpdate);
+            this.Controls.Add(this._Label1);
+            this.Controls.Add(this._txtInterval);
+            this.Controls.Add(this._chkAutoSend);
+            this.Controls.Add(this._chkAutoPoll);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "DialogPolling";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Polling Intervals";
+            this.Load += new System.EventHandler(this.Properties_Load);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
 
         private CheckBox _chkAutoPoll;

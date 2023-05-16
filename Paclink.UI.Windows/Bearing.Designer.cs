@@ -36,7 +36,6 @@ namespace Paclink.UI.Windows
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Bearing));
             this._pnlRadar = new System.Windows.Forms.Panel();
             this._tmrShow = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
@@ -50,7 +49,7 @@ namespace Paclink.UI.Windows
             this._pnlRadar.Location = new System.Drawing.Point(0, 0);
             this._pnlRadar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this._pnlRadar.Name = "_pnlRadar";
-            this._pnlRadar.Size = new System.Drawing.Size(241, 243);
+            this._pnlRadar.Size = new System.Drawing.Size(237, 239);
             this._pnlRadar.TabIndex = 24;
             // 
             // _tmrShow
@@ -60,13 +59,12 @@ namespace Paclink.UI.Windows
             // 
             // Bearing
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(241, 243);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(237, 239);
             this.ControlBox = false;
             this.Controls.Add(this._pnlRadar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.MaximizeBox = false;
             this.MinimizeBox = false;

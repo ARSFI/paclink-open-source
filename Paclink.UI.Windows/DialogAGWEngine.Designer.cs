@@ -35,244 +35,266 @@ namespace Paclink.UI.Windows
         [DebuggerStepThrough()]
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(DialogAGWEngine));
-            _btnCancel = new Button();
-            _btnCancel.Click += new EventHandler(btnCancel_Click);
-            _btnUpdate = new Button();
-            _btnUpdate.Click += new EventHandler(btnUpdate_Click);
-            _rdoNotUsed = new RadioButton();
-            _rdoNotUsed.CheckedChanged += new EventHandler(rdoNotUsed_CheckedChanged);
-            _rdoLocal = new RadioButton();
-            _rdoLocal.CheckedChanged += new EventHandler(rdoLocal_CheckedChanged);
-            _rdoRemote = new RadioButton();
-            _rdoRemote.CheckedChanged += new EventHandler(rdoRemote_CheckedChanged);
-            _Label1 = new Label();
-            _txtAGWPath = new TextBox();
-            _Label2 = new Label();
-            _Label3 = new Label();
-            _Label4 = new Label();
-            _Label5 = new Label();
-            _txtAGWPort = new TextBox();
-            _txtAGWHost = new TextBox();
-            _txtAGWUserId = new TextBox();
-            _txtAGWPassword = new TextBox();
-            _ToolTip1 = new ToolTip(components);
-            _btnRemote = new Button();
-            _btnRemote.Click += new EventHandler(btnRemote_Click);
-            _btnBrowse = new Button();
-            _btnBrowse.Click += new EventHandler(btnBrowse_Click);
-            _btnHelp = new Button();
-            _btnHelp.Click += new EventHandler(btnHelp_Click);
-            SuspendLayout();
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DialogAGWEngine));
+            this._btnCancel = new System.Windows.Forms.Button();
+            this._btnUpdate = new System.Windows.Forms.Button();
+            this._rdoNotUsed = new System.Windows.Forms.RadioButton();
+            this._rdoLocal = new System.Windows.Forms.RadioButton();
+            this._rdoRemote = new System.Windows.Forms.RadioButton();
+            this._Label1 = new System.Windows.Forms.Label();
+            this._txtAGWPath = new System.Windows.Forms.TextBox();
+            this._Label2 = new System.Windows.Forms.Label();
+            this._Label3 = new System.Windows.Forms.Label();
+            this._Label4 = new System.Windows.Forms.Label();
+            this._Label5 = new System.Windows.Forms.Label();
+            this._txtAGWPort = new System.Windows.Forms.TextBox();
+            this._txtAGWHost = new System.Windows.Forms.TextBox();
+            this._txtAGWUserId = new System.Windows.Forms.TextBox();
+            this._txtAGWPassword = new System.Windows.Forms.TextBox();
+            this._ToolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this._btnRemote = new System.Windows.Forms.Button();
+            this._btnBrowse = new System.Windows.Forms.Button();
+            this._btnHelp = new System.Windows.Forms.Button();
+            this.SuspendLayout();
             // 
-            // btnCancel
+            // _btnCancel
             // 
-            _btnCancel.Location = new Point(421, 113);
-            _btnCancel.Name = "_btnCancel";
-            _btnCancel.Size = new Size(107, 28);
-            _btnCancel.TabIndex = 9;
-            _btnCancel.Text = "Close";
-            _btnCancel.UseVisualStyleBackColor = true;
+            this._btnCancel.Location = new System.Drawing.Point(491, 130);
+            this._btnCancel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._btnCancel.Name = "_btnCancel";
+            this._btnCancel.Size = new System.Drawing.Size(125, 32);
+            this._btnCancel.TabIndex = 9;
+            this._btnCancel.Text = "Close";
+            this._btnCancel.UseVisualStyleBackColor = true;
+            this._btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // btnUpdate
+            // _btnUpdate
             // 
-            _btnUpdate.Location = new Point(421, 76);
-            _btnUpdate.Name = "_btnUpdate";
-            _btnUpdate.Size = new Size(107, 28);
-            _btnUpdate.TabIndex = 8;
-            _btnUpdate.Text = "Update";
-            _btnUpdate.UseVisualStyleBackColor = true;
+            this._btnUpdate.Location = new System.Drawing.Point(491, 88);
+            this._btnUpdate.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._btnUpdate.Name = "_btnUpdate";
+            this._btnUpdate.Size = new System.Drawing.Size(125, 32);
+            this._btnUpdate.TabIndex = 8;
+            this._btnUpdate.Text = "Update";
+            this._btnUpdate.UseVisualStyleBackColor = true;
+            this._btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
-            // rdoNotUsed
+            // _rdoNotUsed
             // 
-            _rdoNotUsed.AutoSize = true;
-            _rdoNotUsed.Location = new Point(44, 23);
-            _rdoNotUsed.Name = "_rdoNotUsed";
-            _rdoNotUsed.Size = new Size(70, 17);
-            _rdoNotUsed.TabIndex = 0;
-            _rdoNotUsed.TabStop = true;
-            _rdoNotUsed.Text = "Not Used";
-            _ToolTip1.SetToolTip(_rdoNotUsed, "Select to not use AGWPE");
-            _rdoNotUsed.UseVisualStyleBackColor = true;
+            this._rdoNotUsed.AutoSize = true;
+            this._rdoNotUsed.Location = new System.Drawing.Point(51, 27);
+            this._rdoNotUsed.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._rdoNotUsed.Name = "_rdoNotUsed";
+            this._rdoNotUsed.Size = new System.Drawing.Size(74, 19);
+            this._rdoNotUsed.TabIndex = 0;
+            this._rdoNotUsed.TabStop = true;
+            this._rdoNotUsed.Text = "Not Used";
+            this._ToolTip1.SetToolTip(this._rdoNotUsed, "Select to not use AGWPE");
+            this._rdoNotUsed.UseVisualStyleBackColor = true;
+            this._rdoNotUsed.CheckedChanged += new System.EventHandler(this.rdoNotUsed_CheckedChanged);
             // 
-            // rdoLocal
+            // _rdoLocal
             // 
-            _rdoLocal.AutoSize = true;
-            _rdoLocal.Location = new Point(139, 23);
-            _rdoLocal.Name = "_rdoLocal";
-            _rdoLocal.Size = new Size(95, 17);
-            _rdoLocal.TabIndex = 1;
-            _rdoLocal.TabStop = true;
-            _rdoLocal.Text = "Local Machine";
-            _ToolTip1.SetToolTip(_rdoLocal, "Select if AGWPE is on THIS computer");
-            _rdoLocal.UseVisualStyleBackColor = true;
+            this._rdoLocal.AutoSize = true;
+            this._rdoLocal.Location = new System.Drawing.Point(162, 27);
+            this._rdoLocal.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._rdoLocal.Name = "_rdoLocal";
+            this._rdoLocal.Size = new System.Drawing.Size(102, 19);
+            this._rdoLocal.TabIndex = 1;
+            this._rdoLocal.TabStop = true;
+            this._rdoLocal.Text = "Local Machine";
+            this._ToolTip1.SetToolTip(this._rdoLocal, "Select if AGWPE is on THIS computer");
+            this._rdoLocal.UseVisualStyleBackColor = true;
+            this._rdoLocal.CheckedChanged += new System.EventHandler(this.rdoLocal_CheckedChanged);
             // 
-            // rdoRemote
+            // _rdoRemote
             // 
-            _rdoRemote.AutoSize = true;
-            _rdoRemote.Location = new Point(250, 23);
-            _rdoRemote.Name = "_rdoRemote";
-            _rdoRemote.Size = new Size(106, 17);
-            _rdoRemote.TabIndex = 2;
-            _rdoRemote.TabStop = true;
-            _rdoRemote.Text = "Remote Machine";
-            _ToolTip1.SetToolTip(_rdoRemote, "Select if AGWPE on a remote computer");
-            _rdoRemote.UseVisualStyleBackColor = true;
+            this._rdoRemote.AutoSize = true;
+            this._rdoRemote.Location = new System.Drawing.Point(292, 27);
+            this._rdoRemote.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._rdoRemote.Name = "_rdoRemote";
+            this._rdoRemote.Size = new System.Drawing.Size(115, 19);
+            this._rdoRemote.TabIndex = 2;
+            this._rdoRemote.TabStop = true;
+            this._rdoRemote.Text = "Remote Machine";
+            this._ToolTip1.SetToolTip(this._rdoRemote, "Select if AGWPE on a remote computer");
+            this._rdoRemote.UseVisualStyleBackColor = true;
+            this._rdoRemote.CheckedChanged += new System.EventHandler(this.rdoRemote_CheckedChanged);
             // 
-            // Label1
+            // _Label1
             // 
-            _Label1.AutoSize = true;
-            _Label1.Location = new Point(21, 49);
-            _Label1.Name = "_Label1";
-            _Label1.Size = new Size(161, 13);
-            _Label1.TabIndex = 11;
-            _Label1.Text = "Path to the AGW Packet Engine";
+            this._Label1.AutoSize = true;
+            this._Label1.Location = new System.Drawing.Point(24, 57);
+            this._Label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._Label1.Name = "_Label1";
+            this._Label1.Size = new System.Drawing.Size(172, 15);
+            this._Label1.TabIndex = 11;
+            this._Label1.Text = "Path to the AGW Packet Engine";
             // 
-            // txtAGWPath
+            // _txtAGWPath
             // 
-            _txtAGWPath.Location = new Point(24, 65);
-            _txtAGWPath.Name = "_txtAGWPath";
-            _txtAGWPath.Size = new Size(312, 20);
-            _txtAGWPath.TabIndex = 3;
-            _txtAGWPath.TextAlign = HorizontalAlignment.Center;
-            _ToolTip1.SetToolTip(_txtAGWPath, "Path to the AGWPE Exe file. (AGW Packet Engine.exe  or Packet Engine Pro.exe) ");
+            this._txtAGWPath.Location = new System.Drawing.Point(28, 75);
+            this._txtAGWPath.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._txtAGWPath.Name = "_txtAGWPath";
+            this._txtAGWPath.Size = new System.Drawing.Size(363, 23);
+            this._txtAGWPath.TabIndex = 3;
+            this._txtAGWPath.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this._ToolTip1.SetToolTip(this._txtAGWPath, "Path to the AGWPE Exe file. (AGW Packet Engine.exe  or Packet Engine Pro.exe) ");
             // 
-            // Label2
+            // _Label2
             // 
-            _Label2.AutoSize = true;
-            _Label2.Location = new Point(56, 120);
-            _Label2.Name = "_Label2";
-            _Label2.Size = new Size(58, 13);
-            _Label2.TabIndex = 13;
-            _Label2.Text = "AGW Port:";
+            this._Label2.AutoSize = true;
+            this._Label2.Location = new System.Drawing.Point(65, 138);
+            this._Label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._Label2.Name = "_Label2";
+            this._Label2.Size = new System.Drawing.Size(62, 15);
+            this._Label2.TabIndex = 13;
+            this._Label2.Text = "AGW Port:";
             // 
-            // Label3
+            // _Label3
             // 
-            _Label3.AutoSize = true;
-            _Label3.Location = new Point(56, 94);
-            _Label3.Name = "_Label3";
-            _Label3.Size = new Size(61, 13);
-            _Label3.TabIndex = 14;
-            _Label3.Text = "AGW Host:";
+            this._Label3.AutoSize = true;
+            this._Label3.Location = new System.Drawing.Point(65, 108);
+            this._Label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._Label3.Name = "_Label3";
+            this._Label3.Size = new System.Drawing.Size(65, 15);
+            this._Label3.TabIndex = 14;
+            this._Label3.Text = "AGW Host:";
             // 
-            // Label4
+            // _Label4
             // 
-            _Label4.AutoSize = true;
-            _Label4.Location = new Point(41, 146);
-            _Label4.Name = "_Label4";
-            _Label4.Size = new Size(73, 13);
-            _Label4.TabIndex = 15;
-            _Label4.Text = "AGW User Id:";
+            this._Label4.AutoSize = true;
+            this._Label4.Location = new System.Drawing.Point(48, 168);
+            this._Label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._Label4.Name = "_Label4";
+            this._Label4.Size = new System.Drawing.Size(76, 15);
+            this._Label4.TabIndex = 15;
+            this._Label4.Text = "AGW User Id:";
             // 
-            // Label5
+            // _Label5
             // 
-            _Label5.AutoSize = true;
-            _Label5.Location = new Point(29, 172);
-            _Label5.Name = "_Label5";
-            _Label5.Size = new Size(85, 13);
-            _Label5.TabIndex = 16;
-            _Label5.Text = "AGW Password:";
+            this._Label5.AutoSize = true;
+            this._Label5.Location = new System.Drawing.Point(34, 198);
+            this._Label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this._Label5.Name = "_Label5";
+            this._Label5.Size = new System.Drawing.Size(90, 15);
+            this._Label5.TabIndex = 16;
+            this._Label5.Text = "AGW Password:";
             // 
-            // txtAGWPort
+            // _txtAGWPort
             // 
-            _txtAGWPort.CharacterCasing = CharacterCasing.Upper;
-            _txtAGWPort.Location = new Point(120, 117);
-            _txtAGWPort.Name = "_txtAGWPort";
-            _txtAGWPort.Size = new Size(157, 20);
-            _txtAGWPort.TabIndex = 5;
-            _txtAGWPort.TextAlign = HorizontalAlignment.Center;
-            _ToolTip1.SetToolTip(_txtAGWPort, "Port on which AGWPE is listening (default for normal AGWPE installation is 8000)");
+            this._txtAGWPort.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this._txtAGWPort.Location = new System.Drawing.Point(140, 135);
+            this._txtAGWPort.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._txtAGWPort.Name = "_txtAGWPort";
+            this._txtAGWPort.Size = new System.Drawing.Size(182, 23);
+            this._txtAGWPort.TabIndex = 5;
+            this._txtAGWPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this._ToolTip1.SetToolTip(this._txtAGWPort, "Port on which AGWPE is listening (default for normal AGWPE installation is 8000)");
             // 
-            // txtAGWHost
+            // _txtAGWHost
             // 
-            _txtAGWHost.Location = new Point(120, 91);
-            _txtAGWHost.Name = "_txtAGWHost";
-            _txtAGWHost.Size = new Size(157, 20);
-            _txtAGWHost.TabIndex = 4;
-            _txtAGWHost.TextAlign = HorizontalAlignment.Center;
-            _ToolTip1.SetToolTip(_txtAGWHost, "Friendly or dotted IP address for the AGWPE computer (\"localhost or 127.0.0.1 for" + " this compuer) ");
+            this._txtAGWHost.Location = new System.Drawing.Point(140, 105);
+            this._txtAGWHost.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._txtAGWHost.Name = "_txtAGWHost";
+            this._txtAGWHost.Size = new System.Drawing.Size(182, 23);
+            this._txtAGWHost.TabIndex = 4;
+            this._txtAGWHost.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this._ToolTip1.SetToolTip(this._txtAGWHost, "Friendly or dotted IP address for the AGWPE computer (\"localhost or 127.0.0.1 for" +
+        " this compuer) ");
             // 
-            // txtAGWUserId
+            // _txtAGWUserId
             // 
-            _txtAGWUserId.CharacterCasing = CharacterCasing.Upper;
-            _txtAGWUserId.Location = new Point(120, 143);
-            _txtAGWUserId.Name = "_txtAGWUserId";
-            _txtAGWUserId.Size = new Size(157, 20);
-            _txtAGWUserId.TabIndex = 6;
-            _txtAGWUserId.TextAlign = HorizontalAlignment.Center;
-            _ToolTip1.SetToolTip(_txtAGWUserId, "AGW User ID (needed only if secure login set for AGWPE) ");
+            this._txtAGWUserId.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this._txtAGWUserId.Location = new System.Drawing.Point(140, 165);
+            this._txtAGWUserId.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._txtAGWUserId.Name = "_txtAGWUserId";
+            this._txtAGWUserId.Size = new System.Drawing.Size(182, 23);
+            this._txtAGWUserId.TabIndex = 6;
+            this._txtAGWUserId.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this._ToolTip1.SetToolTip(this._txtAGWUserId, "AGW User ID (needed only if secure login set for AGWPE) ");
             // 
-            // txtAGWPassword
+            // _txtAGWPassword
             // 
-            _txtAGWPassword.Location = new Point(120, 169);
-            _txtAGWPassword.Name = "_txtAGWPassword";
-            _txtAGWPassword.Size = new Size(157, 20);
-            _txtAGWPassword.TabIndex = 7;
-            _txtAGWPassword.TextAlign = HorizontalAlignment.Center;
-            _ToolTip1.SetToolTip(_txtAGWPassword, "AGW Password (needed only if secure login set for AGWPE) ");
+            this._txtAGWPassword.Location = new System.Drawing.Point(140, 195);
+            this._txtAGWPassword.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._txtAGWPassword.Name = "_txtAGWPassword";
+            this._txtAGWPassword.Size = new System.Drawing.Size(182, 23);
+            this._txtAGWPassword.TabIndex = 7;
+            this._txtAGWPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this._ToolTip1.SetToolTip(this._txtAGWPassword, "AGW Password (needed only if secure login set for AGWPE) ");
             // 
-            // btnRemote
+            // _btnRemote
             // 
-            _btnRemote.Location = new Point(421, 42);
-            _btnRemote.Name = "_btnRemote";
-            _btnRemote.Size = new Size(107, 28);
-            _btnRemote.TabIndex = 18;
-            _btnRemote.Text = "Test Remote Login";
-            _ToolTip1.SetToolTip(_btnRemote, "Check remote login. Yellow = In process, Green = Login OK, Red = Fail or 10 secon" + "d timeout");
-            _btnRemote.UseVisualStyleBackColor = true;
+            this._btnRemote.Location = new System.Drawing.Point(491, 48);
+            this._btnRemote.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._btnRemote.Name = "_btnRemote";
+            this._btnRemote.Size = new System.Drawing.Size(125, 32);
+            this._btnRemote.TabIndex = 18;
+            this._btnRemote.Text = "Test Remote Login";
+            this._ToolTip1.SetToolTip(this._btnRemote, "Check remote login. Yellow = In process, Green = Login OK, Red = Fail or 10 secon" +
+        "d timeout");
+            this._btnRemote.UseVisualStyleBackColor = true;
+            this._btnRemote.Click += new System.EventHandler(this.btnRemote_Click);
             // 
-            // btnBrowse
+            // _btnBrowse
             // 
-            _btnBrowse.Location = new Point(342, 63);
-            _btnBrowse.Name = "_btnBrowse";
-            _btnBrowse.Size = new Size(50, 22);
-            _btnBrowse.TabIndex = 17;
-            _btnBrowse.Text = "Browse";
-            _btnBrowse.UseVisualStyleBackColor = true;
+            this._btnBrowse.Location = new System.Drawing.Point(399, 73);
+            this._btnBrowse.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._btnBrowse.Name = "_btnBrowse";
+            this._btnBrowse.Size = new System.Drawing.Size(58, 25);
+            this._btnBrowse.TabIndex = 17;
+            this._btnBrowse.Text = "Browse";
+            this._btnBrowse.UseVisualStyleBackColor = true;
+            this._btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
             // 
-            // btnHelp
+            // _btnHelp
             // 
-            _btnHelp.Location = new Point(421, 147);
-            _btnHelp.Name = "_btnHelp";
-            _btnHelp.Size = new Size(107, 28);
-            _btnHelp.TabIndex = 19;
-            _btnHelp.Text = "Help";
-            _btnHelp.UseVisualStyleBackColor = true;
+            this._btnHelp.Location = new System.Drawing.Point(491, 170);
+            this._btnHelp.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this._btnHelp.Name = "_btnHelp";
+            this._btnHelp.Size = new System.Drawing.Size(125, 32);
+            this._btnHelp.TabIndex = 19;
+            this._btnHelp.Text = "Help";
+            this._btnHelp.UseVisualStyleBackColor = true;
+            this._btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
             // DialogAGWEngine
             // 
-            AutoScaleDimensions = new SizeF(6.0F, 13.0F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(550, 216);
-            Controls.Add(_btnHelp);
-            Controls.Add(_btnRemote);
-            Controls.Add(_btnBrowse);
-            Controls.Add(_txtAGWPassword);
-            Controls.Add(_txtAGWUserId);
-            Controls.Add(_txtAGWHost);
-            Controls.Add(_txtAGWPort);
-            Controls.Add(_Label5);
-            Controls.Add(_Label4);
-            Controls.Add(_Label3);
-            Controls.Add(_Label2);
-            Controls.Add(_txtAGWPath);
-            Controls.Add(_Label1);
-            Controls.Add(_rdoRemote);
-            Controls.Add(_rdoLocal);
-            Controls.Add(_rdoNotUsed);
-            Controls.Add(_btnCancel);
-            Controls.Add(_btnUpdate);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
-            Icon = (Icon)resources.GetObject("$this.Icon");
-            MaximizeBox = false;
-            MinimizeBox = false;
-            Name = "DialogAGWEngine";
-            StartPosition = FormStartPosition.CenterParent;
-            Text = "AGW Engine Properties";
-            Load += new EventHandler(AGWEngine_Load);
-            ResumeLayout(false);
-            PerformLayout();
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(642, 249);
+            this.Controls.Add(this._btnHelp);
+            this.Controls.Add(this._btnRemote);
+            this.Controls.Add(this._btnBrowse);
+            this.Controls.Add(this._txtAGWPassword);
+            this.Controls.Add(this._txtAGWUserId);
+            this.Controls.Add(this._txtAGWHost);
+            this.Controls.Add(this._txtAGWPort);
+            this.Controls.Add(this._Label5);
+            this.Controls.Add(this._Label4);
+            this.Controls.Add(this._Label3);
+            this.Controls.Add(this._Label2);
+            this.Controls.Add(this._txtAGWPath);
+            this.Controls.Add(this._Label1);
+            this.Controls.Add(this._rdoRemote);
+            this.Controls.Add(this._rdoLocal);
+            this.Controls.Add(this._rdoNotUsed);
+            this.Controls.Add(this._btnCancel);
+            this.Controls.Add(this._btnUpdate);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "DialogAGWEngine";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "AGW Engine Properties";
+            this.Load += new System.EventHandler(this.AGWEngine_Load);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
 
         private Button _btnCancel;

@@ -217,7 +217,7 @@ namespace Paclink.UI.Windows
             this._SMTPDisplay.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this._SMTPDisplay.Name = "_SMTPDisplay";
             this._SMTPDisplay.ReadOnly = true;
-            this._SMTPDisplay.Size = new System.Drawing.Size(367, 271);
+            this._SMTPDisplay.Size = new System.Drawing.Size(366, 271);
             this._SMTPDisplay.TabIndex = 0;
             this._SMTPDisplay.Text = "";
             // 
@@ -463,8 +463,8 @@ namespace Paclink.UI.Windows
             // 
             // Main
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(810, 354);
             this.Controls.Add(this._pnlSplitter);
             this.Controls.Add(this._lblMessageDisplay);
