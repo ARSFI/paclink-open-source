@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MimeKit" Version="3.4.3" />
+    <PackageReference Include="MimeKit" Version="4.7.1" />
     <PackageReference Include="NLog" Version="5.1.0" />
     <PackageReference Include="System.IO.Ports" Version="7.0.0" />
   </ItemGroup>
